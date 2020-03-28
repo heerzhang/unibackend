@@ -1,0 +1,110 @@
+#用于调试使用的
+query SPEED_TEST
+{
+    findAllEQPs
+    {
+    cod  oid
+
+  	}
+}
+
+query EQP_QUERY
+{
+  findAllEQPs
+  {
+    id  cod oid factoryNo ownerUnt{
+      id  name
+    }
+    isps{id conclusion }
+    task{id dep }
+  }
+}
+
+query SPEED_GET_DEVS($filter:DeviceCommonInput!,$offset:Int!,$first:Int,$orderBy:String,$asc:Boolean)
+{
+  eqps:findAllEQPsFilter(filter:$filter,offset:$offset,first:$first,orderBy:$orderBy,asc:$asc)
+    {
+    cod  oid
+
+  	}
+}
+
+
+mutation  TEST_MODIFY_EQP {
+  testEQPCriteriaModify(
+        cod: "AT冈",
+        oid: "000Fksdsv"
+    type: "58001"
+  )
+  {
+    id  cod oid factoryNo ownerUnt{
+      id  name
+    }
+    isps{id checkMen{id username} conclusion}
+    task{id dep isps{id conclusion}
+    }
+  }
+}
+
+query Counter_All
+{
+    sum:countAllEQPsFilter(
+      filter: {
+        cod: "4",
+    		oid: ""
+      }
+    )
+}
+
+
+query Look_Relations($where:WhereTree,$offset:Int!,$first:Int,$orderBy:String,$asc:Boolean)
+{
+  isps:findAllISPfilter(where:$where,
+               offset:$offset,first:$first,orderBy:$orderBy,asc:$asc)
+    {
+     id  conclusion ispMen{username}
+  	}
+}
+
+query findEqpMge($id: ID!) {
+  findEqpMge(id: $id) {
+    id
+	eQPCOD
+    __typename
+  }
+}
+
+#参数举例
+# {
+#   "offset": 9,
+#   "first": 1,
+#   "orderBy": "id",
+#   "asc": true,
+#   "filter":
+#    {
+#       "cod": "31",
+# 		"oid": "越"
+#     },
+#          "where": {
+#             "lj": "OR",
+#             "at":{
+#               "sx":"pos", "val":"23409"
+#             },
+#       			"son":{
+#               "lj":"AND",
+#               "at":{
+#                 "sx":"factoryNo", "val":"dddcc"
+#               },
+#               "son":{
+#                 "lj":"noExist",
+#                 "at":{
+#                   "sx":"his","arr":["hez"]
+#                 }
+#               }
+#             }
+#           }
+#        }
+
+# {
+#    "id": "59273"
+# }

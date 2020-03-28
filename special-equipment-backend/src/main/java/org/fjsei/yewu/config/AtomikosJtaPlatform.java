@@ -1,4 +1,4 @@
-package org.fjsei.yewu;
+package org.fjsei.yewu.config;
 
 import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform;
 

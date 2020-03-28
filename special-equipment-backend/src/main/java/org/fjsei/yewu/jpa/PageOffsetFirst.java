@@ -24,7 +24,7 @@ public class PageOffsetFirst extends AbstractPageRequest {
      * @param size the size of the page to be returned.
      * @deprecated use {@link #of(int, int)} instead.
      */
-    @Deprecated
+    //@Deprecated
     public PageOffsetFirst(int page, int size) {
         this(page, size, Sort.unsorted());
     }
@@ -38,7 +38,8 @@ public class PageOffsetFirst extends AbstractPageRequest {
      * @param properties the properties to sort by, must not be {@literal null} or empty.
      * @deprecated use {@link #of(int, int, Sort.Direction, String...)} instead.
      */
-    @Deprecated
+
+   // @Deprecated
     public PageOffsetFirst(int page, int size, Sort.Direction direction, String... properties) {
         this(page, size, Sort.by(direction, properties));
     }

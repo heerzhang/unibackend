@@ -1,0 +1,18 @@
+"加载的graphqls目录不一样，接口就不一样了"
+
+type Author {
+    id: ID!
+    firstName: String!
+    lastName: String!
+}
+
+
+#schema省略,Query type is presumed to be the query root operation type of the schema像一般对象使用
+type Query {
+    findAllAuthors: [Author]!
+    countAuthors: Long!
+}
+
+type Mutation {
+    newAuthor(firstName: String!, lastName: String!) : Author!
+}

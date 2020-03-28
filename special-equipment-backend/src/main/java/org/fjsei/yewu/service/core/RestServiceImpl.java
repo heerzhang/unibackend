@@ -52,6 +52,7 @@ public class RestServiceImpl implements RestService {
     public Page<EQP> findByName_Page(String name) {
         //根据id 进行降序
         Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
+    /* 作废
         Sort sort = new Sort(order);
         //index 1 从0开始 不是从1开始的
         Pageable page = new PageRequest(0,10,sort);
@@ -61,8 +62,9 @@ public class RestServiceImpl implements RestService {
         System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
         System.out.println("查询当前页面的集合:"+employeeList.getContent());
         System.out.println("查询当前页面的记录数:"+employeeList.getNumberOfElements());
-
         return employeeList;
+        */
+        return null;
     }
 
     public EQP findByName_ExampleMatcher(String name) {
@@ -99,7 +101,7 @@ public class RestServiceImpl implements RestService {
             System.out.println(bo.getCod());
         }
 
-
+    /* 作废
         Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
         Sort sort = new Sort(order);
         //index 1 从0开始 不是从1开始的
@@ -114,7 +116,7 @@ public class RestServiceImpl implements RestService {
         EntityManagerFactory entityManagerFactory= ((HibernateEntityManagerFactory)emBar.getEntityManagerFactory());
         SessionFactory sessionFactory =((HibernateEntityManagerFactory) entityManagerFactory).getSessionFactory();
         Statistics statistics=sessionFactory.getStatistics();
-
+    */
         return null;//employeeList;
     }
 
@@ -145,13 +147,12 @@ public class RestServiceImpl implements RestService {
         {
             System.out.println(bo.getCod());
         }
-
-
-
+        /*作废！
         EntityManagerFactory entityManagerFactory= ((HibernateEntityManagerFactory)emBar.getEntityManagerFactory());
         SessionFactory sessionFactory =((HibernateEntityManagerFactory) entityManagerFactory).getSessionFactory();
         Statistics statistics=sessionFactory.getStatistics();
         Cache cache=sessionFactory.getCache();
+        */
         return null;//employeeList;
     }
 
@@ -159,6 +160,7 @@ public class RestServiceImpl implements RestService {
     public Page<EQP> findByName_Example(String name) {
 
         Sort.Order order =  new Sort.Order(Sort.Direction.ASC,"id");
+      /* 作废
         Sort sort = new Sort(order);
         //index 1 从0开始 不是从1开始的
         Pageable page = new PageRequest(0,10,sort);
@@ -169,9 +171,9 @@ public class RestServiceImpl implements RestService {
                                          CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<String> codPath = root.get("cod");
                 Path<String> oidPath = root.get("oid");
-                /**
-                 * 连接查询条件, 不定参数，可以连接0..N个查询条件
-                 */
+
+              //连接查询条件, 不定参数，可以连接0..N个查询条件
+
                 query.where(cb.like(codPath, "%电梯%"), cb.like(oidPath, "%12%")); //这里可以设置任意条查询条件
 
                 return null;
@@ -184,6 +186,7 @@ public class RestServiceImpl implements RestService {
         System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
         System.out.println("查询当前页面的集合:"+employeeList.getContent());
         System.out.println("查询当前页面的记录数:"+employeeList.getNumberOfElements());
+        */
         return null;//eqpRepository.findByCod(name);
     }
 
