@@ -13,8 +13,7 @@ GRADLE_USER_HOME 仓库= E:\del\repository
 Gradle 安装与配置 https://www.cnblogs.com/NyanKoSenSei/p/11458953.html
 GRADLE_HOME/init.d/目录下的init.gradle
 IDEA直接配置加上jar远端库=使用阿里的依赖库=https://www.cnblogs.com/lihuawei/p/12460193.html
-
-？//：todo？java还未支持协程Fiber；js其实单线程。Spring WebFlux既支持Tomcat、Jetty容器（Servlet3.1+）,又支持Netty、Undertow等异步容器。
+java还未支持协程Fiber；js其实单线程。
 使用 Undertow 替换掉 Tomcat;  工程：compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '2.2.5.RELEASE'
 移除SpringMvc相关组件以及Tomcat，Jetty，Undertow等Web容器，使用Netty构建HttpServer来实现轻量级的RestfulAPIs。
 Spring WebFlux 默认是使用 Netty 作为 Web 容器的。Undertow 用的人比较少，。

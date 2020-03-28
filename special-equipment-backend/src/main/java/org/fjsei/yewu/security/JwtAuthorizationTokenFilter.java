@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-//TODO： 有必要引入OAuth 2 来授权认证。
+
 
 //过滤器实际也是注入的。
 @Component
@@ -57,10 +57,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String originHeads = request.getHeader("Origin");
-
-      //todo:作废被文件
-
-        if(true  ){
+        if(seiFilterOriginProperties.getList().contains(originHeads) ){
             //设置允许跨域的配置允许进行跨域的主机ip（正式上线时可以动态配置具体允许的域名和IP）
             response.setHeader("Access-Control-Allow-Origin", originHeads);
         }

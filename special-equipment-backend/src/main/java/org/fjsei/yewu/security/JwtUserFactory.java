@@ -1,8 +1,6 @@
 package org.fjsei.yewu.security;
-//Todo:暂时屏蔽
-//import org.fjsei.yewu.entity.sei.Authority;
-//import org.fjsei.yewu.entity.sei.User;
 
+import org.fjsei.yewu.entity.sei.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -11,26 +9,27 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
-    //Todo:暂时改变
-
-
 
     private JwtUserFactory() {
     }
 
     public static JwtUser create(User user) {
         return new JwtUser(
-                null,
+                user.getId(),
                 user.getUsername(),
-                null,
-                null,
-                null,
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
                 user.getPassword(),
-                null,
+                mapToGrantedAuthorities(user.heHasRoles()),
                 user.getEnabled(),
-                null
+                user.getLastPasswordResetDate()
         );
     }
-//todo: 本文作废
 
+    private static List<GrantedAuthority> mapToGrantedAuthorities(Set<Authority> authorities) {
+        return authorities.stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getName().name()))
+                .collect(Collectors.toList());
+    }
 }
