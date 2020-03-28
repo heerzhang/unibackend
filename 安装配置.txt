@@ -1,0 +1,65 @@
+java13升级中，CentOS；
+Java SE Development Kit 13(JDK13) 13.0.1下载  = https://www.7down.com/soft/344930.html
+windown10安装软件打开时以管理员身份安装软件不然容易出问题,jdk13.0.2没有jre文件夹，所以需要手动生成;
+win10安装JDK13.0.2 https://blog.csdn.net/eee528/article/details/104109872
+环境变量JAVA_HOME C:\Program Files\Java\jdk1.8.0_121   E:\Program Files\jdk13-1
+JRE_HOME CLASSPATH先不管了；
+JRE运行时{我是开发的}先不管了；
+IDEA右上角的启动project structure对话框直接修改每个工程单独jdk路径。
+gradle升级中，gradle-6.3-rc-1下载解压 = https://services.gradle.org/distributions/
+要Gradle Wrapper去统一Gradle的版本，避免开发团队因为Gradle版本不一致而产生问题。
+配置环境变量 D:\proj\gradle-6.3\bin。全局配置=https://www.jianshu.com/p/6b9cd92c4920
+GRADLE_USER_HOME 仓库= E:\del\repository
+Gradle 安装与配置 https://www.cnblogs.com/NyanKoSenSei/p/11458953.html
+GRADLE_HOME/init.d/目录下的init.gradle
+IDEA直接配置加上jar远端库=使用阿里的依赖库=https://www.cnblogs.com/lihuawei/p/12460193.html
+
+？//：todo？java还未支持协程Fiber；js其实单线程。Spring WebFlux既支持Tomcat、Jetty容器（Servlet3.1+）,又支持Netty、Undertow等异步容器。
+使用 Undertow 替换掉 Tomcat;  工程：compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '2.2.5.RELEASE'
+移除SpringMvc相关组件以及Tomcat，Jetty，Undertow等Web容器，使用Netty构建HttpServer来实现轻量级的RestfulAPIs。
+Spring WebFlux 默认是使用 Netty 作为 Web 容器的。Undertow 用的人比较少，。
+
+https://github.com/graphql-java-kickstart/samples
+com.coxautodev.graphql.tools包名都改graphql.kickstart.tools 升级有问题
+import graphql.kickstart.tools.GraphQLQueryResolver; 这个不能切换包名！
+
+windows 10中Tomcat安装和部署的教程  https://www.jb51.net/article/173324.htm ; 端口号冲突 JRE=jdk目录 .bin\startup.bat。
+@SpringBootApplication没有web.xml而老Spring MVC项目web.xml添filter-mapping、servlet-mapping的。https://www.pocketdigi.com/20170527/1576.html
+Jenkins发布部署 Kubernetes集群；拉取源码选择git,http://代码服务器（gitbucket）；GitBucket自己的GitHub。码云Gitee= Git代码托管;网站配置免费SSL证书;
+GraphQLHttpServlet:GraphQLConfiguration->createSchema->SchemaParser+makeExecutableSchema;
+启动初始化链条=HostConfig->tomcat内嵌容器->initServlet->GraphQLHttpServlet.init()->GraphQLConfiguration->createSchema()->SchemaGenerator:不可能重新改file("schema.graphqls")。
+而对每个http请求流程=SocketProcessorBase<NioChannel>：FilterChain：WsFilter->初始化connection->doFilter()->HttpServlet:service(req,resp)->AbstractGraphQLHttpServlet.doPost+doGet();
+单个前端<ApolloProvider client={client}>只能有一个Endpoint==一个Servlet;单个SPA页就不好做的。反而单个后端容易做多个接口Endpoint多个Schema path。
+Jetty 和 undertow 服务器SpringBoot 使用轻量级的 undertow 容器替代重量级 Tomcat https://hacpai.com/article/1575252759539
+三个集成 directives + servlet-hello-world + 最後那個,,;
+rest方式发送包{   "query": "{hello(value394:\"sdfds1124cv\") }" }
+
+Gradle问题：在IDEA新建立时gradle java工程,多模块。IDEA在配置Build>Gradle:有个radio三选一很关键。
+Use default gradle wrapper(recommended) 需要配套修改/gradle/wrapper gradle/wrapper/gradle-wrapper.properties的版本号，distributionUrl=https\://downloads.gradle-dn.com/distributions/gradle-6.3-rc-1-all.zip
+distributionUrl=https\://services.gradle.org/distributions/gradle-4.10-all.zip
+gradle还和Java版本也有关啊[5.6.4]，gradle自己还有版本问题，Gradle JVM版本设置java10可行。
+build.gradle里面wrapper{gradleVersion='6.3-rc-1'}直接运行3行脚本就可初始化gradle/wrapper/*，但IDEA设置Gradle JVM版本到/repository/wrapper/dists/gradle/.。Gradle JVM不要选Use Project JDK/JAVAHOME;
+测试通过gradle-5.6.4 刷新工程的时候需要设置Gradle JVM到低版本，然后正常编译恢复高版本JDK};
+gradle/wrapper/gradle-wrapper.properties要自动下载，dists\.\gradle-5.6.4\init.d还不能加init.gradle,就通过了，可能下载文件不正宗的。
+https://github.com/graphql-java-kickstart/graphql-spring-boot
+参考graphql-spring-boot-autoconfigure\x.graphql.boot.GraphQLWebAutoConfiguration，复制和定做特别的接口1，2 xxxAutoConfiguration。
+
+bean注入@Qualifier存在多个同类型bean时，通过value值选择bean方法名字就是Bean的ID；xxx(@Qualifiler(value="d") My my);  https://www.wandouip.com/t5i352131/
+
+添加ServletConfiguration模式不能處理數據{Resolver不執行}能報schema語法異常。PublicGqwAutoConfiguration配置路綫的能QueryResolver數據卻無法返回數據(directive能執行)同時不能報語法異常。
+目標是com.coxautodev.graphql.tools.SchemaParser的中同名SchemaParser定制替換{@Autowired SchemaParser+ build變成新的SchemaParser}。
+若/config/PublicGqwAutoConfiguration.java移除了就能恢复旧正常的graphql/iql，而Servlet模式的未受此影响。
+@某些注解是编译用的，IDEA配置 Build>Compiler>Annotation Processors勾上。
+oauth2..JwtAuthenticationToken;认证方式＝jwkSetUri关键第三方认证redirectUri Provider userInfoUri还要给UserDetailsService配套存储Repository。
+GitHub私有库国内加速访问的办法 DNS污染？  https://www.sohu.com/a/312804771_100213241
+POST http://localhost:9000/graphql
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+
+{   "query": "{hello(value2:\"sdfds1124cv\") }" }
+Webflux(REST || Thymeleaf模板)Reactive Web,Reactor项目实现Reactive Streams,感觉graphql是并行竞争关系，但是Webflux是REST，对标WebMVC模板。实际上starter-web对标starter-webflux二选一。
+Webflux核心使用了异步资源加载！需要ReactiveMongoRepository，无法用原来数据库@Entity+原来Repository。给客户应答可能要分多次/数据拆分陆续返回模式。 前端需要EventSource SSE的JS；
+看Webflux其实在请求应答返回数据很少的就毫无效果哦！graphql分页数据。实体表多页查询，一次要获取很多对象吗，正常网页需要吗，除非下载转储文件这类的功能｛毕竟使用频率较少｝。
+web容器更换Undertow依赖支持HTTP、HTTPS、HTTP/2多路复用机制；  http://www.imooc.com/article/274138
+免费申请SSL证书  https://freessl.org
+

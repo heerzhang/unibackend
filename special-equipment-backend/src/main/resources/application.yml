@@ -1,0 +1,64 @@
+sei:
+  filter:
+    #开启CORS后的对等前端的地址，同源策略，多个域的如何配置？
+    origin:
+      list[0]: https://27.151.117.65:3765
+      list[1]: http://27.151.117.65:3765
+      list[2]: https://localhost:3765
+      list[3]: http://localhost:3765
+      list[4]: https://192.168.171.3:3765
+      list[5]: http://192.168.171.3:3765
+      list[6]: https://192.168.1.105:3765
+      list[7]: http://192.168.1.105:3765
+    maxage: 3600
+  visibility:
+    #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
+    role: USER
+  testMode: true
+  control:
+    #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
+    permitAnyURL: false
+  cache.log: false
+  server.URI: http://27.151.117.65:8673
+  cookie:
+    domain: 27.151.117.65
+
+server:
+  port: 9000
+  undertow:
+    io-threads: 2
+    worker-threads: 12
+    buffer-size: 512
+    direct-buffers: true
+
+debug: true
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+    exception-handlers-enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR
+  file:
+    path: E:\\del\\logs
+
+jwt:
+  header: Authorization
+  expiration: 5400
+  #做Hash的密码
+  secret: 适得府君书都会
+
+unibackend:
+  tools:
+    starter-enabled: true
+    third-enabled: true
+    public-enabled: true
+
+
+
+

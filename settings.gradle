@@ -1,0 +1,4 @@
+rootProject.name = 'industry-services-com'
+//rootProject.name = 'special-equipment-backend'
+//include 'mainProject'
+include 'special-equipment-backend'

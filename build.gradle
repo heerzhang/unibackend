@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+}
+
+//实际不用它，直接在IDEA配置指定本地目录了。
+wrapper {
+         //测试当前没毛病版本
+    gradleVersion = '5.6.4'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
+}
+
+group 'industry-services-com'
+//group 'jianyan.org.cn'
+version '1.0-SNAPSHOT'
+
+//自己还要设置依赖库
+repositories {
+    mavenCentral()
+}
+
+//这才是设置代码的依赖库
+allprojects {
+    repositories {
+        //阿里云 maven 地址
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        google()
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
+}
+
+
+dependencies {
+
+}
+
