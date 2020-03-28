@@ -40,8 +40,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
 
 
-    compile "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
-    compile "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
+    implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
+    implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
+    implementation "com.graphql-java-kickstart:voyager-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
@@ -52,14 +53,30 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-websocket"
 
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    compile group: 'com.h2database', name: 'h2', version:'1.4.200'
+    implementation group: 'com.h2database', name: 'h2', version:'1.4.200'
     compile group: 'com.oracle', name: 'ojdbc6', version:'11.2.0.3'
     // implementation(project(":graphql-spring-boot-starter"))
     implementation "io.jsonwebtoken:jjwt:0.9.1"
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
+    implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+    //hibernate-ehcache依赖于net.sf.ehcache　2.10.6旧版本，必须要配套的版本。
+    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.13.Final') {
+        exclude(module: 'ehcache-core')
+    }
+
+    //新版本ehcache 3 不能用, Hibernate 必须要配套的版本。
+    //compile group: 'org.ehcache', name: 'ehcache', version: '3.8.1'
+    compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
+
+    runtime('org.springframework.boot:spring-boot-devtools')
+    
     //compile "org.springframework.boot:spring-boot-starter-security"
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    
 }
 
 
@@ -69,5 +86,7 @@ dependencies {
          exclude module: 'spring-boot-starter-tomcat', group: 'org.springframework.boot'
     }
     compile("org.springframework.boot:spring-boot-starter-undertow")
+资料：Spring的全家桶　https://spring.io/projects/spring-boot
+而JPA关键用到ORM Hibernate Core；数据库方言https://blog.csdn.net/erlian1992/article/details/74331774　    
 */
 

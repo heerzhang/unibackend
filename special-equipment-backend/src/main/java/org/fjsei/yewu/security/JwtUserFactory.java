@@ -1,6 +1,7 @@
 package org.fjsei.yewu.security;
 
 import org.fjsei.yewu.entity.sei.Authority;
+import org.fjsei.yewu.entity.sei.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

@@ -62,3 +62,9 @@ Webflux核心使用了异步资源加载！需要ReactiveMongoRepository，无�
 web容器更换Undertow依赖支持HTTP、HTTPS、HTTP/2多路复用机制；  http://www.imooc.com/article/274138
 免费申请SSL证书  https://freessl.org
 
+Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
+（在Redisson PRO版本中可用）实现了具有本地缓存​​支持的Hibernate缓存。
+implementation 'org.redisson:redisson-spring-boot-starter:3.10.2'   https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
+compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
+ compile 'org.redisson:redisson-hibernate-53:3.10.2'
+
