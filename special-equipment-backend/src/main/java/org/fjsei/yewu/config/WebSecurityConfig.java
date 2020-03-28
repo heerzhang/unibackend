@@ -1,6 +1,8 @@
 package org.fjsei.yewu.config;
 
 import org.fjsei.yewu.security.JwtAuthenticationEntryPoint;
+import org.fjsei.yewu.security.JwtAuthorizationTokenFilter;
+import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
