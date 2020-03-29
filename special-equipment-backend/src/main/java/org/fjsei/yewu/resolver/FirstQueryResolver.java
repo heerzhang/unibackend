@@ -6,18 +6,23 @@ import org.fjsei.yewu.model.Book;
 import org.fjsei.yewu.repository.AuthorRepository;
 import org.fjsei.yewu.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 //GraphqlConfiguration 关联，Query=类名字可修改
-public class Query implements GraphQLQueryResolver {
+
+@Service
+public class FirstQueryResolver implements GraphQLQueryResolver {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private AuthorRepository authorRepository;
 
-    public Query(AuthorRepository authorRepository, BookRepository bookRepository) {
+
+    public FirstQueryResolver(AuthorRepository authorRepository, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
     }
+
 
     public Iterable<Book> findAllBooks() {
         return bookRepository.findAll();

@@ -53,7 +53,7 @@ public class JdbcDataSourceConfig {
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
-    /* 旧的库
+    /* 旧的库； 監察的。
      */
 
     @Bean(name = "dataSourcePropertiesIncp")

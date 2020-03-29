@@ -43,7 +43,7 @@ public class MyRestServiceClient {
         );
         List<Book> Books = Arrays.asList(responseEntity.getBody());
 
-        return Books.stream().filter(Book -> Book.getAuthor().getAuthorId().equals(authorId)).collect(Collectors.toList());
+        return Books.stream().filter(Book -> Book.getAuthor().getId().equals(authorId)).collect(Collectors.toList());
     }
 
     public List<Author> getAuthors() {

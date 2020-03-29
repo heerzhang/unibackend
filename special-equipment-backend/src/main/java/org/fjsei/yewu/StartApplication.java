@@ -76,7 +76,7 @@ public class StartApplication {
   public CommandLineRunner demo(AuthorRepository authorRepository, BookRepository bookRepository) {
     if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
     return (args) -> {
-      Author author = new Author("Herbert", "Schildt");
+      Author author = new Author();
     };
   }
 

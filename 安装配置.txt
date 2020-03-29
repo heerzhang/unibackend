@@ -67,4 +67,16 @@ Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作H
 implementation 'org.redisson:redisson-spring-boot-starter:3.10.2'   https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
 compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
  compile 'org.redisson:redisson-hibernate-53:3.10.2'
-
+<Directive> directives ("authr"))("qx"); equals("authenticate") || fieldName.equals("logout") || fieldName.equals("newUser"))equals("auth") )
+新建文本文档.txt
+<Directive> directives ("authr"))("qx");
+        /**
+         * @param fieldVisibility the field visibility
+         * @return this builder
+         * @deprecated use {@link graphql.schema.GraphQLCodeRegistry.Builder#fieldVisibility(graphql.schema.visibility.GraphqlFieldVisibility)} instead
+         */
+        @Deprecated   graphql/schema/GraphQLSchema. Builder{}
+        public Builder fieldVisibility(GraphqlFieldVisibility fieldVisibility) {
+            this.codeRegistry = this.codeRegistry.transform(builder -> builder.fieldVisibility(fieldVisibility));
+            return this;
+        }

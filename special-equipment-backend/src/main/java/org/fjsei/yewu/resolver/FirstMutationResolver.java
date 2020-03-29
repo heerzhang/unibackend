@@ -7,6 +7,7 @@ import org.fjsei.yewu.model.Book;
 import org.fjsei.yewu.repository.AuthorRepository;
 import org.fjsei.yewu.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -14,15 +15,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 //GraphqlConfiguration 关联，Mutation=类名字可修改
-public class Mutation implements GraphQLMutationResolver {
+
+@Service
+public class FirstMutationResolver implements GraphQLMutationResolver {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private AuthorRepository authorRepository;
+
     @PersistenceContext(unitName = "entityManagerFactorySei")
     private EntityManager emSei;
 
-    public Mutation(AuthorRepository authorRepository, BookRepository bookRepository) {
+
+    public FirstMutationResolver(AuthorRepository authorRepository, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
     }
@@ -46,7 +51,10 @@ public class Mutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Assert.isTrue(emSei.isJoinedToTransaction(),"没emSeiisJoinedToTransaction");
         Book book = new Book();
-        book.setAuthor(new Author(authorId));
+        //book.setAuthor(new Author(authorId));
+       Author author=new Author();
+       author.setId(authorId);
+        book.setAuthor(author);
         book.setTitle(title);
         book.setIsbn(isbn);
         book.setPageCount(pageCount != null ? pageCount : 0);
