@@ -1,0 +1,184 @@
+sei:
+  filter:
+    #开启CORS后的对等前端的地址，同源策略，多个域的如何配置？
+    origin:
+      list[0]: https://27.151.117.65:3765
+      list[1]: http://27.151.117.65:3765
+      list[2]: https://localhost:3765
+      list[3]: http://localhost:3765
+      list[4]: https://192.168.171.3:3765
+      list[5]: http://192.168.171.3:3765
+      list[6]: https://192.168.1.105:3765
+      list[7]: http://192.168.1.105:3765
+    maxage: 3600
+  visibility:
+    #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
+    role: USER
+  testMode: true
+  control:
+    #若PermitAnyURL=true那么：不登录REST就能随意访问，但是graphQL没变化。
+    permitAnyURL: false
+  cache.log: false
+  server.URI: http://192.168.1.105:8673
+  cookie:
+    domain: 192.168.1.105
+
+
+debug: false
+#底层中间件的，太多了消息。
+trace: false
+#这是后端WEB容器Tomcat端口。
+server:
+  port: 8673
+  ssl:
+    #对https,http的协议切换
+    enabled: false
+    #生成证书的名字
+    key-store: SeiYewu.keystore
+    #密钥库密码
+    key-store-password: 123456
+    key-store-type: JKS
+    key-alias: SeiYewu
+
+  #日志配置，此处使用默认日志
+  #logging:
+  #  config: classpath:log4j2.yml
+#logging:
+#  level:
+#    org.springframework:
+##      web: DEBUG
+
+#数据库连接，屏蔽的可直接加序号改名字==弃用。
+#数据库连接用户schema, 不管底层物理数据库是否集群分布还是云啥的，这里实际是单用户可见的数据库。
+app:
+  datasource:
+    #源程序中@ConfigurationProperties(prefix="app.datasource.sei")和这里名字要一致。
+    #若没有Oracle可用，本机可使用H2数据库测试就行。　可能要修改Hibernate中配置数据库方言设置。
+    sei:
+      url: jdbc:h2:tcp://localhost/~/sei2
+      username: sa
+      password:
+    #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
+    #若没有开启本机H2的console，将会自动使用H2内存数据库。
+    #旧平台正式运行的。
+    fjtj:
+      url: jdbc:h2:tcp://localhost/~/fjtj
+      username: sa
+      password:
+
+# spring
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+  application:
+    name: fjtj
+  profiles:
+    active:
+    - product
+
+  #jta相关参数配置
+  jta:
+    atomikos:
+      properties:
+        #没效果? 要去jta.properties文件
+        #default-jta-timeout: 2600000
+        #max-timeout: 30000000
+        enable-logging: true
+  #log-dir: classpath:newlog
+  #transaction-manager-id: txManager
+  jpa:
+    properties:
+      javax:
+        persistence:
+          sharedCache.mode: ENABLE_SELECTIVE
+      #开启查询缓存factory_class    cache.use_query_cache: true
+      hibernate.format_sql: true
+      hibernate.use_sql_comments: true
+      hibernate:
+        #default_schema: newsei   还是一个个指定好
+        #看SQL打印　true 　false
+        show_sql: true
+        #统计对单个hibernate session会话的总结
+        generate_statistics: true
+        ##      dialect: org.hibernate.dialect.Oracle10gDialect
+        hbm2ddl:
+          auto: update
+        #指定缓存provider
+        cache:
+          region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+          #二级缓存关闭启用的2个总开关,关不了集合字段
+          use_second_level_cache: true
+          use_query_cache: true
+    generate-ddl: true
+    open-in-view: true
+
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    view:
+      prefix: /
+      #suffix: .jsp
+  cache:
+
+
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+    exception-handlers-enabled: true
+  tools:
+    #按resources子目录来管理模型加载的graphqls目录不一样，接口就不一样了;
+    schema-location-pattern: "graphql/**/*.graphqls"
+    introspection-enabled: true
+
+graphiql:
+  mapping: /graphiql
+  endpoint:
+    graphql: /graphql
+    subscriptions: /forbidden
+  static:
+    basePath: /
+    #生产系统graphiql可关闭
+  enabled: true
+  pageTitle: GraphiQL
+  cdn:
+    enabled: false
+    version: 0.11.11
+  props:
+    resources:
+      defaultQuery: defaultQuery.graphql
+    variables:
+      editorTheme: "solarized light"
+  headers:
+  #用这会必然带上Bearer　，但是时间固定,超时,若走cockie模式就不会,而两token也不同的。给mvc浏览器读的。
+  #Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU0OTk2MzUyNywiaWF0IjoxNTQ5OTU4MTI3fQ.z96CaGdjhI1OhudZlNTNcJWrRBEETFsliVI0x3_mrqRj2mOjLU0IOV1G3_WEufGMyfJ_MBK0jNYHF8drlAqD2A"
+
+
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 5400
+  route:
+    authentication:
+      path: /auth
+      refresh: /refresh
+
+
+logging:
+  level:
+    com:
+      oembedler:
+        moon:
+          graphql:
+            boot:
+              error: debug
+
+file:
+  #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
+  upload-dir: F:/Users/uploads
+

@@ -1,0 +1,19 @@
+type Unit{
+    id:ID!
+    name: String!
+    address: String
+    linkMen: String
+    phone: String
+    owns: [EQP]
+    maints: [EQP]
+}
+
+
+extend type Query {
+    findAllUnits: [Unit]!
+}
+
+extend type Mutation {
+    newUnit(name: String!, address: String) : Unit!
+}
+

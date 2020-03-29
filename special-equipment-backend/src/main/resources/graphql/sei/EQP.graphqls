@@ -1,0 +1,48 @@
+#给前端看的模型须能在同名POJO实体类中匹配getxxx()方法,注意中文空格和英文不同。
+type EQP{
+    id:ID!
+    cod: String!
+    oid: String
+    type: String!
+    ownerUnt: Unit
+    pos: Address
+    maintUnt: Unit
+    instDate: String
+    factoryNo: String
+    task: [Task]
+    isps: [ISP]
+    #外模型看到的字段和POJO可不同
+    meDoIsp: [ISP]
+    valid: Boolean
+}
+
+
+
+extend type Query {
+    getDevice(id:ID!): EQP
+    getDeviceSelf(id:ID!): EQP
+    findEQPbyCod(cod: String!): EQP
+    #不能用type定义的对象类型来做输入参数，报错to be a GraphQLInputType#
+    findEQPLike(filter: DeviceCommonInput): [EQP]!
+    findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [EQP]!
+    getAllEQP: [EQP]!
+    countAllEQP: Long!
+    countAllEQPsFilter(filter: DeviceCommonInput!): Long!
+    countAllEQPsWhere(where: WhereTree): Long!
+    findAllEQPsFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
+}
+
+extend type Mutation {
+    newEQP(cod: String!, type: String!, oid: String) : EQP!
+    "因为type普通对象直接用于输入参数的话,语义比较模糊,所以graphQL要求另外单独建"
+    setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : EQP!
+    #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。
+    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : EQP
+    testEQPModify(id:ID!, oid: String ): EQP
+    testEQPFindModify(cod:String!, oid: String ): String
+    testEQPStreamModify(cod:String!, oid: String ): String
+    testEQPCriteriaModify(cod:String!, oid: String, type: String): EQP
+    testEQPcreateQueryModify(cod:String!, oid: String ): String
+    invalidateEQP(whichEqp:ID!, reason: String!) : Boolean!
+}
+

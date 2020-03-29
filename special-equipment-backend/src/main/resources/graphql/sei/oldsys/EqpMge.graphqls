@@ -1,0 +1,11 @@
+type EqpMge{
+    id: ID!
+    eQPCOD: String!
+}
+extend type Query {
+    #旧平台实体表应当直接融合掉，这里只提供索引定位功能。
+    findEqpMge(id:ID!):EqpMge
+}
+extend type Mutation {
+}
+

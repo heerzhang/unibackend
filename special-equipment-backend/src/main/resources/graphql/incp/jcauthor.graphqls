@@ -1,0 +1,14 @@
+type JcAuthor{
+    id:ID!
+    nickname: String!
+    books: [JcBook]
+}
+
+
+extend type Query {
+    findAllJcAuthors: [JcAuthor]!
+}
+
+extend type Mutation {
+    newJcAuthor(nickname: String!) : JcAuthor!
+}

@@ -1,0 +1,24 @@
+type Task{
+    id: ID!
+    devs: [EQP]!
+    dep: String
+    date: String
+    status: String
+    #能直接这么屏蔽fee: String
+    isps: [ISP]
+}
+
+extend type Query {
+    findAllTasks: [Task]!
+    countTask(dep: String, status: String):Long
+    findAllTaskFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [Task]!
+}
+
+extend type Mutation {
+    newTask( devs: ID!) : Task!
+    addDeviceToTask(task: ID!, dev: ID!) : Task!
+    dispatchTaskTo(id: ID!,status: String!,dep: String!, date: String!) : Task!
+    buildTask(devs: ID!, dep: String!, date: String!) : Task!
+    cancellationTask(task: ID!, reason: String): Boolean!
+}
+

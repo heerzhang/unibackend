@@ -1,0 +1,16 @@
+type JcBook{
+    id: ID!
+    title: String!
+    isbn: String!
+    author: JcAuthor
+}
+
+
+extend type Query {
+    findAllJcBooks: [JcBook]!
+    countJcBook(author: ID ):Long
+}
+
+extend type Mutation {
+    newJcBook(title: String!, isbn: String!, author: ID!) : JcBook!
+}

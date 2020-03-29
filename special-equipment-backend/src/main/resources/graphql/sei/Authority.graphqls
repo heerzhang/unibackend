@@ -1,0 +1,11 @@
+type Authority{
+    id:ID!
+    "枚举GraphQLEnumType是输入输出都能做"
+    name: String!
+    users: [User]
+}
+
+extend type Query {
+    findAllAuthority: [Authority]!
+}
+

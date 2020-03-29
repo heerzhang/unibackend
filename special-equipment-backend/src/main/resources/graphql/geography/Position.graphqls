@@ -1,0 +1,28 @@
+type Address{
+    id:ID!
+    name: String!
+    lng: String
+    lat: String
+    eqps: [EQP]
+    ad:  Adminunit
+}
+
+type Adminunit{
+    id:ID!
+    prefix: String!
+    areacode: String!
+    zipcode: String
+    adrs: [Address]
+}
+
+extend type Query {
+    findAllPositions: [Address]!
+    countPositionEQP(id: ID ):Long
+}
+
+extend type Mutation {
+    newPosition(name: String!, aduId: ID!, lat: String, lng: String) : Address!
+    initAdminunit(townId: ID!, prefix: String!, areacode: String!, zipcode: String) : Adminunit
+
+}
+

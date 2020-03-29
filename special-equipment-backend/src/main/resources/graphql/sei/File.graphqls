@@ -1,0 +1,13 @@
+type File{
+    id:ID!
+    url: String!
+    creator: User
+    anyoneCanSee: Boolean!
+}
+
+extend type Query {
+}
+
+extend type Mutation {
+}
+
