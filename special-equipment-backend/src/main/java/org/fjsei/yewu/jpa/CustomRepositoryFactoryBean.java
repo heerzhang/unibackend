@@ -2,6 +2,7 @@ package org.fjsei.yewu.jpa;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.data.mapping.context.MappingContext;
@@ -19,7 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
-
+//版本升級特別小心，要跟溯源來的隨源代碼修改，否則可能出問題。2.1.4升級2.2.6就報錯啦！
 //修改的源代码来源是 org.springframework.data/spring-data-jpa-2.1.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactoryBean.java
 //直接替换 org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean。
 //没法继承 JpaRepositoryFactoryBean。
@@ -36,9 +37,9 @@ import java.io.Serializable;
 public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> {
 
-    private @Nullable
-    EntityManager entityManager;
+    private @Nullable EntityManager entityManager;
     private EntityPathResolver entityPathResolver;
+    private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
 
     /**
      * Creates a new {@link org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean} for the given repository interface.
@@ -109,8 +110,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
 
    //修改的：：
-    protected RepositoryFactorySupport createRepositoryFactory(EntityManager em) {
-        return new CustomRepositoryFactory(em);
+    protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
+        CustomRepositoryFactory customRepositoryFactory=new CustomRepositoryFactory(entityManager);
+        customRepositoryFactory.setEscapeCharacter(escapeCharacter);
+        return customRepositoryFactory;
     }
 
 
@@ -126,8 +129,11 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
         super.afterPropertiesSet();
     }
+    //2.2.6版本升級時 增加的
+    public void setEscapeCharacter(char escapeCharacter) {
 
-
+        this.escapeCharacter = EscapeCharacter.of(escapeCharacter);
+    }
 
 
     //新增加：
