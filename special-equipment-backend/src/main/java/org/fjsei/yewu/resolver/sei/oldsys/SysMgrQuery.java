@@ -73,7 +73,7 @@ public class SysMgrQuery implements GraphQLQueryResolver {
          // List<EqpMge> eqps= eqpMgeRepository.findAllByEQPCODIsLike("%958%");
         EqpMge eqp=eqpMgeRepository.findById(id).orElse(null);
 
-        ElevPara elevPara=elevParaRepository.getByEqpcodEquals(eqp.getEQPCOD());
+        ElevPara elevPara=elevParaRepository.getByEqpcodEquals(eqp.getEqpcod());
        // Long build_id= eqp.getBUILD_ID();
         //HouseMge houseMge=houseMgeRepository.getOne(5194L); 不可使用getOne，未加载的实体记录就查不到。
         HouseMge houseMge=houseMgeRepository.findById(eqp.getBUILD_ID()).orElse(null);

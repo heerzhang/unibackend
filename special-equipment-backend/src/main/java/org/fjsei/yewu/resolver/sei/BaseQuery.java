@@ -426,7 +426,7 @@ public class BaseQuery implements GraphQLQueryResolver {
             String cod=report.getIsp().getDev().getCod();
             DeviceSnapshot dss=new DeviceSnapshot();
             dss.setEqpcod(cod);
-            EqpMge eqp=eqpMgeRepository.findByEQPCODEquals(cod);
+            EqpMge eqp=eqpMgeRepository.findByEqpcodEquals(cod);
             ElevPara para=elevParaRepository.getByEqpcodEquals(cod);
             if(eqp==null || para==null)    return report;
             dss.set监察识别码(eqp.getOIDNO());

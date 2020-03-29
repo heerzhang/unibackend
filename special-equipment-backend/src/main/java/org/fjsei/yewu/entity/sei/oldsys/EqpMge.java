@@ -19,8 +19,9 @@ public class EqpMge {
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
     //用JPA高级功能时会报错，JPA Repository规范要求的字段名：必须是小写头的，也不能用_号分割的。字段名尽量连续小写的变量。
+    //最早EQP_COD，改eQPCOD，再次改eqpcod;
     @Column(name = "EQP_COD")
-    private String eQPCOD;
+    private String eqpcod;
     private String OIDNO;
     private String EQP_USECERT_COD;     //'使用证号'
     private String EQP_STATION_COD;     //'设备代码
