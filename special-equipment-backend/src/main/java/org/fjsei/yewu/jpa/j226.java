@@ -18,13 +18,13 @@ import javax.persistence.PersistenceContext;
 
 public class j226 {
     /*
-     * Copyright 2008-2020 the original author or authors.
+     * Copyright 2008-2019 the original author or authors.
      *
      * Licensed under the Apache License, Version 2.0 (the "License");
      * you may not use this file except in compliance with the License.
      * You may obtain a copy of the License at
      *
-     *      https://www.apache.org/licenses/LICENSE-2.0
+     *      http://www.apache.org/licenses/LICENSE-2.0
      *
      * Unless required by applicable law or agreed to in writing, software
      * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,7 +39,6 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
@@ -62,10 +61,8 @@ import org.springframework.util.Assert;
     public class JpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
             extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> {
 
-        private @Nullable
-        EntityManager entityManager;
+        private @Nullable EntityManager entityManager;
         private EntityPathResolver entityPathResolver;
-        private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
 
         /**
          * Creates a new {@link org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean} for the given repository interface.
@@ -125,7 +122,7 @@ import org.springframework.util.Assert;
 
             JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
             jpaRepositoryFactory.setEntityPathResolver(entityPathResolver);
-            jpaRepositoryFactory.setEscapeCharacter(escapeCharacter);
+
             return jpaRepositoryFactory;
         }
 
@@ -139,11 +136,6 @@ import org.springframework.util.Assert;
             Assert.state(entityManager != null, "EntityManager must not be null!");
 
             super.afterPropertiesSet();
-        }
-
-        public void setEscapeCharacter(char escapeCharacter) {
-
-            this.escapeCharacter = EscapeCharacter.of(escapeCharacter);
         }
     }
 
