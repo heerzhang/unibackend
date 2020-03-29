@@ -1,10 +1,17 @@
 package org.fjsei.yewu.entity.sdn;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 //import org.springframework.data.annotation.Id; 不是这个；
 
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="T_EBM_USER")
 public class TEbmUser {
@@ -26,8 +33,8 @@ public class TEbmUser {
 
     //如果不需要根据Address反向级联查询People，可以注释掉
     //双向的1 ：1关系，关系是TSdnEnp类来维护；
-    @OneToOne(mappedBy = "tEbmUser")
-    private TSdnEnp  tSdnEnp;
+    @OneToOne(mappedBy = "tebmuser")
+    private TSdnEnp  tsdnenp;    //JPA版本升級 大小寫敏感 tSdnEnp
 
 
     public Long getUserId() {
@@ -38,13 +45,6 @@ public class TEbmUser {
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
     public String getLoginName() {
         return loginName;
     }

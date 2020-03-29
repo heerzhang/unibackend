@@ -43,7 +43,7 @@ public interface TEbmUserRepository extends JpaRepository<TEbmUser, String>, Jpa
     public int closeManagerAcountOfUnt(@Param("untName") String untName);
 
 //"select a.user_id,b.LOGIN_NAME,a.LKMAN_MOBIL from T_SDN_ENP a,T_EBM_USER b WHERE a.user_id=b.user_id AND b.status=0 AND b.USER_TYPE=1 AND a.unt_name=?"
-    boolean existsByStatusAndUserTypeAndTSdnEnp_UntName(String status, String userType, String untName);
+    boolean existsByStatusAndUserTypeAndTsdnenp_UntName(String status, String userType, String untName);
 
 }
 

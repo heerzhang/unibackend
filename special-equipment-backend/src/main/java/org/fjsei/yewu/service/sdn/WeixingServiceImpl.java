@@ -67,7 +67,7 @@ public class WeixingServiceImpl implements WeixingService {
         WeixingOutput outObj= new WeixingOutput();
         if(topic.UNT_NAME.length()<3 || topic.WC_NUM.length()<3)	return outObj;
 
-        TSdnEnp tSdnEnp=tSdnEnpRepository.findTopByUntNameAndTEbmUser_LoginNameAndStatusNotIn(topic.UNT_NAME,topic.WC_NUM,"3");  //参数名称转换
+        TSdnEnp tSdnEnp=tSdnEnpRepository.findTopByUntNameAndTebmuser_LoginNameAndStatusIsNotLike(topic.UNT_NAME,topic.WC_NUM,"3");  //参数名称转换
         //接口返回该账户已经存在，无需重新绑定； 	b.USER_TYPE=2 AND a.user_id=? AND b.STATUS=1
         //&& tSdnEnp.getTEbmUser().getStatus().equals("0")
         if(tSdnEnp!=null ){
@@ -97,7 +97,7 @@ public class WeixingServiceImpl implements WeixingService {
             //他不是管理员
             //报检平台存在管理员帐户
             //select a.user_id,b.LOGIN_NAME,a.LKMAN_MOBIL from T_SDN_ENP a,T_EBM_USER b WHERE a.user_id=b.user_id AND b.status=0 AND b.USER_TYPE=1 AND a.unt_name=?"
-            if (tEbmUserRepository.existsByStatusAndUserTypeAndTSdnEnp_UntName("0", "1", topic.UNT_NAME)) {
+            if (tEbmUserRepository.existsByStatusAndUserTypeAndTsdnenp_UntName("0", "1", topic.UNT_NAME)) {
                 newUSER_TYPE = "2";
                 //如果存在，直接在报检平台用户表中插入一条待审核的用户记录，
             }else{
@@ -115,7 +115,7 @@ public class WeixingServiceImpl implements WeixingService {
             tEbmUser.setStatus("1");
             tEbmUser.setUserType(newUSER_TYPE);
             TSdnEnp tSdnEnp2=new TSdnEnp();
-            tSdnEnp2.setTEbmUser(tEbmUser);
+            tSdnEnp2.setTebmuser(tEbmUser);
             tSdnEnp2.setUntName(topic.UNT_NAME);
             tSdnEnp2.setStatus("1");
             tSdnEnp2.setUntCod(tbUntMge.getUntId());
@@ -162,16 +162,16 @@ public class WeixingServiceImpl implements WeixingService {
         WeixingOutput outObj= new WeixingOutput();
         if(!topic.STATUS.equals("0") && !topic.STATUS.equals("3"))	return outObj;
    //     TSdnEnp tSdnEnp=tSdnEnpRepository.findByUserId(topic.USER_ID);
-        TSdnEnp tSdnEnp=tSdnEnpRepository.findByTEbmUser_userId(topic.USER_ID);
+        TSdnEnp tSdnEnp=tSdnEnpRepository.findByTebmuser_userId(topic.USER_ID);
         //接口返回该账户已经存在，无需重新绑定； 	b.USER_TYPE=2 AND a.user_id=? AND b.STATUS=1
-        if(tSdnEnp!=null && tSdnEnp.getTEbmUser().getStatus().equals("1") && tSdnEnp.getTEbmUser().getUserType().equals("2")){
+        if(tSdnEnp!=null && tSdnEnp.getTebmuser().getStatus().equals("1") && tSdnEnp.getTebmuser().getUserType().equals("2")){
         }
         else {
             outObj.returnDesc = "没该账户在申请";
             return outObj;
         }
-        tSdnEnp.getTEbmUser().setStatus(topic.STATUS);
-        tSdnEnp.getTEbmUser().setUserType("2");
+        tSdnEnp.getTebmuser().setStatus(topic.STATUS);
+        tSdnEnp.getTebmuser().setUserType("2");
         tSdnEnpRepository.save(tSdnEnp);
         if(topic.STATUS.equals("0")){
             outObj.returnCode="00";

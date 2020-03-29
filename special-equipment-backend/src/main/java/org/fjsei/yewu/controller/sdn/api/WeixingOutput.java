@@ -14,9 +14,9 @@ public class WeixingOutput {
     public WeixingOutput copyDataFromTSdnEnp(TSdnEnp from, String UNT_ID, String UNT_ORG_COD) {
         if(from==null)     return this;
         WeixingUser data=new WeixingUser();
-        data.USER_ID=from.getTEbmUser().getUserId().toString();
-        data.STATUS=from.getTEbmUser().getStatus();
-        data.USER_TYPE=from.getTEbmUser().getUserType();
+        data.USER_ID=from.getTebmuser().getUserId().toString();
+        data.STATUS=from.getTebmuser().getStatus();
+        data.USER_TYPE=from.getTebmuser().getUserType();
        //  data.UNT_ID= UNT_ORG_COD  从检验平台的数据库查
         // outObj.data.add(data);
         data.UNT_ID=UNT_ID;

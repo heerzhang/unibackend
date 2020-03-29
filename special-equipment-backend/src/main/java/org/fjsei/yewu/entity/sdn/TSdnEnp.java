@@ -1,5 +1,9 @@
 package org.fjsei.yewu.entity.sdn;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 ///不能用 import org.springframework.data.annotation.Id;
 
@@ -9,6 +13,9 @@ import javax.persistence.*;
 }) */
 
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="T_Sdn_Enp")
 public class TSdnEnp {
@@ -37,7 +44,7 @@ public class TSdnEnp {
     //1 ：1关系，关系是本类来维护，添加外键指向对方实体表的主键；
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
-    private TEbmUser tEbmUser;
+    private TEbmUser tebmuser;      //tEbmUser
     //[特殊] 反向查询需要：因为对方关联的不是我方的id；
     @Column(name="USER_ID",updatable=false,insertable=false)
     private Long userId;
@@ -50,13 +57,6 @@ public class TSdnEnp {
     this.enpId = enpId;
   }
 
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
     public String getCertSerial() {
         return certSerial;
     }
@@ -130,12 +130,5 @@ public class TSdnEnp {
     this.untName = untName;
   }
 
-  public TEbmUser getTEbmUser() {
-    return tEbmUser;
-  }
-
-  public void setTEbmUser(TEbmUser tEbmUser) {
-    this.tEbmUser = tEbmUser;
-  }
 }
 
