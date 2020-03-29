@@ -5,11 +5,11 @@ type Author {
 }
 
 #schema省略,Query type is presumed to be the query root operation type of the schema像一般对象使用
-type Query {
+extend type Query {
     findAllAuthors: [Author]!
     countAuthors: Long!
 }
 
-type Mutation {
+extend type Mutation {
     newAuthor(firstName: String!, lastName: String!) : Author!
 }

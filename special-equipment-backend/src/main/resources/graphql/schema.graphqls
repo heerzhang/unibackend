@@ -10,9 +10,12 @@ type Query {
     limitedValue(value: Float! @range(min: 0.00, max: 1.00)): Float
 }
 
+#不能重复定义type的;其它Query只能用extend type Query；extend type Mutation之类的。
+
+type Mutation {
+
+}
 
 type Subscription {
   hello: Int
 }
-
-
