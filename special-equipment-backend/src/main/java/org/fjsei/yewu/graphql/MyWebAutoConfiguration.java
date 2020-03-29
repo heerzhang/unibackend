@@ -156,3 +156,13 @@ public class MyWebAutoConfiguration {
 //配置文件"graphql.tools.schema-location-pattern",缺省: "**\/*.graphqls" 的，它来自graphql-kickstart-spring-boot-autoconfigure-tools。
 //标准配置文件"graphql.servlet.xx"  ，它来自 graphql-spring-boot-autoconfigure / GraphQLWebAutoConfiguration。
 //supplier也是是用来创建对象的，但是不同于传统的创建对象语法：new();
+
+/* 早期版本的配置：
+    第一个entity/repository: 在对应的各自*.graphqls配置文件中， type Query / type Mutation不用extend;
+    Bean的装配参数个数不固定，参数类型也不固定。
+    @Bean
+    @Transactional(readOnly = true)
+    public XXQuery  query(AuthorRepository authorRepository, BookRepository bookRepository,) {
+        return new XXQuery(authorRepository, bookRepository,);
+    }
+*/
