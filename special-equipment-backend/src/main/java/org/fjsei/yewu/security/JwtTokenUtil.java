@@ -90,6 +90,7 @@ public class JwtTokenUtil implements Serializable {
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
+        //这里HMAC using SHA-512 base64EncodedSecretKey 做Hash Base64Codec的密码；不支持汉字的;
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(subject)

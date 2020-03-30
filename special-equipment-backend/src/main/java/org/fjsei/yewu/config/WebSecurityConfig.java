@@ -20,6 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 //两地方@Configuration都做WebSecurityConfigurerAdapter报错@Order on WebSecurityConfigurers must be unique. Order of 100 was already used on WebSecurityConfig。
 //加spring-boot-starter-security包注意必须处理，否则都报错；加了这个后 原来报错401变成403。
@@ -71,14 +72,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //从中间拆分解开　middleRegistry；
         //<HttpSecurity>范型 必须加上，否则底下使用的第三个地方可能编译报错。
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry    middleRegistry;
-        // we don't need CSRF because our token is invulnerable无懈可击
+        //we don't need CSRF because our token is invulnerable无懈可击; 由于使用的是JWT，我们这不需csrf
+        //我们这graphql serlet在这前面已经会配设CorsFilter corsConfigurer()了，所以不要加.cors()咯。
         middleRegistry =httpSecurity.csrf().disable()
-                .cors().and()
+                // .cors().and()    //进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // don't create session 无状态的，不需要服务器来维持会话数据。
+                // don't create session 无状态的，不需要服务器来维持会话数据。基于token所以不需session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests();
 
+        //对preflight放行 OPTIONS请求实际上就是preflight(预检请求)。
+        //上面.cors().and()配合graphql.servlet.corsEnabled: true组合下，本条分支配置就不起作用。？好多种的组合配置！！
+        middleRegistry = middleRegistry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+
+        // 所有 / 的所有请求 都放行;
         if(isPermitAnyURL) {
             //若PermitAnyURL=true那么：不登录REST就能随意访问任何接口； 但是graphQL没变化。
             //测试等场合，放开接入控制的。
@@ -92,6 +99,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/forbidden").denyAll();
         }
 
+        //        .antMatchers("/*").permitAll()
+        //        .antMatchers("/u").denyAll()
+        //        .antMatchers("/article/**").permitAll()
+        //        .antMatchers("/v2/api-docs", "/swagger-resources/**","/webjars/**").permitAll() ;
+        //permitAll().antMatchers("/manage/**").hasRole("ADMIN") // 需要相应的角色才能访问
+
+        //除上面外的所有请求全部需要鉴权认证
         middleRegistry.anyRequest().authenticated();
 
         //控制要不要验证权限。
@@ -101,12 +115,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         //看boot自带登录页面.formLogin().loginPage("/login").permitAll();
 
+        // 禁用缓存
+        // httpSecurity.headers().cacheControl();
         // disable page caching
         httpSecurity
                 .headers()
-                .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
+                .frameOptions().sameOrigin()    //required to set for H2 else H2 Console will be blank.
                 .cacheControl();
+
+        //添加未授权处理
+       //   httpSecurity.exceptionHandling().authenticationEntryPoint(getAuthenticationEntryPoint());
+        //权限不足处理
+       //  httpSecurity.exceptionHandling().accessDeniedHandler(getAccessDeniedHandler());
+
     }
+
 
     //订阅消息`ws://localhost:9000/subscriptions`也走这里的。 上面HttpSecurity "/subscriptions/**"不加走不通。
     //静态的文件内容-可以允许那些非授权=没token访问的内容；

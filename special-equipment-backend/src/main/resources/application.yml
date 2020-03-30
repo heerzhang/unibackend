@@ -61,7 +61,7 @@ app:
       password:
 
 
-trace: true
+trace: false
 debug: true
 
 server:
@@ -106,8 +106,7 @@ logging:
 jwt:
   header: Authorization
   expiration: 5400
-  #做Hash的密码
-  secret: 适得府君书都会
+  secret: df1jgV0jh56Oje8DrtOrn9E1df0l0g94ns
 
 unibackend:
   tools:
