@@ -10,43 +10,20 @@ sei:
       list[5]: http://192.168.171.3:3765
       list[6]: https://192.168.1.105:3765
       list[7]: http://192.168.1.105:3765
+      list[8]: http://localhost:3764
+      list[9]: http://192.168.1.105:3764
     maxage: 3600
   visibility:
     #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
     role: USER
   testMode: true
   control:
-    #若PermitAnyURL=true那么：不登录REST就能随意访问，但是graphQL没变化。
-    permitAnyURL: false
+    #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
+    permitAnyURL: true
   cache.log: false
   server.URI: http://192.168.1.105:8673
   cookie:
     domain: 192.168.1.105
-
-
-debug: false
-#底层中间件的，太多了消息。
-trace: false
-#这是后端WEB容器Tomcat端口。
-server:
-  port: 8673
-  ssl:
-    #对https,http的协议切换
-    enabled: false
-    #生成证书的名字
-    key-store: SeiYewu.keystore
-    #密钥库密码
-    key-store-password: 123456
-    key-store-type: JKS
-    key-alias: SeiYewu
-
-  #日志配置，此处使用默认日志
-  #logging:
-  #  config: classpath:log4j2.yml
-#logging:
-#  level:
-#    org.springframework:
-##      web: DEBUG
 
 #数据库连接，屏蔽的可直接加序号改名字==弃用。
 #数据库连接用户schema, 不管底层物理数据库是否集群分布还是云啥的，这里实际是单用户可见的数据库。
@@ -65,8 +42,67 @@ app:
       url: jdbc:h2:tcp://localhost/~/fjtj
       username: sa
       password:
+    #监察数据库。
+    incp:
+      url: jdbc:h2:tcp://localhost/~/incp
+      username: sa
+      password:
 
-# spring
+
+trace: false
+debug: true
+
+server:
+  port: 8673
+  undertow:
+    io-threads: 2
+    worker-threads: 12
+    buffer-size: 512
+    direct-buffers: true
+  ssl:
+    #对https,http的协议切换
+    enabled: false
+    #生成证书的名字
+    key-store: SeiYewu.keystore
+    #密钥库密码
+    key-store-password: 123456
+    key-store-type: JKS
+    key-alias: SeiYewu
+
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+    exception-handlers-enabled: true
+
+logging:
+  file:
+    path: E:\\del\\logs
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR
+    com:
+      oembedler:
+        moon:
+          graphql:
+            boot:
+              error: debug
+
+
+jwt:
+  header: Authorization
+  expiration: 5400
+  #做Hash的密码
+  secret: 适得府君书都会
+
+unibackend:
+  tools:
+    starter-enabled: true
+    third-enabled: true
+    public-enabled: true
+
 spring:
   servlet:
     multipart:
@@ -79,8 +115,6 @@ spring:
   profiles:
     active:
     - product
-
-  #jta相关参数配置
   jta:
     atomikos:
       properties:
@@ -115,7 +149,6 @@ spring:
           use_query_cache: true
     generate-ddl: true
     open-in-view: true
-
   main:
     allow-bean-definition-overriding: true
   mvc:
@@ -124,17 +157,6 @@ spring:
       #suffix: .jsp
   cache:
 
-
-graphql:
-  servlet:
-    mapping: /graphql
-    enabled: true
-    corsEnabled: true
-    exception-handlers-enabled: true
-  tools:
-    #按resources子目录来管理模型加载的graphqls目录不一样，接口就不一样了;
-    schema-location-pattern: "graphql/**/*.graphqls"
-    introspection-enabled: true
 
 graphiql:
   mapping: /graphiql
@@ -158,27 +180,6 @@ graphiql:
   #用这会必然带上Bearer　，但是时间固定,超时,若走cockie模式就不会,而两token也不同的。给mvc浏览器读的。
   #Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU0OTk2MzUyNywiaWF0IjoxNTQ5OTU4MTI3fQ.z96CaGdjhI1OhudZlNTNcJWrRBEETFsliVI0x3_mrqRj2mOjLU0IOV1G3_WEufGMyfJ_MBK0jNYHF8drlAqD2A"
 
-
-jwt:
-  header: Authorization
-  secret: mySecret
-  expiration: 5400
-  route:
-    authentication:
-      path: /auth
-      refresh: /refresh
-
-
-logging:
-  level:
-    com:
-      oembedler:
-        moon:
-          graphql:
-            boot:
-              error: debug
-
 file:
   #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
   upload-dir: F:/Users/uploads
-

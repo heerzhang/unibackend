@@ -80,3 +80,4 @@ compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
             this.codeRegistry = this.codeRegistry.transform(builder -> builder.fieldVisibility(fieldVisibility));
             return this;
         }
+报错extend type Query {} extend type Mutation {}不能允许为空的。

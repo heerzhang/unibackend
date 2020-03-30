@@ -4,10 +4,3 @@ type File{
     creator: User
     anyoneCanSee: Boolean!
 }
-
-extend type Query {
-}
-
-extend type Mutation {
-}
-

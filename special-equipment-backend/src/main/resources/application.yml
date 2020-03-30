@@ -15,15 +15,15 @@ sei:
     maxage: 3600
   visibility:
     #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
-    role: USER
+    role:
   testMode: true
   control:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
-  server.URI: http://192.168.1.105:8673
+  server.URI: http://27.151.117.65:8673
   cookie:
-    domain: 192.168.1.105
+    domain: 27.151.117.65
 
 #数据库连接，屏蔽的可直接加序号改名字==弃用。
 #数据库连接用户schema, 不管底层物理数据库是否集群分布还是云啥的，这里实际是单用户可见的数据库。
@@ -32,24 +32,28 @@ app:
     #源程序中@ConfigurationProperties(prefix="app.datasource.sei")和这里名字要一致。
     #若没有Oracle可用，本机可使用H2数据库测试就行。　可能要修改Hibernate中配置数据库方言设置。
     sei:
-      url: jdbc:h2:tcp://localhost/~/sei2
-      username: sa
-      password:
+      url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
+      username: fjseiinuser
+      password: fjseiuser12345678
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
     #旧平台正式运行的。
     fjtj:
-      url: jdbc:h2:tcp://localhost/~/fjtj
-      username: sa
-      password:
+      url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
+      username: fjseiinuser
+      password: fjseiuser12345678
     #监察数据库。
-    incp:
+    incp6:
       url: jdbc:h2:tcp://localhost/~/incp
       username: sa
       password:
+    sdn7:
+      url: jdbc:h2:tcp://localhost/~/sdn
+      username: sa
+      password:
 
 
-trace: false
+trace: true
 debug: true
 
 server:

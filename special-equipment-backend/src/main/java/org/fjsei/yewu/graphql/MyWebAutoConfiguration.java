@@ -7,6 +7,7 @@ import graphql.kickstart.tools.boot.*;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaDirectiveWiring;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -29,6 +30,7 @@ import java.util.List;
 @ConditionalOnProperty(value = "graphql.servlet.enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter({GraphQLJavaToolsAutoConfiguration.class, JacksonAutoConfiguration.class})
 @EnableConfigurationProperties({GraphQLServletProperties.class,MyGraphQLToolsProperties.class})
+@Slf4j
 public class MyWebAutoConfiguration {
     //@Autowired  private MyGraphQLToolsProperties props;
     @Autowired(required = false)
@@ -57,6 +59,10 @@ public class MyWebAutoConfiguration {
 
         List<String> schemaStrings = schemaStringProvider.schemaStrings();
         schemaStrings.forEach(builder::schemaString);
+        //记录启动日志，跟踪报错，定位schema文本。
+        StringBuffer allSchemaText=new StringBuffer("");
+        schemaStrings.forEach(s -> {allSchemaText.append(s+"\n");});
+        log.info("定位{}的schema整文本:{}", schemaStringProvider.getClass(),allSchemaText);
 
         if (scalars != null) {
             builder.scalars(scalars);

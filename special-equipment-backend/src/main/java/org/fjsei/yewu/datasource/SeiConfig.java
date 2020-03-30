@@ -66,7 +66,7 @@ public class SeiConfig {
             .dataSource(seiDataSource)
             .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model")
             .persistenceUnit("seiPersistenceUnit")
-      //      .properties(getVendorProperties())
+         //.properties(getVendorProperties())　　实际环境Oracle连接特别得慢！　本地H2测试库连接很快。
             .build();
 
         //必须在@EnableJpaRepositories里头注解  "org.fjsei.yewu.entity.sei"
