@@ -124,7 +124,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                     HttpMethod.GET,
                     "/teacher/*", "/graphiql", "/test/*", "/vendor/*","/subscriptions/*"
-                );
+                ).and()
+                   .ignoring()
+                   .antMatchers(
+                           HttpMethod.OPTIONS,
+                           "/graphql/*","/auth"
+                   );
+
          //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
         }
         else {
