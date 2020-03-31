@@ -73,7 +73,9 @@ compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
         /**
          * @param fieldVisibility the field visibility
          * @return this builder
-         * @deprecated use {@link graphql.schema.GraphQLCodeRegistry.Builder#fieldVisibility(graphql.schema.visibility.GraphqlFieldVisibility)} instead
+         * @deprecated use {@link
+         graphql.schema.GraphQLCodeRegistry.Builder#fieldVisibility(graphql.schema.visibility.GraphqlFieldVisibility)
+         } instead
          */
         @Deprecated   graphql/schema/GraphQLSchema. Builder{}
         public Builder fieldVisibility(GraphqlFieldVisibility fieldVisibility) {
@@ -86,3 +88,8 @@ Content-Type: application/json; charset=utf-8
 Cache-Control: no-cache
 
 {   "query": "{hello2(value1:\"sdsR65adaf\") }" }
+  @Bean
+  @ConditionalOnMissingBean
+  public GraphQLSchemaServletProvider graphQLSchemaProvider(GraphQLSchema schema) {
+    return new DefaultGraphQLSchemaServletProvider(schema);
+  }

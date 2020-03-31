@@ -7,6 +7,8 @@ import graphql.kickstart.tools.boot.*;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.SchemaDirectiveWiring;
+import graphql.servlet.config.DefaultGraphQLSchemaServletProvider;
+import graphql.servlet.config.GraphQLSchemaServletProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +23,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 import java.io.IOException;
 import java.util.List;
 
-//配置额外增加的graphql 多个接口。
+//配置额外增加的graphql 多个接口。   参照：graphql-spring-boot-autoconfigure/com/oembedler/moon/graphql/boot/GraphQLWebAutoConfiguration.java
 //全关闭不现实"graphql.servlet.enabled"考虑都是=true。
 
 @Configuration
@@ -156,7 +158,15 @@ public class MyWebAutoConfiguration {
    //@ConditionalOnProperty(value = "graphql.servlet.use-default-objectmapper", havingValue = "true", matchIfMissing = true)
    //public ObjectMapperProvider objectMapperProvider(ObjectMapper objectMapper)
 
+    //为了支持GraphqlFieldVisibility需要加，要定做：
+    @Bean
+    @ConditionalOnMissingBean
+    public GraphQLSchemaServletProvider graphQLSchemaProvider(GraphQLSchema schema) {
+        return new DefaultGraphQLSchemaServletProvider(schema);
+    }
+
 }
+
 
 
 //配置文件"graphql.tools.schema-location-pattern",缺省: "**\/*.graphqls" 的，它来自graphql-kickstart-spring-boot-autoconfigure-tools。

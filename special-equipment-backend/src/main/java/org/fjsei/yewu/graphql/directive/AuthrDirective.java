@@ -62,3 +62,7 @@ public class AuthrDirective implements SchemaDirectiveWiring {
     return field;
   }
 }
+
+
+//Scalar是不可再分的基础数据type;
+//关注graphql概念：field, Object ,Interface ,Scalar ,Union, InputObject ,Argument; 接口方法也算field的。接口方法不能同名的。
