@@ -81,3 +81,8 @@ compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
             return this;
         }
 报错extend type Query {} extend type Mutation {}不能允许为空的。
+POST http://localhost:8673/graphql
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+
+{   "query": "{hello2(value1:\"sdsR65adaf\") }" }

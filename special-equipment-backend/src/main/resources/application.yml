@@ -106,6 +106,7 @@ logging:
 jwt:
   header: Authorization
   expiration: 5400
+  #改口令只能深夜没人使用时刻，等证书过期了才行。
   secret: df1jgV0jh56Oje8DrtOrn9E1df0l0g94ns
 
 unibackend:

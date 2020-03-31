@@ -1,9 +1,6 @@
 package org.fjsei.yewu;
 
 import org.fjsei.yewu.graphql.MyGraphQLToolsProperties;
-import org.fjsei.yewu.graphql.RangeDirective;
-import org.fjsei.yewu.graphql.UppercaseDirective;
-import graphql.kickstart.tools.boot.SchemaDirective;
 import org.fjsei.yewu.model.Author;
 import org.fjsei.yewu.property.FileStorageProperties;
 import org.fjsei.yewu.repository.AuthorRepository;
@@ -40,23 +37,6 @@ public class StartApplication {
     SpringApplication.run(StartApplication.class, args);
   }
 
-  @Bean
-  public SchemaDirective myCustomDirective() {
-    return new SchemaDirective("uppercase", new UppercaseDirective());
-  }
-
-  @Bean
-  public SchemaDirective rangeDirective() {
-    return new SchemaDirective("range", new RangeDirective());
-  }
-
-  /*配置Config方式; GraphQLWebAutoConfiguration会同名冲突。
-  @Bean
-  ServletRegistrationBean graphQLServletRegistrationBean(GraphQLInvocationInputFactory invocationInputFactory,
-                                                         GraphQLQueryInvoker queryInvoker,GraphQLObjectMapper graphQLObjectMapper) {
-    return new ServletRegistrationBean(new SimpleGraphQLHttpServlet(invocationInputFactory,queryInvoker, graphQLObjectMapper, null,true), "/d2gql");
-  }
-  */
 
   //jpa懒加载报异常：session失效,配置文件中加jpa.properties.open-in-view: true;
   @Bean

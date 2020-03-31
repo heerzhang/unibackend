@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-//这个类不能有私有数据=每个请求的不一样的状态不可保留。
+//这个类不能有私有数据=每个请求的不一样的状态不可保留。 OAuth2 规范=>OpenID Connect=>JSON Web Token JWT;
+//目前的计算能力下，可以认为HMAC算法在“挑战/响应”身份认证应用中是安全的。
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -30,9 +31,10 @@ public class JwtTokenUtil implements Serializable {
     static final String CLAIM_KEY_USERNAME = "sub";
     static final String CLAIM_KEY_CREATED = "iat";
     private static final long serialVersionUID = -3301605591108950415L;
-//    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
+    //    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
     private Clock clock = DefaultClock.INSTANCE;
 
+    //配置文件中的密钥(非中文)，若修改了那么客户端必须删除token cookie，否则不可访问或等着证书过期。
     @Value("${jwt.secret}")
     private String secret;
 
@@ -98,6 +100,8 @@ public class JwtTokenUtil implements Serializable {
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS512, secret)
             .compact();
+
+        //算法选择：若是RS512， 签名验签，需提供RSA密钥对文件。
     }
 
     public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
