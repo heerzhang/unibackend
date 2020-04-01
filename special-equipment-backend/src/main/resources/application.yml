@@ -1,6 +1,6 @@
 sei:
   filter:
-    #开启CORS后的对等前端的地址，同源策略，多个域的如何配置？
+    #允许接入cors前端各服务器地址
     origin:
       list[0]: https://27.151.117.65:3765
       list[1]: http://27.151.117.65:3765
@@ -14,7 +14,7 @@ sei:
       list[9]: http://192.168.1.105:3764
     maxage: 3600
   visibility:
-    #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
+    #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
     role:
   testMode: true
   control:

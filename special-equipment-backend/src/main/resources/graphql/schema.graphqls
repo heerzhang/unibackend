@@ -5,7 +5,7 @@ directive @range(
 ) on ARGUMENT_DEFINITION
 
 type Query {
-    hello2(value1: String!): String @uppercase
+    hello2(value: String!): String
     hello: String  @fetch(from : "zhuanyi")
     limitedValue(value: Float! @range(min: 1.0, max: 999.0)): Float @authr(qx:["USER"])
     zhuanyi: String

@@ -1,3 +1,4 @@
-type Query{hello2(value3: String!): String}
-
-
+type Query {
+    hello2(value: String!): String
+    auth: String!
+}

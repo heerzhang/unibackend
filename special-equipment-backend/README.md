@@ -16,3 +16,10 @@ graphql asyncModeEnabled=false
 
 
 @ConditionalOnProperty(value = "graphql.servlet.enabled", havingValue = "true", matchIfMissing = true)
+POST http://localhost:8673/third
+Content-Type: application/json; charset=utf-8
+Cache-Control: no-cache
+
+{   "query": "{hello2(value:\"sdvvsd\") }" }
+
+###

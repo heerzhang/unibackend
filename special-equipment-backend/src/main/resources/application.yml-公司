@@ -1,6 +1,6 @@
 sei:
   filter:
-    #开启CORS后的对等前端的地址，同源策略，多个域的如何配置？
+    #允许接入cors前端各服务器地址
     origin:
       list[0]: https://27.151.117.65:3765
       list[1]: http://27.151.117.65:3765
@@ -14,7 +14,7 @@ sei:
       list[9]: http://192.168.1.105:3764
     maxage: 3600
   visibility:
-    #role: USER =graphql定义文件中没@authr(qx明确指的其他字段或接口将用的角色缺省值,一般来说都务必要设置上！！
+    #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
     role:
   testMode: true
   control:
@@ -31,22 +31,22 @@ app:
   datasource:
     #源程序中@ConfigurationProperties(prefix="app.datasource.sei")和这里名字要一致。
     #若没有Oracle可用，本机可使用H2数据库测试就行。　可能要修改Hibernate中配置数据库方言设置。
-    sei:
+    sei4:
       url: jdbc:h2:tcp://localhost/~/sei2
       username: sa
       password:
-    sei4:
+    sei:
       url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
     #旧平台正式运行的。
-    fjtj4:
+    fjtj:
       url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
-    fjtj:
+    fjtj4:
       url: jdbc:h2:tcp://localhost/~/fjtj
       username: sa
       password:
@@ -61,7 +61,7 @@ app:
       password:
 
 
-trace: true
+trace: false
 debug: true
 
 server:
@@ -106,8 +106,8 @@ logging:
 jwt:
   header: Authorization
   expiration: 5400
-  #做Hash的密码
-  secret: 适得府君书都会
+  #改口令只能深夜没人使用时刻，等证书过期了才行。
+  secret: df1jgV0jh56Oje8DrtOrn9E1df0l0g94ns
 
 unibackend:
   tools:
