@@ -60,6 +60,7 @@ public class MyWebAutoConfiguration {
     @Autowired(required = false)
     private List<SchemaDirectiveWiring> directiveWirings;
 
+    //模型SDL缺省可见性判定角色：ROLE_USER，ROLE_OUTERSYS，若""空代表任意就算未登陆也允许; 每个安全域接口独立设置。
     @Value("${sei.visibility.role:}")
     private   String visibilityDefaultRole="";      //不能用final来修饰？
 
@@ -73,7 +74,7 @@ public class MyWebAutoConfiguration {
 
     //这个原始来源自/tools/boot/GraphQLJavaToolsAutoConfiguration.java
     //[都会用到的]抽取合并功能。
-    private SchemaParser buildSchemaParser(
+    private SchemaParser buildSchemaParser(String defaultRole,
             List<GraphQLResolver<?>> resolvers,
             SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
@@ -106,7 +107,7 @@ public class MyWebAutoConfiguration {
                                     .build();
         //add 可见性过滤；
         //这里注入吧
-        schemaParser.parseSchemaObjects().getCodeRegistryBuilder().fieldVisibility(myGraphqlFieldVisibility());
+        schemaParser.parseSchemaObjects().getCodeRegistryBuilder().fieldVisibility(myGraphqlFieldVisibility(defaultRole));
         return schemaParser;
     }
 
@@ -123,7 +124,7 @@ public class MyWebAutoConfiguration {
     ) throws IOException {
         //和其他的安全域模块接口平行的接入点。　开始初始化的机会。
 
-        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser("ROLE_USER",resolvers, schemaStringProvider, optionsBuilder);
     }
 
     //这个原始来源自/tools/boot/GraphQLJavaToolsAutoConfiguration.java
@@ -164,7 +165,7 @@ public class MyWebAutoConfiguration {
             @Qualifier("publicSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
-        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser("",resolvers, schemaStringProvider, optionsBuilder);
     }
 
     //名字相近的 graphql-java-tools/./com/coxautodev/graphql/tools/SchemaParser.kt;不同./graphql/kickstart/execution/config/GraphQLSchemaProvider
@@ -182,7 +183,7 @@ public class MyWebAutoConfiguration {
             @Qualifier("thirdSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
-        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser("ROLE_OUTERSYS",resolvers, schemaStringProvider, optionsBuilder);
     }
 
    //@ConditionalOnProperty(value = "graphql.servlet.use-default-objectmapper", havingValue = "true", matchIfMissing = true)
@@ -190,90 +191,50 @@ public class MyWebAutoConfiguration {
 
     //为了支持GraphqlFieldVisibility需要加，要定做：
     //仅仅针对graphql主线程的配置，其他安全域接口模块需要额外在servlet的getConfiguration()里面配置。
-    //作废！这个时刻已经初始化完成。
+    //这个时刻已经初始化完成。
     @Bean
     @ConditionalOnMissingBean
     public GraphQLSchemaServletProvider graphQLSchemaProvider(GraphQLSchema schema) {
         return new DefaultGraphQLSchemaServletProvider(schema);
     }
 
+
     //从*.graphqls文件注入角色权限控制机制，给外模型字段添加内省安全能力。
     //安全过滤自定义 directive @authr，因为角色权限而屏蔽给前端看的外模型的字段，返回null,考虑缺省角色以及可能特殊情况的字段。
     //这个是针对接口函数的一次性过滤字段，而不能针对单条数据记录来做细分上的过滤,不会因每一条数据记录都运行到这里。
-    public GraphqlFieldVisibility myGraphqlFieldVisibility() {
+    public GraphqlFieldVisibility myGraphqlFieldVisibility(String defaultRole) {
         return new DefaultGraphqlFieldVisibility() {
+           //String defaultRole
             @Override
             public List<GraphQLFieldDefinition> getFieldDefinitions(GraphQLFieldsContainer fieldsContainer) {
                 //graphiQL的刷新时执行这里，获取每个模型对象的详细字段列表;　一般函数不会执行到这;
                 return fieldsContainer.getFieldDefinitions();
             }
-
+            //一次查询就来4次，中间运行AuthrDirective.onField的登记好大的钩子，+1次，这里过滤优先。
             @Override
             public GraphQLFieldDefinition getFieldDefinition(GraphQLFieldsContainer fieldsContainer, String fieldName) {
+                GraphQLFieldDefinition field =fieldsContainer.getFieldDefinition(fieldName);
+                if(defaultRole.length()==0)  //defaultRole=""代表随意都能访问缺省没有"@authr"注解的字段或方法。
+                    return field;
                 //执行到这时，还处于parseAndValidate堆栈，还没有获取数据呢，无法区分id。　多次调用最后ExecutionStrategy回已经取了子对象authorities数据没有User数据
+                String fieldsContainerName =fieldsContainer.getName();
+                if(fieldsContainerName.equals("Query")) {
+                    if(fieldName.equals("auth") )
+                        return field;
+                }
+                else if(fieldsContainerName.equals("Mutation")) {
+                    if(fieldName.equals("authenticate") || fieldName.equals("logout") || fieldName.equals("newUser"))
+                        return field;
+                }
 
                 Authentication auth= SecurityContextHolder.getContext().getAuthentication();    //当前用户是?
-                Set<SimpleGrantedAuthority> requireRoles= new HashSet<SimpleGrantedAuthority>();
-                GraphQLFieldDefinition field =fieldsContainer.getFieldDefinition(fieldName);
-                if(field!=null) {
-                    FieldDefinition definition = field.getDefinition();     //服务端定义文件的内容
-                    //从graphiQL特殊query IntrospectionQuery{ __schema {queryType { name } 会导致definition空;
-                    if(definition!=null) {
-                        List<Directive> directives = definition.getDirectives();
-                        directives.stream().forEach(item -> {
-                            if (item.getName().equals("authr")) { //自定义访问字段的角色要求，qx参数，角色没有绝对高低的线性关系。
-                                Argument argument = item.getArgument("qx");
-                                List<StringValue> roles = argument.getValue().getChildren();
-                                roles.stream().forEach(role -> {
-                                    requireRoles.add(new SimpleGrantedAuthority("ROLE_" + role.getValue()));    //该字段所要求的角色之一{最少满足一个吧}
-                                    //authr没有明确指出的其他字段采用缺省角色要求。
-                                });
-                            }
-                        });
-                    }
+                if(auth!=null){
+                    Boolean hasRole= auth.getAuthorities().stream().filter(a -> a.getAuthority().equals(defaultRole) )
+                            .count()>0;
+                    return hasRole? field:null;
                 }
-                int fieldRolesCount=requireRoles.size();    //配置文件配好的角色个数
-                if(fieldRolesCount==0) {
-                    if(visibilityDefaultRole.length()>0)
-                        requireRoles.add(new SimpleGrantedAuthority("ROLE_"+visibilityDefaultRole));    //缺省机制
-                }
-
-                boolean isItVisible=true;   //检查看外模型字段或接口方法的可见性/可使用吗。
-                if(requireRoles.size()>0) {
-                    if(auth!=null)
-                        requireRoles.retainAll(auth.getAuthorities());    //集合取交集的，剔除不在后面权限集合里面的。
-                    else{   //未登录的 或正在注销退出
-                        if(visibilityDefaultRole.length()>0)
-                            isItVisible = false;
-                    }
-                }
-
-                if(visibilityDefaultRole.length()>0) {
-                    if (requireRoles.size() == 0)       //剩下是当前用户能匹配到的权限
-                        isItVisible = false;      //不让看了
-                    //添加特殊情况入口处理。没有登录就用的，极少数注册的接口。不经过JWT cockie授权也可访问。
-                    if(!isItVisible){
-                        if(fieldsContainer.getName().equals("Query")) {
-                            if(fieldName.equals("auth") )
-                                isItVisible=true;
-                        }
-                        else if(fieldsContainer.getName().equals("Mutation")) {
-                            if(fieldName.equals("authenticate") || fieldName.equals("logout") || fieldName.equals("newUser"))
-                                isItVisible=true;
-                        }
-                    }
-                }else{      //没有配置字段域或接口缺省角色(多属于测试情形的) ，没登录的带ROLE_ANONYMOUS
-                    if (requireRoles.size() == 0  && fieldRolesCount>0)
-                        isItVisible = false;
-                    //配置文件里visibility.role: =空的+ @authr(qx没注解；==危险咯，这条情景竟可以随意访问了。
-                    //这里可添加特殊情况的处理。
-                }
-                //该地执行非常密集，每一个字段都会来这里。
-                if(isItVisible)
-                    return fieldsContainer.getFieldDefinition(fieldName);   //正常的授权获取的字段可显示。
                 else
-                    return null;    //因为查了没有权限的字段，会导致整个查询都失败的，前端没有取得半点数据了。
-                //throw new BookNotFoundException("没有权限"+fieldsContainer.getName()+"//"+fieldName,(long)0); 这样导致前端没提示的；
+                    return null;
             }
 
         };
