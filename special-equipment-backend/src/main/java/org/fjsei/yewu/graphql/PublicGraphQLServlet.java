@@ -28,6 +28,8 @@ public class PublicGraphQLServlet extends GraphQLHttpServlet {
   @Override
   protected GraphQLConfiguration getConfiguration() {
     try {
+        //schema直接生成with(GraphQLSchema schema = schemaParser.makeExecutableSchema() ) 。
+
         return GraphQLConfiguration.with(schemaParser.makeExecutableSchema()).build();
     } catch (Exception ex) {
       System.out.println("装载*.graphqls配置失败");
