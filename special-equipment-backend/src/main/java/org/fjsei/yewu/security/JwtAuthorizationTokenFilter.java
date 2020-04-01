@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -85,6 +87,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                     return;     //禁止使用的URL
                 }
             }
+
             if(isTestMode) {
                 if (startPath.startsWith("/test/") || startPath.startsWith("/vendor/")
                         || startPath.startsWith("/favicon.ico"))
@@ -120,6 +123,13 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
 
 
+            if("/subscriptions".equals(startPath)) {
+                Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+                if(auth!=null)       logger.info("进入的auth{}",auth.getAuthorities());
+                else    logger.info("进入的auth{没东西}");
+                chain.doFilter(request, response);
+                return;
+            }
             /*Authentication auth= SecurityContextHolder.getContext().getAuthentication();
             if(auth!=null)       logger.info("进入的auth{}",auth.getAuthorities());
             else    logger.info("进入的auth{没东西}");    */

@@ -93,3 +93,4 @@ Cache-Control: no-cache
   public GraphQLSchemaServletProvider graphQLSchemaProvider(GraphQLSchema schema) {
     return new DefaultGraphQLSchemaServletProvider(schema);
   }
+import { WebSocketLink } from 'apollo-link-ws';有加了一层。

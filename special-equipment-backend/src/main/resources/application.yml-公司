@@ -1,52 +1,25 @@
-sei:
-  filter:
-    #允许接入cors前端各服务器地址
-    origin:
-      list[0]: https://27.151.117.65:3765
-      list[1]: http://27.151.117.65:3765
-      list[2]: https://localhost:3765
-      list[3]: http://localhost:3765
-      list[4]: https://192.168.171.3:3765
-      list[5]: http://192.168.171.3:3765
-      list[6]: https://192.168.1.105:3765
-      list[7]: http://192.168.1.105:3765
-      list[8]: http://localhost:3764
-      list[9]: http://192.168.1.105:3764
-    maxage: 3600
-  visibility:
-    #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
-    role:
-  testMode: true
-  control:
-    #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
-    permitAnyURL: true
-  cache.log: false
-  server.URI: http://27.151.117.65:8673
-  cookie:
-    domain: 27.151.117.65
-
 #数据库连接，屏蔽的可直接加序号改名字==弃用。
 #数据库连接用户schema, 不管底层物理数据库是否集群分布还是云啥的，这里实际是单用户可见的数据库。
 app:
   datasource:
     #源程序中@ConfigurationProperties(prefix="app.datasource.sei")和这里名字要一致。
     #若没有Oracle可用，本机可使用H2数据库测试就行。　可能要修改Hibernate中配置数据库方言设置。
-    sei4:
+    sei:
       url: jdbc:h2:tcp://localhost/~/sei2
       username: sa
       password:
-    sei:
+    sei4:
       url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
     #旧平台正式运行的。
-    fjtj:
+    fjtj4:
       url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
-    fjtj4:
+    fjtj:
       url: jdbc:h2:tcp://localhost/~/fjtj
       username: sa
       password:
@@ -106,7 +79,6 @@ logging:
 jwt:
   header: Authorization
   expiration: 5400
-  #改口令只能深夜没人使用时刻，等证书过期了才行。
   secret: df1jgV0jh56Oje8DrtOrn9E1df0l0g94ns
 
 unibackend:
@@ -195,3 +167,33 @@ graphiql:
 file:
   #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
   upload-dir: F:/Users/uploads
+
+sei:
+  visibility:
+    #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
+    role:
+  testMode: false
+  control:
+    #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
+    permitAnyURL: false
+  cache.log: false
+  server.URI: http://27.151.117.65:8673
+  cookie:
+    domain: 27.151.117.65
+  filter:
+    #浏览器用Access-Control-Max-Age
+    maxage: 3600
+    #允许接入cors前端各服务器地址
+    origin:
+      map[https://27.151.117.65:3765]:
+      map[http://27.151.117.65:3765]:
+      map[https://localhost:3765]:
+      map[http://localhost:3765]:
+      map[https://192.168.171.3:3765]:
+      map[http://192.168.171.3:3765]:
+      map[https://192.168.1.105:3765]:
+      map[http://192.168.1.105:3765]:
+      map[http://localhost:3764]:
+      map[http://192.168.1.105:3764]:
+      map[http://localhost:3000]:
+
