@@ -137,16 +137,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         //AuthenticationTokenFilter 不过滤的内容-文件; Spring Security要忽略的部分;
         //非生产的和系统调试用的。 正式生产环境配置=false;
+        //其实isTestMode和PermitAnyURL独立影响。！注意 vendor/* vendor/** vendor/ vendor 区别很大。
         if(isTestMode) {
-           //web.ignoring().antMatchers()不能用多次？。
+           //开启graphiql测试工具
            web.ignoring().antMatchers(
                     HttpMethod.POST,
-                    "/graphiql/*","/subscriptions/*","/auth"
+                    "/subscriptions/*","/auth"
             ).and()
                 .ignoring()
                 .antMatchers(
                     HttpMethod.GET,
-                    "/teacher/*", "/graphiql", "/test/*", "/vendor/*","/subscriptions/*"
+                    "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions/*"
                 ).and()
                    .ignoring()
                    .antMatchers(

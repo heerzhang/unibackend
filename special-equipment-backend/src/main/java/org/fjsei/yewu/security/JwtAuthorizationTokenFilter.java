@@ -57,8 +57,9 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String originHeads = request.getHeader("Origin");
-        if(seiFilterOriginProperties.getList().contains(originHeads) ){
+        if(seiFilterOriginProperties.getMap().containsKey(originHeads)){
             //设置允许跨域的配置允许进行跨域的主机ip（正式上线时可以动态配置具体允许的域名和IP）
+            //不设置就 被此处拦截spring-web/org/springframework/web/filter/CorsFilter.java:90掉。
             response.setHeader("Access-Control-Allow-Origin", originHeads);
         }
         if (request.getMethod().equals("OPTIONS")){     //浏览器自主决定的请求，不是用户决定。

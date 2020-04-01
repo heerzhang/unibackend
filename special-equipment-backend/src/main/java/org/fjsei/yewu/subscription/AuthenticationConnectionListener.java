@@ -26,6 +26,9 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
     Authentication authentication = new UsernamePasswordAuthenticationToken(token, null);
     session.getUserProperties().put("CONNECT_TOKEN", authentication);
     SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    //subscriptions认证 无法通过当前设定安全框架。
+
   }
 }
 
