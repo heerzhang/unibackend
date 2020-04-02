@@ -95,6 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             middleRegistry =middleRegistry.antMatchers("/graphql/**").permitAll()
                     .antMatchers("/public/**").permitAll()
                     .antMatchers("/third/**").permitAll()
+                    .antMatchers("/subscriptions").permitAll()
                     .antMatchers("/subscriptions/**").permitAll()
                     .antMatchers("/forbidden").denyAll();
         }
@@ -106,7 +107,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //permitAll().antMatchers("/manage/**").hasRole("ADMIN") // 需要相应的角色才能访问
 
         //除上面外的所有请求全部需要鉴权认证
+        //TODO: 暂时去掉， subscription搞不定
         middleRegistry.anyRequest().authenticated();
+
 
         //控制要不要验证权限。
         //支持访问http://localhost:8083/voyager 这里并不需要添加路径啊？
@@ -147,7 +150,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers(
                     HttpMethod.GET,
-                    "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions/*"
+                    "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions"
                 ).and()
                    .ignoring()
                    .antMatchers(
@@ -158,10 +161,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
         }
         else {
+            //这条路"/subscriptions"反而更惨，failed to access class MySubscriptionResolver，而另一路是陷入cors缺省值被拦截。
             web.ignoring()
                     .antMatchers(
                             HttpMethod.POST,
                             "/auth"
+                    )
+                    .and()
+                    .ignoring()
+                    .antMatchers(
+                            HttpMethod.GET,
+                            "/subscriptions"
                     );    //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
         }
      //若isTestMode但是isPermitAnyURL=false，没有登录JWTcookies=null的情形，还是无法访问以上资源的。必须!

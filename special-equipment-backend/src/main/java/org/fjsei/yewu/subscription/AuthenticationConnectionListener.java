@@ -24,6 +24,8 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
 
   private static final Logger log = LoggerFactory.getLogger(AuthenticationConnectionListener.class);
   //每个用户请求初始化的；ws://超时之后重新连接也来这里的。
+
+  //首先MyCorsConfig指示CORSfilter过关,然后JwtAuthorizationTokenFilter过一遍,最后才到这里：
   public void onConnect(SubscriptionSession session, OperationMessage message) {
     log.debug("onConnect with payload {}", message.getPayload().getClass());
     //相当于token口令，代表认证账户。

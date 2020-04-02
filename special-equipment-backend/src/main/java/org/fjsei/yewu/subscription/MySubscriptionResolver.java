@@ -21,7 +21,9 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
   private MyPublisher publisher = new MyPublisher();
   //每个新的前端发起的<Subscription　onHelloIncremented { hello }> 请求到这，随后的循环就省略了。
   //前端超时会重新尝试，重新尝试还会再来认证；
-  Publisher<Integer> hello(DataFetchingEnvironment env) {
+  //必须首先AuthenticationConnectionListener当中认证，才可能允许调用。
+  Publisher<Integer> hello(DataFetchingEnvironment env)
+  {
     GraphQLWebSocketContext context = env.getContext();
     Optional<Authentication> authentication = Optional.ofNullable(context.getSession())
         .map(Session::getUserProperties)
