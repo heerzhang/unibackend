@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 //配置额外增加的graphql 多个接口。
 //合并参照这两个来源： graphql-spring-boot-autoconfigure/com/oembedler/moon/graphql/boot/GraphQLWebAutoConfiguration.java
@@ -61,7 +62,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     private List<SchemaDirectiveWiring> directiveWirings;
 
     //模型SDL缺省可见性判定角色：ROLE_USER，ROLE_OUTERSYS，若""空代表任意就算未登陆也允许; 每个安全域接口独立设置。
-    @Value("${sei.visibility.role:''}")
+    @Value("${sei.visibility.role:null}")
     private String visibilityDefaultRole;
 
     //配置正常starter自带的哪一个缺省graphql; 配置unibackend:tools: starter-enabled
@@ -106,8 +107,8 @@ public class GraphQLWebJavaToolsAutoConfiguration {
                                     .resolvers(resolvers)
                                     .build();
         //add 可见性过滤；
-        //这里注入吧
-        schemaParser.parseSchemaObjects().getCodeRegistryBuilder().fieldVisibility(myGraphqlFieldVisibility(defaultRole));
+        //这里注入不行？, 语法分析器，时机不对
+        //schemaParser.parseSchemaObjects().getCodeRegistryBuilder().fieldVisibility(myGraphqlFieldVisibility()).build().;
         return schemaParser;
     }
 
@@ -139,7 +140,16 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     @ConditionalOnProperty(value = "unibackend.tools.starter-enabled", havingValue = "true", matchIfMissing = true)
     public GraphQLSchema graphQLSchema(@Qualifier("schemaParser") SchemaParser schemaParser) {
         //和其他的安全域模块接口平行的接入点。　倒数第二次机会。
-        return schemaParser.makeExecutableSchema();
+        GraphQLSchema   schema=schemaParser.makeExecutableSchema();
+        //若在buildSchemaParser阶段就将myGraphqlFieldVisibility加入，没经过makeExecutableSchema，后果是subscription方法有reflectasm报反射数据入口失败。
+
+        //    GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry().fieldVisibility(myGraphqlFieldVisibility()).build();
+        //    Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
+        //新版本API有毛病，旧版本API反而正常的。
+        Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.fieldVisibility(myGraphqlFieldVisibility(visibilityDefaultRole));
+        GraphQLSchema   schemaNew= schema.transform(builderConsumer);
+        return schemaNew;
+        //graphql.AssertException: There must be a type resolver for interface Person
     }
 
     /*
@@ -211,6 +221,8 @@ public class GraphQLWebJavaToolsAutoConfiguration {
             //这里安全控制机制只能当作基础门槛，控制力度比较弱的。要强的就要SDL注解，Java注解，代码层次个别判定。
             @Override
             public GraphQLFieldDefinition getFieldDefinition(GraphQLFieldsContainer fieldsContainer, String fieldName) {
+                if(true)
+                    return fieldsContainer.getFieldDefinition(fieldName);
                 GraphQLFieldDefinition field =fieldsContainer.getFieldDefinition(fieldName);
                 //@authr注解的不受这里影响，两个机制都起作用；defaultRole是没有@authr注解的任何字段方法的权限要求。
                 if(defaultRole==null)   //defaultRole=""代表随意都能访问缺省没有"@authr"注解的字段或方法。

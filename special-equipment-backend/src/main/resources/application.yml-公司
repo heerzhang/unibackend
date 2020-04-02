@@ -95,7 +95,7 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
   application:
-    name: fjtj
+    name: unibackend
   profiles:
     active:
     - product
@@ -143,14 +143,14 @@ spring:
 
 
 graphiql:
+  #生产系统的graphiql必需要关闭！
+  enabled: true
   mapping: /graphiql
   endpoint:
     graphql: /graphql
     subscriptions: /forbidden
   static:
     basePath: /
-    #生产系统graphiql可关闭
-  enabled: true
   pageTitle: GraphiQL
   cdn:
     enabled: false
@@ -161,7 +161,7 @@ graphiql:
     variables:
       editorTheme: "solarized light"
   headers:
-  #用这会必然带上Bearer　，但是时间固定,超时,若走cockie模式就不会,而两token也不同的。给mvc浏览器读的。
+  #用这会必然带上Bearer　，但是时间固定,超时,若走cockie模式就不会,而两token也不同的。graphiql浏览器读的。
   #Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU0OTk2MzUyNywiaWF0IjoxNTQ5OTU4MTI3fQ.z96CaGdjhI1OhudZlNTNcJWrRBEETFsliVI0x3_mrqRj2mOjLU0IOV1G3_WEufGMyfJ_MBK0jNYHF8drlAqD2A"
 
 file:
@@ -172,14 +172,14 @@ sei:
   visibility:
     #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
     role:
-  testMode: false
+  testMode: true
   control:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
-    permitAnyURL: false
+    permitAnyURL: true
   cache.log: false
-  server.URI: http://27.151.117.65:8673
+  server.URI: http://192.168.1.105:8673
   cookie:
-    domain: 27.151.117.65
+    domain: 192.168.1.105
   filter:
     #浏览器用Access-Control-Max-Age
     maxage: 3600

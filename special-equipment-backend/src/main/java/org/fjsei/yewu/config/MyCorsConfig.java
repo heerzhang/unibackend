@@ -7,7 +7,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-//@Configuration
+@Configuration
 public class MyCorsConfig {
 /* @Bean 名字同名，名字不能乱用 corsFilter()就报错了
 org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'corsFilter' is expected to be of type 'org.springframework.web.filter.CorsFilter' but was actually of type 'org.springframework.boot.web.servlet.FilterRegistrationBean'
@@ -21,6 +21,7 @@ org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'co
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://192.168.1.105:3000");
         config.addAllowedOrigin("http://localhost:3765");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
@@ -30,5 +31,7 @@ org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'co
 
         //不起做了！！
     }
+
+    //为何ws//程序会进入 org/springframework/web/cors/DefaultCorsProcessor.java:84，两种协议CORS处理流程还不一样。http/和ws:/的。
 }
 

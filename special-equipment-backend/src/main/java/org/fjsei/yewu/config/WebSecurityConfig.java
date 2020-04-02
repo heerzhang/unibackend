@@ -74,6 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry    middleRegistry;
         //we don't need CSRF because our token is invulnerable无懈可击; 由于使用的是JWT，我们这不需csrf
         //我们这graphql serlet在这前面已经会配设CorsFilter corsConfigurer()了，所以不要加.cors()咯。
+        //http:/该加上.cors().and()
+
         middleRegistry =httpSecurity.csrf().disable()
                 .cors().and()    //进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

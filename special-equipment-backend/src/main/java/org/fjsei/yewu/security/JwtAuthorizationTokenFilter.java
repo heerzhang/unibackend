@@ -124,7 +124,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
 
             if("/subscriptions".equals(startPath)) {
-                authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTgwNTEzNCwiaWF0IjoxNTg1Nzk5NzM0fQ.vifNkbP9cTMNq2JZZbDVTefV5yk0W16rfZr6SjHC6_YtKYjyZOtKm1cMze2WXONEhq-273uYDpP7RlHMm29PHw";
+                authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
                 jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
 
                 Authentication auth= SecurityContextHolder.getContext().getAuthentication();
