@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //http:/该加上.cors().and()
 
         middleRegistry =httpSecurity.csrf().disable()
-                .cors().and()    //进入另外一种模式，缺省机制发挥作用。
+              //  .cors().and()    //进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // don't create session 无状态的，不需要服务器来维持会话数据。基于token所以不需session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -157,7 +157,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                    .ignoring()
                    .antMatchers(
                            HttpMethod.OPTIONS,
-                           "/graphql/*","/auth"
+                           "/graphql","/auth"
                    );
 
          //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
