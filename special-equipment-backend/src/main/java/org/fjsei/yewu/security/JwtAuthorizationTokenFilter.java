@@ -125,7 +125,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
             if("/subscriptions".equals(startPath)) {
                 authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
-                jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
+            //jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
 
                 Authentication auth= SecurityContextHolder.getContext().getAuthentication();
                 if(auth!=null)       logger.info("进入的auth{}",auth.getAuthorities());

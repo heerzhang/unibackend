@@ -1,6 +1,8 @@
 package org.fjsei.yewu.graphql;
 
 import graphql.kickstart.tools.*;
+import graphql.schema.GraphQLCodeRegistry;
+import graphql.schema.GraphQLSchema;
 import graphql.servlet.GraphQLConfiguration;
 import graphql.servlet.GraphQLHttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
+import java.util.function.Consumer;
 
 //配置额外增加的graphql 多个接口。
 
@@ -28,9 +31,12 @@ public class PublicGraphQLServlet extends GraphQLHttpServlet {
   @Override
   protected GraphQLConfiguration getConfiguration() {
     try {
-        //schema直接生成with(GraphQLSchema schema = schemaParser.makeExecutableSchema() ) 。
-
-        return GraphQLConfiguration.with(schemaParser.makeExecutableSchema()).build();
+        GraphQLSchema schema=schemaParser.makeExecutableSchema();
+        GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
+                .fieldVisibility(new MyGraphqlFieldVisibility(null))
+                .build();
+        Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
+        return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();
     } catch (Exception ex) {
       System.out.println("装载*.graphqls配置失败");
       return null;

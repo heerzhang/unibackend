@@ -8,10 +8,7 @@ import graphql.language.Argument;
 import graphql.language.Directive;
 import graphql.language.FieldDefinition;
 import graphql.language.StringValue;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLFieldsContainer;
-import graphql.schema.GraphQLScalarType;
-import graphql.schema.GraphQLSchema;
+import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.visibility.DefaultGraphqlFieldVisibility;
 import graphql.schema.visibility.GraphqlFieldVisibility;
@@ -75,8 +72,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
 
     //这个原始来源自/tools/boot/GraphQLJavaToolsAutoConfiguration.java
     //[都会用到的]抽取合并功能。
-    private SchemaParser buildSchemaParser(String defaultRole,
-            List<GraphQLResolver<?>> resolvers,
+    private SchemaParser buildSchemaParser( List<GraphQLResolver<?>> resolvers,
             SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
@@ -124,12 +120,11 @@ public class GraphQLWebJavaToolsAutoConfiguration {
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
         //和其他的安全域模块接口平行的接入点。　开始初始化的机会。
-        return buildSchemaParser(visibilityDefaultRole.length()==0? null:visibilityDefaultRole,
-                                  resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
     }
 
     //这个原始来源自/tools/boot/GraphQLJavaToolsAutoConfiguration.java
-    //配置正常starter自带的哪一个缺省graphql;
+    //配置正常starter自带的哪一个缺省graphql;  其他的额外graphql接口、安全域模块在各自主文件xxGraphQLServlet配置。
     // 新add??　原是　来自tools模块GraphQLJavaToolsAutoConfiguration。
     // @ConditionalOnMissingBean({GraphQLSchema.class, GraphQLSchemaProvider.class})
     // GraphQLSchema graphQLSchema(@Qualifier("publicSchemaParser") SchemaParser schemaParser)
@@ -142,14 +137,12 @@ public class GraphQLWebJavaToolsAutoConfiguration {
         //和其他的安全域模块接口平行的接入点。　倒数第二次机会。
         GraphQLSchema   schema=schemaParser.makeExecutableSchema();
         //若在buildSchemaParser阶段就将myGraphqlFieldVisibility加入，没经过makeExecutableSchema，后果是subscription方法有reflectasm报反射数据入口失败。
-
-        //    GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry().fieldVisibility(myGraphqlFieldVisibility()).build();
-        //    Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
-        //新版本API有毛病，旧版本API反而正常的。
-        Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.fieldVisibility(myGraphqlFieldVisibility(visibilityDefaultRole));
-        GraphQLSchema   schemaNew= schema.transform(builderConsumer);
-        return schemaNew;
-        //graphql.AssertException: There must be a type resolver for interface Person
+        //新版本API使用方法有毛病，导致字段方法竟然没挂接到处理函数。
+        GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
+                                 .fieldVisibility(new MyGraphqlFieldVisibility(visibilityDefaultRole))
+                                    .build();
+        Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
+        return schema.transform(builderConsumer);
     }
 
     /*
@@ -174,7 +167,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
             @Qualifier("publicSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
-        return buildSchemaParser(null,resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
     }
 
     //名字相近的 graphql-java-tools/./com/coxautodev/graphql/tools/SchemaParser.kt;不同./graphql/kickstart/execution/config/GraphQLSchemaProvider
@@ -192,7 +185,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
             @Qualifier("thirdSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
-        return buildSchemaParser("ROLE_OUTERSYS",resolvers, schemaStringProvider, optionsBuilder);
+        return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);
     }
 
    //@ConditionalOnProperty(value = "graphql.servlet.use-default-objectmapper", havingValue = "true", matchIfMissing = true)
@@ -205,50 +198,6 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     @ConditionalOnMissingBean
     public GraphQLSchemaServletProvider graphQLSchemaProvider(GraphQLSchema schema) {
         return new DefaultGraphQLSchemaServletProvider(schema);
-    }
-
-    //从*.graphqls文件注入角色权限控制机制，给外模型字段添加内省安全能力。
-    //安全过滤自定义 directive @authr，因为角色权限而屏蔽给前端看的外模型的字段，返回null,考虑缺省角色以及可能特殊情况的字段。
-    //这个是针对接口函数的一次性过滤字段，而不能针对单条数据记录来做细分上的过滤,不会因每一条数据记录都运行到这里。
-    public GraphqlFieldVisibility myGraphqlFieldVisibility(String defaultRole) {
-        return new DefaultGraphqlFieldVisibility() {
-            @Override
-            public List<GraphQLFieldDefinition> getFieldDefinitions(GraphQLFieldsContainer fieldsContainer) {
-                //graphiQL的刷新时执行这里，获取每个模型对象的详细字段列表;　一般函数不会执行到这;
-                return fieldsContainer.getFieldDefinitions();
-            }
-            //一次查询就来4次，中间运行AuthrDirective.onField的登记好大的钩子，+1次，这里过滤优先。
-            //这里安全控制机制只能当作基础门槛，控制力度比较弱的。要强的就要SDL注解，Java注解，代码层次个别判定。
-            @Override
-            public GraphQLFieldDefinition getFieldDefinition(GraphQLFieldsContainer fieldsContainer, String fieldName) {
-                if(true)
-                    return fieldsContainer.getFieldDefinition(fieldName);
-                GraphQLFieldDefinition field =fieldsContainer.getFieldDefinition(fieldName);
-                //@authr注解的不受这里影响，两个机制都起作用；defaultRole是没有@authr注解的任何字段方法的权限要求。
-                if(defaultRole==null)   //defaultRole=""代表随意都能访问缺省没有"@authr"注解的字段或方法。
-                    return field;
-                //执行到这时，还处于parseAndValidate堆栈，还没有获取数据呢，无法区分id。　多次调用最后ExecutionStrategy回已经取了子对象authorities数据没有User数据
-                String fieldsContainerName =fieldsContainer.getName();
-                if(fieldsContainerName.equals("Query")) {
-                    if(fieldName.equals("auth") )
-                        return field;
-                }
-                else if(fieldsContainerName.equals("Mutation")) {
-                    //特殊接口可直通
-                    if(fieldName.equals("authenticate") || fieldName.equals("logout") || fieldName.equals("newUser"))
-                        return field;
-                }
-                //当前用户权限。
-                Authentication auth= SecurityContextHolder.getContext().getAuthentication();
-                if(auth!=null){
-                    Boolean hasRole= auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(defaultRole) );
-                    return hasRole? field:null;
-                }
-                else
-                    return null;   //意味着屏蔽该字段或接口函数。
-            }
-
-        };
     }
 
 }

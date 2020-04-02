@@ -15,6 +15,8 @@ org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'co
 
     //实际比　ＪＷＴｘｘｘ验证提前了！
     //todo: ? 两个地方都作了ＣＯＲＳ？？
+    //subscription正常了 http3765原前端却被cors拦截。 相反机制作用？两者对着干。
+
     @Bean
     public FilterRegistrationBean  myAddcorsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
