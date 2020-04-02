@@ -75,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //we don't need CSRF because our token is invulnerable无懈可击; 由于使用的是JWT，我们这不需csrf
         //我们这graphql serlet在这前面已经会配设CorsFilter corsConfigurer()了，所以不要加.cors()咯。
         middleRegistry =httpSecurity.csrf().disable()
-                // .cors().and()    //进入另外一种模式，缺省机制发挥作用。
+                .cors().and()    //进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // don't create session 无状态的，不需要服务器来维持会话数据。基于token所以不需session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
