@@ -10,7 +10,7 @@ sei:
       list[5]: http://192.168.171.3:3765
       list[6]: https://192.168.1.105:3765
       list[7]: http://192.168.1.105:3765
-      list[8]: http://localhost:3764
+      list[8]: http://localhost:3000
       list[9]: http://192.168.1.105:3764
     maxage: 3600
   visibility:
@@ -21,9 +21,9 @@ sei:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
-  server.URI: http://192.168.1.105:8673
+  server.URI: http://27.151.117.65:8673
   cookie:
-    domain: 192.168.1.105
+    domain: 27.151.117.65
 
 #数据库连接，屏蔽的可直接加序号改名字==弃用。
 #数据库连接用户schema, 不管底层物理数据库是否集群分布还是云啥的，这里实际是单用户可见的数据库。
