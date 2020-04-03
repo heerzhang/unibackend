@@ -31,18 +31,19 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
     //相当于token口令，代表认证账户。
     String token = ((Map<String, String>) message.getPayload()).get("authToken");
     log.info("Token: {}", token);
-
-    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("herzhang");
+    //挂token名
+    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( token );
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
- //   authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(null));
-    //SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+    //  authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(null));
+    //  SecurityContextHolder.getContext().setAuthentication(authentication);
 
    // Authentication authentication = new UsernamePasswordAuthenticationToken(token, null);
+
     session.getUserProperties().put("CONNECT_TOKEN", authentication);
+    //保存CONNECT_TOKEN起来再在Publisher<Integer> hello(DataFetchingEnvironment env)把身份信息取得。？？
     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //subscriptions认证 无法通过当前设定安全框架。
-
   }
 }
 

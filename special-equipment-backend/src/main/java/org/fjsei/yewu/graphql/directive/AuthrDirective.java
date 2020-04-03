@@ -43,17 +43,15 @@ public class AuthrDirective implements SchemaDirectiveWiring {
             .permitDataFetcher(originalFetcher, ((dataFetchingEnvironment, value) -> {
                 Authentication auth= SecurityContextHolder.getContext().getAuthentication();    //当前用户是
                 if(auth!=null) {
-                    auth.getAuthorities();
-                    requireRoles.retainAll(auth.getAuthorities());
-                    if (requireRoles.size() == 0)   //剩下是当前用户能匹配到的权限
+                    Set<SimpleGrantedAuthority>  权限= new HashSet<SimpleGrantedAuthority>();
+                    权限.addAll(requireRoles);
+                    权限.retainAll(auth.getAuthorities());
+                    if(权限.size() == 0)   //剩下是当前用户能匹配到的权限
                     {
-                        throw new IllegalArgumentException(
-                                String.format("没有权限:针对%s", graphQLFieldDefinition.getName())
-                        );
+                        throw new IllegalArgumentException(String.format("没有权限:针对%s", graphQLFieldDefinition.getName()));
                     }
                 }
-                else{   //未登录的
-                }
+                //未登录的也会有auth!
           return value;
         }));
 

@@ -23,6 +23,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 class MyPublisher implements Publisher<Integer> {
 
   private static final Logger log = LoggerFactory.getLogger(MyPublisher.class);
+  //用Flux做的例子　https://github.com/graphql-java-kickstart/graphql-spring-boot/tree/master/example-graphql-subscription
   //很多客户等待中的。激活客户端列表；
   private final List<MySubscription> subscriptions = Collections.synchronizedList(new ArrayList<>());
   private final CompletableFuture<Void> terminated = new CompletableFuture<>();
