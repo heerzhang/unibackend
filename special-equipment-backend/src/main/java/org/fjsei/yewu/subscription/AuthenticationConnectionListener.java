@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import java.util.Map;
 
-//首先要过WebSecurityConfigurerAdapter验证，然后才来这里的。
+//首先要过WebSecurityConfigurerAdapter验证，然后才来这里的。Http与websocket是两个完全不同的协议，两者唯一联系是WebSocket利用Http进行握手；
 
 @Component
 class AuthenticationConnectionListener implements ApolloSubscriptionConnectionListener {

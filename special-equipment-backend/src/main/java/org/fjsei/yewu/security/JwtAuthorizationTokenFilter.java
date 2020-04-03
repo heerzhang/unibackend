@@ -76,7 +76,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             return;
         }else {
             String startPath =request.getServletPath();
-            if("GET".equals(request.getMethod()) && "/forbidden".equals(startPath)) {
+            String method=request.getMethod();
+            if("GET".equals(method) && "/forbidden".equals(startPath)) {
                 //response.setContentType("text/html;charset=utf-8");  getMethod()
                 if(originHeads.equals(serverURI))
                 {

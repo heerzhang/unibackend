@@ -177,9 +177,9 @@ sei:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
-  server.URI: http://27.151.117.65:8673
+  server.URI: http://192.168.1.105:8673
   cookie:
-    domain: 27.151.117.65
+    domain: 192.168.1.105
   filter:
     #浏览器用Access-Control-Max-Age
     maxage: 3600
