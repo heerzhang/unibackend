@@ -139,7 +139,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
         //若在buildSchemaParser阶段就将myGraphqlFieldVisibility加入，没经过makeExecutableSchema，后果是subscription方法有reflectasm报反射数据入口失败。
         //新版本API使用方法有毛病，导致字段方法竟然没挂接到处理函数。
         GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
-                                 .fieldVisibility(new MyGraphqlFieldVisibility(visibilityDefaultRole))
+                              .fieldVisibility(new MyGraphqlFieldVisibility(visibilityDefaultRole.length()==0? null:visibilityDefaultRole))
                                     .build();
         Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
         return schema.transform(builderConsumer);
