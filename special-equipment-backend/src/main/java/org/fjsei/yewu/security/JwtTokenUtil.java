@@ -191,6 +191,9 @@ public class JwtTokenUtil implements Serializable {
                         && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
         );
     }
+    /*
+    将jwt放到Cookie中反给用户并且使用HttpOnly属性来防止Cookie被JavaScript读取,并且设置一个过期时间来保证安全;
+    */
     //时间快到了，重新发放证书
     private void timeArrivedRegenerateToken(UserDetails userDetails, HttpServletRequest request, HttpServletResponse response) {
         String token = generateToken(userDetails);     //jwtTokenUtil.validateToken(authToken, userDetails)

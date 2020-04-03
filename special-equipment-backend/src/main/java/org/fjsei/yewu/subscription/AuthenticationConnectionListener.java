@@ -26,11 +26,13 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
   //每个用户请求初始化的；ws://超时之后重新连接也来这里的。
 
   //首先MyCorsConfig指示CORSfilter过关,然后JwtAuthorizationTokenFilter过一遍,最后才到这里：
+  //前面处理还没结束，同一个客户无法再次连接到这里来的。
   public void onConnect(SubscriptionSession session, OperationMessage message) {
     log.debug("onConnect with payload {}", message.getPayload().getClass());
     //相当于token口令，代表认证账户。
     String token = ((Map<String, String>) message.getPayload()).get("authToken");
     log.info("Token: {}", token);
+    //WebSocket认证特别，让Http认证过后，格外申请个一次性token并且特别用途目的coockieToken,让JS可以读取。
     //挂token名
     UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( token );
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
