@@ -24,6 +24,7 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
   //必须首先AuthenticationConnectionListener当中认证，才可能允许调用。
   Publisher<Integer> hello(DataFetchingEnvironment env)
   {
+    //到这这一步，ws:/握手已经结束，开始发送正常业务数据。
     GraphQLWebSocketContext context = env.getContext();
     Optional<Authentication> authentication = Optional.ofNullable(context.getSession())
         .map(Session::getUserProperties)

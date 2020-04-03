@@ -66,7 +66,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
         if (request.getMethod().equals("OPTIONS")){     //浏览器自主决定的请求，不是用户决定。
             logger.debug("浏览器的预请求的处理..");
-            //response.setHeader("Access-Control-Allow-Origin",filterOrigin);
+            //这一步只有http初始化可能发生也是时间过期了才有。　而ws://没有走到这里。
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
             response.setHeader("Access-Control-Max-Age", filterMaxage);

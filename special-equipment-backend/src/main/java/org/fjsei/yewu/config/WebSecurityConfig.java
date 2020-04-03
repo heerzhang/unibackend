@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //http:/该加上.cors().and()
 
         middleRegistry =httpSecurity.csrf().disable()
-              //  .cors().and()    //进入另外一种模式，缺省机制发挥作用。
+                //.cors().and()    //加了就进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // don't create session 无状态的，不需要服务器来维持会话数据。基于token所以不需session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -85,6 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //对preflight放行 OPTIONS请求实际上就是preflight(预检请求)。
         //上面.cors().and()配合graphql.servlet.corsEnabled: true组合下，本条分支配置就不起作用。？好多种的组合配置！！
+        //预检PreFlightRequest就是　OPTIONS的。
         middleRegistry = middleRegistry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
 
         // 所有 / 的所有请求 都放行;
@@ -109,9 +110,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //permitAll().antMatchers("/manage/**").hasRole("ADMIN") // 需要相应的角色才能访问
 
         //除上面外的所有请求全部需要鉴权认证
-        //TODO: 暂时去掉， subscription搞不定
         middleRegistry.anyRequest().authenticated();
-
 
         //控制要不要验证权限。
         //支持访问http://localhost:8083/voyager 这里并不需要添加路径啊？
