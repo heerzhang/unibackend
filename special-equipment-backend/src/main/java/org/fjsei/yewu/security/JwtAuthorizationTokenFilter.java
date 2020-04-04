@@ -66,7 +66,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
         if (request.getMethod().equals("OPTIONS")){     //浏览器自主决定的请求，不是用户决定。
             logger.debug("浏览器的预请求的处理..");
-            //这一步只有http初始化可能发生也是时间过期了才有。　而ws://没有走到这里。
+            //这一步只有http初始化可能发生也是时间过期了才有。　而ws://都没有走到这里。
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
             response.setHeader("Access-Control-Max-Age", filterMaxage);
@@ -114,6 +114,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
             else {    //没有Authorization: Bearer开头;
                 //为何点内部链接就不行，非但刷新才可以走Bearer　那个逻辑呢？，只有Cookie: token= 没有authorization:
+                //調試這位置，只有運行request.getCookies()后，request才有cookie；这块是实时交互式的读取浏览器的数据？不是浏览器发送请求包已经就带的数据。
                 Cookie[] cookies=request.getCookies();
                 if(cookies!=null) {
                     Cookie tokenCook = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("token")).findFirst().orElse(null);

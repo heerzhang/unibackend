@@ -98,8 +98,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             middleRegistry =middleRegistry.antMatchers("/graphql/**").permitAll()
                     .antMatchers("/public/**").permitAll()
                     .antMatchers("/third/**").permitAll()
-                    .antMatchers("/subscriptions").permitAll()
-                    .antMatchers("/subscriptions/**").permitAll()
+                   // .antMatchers("/subscriptions").permitAll()   真攔截住了！
+                   // .antMatchers("/subscriptions/**").permitAll()
                     .antMatchers("/forbidden").denyAll();
         }
 
@@ -173,7 +173,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(
                             HttpMethod.GET,
                             "/subscriptions"
-                    );    //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
+                    );
+
+
+            //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
         }
      //若isTestMode但是isPermitAnyURL=false，没有登录JWTcookies=null的情形，还是无法访问以上资源的。必须!
     }

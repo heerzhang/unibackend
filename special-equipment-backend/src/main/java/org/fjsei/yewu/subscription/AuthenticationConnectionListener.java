@@ -34,7 +34,7 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
     log.info("Token: {}", token);
     //WebSocket认证特别，让Http认证过后，格外申请个一次性token并且特别用途目的coockieToken,让JS可以读取。
     //挂token名
-    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( token );
+    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( "herzhang" );
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
 
