@@ -38,6 +38,8 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
     authentication.ifPresent(SecurityContextHolder.getContext()::setAuthentication);
     log.info("Security context principal: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     //后；发布开始。
+    if(true)
+      return null;
     return publisher;
   }
 

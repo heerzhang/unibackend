@@ -66,7 +66,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    //WebSecurity是上层较粗的会忽略那些的。反而HttpSecurity下层细节属于更加精细更消耗计算量的进一步深度控制，WebSecurity话语权优先。
+    //假如WebSecurity.ignoring().antMatchers("/subscriptions"，那么HttpSecurity.antMatchers("/subscriptions").permitAll()就没有必要添加。
+    //订阅消息`ws://localhost:9000/subscriptions`也走这里的。 上面HttpSecurity "/subscriptions/**"不加走不通。
+    //静态的文件内容-可以允许那些非授权=没token访问的内容；
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //AuthenticationTokenFilter 不过滤的内容-文件; Spring Security要忽略的部分;
+        //非生产的和系统调试用的。 正式生产环境配置=false;
+        //其实isTestMode和PermitAnyURL独立影响。！注意 vendor/* vendor/** vendor/ vendor 区别很大。
+        if(isTestMode) {
+            //开启graphiql测试工具
+            web.ignoring().antMatchers(
+                    HttpMethod.POST,
+                    "/subscriptions/*","/auth"
+            ).and()
+                    .ignoring()
+                    .antMatchers(
+                            HttpMethod.GET,
+                            "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions"
+                    ).and()
+                    .ignoring()
+                    .antMatchers(
+                            HttpMethod.OPTIONS,
+                            "/graphql","/auth"
+                    );
 
+            //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
+        }
+        else {
+            //这条路"/subscriptions"反而更惨，failed to access class MySubscriptionResolver，而另一路是陷入cors缺省值被拦截。
+            web.ignoring()
+                    .antMatchers(
+                            HttpMethod.POST,
+                            "/auth"
+                    )
+                    .and()
+                    .ignoring()
+                    .antMatchers(
+                            HttpMethod.GET,
+                            "/subscriptions"
+                    );
+
+
+            //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
+        }
+        //若isTestMode但是isPermitAnyURL=false，没有登录JWTcookies=null的情形，还是无法访问以上资源的。必须!
+    }
+
+    //关系颠倒很别扭：WebSecurity是上层大门粗略放行，反而HttpSecurity下层明细控制，上层已经放行的，下层就不会再检查了。
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         //从中间拆分解开　middleRegistry；
@@ -98,8 +146,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             middleRegistry =middleRegistry.antMatchers("/graphql/**").permitAll()
                     .antMatchers("/public/**").permitAll()
                     .antMatchers("/third/**").permitAll()
-                   // .antMatchers("/subscriptions").permitAll()   真攔截住了！
-                   // .antMatchers("/subscriptions/**").permitAll()
+                    //.antMatchers("/subscriptions").permitAll()
                     .antMatchers("/forbidden").denyAll();
         }
 
@@ -134,52 +181,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-
-    //订阅消息`ws://localhost:9000/subscriptions`也走这里的。 上面HttpSecurity "/subscriptions/**"不加走不通。
-    //静态的文件内容-可以允许那些非授权=没token访问的内容；
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        //AuthenticationTokenFilter 不过滤的内容-文件; Spring Security要忽略的部分;
-        //非生产的和系统调试用的。 正式生产环境配置=false;
-        //其实isTestMode和PermitAnyURL独立影响。！注意 vendor/* vendor/** vendor/ vendor 区别很大。
-        if(isTestMode) {
-           //开启graphiql测试工具
-           web.ignoring().antMatchers(
-                    HttpMethod.POST,
-                    "/subscriptions/*","/auth"
-            ).and()
-                .ignoring()
-                .antMatchers(
-                    HttpMethod.GET,
-                    "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions"
-                ).and()
-                   .ignoring()
-                   .antMatchers(
-                           HttpMethod.OPTIONS,
-                           "/graphql","/auth"
-                   );
-
-         //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
-        }
-        else {
-            //这条路"/subscriptions"反而更惨，failed to access class MySubscriptionResolver，而另一路是陷入cors缺省值被拦截。
-            web.ignoring()
-                    .antMatchers(
-                            HttpMethod.POST,
-                            "/auth"
-                    )
-                    .and()
-                    .ignoring()
-                    .antMatchers(
-                            HttpMethod.GET,
-                            "/subscriptions"
-                    );
-
-
-            //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
-        }
-     //若isTestMode但是isPermitAnyURL=false，没有登录JWTcookies=null的情形，还是无法访问以上资源的。必须!
-    }
 
 }
 
