@@ -40,7 +40,8 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
     //后；发布开始。
     if(true)
       return null;
+    //从这里开始ws://协议层次和 publisher 一点关系都没有?。return null;并不意味ws:/连接要关闭的。
     return publisher;
   }
-
 }
+
