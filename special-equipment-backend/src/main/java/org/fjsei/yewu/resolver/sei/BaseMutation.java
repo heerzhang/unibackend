@@ -306,10 +306,16 @@ public class BaseMutation implements GraphQLMutationResolver {
             //浏览器自动遵守标准：超时的cookie就不会该送过来了。 那万一不守规矩？两手准备。
            HttpServletResponse response=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
            Cookie cookie =new Cookie("token", token);
-           cookie.setDomain(cookieDomain);
-           cookie.setHttpOnly(true);
-           cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
-           cookie.setPath("/");
+            cookie.setDomain(cookieDomain);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
+            cookie.setPath("/");
+           response.addCookie(cookie);
+            cookie =new Cookie("wsToken", token);
+            cookie.setDomain(cookieDomain);
+            cookie.setHttpOnly(false);
+            cookie.setMaxAge(10);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
+            cookie.setPath("/");
            response.addCookie(cookie);
         }
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();

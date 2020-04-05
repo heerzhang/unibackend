@@ -94,3 +94,14 @@ Cache-Control: no-cache
     return new DefaultGraphQLSchemaServletProvider(schema);
   }
 import { WebSocketLink } from 'apollo-link-ws';有加了一层。
+
+document.cookie = 'key=val'
+new WebSocket('ws://localhost:8673/subscriptions')
+WebSocket握手请求：
+个请求必须包含一个Upgrade header字段，它的值必须包含"websocket"。
+请求必须包含一个Connection header字段，它的值必须包含"Upgrade"。
+请求必须包含一个名为 Sec-WebSocket-Key的header字段。
+包含一个 Origin header字段。
+请求可能如cookie（RFC6265）或者认证相关的header字段如Authorization字段（RFC2616）。
+服务端 cookie.setHttpOnly(false); 前端 启动时已经有cookie= token=可以获取。 ！ 走ws自己的内部认证控制环节可以的。
+服务端 cookie.setHttpOnly(true); 前端 启动时已经有cookie= null; 无法获知！！。只能单独搞一个token;
