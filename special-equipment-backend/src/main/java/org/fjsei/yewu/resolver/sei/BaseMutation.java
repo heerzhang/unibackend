@@ -310,11 +310,12 @@ public class BaseMutation implements GraphQLMutationResolver {
             cookie.setHttpOnly(true);
             cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
             cookie.setPath("/");
+           //cookie.setSecure(true);     //HTTPS才允許設置的。
            response.addCookie(cookie);
             cookie =new Cookie("wsToken", token);
             cookie.setDomain(cookieDomain);
             cookie.setHttpOnly(false);
-            cookie.setMaxAge(10);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
+            cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
             cookie.setPath("/");
            response.addCookie(cookie);
         }
