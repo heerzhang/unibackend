@@ -13,6 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+
+import javax.websocket.Session;
+import java.security.Principal;
 import java.util.Map;
 
 //首先要过WebSecurityConfigurerAdapter验证，然后才来这里的。Http与websocket是两个完全不同的协议，两者唯一联系是WebSocket利用Http进行握手；
@@ -29,23 +32,20 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
   //前面处理还没结束，同一个客户无法再次连接到这里来的。
   public void onConnect(SubscriptionSession session, OperationMessage message) {
     //无法掌控http握手。运行到了这一步实际上http握手早就完成了，这里也无法获知http的相关cookie等交互信息。想认证http白搭。
-    log.debug("onConnect with payload {}", message.getPayload().getClass());
+    Session sessionInternal= (Session)session.unwrap();
+    Principal principal=sessionInternal.getUserPrincipal();
+
+    log.info("onConnect with payload {}", message.getPayload().getClass());
     //相当于token口令，代表认证账户。
-    String token = ((Map<String, String>) message.getPayload()).get("authToken");
-    log.info("Token: {}", token);
+    //String token = ((Map<String, String>) message.getPayload()).get("authToken");
+    //log.info("Token: {}", token);
+
+    //Authentication auth= SecurityContextHolder.getContext().getAuthentication();
     //WebSocket认证特别，让Http认证过后，格外申请个一次性token并且特别用途目的coockieToken,让JS可以读取。
-    //挂token名
-    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( "herzhang" );
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    session.getUserProperties().put("CONNECT_TOKEN", principal);
 
-
-    //  authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(null));
-    //  SecurityContextHolder.getContext().setAuthentication(authentication);
-
-   // Authentication authentication = new UsernamePasswordAuthenticationToken(token, null);
-
-    session.getUserProperties().put("CONNECT_TOKEN", authentication);
     //保存CONNECT_TOKEN起来再在Publisher<Integer> hello(DataFetchingEnvironment env)把身份信息取得。？？
+    UsernamePasswordAuthenticationToken authentication =(UsernamePasswordAuthenticationToken)principal;
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 }

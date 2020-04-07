@@ -110,6 +110,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             //?标准没Bearer ;
             //新版graphiQL的客户端都会给服务器Authorization: Bearer ? + cockie=俩个token都带来
             if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
+                //作废！   这个分支实际都没用了
                 authToken = requestHeader.substring(7);
             }
             else {    //没有Authorization: Bearer开头;
@@ -128,9 +129,11 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             if("/subscriptions".equals(startPath)) {
                 //authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
             //jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
-
-                Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+                //这位置有小概率直接获得auth非null的。
+                Authentication auth0= SecurityContextHolder.getContext().getAuthentication();
                 //【协议调试地狱】这个位置若设置断点观察就会破坏协议，导致不正常；设了断点auth大多是null，不设断点正常跑却大多是auth获得授权用户！奇葩啊！
+                jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
+                Authentication auth= SecurityContextHolder.getContext().getAuthentication();
                 if(auth!=null) {
                     logger.info("进入subsc07riptions=V的过滤报位置竟然有auth{}稀奇！", auth.getAuthorities());
                     chain.doFilter(request, response);

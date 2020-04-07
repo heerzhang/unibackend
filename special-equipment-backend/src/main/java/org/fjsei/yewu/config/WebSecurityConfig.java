@@ -100,13 +100,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(
                             HttpMethod.POST,
                             "/auth"
-                    )
-                    .and()
+                    );
+                    /*.and()
                     .ignoring()
                     .antMatchers(
                             HttpMethod.GET,
                             "/subscriptions"
-                    );
+                    );*/
 
 
             //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
