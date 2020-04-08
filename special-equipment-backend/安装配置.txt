@@ -105,3 +105,4 @@ WebSocket握手请求：
 请求可能如cookie（RFC6265）或者认证相关的header字段如Authorization字段（RFC2616）。
 服务端 cookie.setHttpOnly(false); 前端 启动时已经有cookie= token=可以获取。 ！ 走ws自己的内部认证控制环节可以的。
 服务端 cookie.setHttpOnly(true); 前端 启动时已经有cookie= null; 无法获知！！。只能单独搞一个token;
+websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录注册的servlet优先抢走处理。

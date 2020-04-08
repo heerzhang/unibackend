@@ -30,7 +30,9 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
 
   //首先MyCorsConfig指示CORSfilter过关,然后JwtAuthorizationTokenFilter过一遍,最后才到这里：
   //前面处理还没结束，同一个客户无法再次连接到这里来的。
-  public void onConnect(SubscriptionSession session, OperationMessage message) {
+  public void onConnect(SubscriptionSession session, OperationMessage message)
+  {
+    //★［特别注意］★　若设断点调试，很可能时间错过了，就不会触发运行到这里了。
     //无法掌控http握手。运行到了这一步实际上http握手早就完成了，这里也无法获知http的相关cookie等交互信息。想认证http白搭。
     Session sessionInternal= (Session)session.unwrap();
     Principal principal=sessionInternal.getUserPrincipal();
