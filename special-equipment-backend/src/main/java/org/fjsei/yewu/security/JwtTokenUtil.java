@@ -85,6 +85,8 @@ public class JwtTokenUtil implements Serializable {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("QX",true);
+        claims.put("third","USERok sfda奧古斯丁法國和德國的雙簧管單簧管的時候345654 64564009");
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -95,7 +97,7 @@ public class JwtTokenUtil implements Serializable {
         //这里HMAC using SHA-512 base64EncodedSecretKey 做Hash Base64Codec的密码；不支持汉字的;
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(subject)
+            .setSubject(subject)    //用戶名Username
             .setIssuedAt(createdDate)
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS512, secret)

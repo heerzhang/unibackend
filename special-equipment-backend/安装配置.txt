@@ -106,3 +106,5 @@ WebSocket握手请求：
 服务端 cookie.setHttpOnly(false); 前端 启动时已经有cookie= token=可以获取。 ！ 走ws自己的内部认证控制环节可以的。
 服务端 cookie.setHttpOnly(true); 前端 启动时已经有cookie= null; 无法获知！！。只能单独搞一个token;
 websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录注册的servlet优先抢走处理。
+谷歌Chrome引入SameSite cookie将提高隐私安全性能，可保证仅通过HTTPS连接访问跨站cookie。限制cookie被第三方网站追踪。
+
