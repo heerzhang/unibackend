@@ -170,6 +170,7 @@ public class JwtTokenUtil implements Serializable {
             timeArrivedRegenerateToken(userDetails,request,response);
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
+            //因为Session .STATELESS每一次请求包都需要再次设置身份信息，实际上这里每次请求包都要过。
             //credentials 证明书? 公钥的Key吗;
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -177,7 +178,9 @@ public class JwtTokenUtil implements Serializable {
              //实际就是userId保留到Context
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
+        else {
+            logger.info("稀奇了!STATELESS竟然有");
+        }
     }
 
     //验证合法性的token; 而每一次登录都会重新生成token的。

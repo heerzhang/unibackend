@@ -126,6 +126,10 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
 
 
+            Authentication authFilter= SecurityContextHolder.getContext().getAuthentication();
+            if(authFilter!=null)       logger.info("過濾器-auth{}",authFilter.getAuthorities());
+            else    logger.info("過濾器-auth{没东西}");
+
             if("/subscriptions".equals(servletPath)) {
                 //authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
             //jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
@@ -145,13 +149,13 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-            /*Authentication auth= SecurityContextHolder.getContext().getAuthentication();
-            if(auth!=null)       logger.info("进入的auth{}",auth.getAuthorities());
-            else    logger.info("进入的auth{没东西}");    */
-            jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
 
+            //尝试建立用户身份权限信息注册设置到spring security层。但是Session .STATELESS每一次请求包都需要再次设置身份信息。
+            jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
+            //還未登錄的用戶請求Authentication .getAuthentication()這個位置還是null;就是graphql驗證和做登录處理需要允許直接通過。
             //真正控制还要到上层协议里头去控制，每一个graphQL请求都要验证Auth,可见性MyGraphQLWebAutoConfiguration。
-            //没登录用户走直接REST模式能来到这，但是底层会401钩住它。
+            //没登录用户走直接REST模式能来到这，但是spring security底层会钩住它401报错。
+
             chain.doFilter(request, response);
             //就算Url没有要求授权验证它也可能会到这里。
         }
