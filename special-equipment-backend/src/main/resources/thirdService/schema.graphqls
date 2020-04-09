@@ -2,3 +2,9 @@ type Query {
     hello2(value: String!): String
     auth: String!
 }
+
+#唯一type定义。
+type Mutation {
+
+}
+

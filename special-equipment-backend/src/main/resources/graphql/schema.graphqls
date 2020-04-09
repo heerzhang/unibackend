@@ -16,7 +16,8 @@ type Mutation {
 
 }
 
-#订阅特别，这个权限设置不能少
+#主模型才有订阅，这个权限设置不能少
 type Subscription {
+  qqCommunicate: Int
   hello: Int @authr(qx:["USER"])
 }

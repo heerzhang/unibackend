@@ -18,9 +18,6 @@ public final class JwtUserFactory {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
-                user.getFirstname(),
-                user.getLastname(),
-                user.getEmail(),
                 user.getPassword(),
                 mapToGrantedAuthorities(user.heHasRoles()),
                 user.getEnabled(),
@@ -34,3 +31,4 @@ public final class JwtUserFactory {
                 .collect(Collectors.toList());
     }
 }
+

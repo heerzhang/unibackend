@@ -1,0 +1,43 @@
+type User implements Person {
+    id:ID!
+    username: String!
+    "字段像函数,一般用作内嵌对象约束参数：top,first,ID?"
+    dep(dep: String): String
+    mobile: String
+    #权限表非超级用户只能看自己的了
+    ##authorities: [Authority]
+    "模型字段实际同函数一样的处理,属性竟然也可以有输入参数"
+    enabled(isUsing: Boolean): Boolean!
+    photoURL: String
+}
+
+interface Person {
+    id:ID!
+    username: String!
+    mobile: String
+}
+
+#作废类型也不报错
+type Auth {
+    id:ID!
+    username: String!
+    dep: String
+    authorities: [Authority]
+}
+
+
+extend type Query {
+    findAllUsers: [Person]!
+    #获取当前用户的授权角色
+    auth: String!
+    checkAuth: User
+    findUserLike(username: String): [User]!
+    userBasic(id: ID!): Person
+}
+
+extend type Mutation {
+    newUser(username: String!,password: String!,mobile: String!,external:String,eName:String,ePassword:String) : Boolean!
+    authenticate(username: String!, password: String!) : Boolean!
+    logout : Boolean!
+}
+

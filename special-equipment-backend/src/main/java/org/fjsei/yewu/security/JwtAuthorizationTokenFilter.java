@@ -75,9 +75,9 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             response.setHeader("Vary", "Origin, Access-Control-Request-Headers");
             return;
         }else {
-            String startPath =request.getServletPath();
+            String servletPath =request.getServletPath();
             String method=request.getMethod();
-            if("GET".equals(method) && "/forbidden".equals(startPath)) {
+            if("GET".equals(method) && "/forbidden".equals(servletPath)) {
                 //response.setContentType("text/html;charset=utf-8");  getMethod()
                 if(originHeads.equals(serverURI))
                 {
@@ -90,8 +90,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
 
             if(isTestMode) {
-                if (startPath.startsWith("/test/") || startPath.startsWith("/vendor/")
-                        || startPath.startsWith("/favicon.ico"))
+                if (servletPath.startsWith("/test/") || servletPath.startsWith("/vendor/")
+                        || servletPath.startsWith("/favicon.ico"))
                 {
                     chain.doFilter(request, response);
                     return;      //没必要授权的，只在开发测试阶段使用的URL
@@ -126,7 +126,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
 
 
-            if("/subscriptions".equals(startPath)) {
+            if("/subscriptions".equals(servletPath)) {
                 //authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
             //jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
                 //这位置有小概率直接获得auth非null的。
@@ -160,6 +160,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
 
 /*
+浏览器clear cookie可能清理不掉前后端分离架构下的后端Domain的所有token,对Subscription清理后还能携带多个token，后端cookie共用的与前端域名端口是啥没相关。
 Cookie 的一个独特之处在于，浏览器会自动为每个请求附加到特定域和子域的 Cookie 到 HTTP 请求的头部。
 这就意味着，如果我们将 JWT 存储到了 Cookie 中，假设登录页面和应用共享一个根域，那么在客户端上，我们不需要任何其他的的逻辑，就可以让 Cookie 随每一个请求发送到应用服务器。
 但是另一方面，它引入了一个新的问题 —— XSRF。

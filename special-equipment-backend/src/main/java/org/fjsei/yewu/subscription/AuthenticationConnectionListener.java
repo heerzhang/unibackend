@@ -49,7 +49,9 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
     //保存CONNECT_TOKEN起来再在Publisher<Integer> hello(DataFetchingEnvironment env)把身份信息取得。？？
     UsernamePasswordAuthenticationToken authentication =(UsernamePasswordAuthenticationToken)principal;
     SecurityContextHolder.getContext().setAuthentication(authentication);
+    //假如本graphql接口安全域的模型文件没有type Subscription{}；还是会运行到这，然后关闭ws:/连接。
   }
 }
 
 //nginx需要做一些配置，支持websocket通信。  https://blog.csdn.net/qq_34912469/article/details/94006301
+//订阅　底层配置：GraphQLWebsocketAutoConfiguration，GraphQLWebsocketServlet；只准备支持一个端点endpoint;

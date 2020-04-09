@@ -267,6 +267,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     public User checkAuth() {
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         if(auth==null)  return null;
+        //graphql这块即时没登录也会有系统角色ROLE_ANONYMOUS，奇葩！
         Object principal=auth.getPrincipal();
         if(principal instanceof JwtUser){
             Long  userid=((JwtUser) principal).getId();

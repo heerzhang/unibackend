@@ -82,14 +82,15 @@ public class JwtTokenUtil implements Serializable {
         // here you specify tokens, for that the expiration is ignored
         return false;
     }
-
+    //token [核心数据存储]
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("QX",true);
-        claims.put("third","USERok sfda奧古斯丁法國和德國的雙簧管單簧管的時候345654 64564009");
+        claims.put("graphql",true);
+        claims.put("public",true);
+        claims.put("third",true);
         return doGenerateToken(claims, userDetails.getUsername());
     }
-
+    //加密封装好的token
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
@@ -144,7 +145,8 @@ public class JwtTokenUtil implements Serializable {
     //根据token为其续命,更新对应的spring security;
     protected void continuedTokenLifeAuthentication(UserDetailsService userDetailsService, HttpServletRequest request, HttpServletResponse response, String token)
     {
-        if(token == null )  	return;
+        if(token == null )
+            return;     //没有token证书，允许过，但受到具体接口的内部安全措施控制。
         String username = null;
         final Claims claims = getAllClaimsFromToken(token);
         try {
@@ -168,6 +170,7 @@ public class JwtTokenUtil implements Serializable {
             timeArrivedRegenerateToken(userDetails,request,response);
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
+            //credentials 证明书? 公钥的Key吗;
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           // logger.info("authorizated user '{}', Reset security context", username);

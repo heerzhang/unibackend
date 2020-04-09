@@ -11,3 +11,4 @@ type Query {
     auth: String!
     countAuthors: Long! @authr(qx:["ANONYMOUS"])
 }
+

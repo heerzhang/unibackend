@@ -163,6 +163,7 @@ public class User implements Person {
         if(rights>0)    //超级用户可以看所有人权限表
             return authorities;
         else {
+            //当前SpringSecurity验证给出的用户Principal映射出来的User实体表ID。
             Long curruser= JwtUser.getUserId();
             if(id!=curruser)    //非超级用户，就不要看他人的权限列表
                  return null;      //这样就切断了graphQL选择集，前端无法查询该字段也无法嵌套。
@@ -171,6 +172,7 @@ public class User implements Person {
         }
     }
     //另外只给后端自身使用的替代函数：
+    //本函数特殊！！
     public Set<Authority> heHasRoles() {
         return authorities;
     }
