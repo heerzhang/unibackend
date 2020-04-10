@@ -261,7 +261,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(principal instanceof JwtUser) {
             Long userid = ((JwtUser) principal).getId();
             User user = userRepository.findById(userid).orElse(null);
-            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(user.getUsername());
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( user.getId().toString() );
             logger.info("user logout '{}', 注销退出了", user.getUsername());
             userRepository.save(user);
         }
@@ -293,7 +293,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             logger.debug("security context was null, so authorizating user");
             // It is not compelling necessary to load the use details from the database. You could also store the information
             // in the token and read it from it. It's up to you ;)
-            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(name);
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( user.getId().toString() );
             // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
             // the database compellingly. Again it's up to you ;)
             String token = jwtTokenUtil.generateToken(userDetails);     //jwtTokenUtil.validateToken(authToken, userDetails)

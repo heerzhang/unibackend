@@ -31,10 +31,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -265,6 +268,12 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
     //验证是否登录，谁登录，有那些角色的。
     public User checkAuth() {
+        /*
+        获取servlet路径来鉴定权限。 和ROLE_xxx交叉了，又是接口安全域又是角色，多关联关系？复合主码＋? 接口Path+UserName。
+        简化做法： 直接从ROLE_字符串区分安全域接口。 ROLE_Outer_xx; ROLE_Main_xx 复合型的权限代码;每个接口默认ROLE_都是唯一性差异来区分。
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String servletPath =request.getServletPath();
+        */
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         if(auth==null)  return null;
         //graphql这块即时没登录也会有系统角色ROLE_ANONYMOUS，奇葩！

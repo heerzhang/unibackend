@@ -18,7 +18,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     //参数username identifying the user；改成用户表的ID； spring security只需要以ID识别用户。
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        //token / JWT当中实际存储user ID,代替username做标识。
+        Long userID =Long.valueOf(username);
+        User user = userRepository.findById(userID).orElse(null);   //原来findByUsername(username);
 
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));

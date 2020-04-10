@@ -33,8 +33,9 @@ public class ThirdGraphQLServlet extends GraphQLHttpServlet {
   protected GraphQLConfiguration getConfiguration() {
     try {
       GraphQLSchema schema=schemaParser.makeExecutableSchema();
+      //复合型的ROLE_字符串区分安全域接口。每个接口默认ROLE_xx_ 唯一相互都不同的代码 来区分。
       GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
-              .fieldVisibility(new MyGraphqlFieldVisibility("ROLE_OUTERSYS"))
+              .fieldVisibility(new MyGraphqlFieldVisibility("ROLE_Ot"))
               .build();
       Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
       return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();

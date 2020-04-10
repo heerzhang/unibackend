@@ -82,15 +82,17 @@ public class JwtTokenUtil implements Serializable {
         // here you specify tokens, for that the expiration is ignored
         return false;
     }
-    //token [核心数据存储]
+    //token [核心数据存储]; 只有一种的UserDetails 直接转 JwtUser类型。
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("graphql",true);
-        claims.put("public",true);
-        claims.put("third",true);
-        return doGenerateToken(claims, userDetails.getUsername());
+         //claims.put("graphql",true);
+        if(userDetails instanceof JwtUser){
+            return doGenerateToken(claims, ((JwtUser)userDetails).getId().toString() );
+        }else {
+            return doGenerateToken(claims, userDetails.getUsername());
+        }
     }
-    //加密封装好的token
+    //加密封装好的token;  这subject是用户认证标识。
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
@@ -98,7 +100,7 @@ public class JwtTokenUtil implements Serializable {
         //这里HMAC using SHA-512 base64EncodedSecretKey 做Hash Base64Codec的密码；不支持汉字的;
         return Jwts.builder()
             .setClaims(claims)
-            .setSubject(subject)    //用戶名Username
+            .setSubject(subject)    //用戶名Username改 userID;
             .setIssuedAt(createdDate)
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS512, secret)
@@ -147,19 +149,19 @@ public class JwtTokenUtil implements Serializable {
     {
         if(token == null )
             return;     //没有token证书，允许过，但受到具体接口的内部安全措施控制。
-        String username = null;
+        String usernameId = null;
         final Claims claims = getAllClaimsFromToken(token);
         try {
                  //username = (Claims::getSubject).apply(claims);   为何手机电脑同时登录，token时间容易失效。
-            username = claims.getSubject();      //绕了个大弯 (Claims::getSubject).apply(claims);
+            usernameId = claims.getSubject();      //绕了个大弯 (Claims::getSubject).apply(claims);
         } catch (IllegalArgumentException e) {
             logger.error("an error occured during getting username from token", e);
         } catch (ExpiredJwtException e) {
             logger.warn("the token is expired and not valid anymore", e);
         }
-        if (username == null )	    return;
+        if (usernameId == null )	    return;
         //用JwtUserDetailsService从数据库找的，　UserDetails这里就是JwtUser了;
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);   //即时刷新UserDetails.enabled//=isEnabled()
+        UserDetails userDetails = userDetailsService.loadUserByUsername(usernameId);
      //todo: 登录已经过期了，应当抛出异常，否则返回都是null，不知道到底是何种情况内还是应用层没有数据。
         if(!validateClaims(claims, userDetails))         return;
         //用户已经被屏蔽了。
@@ -192,9 +194,10 @@ public class JwtTokenUtil implements Serializable {
         Boolean isTokenExpired;
         final Date expiration = claims.getExpiration();
         isTokenExpired = expiration.before(clock.now());     //在now以前的
-        //密码修改了？
+        //密码修改了，lastPasswordReset；
+        //username已改成userID了 代替做标识。
         return (
-                username.equals(user.getUsername())
+                username.equals( user.getId().toString() )
                         && !isTokenExpired
                         && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
         );
