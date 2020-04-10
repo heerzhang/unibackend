@@ -15,6 +15,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    //参数username identifying the user；改成用户表的ID； spring security只需要以ID识别用户。
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);

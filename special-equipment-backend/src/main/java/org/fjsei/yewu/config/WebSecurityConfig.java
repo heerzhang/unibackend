@@ -120,14 +120,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //从中间拆分解开　middleRegistry；
         //<HttpSecurity>范型 必须加上，否则底下使用的第三个地方可能编译报错。
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry    middleRegistry;
-        //we don't need CSRF because our token is invulnerable无懈可击; 由于使用的是JWT，我们这不需csrf
+        //前端在每次请求时将JWT放入HTTP Header中的Authorization位。(解决XSS和XSRF问题)
+        //token is invulnerable无懈可击; 由于使用的是JWT，我们这不需csrf
         //我们这graphql serlet在这前面已经会配设CorsFilter corsConfigurer()了，所以不要加.cors()咯。
         //http:/该加上.cors().and()
+        //在使用graphQL或REST 端点时，您不必担心使用CSRF保护,对服务的请求应该是无状态的！
+        //graphQL用无状态的， 但似乎也可以做成有状态模式。
 
         middleRegistry =httpSecurity.csrf().disable()
                 //.cors().and()    //加了就进入另外一种模式，缺省机制发挥作用。
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // don't create session 无状态的，不需要服务器来维持会话数据。基于token所以不需session
+                // don't create session 无状态的，不需要服务器来维持会话数据。基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests();
 
@@ -150,8 +153,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/forbidden").denyAll();
         }
 
+        //spring security判断区别:字符串加了ROLE_就是一个角色Role，如果没有加ROLE_的字符串就代表一个权限Authority!
         //        .antMatchers("/*").permitAll()
         //        .antMatchers("/u").denyAll()
+        // .antMatchers("/admin").hasAuthority("admin")   // 需拥有 admin 这个权限
+        //  .antMatchers("/ADMIN").hasRole("ADMIN")     // 需拥有 ADMIN 这个身份
         //        .antMatchers("/article/**").permitAll()
         //        .antMatchers("/v2/api-docs", "/swagger-resources/**","/webjars/**").permitAll() ;
         //permitAll().antMatchers("/manage/**").hasRole("ADMIN") // 需要相应的角色才能访问
