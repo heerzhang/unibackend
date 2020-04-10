@@ -11,7 +11,7 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long>, Jpa
     // !! 注意 字段名字变化了，**.repository里头的函数名也要修改！否则，启动不了TomcatStarter;
     // !! 字段改名影响： graphql.tools.SchemaParser 配置文件\src\main\resources\graphql\**
 
-    Authority findByName(AuthorityName name);      //不是String参数；
+    //还没用到？
+    // Authority findByName(AuthorityName name);      //不是String参数；
 
 }
-

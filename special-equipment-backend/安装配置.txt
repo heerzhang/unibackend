@@ -109,5 +109,6 @@ websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录�
 谷歌Chrome引入SameSite cookie将提高隐私安全性能，可保证仅通过HTTPS连接访问跨站cookie。限制cookie被第三方网站追踪。
 证书相关authenticate(String name,String password) logout() timeArrivedRegenerateToken； generateToken(UserDetails userDetails);JwtUser implements UserDetails;
 单个订阅endpoint后端token不代表安全域接口只代表用户ID；
-
+Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符; 正则表达式匹配?
+@PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
 

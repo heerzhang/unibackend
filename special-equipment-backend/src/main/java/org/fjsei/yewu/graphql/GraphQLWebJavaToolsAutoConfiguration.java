@@ -127,7 +127,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     //配置正常starter自带的哪一个缺省graphql;  其他的额外graphql接口、安全域模块在各自主文件xxGraphQLServlet配置。
     // 新add??　原是　来自tools模块GraphQLJavaToolsAutoConfiguration。
     // @ConditionalOnMissingBean({GraphQLSchema.class, GraphQLSchemaProvider.class})
-    // GraphQLSchema graphQLSchema(@Qualifier("publicSchemaParser") SchemaParser schemaParser)
+    // GraphQLSchema graphQLSchema(@Qualifier("mainSchemaParser") SchemaParser schemaParser)
     //解决冲突Parameter 0 of method graphQLSchema in graphql.kickstart.tools.boot.GraphQLJavaToolsAutoConfiguration required a single bean, but 2 were found:多个。
     @Bean
     @ConditionalOnBean(SchemaParser.class)
@@ -152,8 +152,8 @@ public class GraphQLWebJavaToolsAutoConfiguration {
 
     @Bean
     //@ConditionalOnMissingBean
-    public SchemaStringProvider publicSchemaStringProvider() {
-        return new ClasspathResourceSchemaStringProvider("publicReport/**/*.graphqls");
+    public SchemaStringProvider mainSchemaStringProvider() {
+        return new ClasspathResourceSchemaStringProvider("model/**/*.graphqls");
     }
 
     //针对unibackend.tools.**-enabled都=false情形，加入@Primary，降级处理，graphql主线程变身public的接口。
@@ -162,9 +162,9 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     @Bean
     @ConditionalOnBean({GraphQLResolver.class})
     //@ConditionalOnMissingBean
-    public SchemaParser publicSchemaParser(
+    public SchemaParser mainSchemaParser(
             List<GraphQLResolver<?>> resolvers,
-            @Qualifier("publicSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
+            @Qualifier("mainSchemaStringProvider")      SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
         return buildSchemaParser(resolvers, schemaStringProvider, optionsBuilder);

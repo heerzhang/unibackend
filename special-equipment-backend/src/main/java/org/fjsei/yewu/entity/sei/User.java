@@ -215,13 +215,14 @@ public class User implements Person {
     public User cloneAuth(){
         User auth= new User(this.username,this.dep);
         auth.setId(this.id);
-        auth.setEnabled(this.enabled);
+        //auth.setEnabled(this.enabled);
         Set<Authority> outAuthorities=new HashSet<Authority>();
         this.authorities.stream().forEach(authority -> {
                     Authority  outAuthority = new Authority();
                     outAuthority.setName(authority.getName());
                     outAuthorities.add(outAuthority);
                 } );
+        //Todo: 不同安全域需要的ROLE_XxYyy也不一样啊;　ROLE_cmnXxx通用的部分。
         auth.setAuthorities(outAuthorities);
         return auth;
     }

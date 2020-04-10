@@ -18,14 +18,12 @@ import java.util.function.Consumer;
 //[注意] 5.7版本com.coxautodev.graphql.tools包名改了，而6.0版本graphql.kickstart.tools包。
 //这里schemaParser:来自xx-autoconfigure-tools/GraphQLJavaToolsAutoConfiguration是个Bean，并不是那个graphql.schema.idl.SchemaParser,名字相同而已！
 
-
-@WebServlet(name = "PublicGraphQLServlet", urlPatterns = {"/public/*"}, loadOnStartup = 0, initParams = {
-        @WebInitParam(name = "graphql", value = "/"),
-} )
-@ConditionalOnProperty(value = "unibackend.tools.public-enabled", havingValue = "true", matchIfMissing = true)
-public class PublicGraphQLServlet extends GraphQLHttpServlet {
+//调换了：starter包原本自带的那个mapping:反而改成了/public； 很多自动配置缺省的都是/graphql的endpoint。
+@WebServlet(name = "MainGraphQLServlet", urlPatterns = {"/graphql/*"}, loadOnStartup =0)
+@ConditionalOnProperty(value = "unibackend.tools.main-enabled", havingValue = "true", matchIfMissing = true)
+public class MainGraphQLServlet extends GraphQLHttpServlet {
   @Autowired(required = false)
-  @Qualifier("publicSchemaParser")
+  @Qualifier("mainSchemaParser")
   SchemaParser schemaParser;
 
   @Override
@@ -33,7 +31,7 @@ public class PublicGraphQLServlet extends GraphQLHttpServlet {
     try {
         GraphQLSchema schema=schemaParser.makeExecutableSchema();
         GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
-                .fieldVisibility(new MyGraphqlFieldVisibility(null))
+                .fieldVisibility(new MyGraphqlFieldVisibility("ROLE_Ma"))
                 .build();
         Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
         return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();

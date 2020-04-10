@@ -5,19 +5,16 @@ directive @range(
 ) on ARGUMENT_DEFINITION
 
 type Query {
-    hello2(value: String!): String
-    hello: String  @fetch(from : "zhuanyi")
-    limitedValue(value: Float! @range(min: 1.0, max: 999.0)): Float @authr(qx:["USER"])
+    hello2(value: String!): String @uppercase
+    limitedValue(value: Float! @range(min: 0.00, max: 1.00)): Float
     zhuanyi: String
+    auth: String!
+    countAuthors: Long! @authr(qx:["ANONYMOUS"])
 }
 
-#不能重复定义type的;其它Query只能用extend type Query；extend type Mutation之类的。
-type Mutation {
-
-}
-
-#主模型才有订阅，这个权限设置不能少
+#主模型才有订阅，须登录用户才可发起沟通，这个权限设置不能少
 type Subscription {
   qqCommunicate: Int
-  hello: Int @authr(qx:["USER"])
+  hello: Int @authr(qx:["cmn"])
 }
+

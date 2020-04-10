@@ -229,11 +229,13 @@ public class BaseQuery implements GraphQLQueryResolver {
         parents.addAll(users);
         return  parents;  //这里返回的对象实际还是User派生类型的，只是graphQL将会把它当成接口类型Person使用。
     }
-   //Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符
+   //Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符; 正则表达式匹配?
+   //@PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
    //SpEL怎样从List、Map集合中取值; @Value("#{numberBean.no == 999 and numberBean.no < 900}")
    // @PreAuthorize("hasRole('ROLE_USER') and hasIpAddress('localhost')" )
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Iterable<Authority> findAllAuthority() {
+        //todo: 不能乱用Authority 安全！控制
         return authorityRepository.findAll();
     }
 
@@ -325,6 +327,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     public String auth() {
         User user=checkAuth();
         if(user==null || !user.getEnabled())  return "{}";        //未登录或者未正常开通使用的就{}
+        //只需要很小部分的User内容输出。
         User out=user.cloneAuth();      //user这里不可以直接用JSON.toJSONString(user)，会报错，有些字段LAZY。
         String strJson = JSON.toJSONString(out);
         //todo: {user &&  user.enabled && ' '}没用字段去除，enabled应该都是，否则user为空的。

@@ -1,6 +1,7 @@
 package org.fjsei.yewu.entity.sei;
 
-//关联靠id;而这里权限的名字和id对应关系很关键，
+//[奇葩了]! 关联靠id;而这里权限的名字和id对应关系很关键，
+//目前只能人工修改权限配置的角色名称实体表"AUTHORITY"。　角色ID属于稳定很少改动的系统性质配置；
 //要 ROLE_  开头的；
 //注意！ id不应该随着AuthorityName的增删改而导致ID变动。  看Table( AUTHORITY )
 //AUTHORITY表，不会从AuthorityName这自动增删改的。
@@ -9,11 +10,13 @@ package org.fjsei.yewu.entity.sei;
 
 //enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager }
 
+//根本不需要数字编号［数据库id不能改动］，只需要字符串EnumType.STRING。
 public enum AuthorityName {
-    ROLE_SOMEONE,        //对应Authority实体表的ID=1；   非登录账户的临时验证通行的，只读很小一部分数据权限。
-    ROLE_USER,           //ID 2；        登录的账户最低权限。
-    ROLE_ADMIN,         //ID=3;  最高权限。
-    ROLE_Manager
+    //应该按顺序添加，数据库ID递增，不能乱改表记录。
+    ROLE_cmn,   //随意的登录用户。
+    ROLE_Ma,    //主模型域基础用户
+    ROLE_MaAdmin,   //主域的管理员
+    ROLE_Th,    //第三方基础用户
+    ROLE_cmnAdmin,   //公共的管理员
 }
-
 

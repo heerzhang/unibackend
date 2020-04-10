@@ -1,6 +1,7 @@
 package org.fjsei.yewu.resolver.sei.inspect;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.fjsei.yewu.entity.sei.*;
 import org.fjsei.yewu.entity.sei.inspect.ISP;
 import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -83,8 +85,10 @@ public class IspMgrQuery implements GraphQLQueryResolver {
         int myInt=iSPRepository.findByIspMen(ispmen).size();
         return Long.parseLong(new String().valueOf(myInt));
     }
-
-    public Long countTask(String dep,String status) {
+    //AccessDeniedException: 不允许访问; @PreAuthorize("hasRole('ROLE_cmn'.concat(this.class.simpleName))")
+    public Long countTask(String dep, String status) {
+       // HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+       // String servletPath =request.getServletPath();
         int result;
         if (StringUtils.isEmpty(dep) && StringUtils.isEmpty(status))
             result=(int)taskRepository.count();

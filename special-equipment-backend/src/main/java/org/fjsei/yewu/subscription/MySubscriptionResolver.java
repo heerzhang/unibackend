@@ -46,6 +46,7 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
     return publisher;
   }
   //模型定义文件都是在graphql主安全域之内。
+  //若有必须是最后一个参数[graphql.schema.DataFetchingEnvironment]
   Publisher<Integer> qqCommunicate(DataFetchingEnvironment env)
   {
     Authentication auth= SecurityContextHolder.getContext().getAuthentication();

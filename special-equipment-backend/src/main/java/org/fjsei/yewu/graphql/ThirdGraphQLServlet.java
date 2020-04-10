@@ -19,9 +19,7 @@ import java.util.function.Consumer;
 //@Configuration是不能加的，多个同名bean冲突;
 //若@Configuration加上，导致starter里面GraphQLHttpServlet也会采用我这里的配置，致graphql接口也加载third模型目录.graphqls了，直接替换掉了starter。
 
-@WebServlet(name = "ThirdGraphQLServlet", urlPatterns = {"/third/*"}, loadOnStartup = 0, initParams = {
-        @WebInitParam(name = "graphql", value = "/"),
-} )
+@WebServlet(name = "ThirdGraphQLServlet", urlPatterns = {"/third/*"}, loadOnStartup= 0)
 @ConditionalOnProperty(value = "unibackend.tools.third-enabled", havingValue = "true", matchIfMissing = true)
 public class ThirdGraphQLServlet extends GraphQLHttpServlet {
   //@Autowired 针对特殊"graphql.servlet.enabled"=false导致MyWebAutoConfiguration全部关闭了；加(required = false)
@@ -35,7 +33,7 @@ public class ThirdGraphQLServlet extends GraphQLHttpServlet {
       GraphQLSchema schema=schemaParser.makeExecutableSchema();
       //复合型的ROLE_字符串区分安全域接口。每个接口默认ROLE_xx_ 唯一相互都不同的代码 来区分。
       GraphQLCodeRegistry codeRegistry = GraphQLCodeRegistry.newCodeRegistry(schema.getCodeRegistry())
-              .fieldVisibility(new MyGraphqlFieldVisibility("ROLE_Ot"))
+              .fieldVisibility(new MyGraphqlFieldVisibility("ROLE_Th"))
               .build();
       Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
       return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();
