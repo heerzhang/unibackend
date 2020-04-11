@@ -108,7 +108,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/subscriptions"
                     );*/
 
-
             //预留REST方式的登录， 报401错误，暂时还没实现它的rest方法
         }
         //若isTestMode但是isPermitAnyURL=false，没有登录JWTcookies=null的情形，还是无法访问以上资源的。必须!
@@ -145,11 +144,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             //测试等场合，放开接入控制的。
             middleRegistry = middleRegistry.antMatchers("/**").permitAll();
         }else {
-            //这里graphql是特权直通。权限控制在graphql配置里面再仔细控制！多个graphQL安全域接口配置：
-            middleRegistry =middleRegistry.antMatchers("/graphql/**").permitAll()
-                    .antMatchers("/public/**").permitAll()
-                    .antMatchers("/third/**").permitAll()
-                    //.antMatchers("/subscriptions").permitAll()
+            //这里graphql是特权直通。权限控制在graphql配置里面再仔细控制！多个graphQL安全域接口配置："/graphql/**"
+            middleRegistry =middleRegistry.antMatchers("/graphql").permitAll()
+                    .antMatchers("/public").permitAll()
+                    .antMatchers("/third").permitAll()
+                    .antMatchers("/subscriptions").permitAll()
                     .antMatchers("/forbidden").denyAll();
         }
 

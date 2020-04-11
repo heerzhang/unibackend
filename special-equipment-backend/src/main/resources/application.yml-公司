@@ -56,7 +56,8 @@ server:
 
 graphql:
   servlet:
-    mapping: /graphql
+    #缺省模型改成低级权限要求的，而Subscription的servlet也用缺省模型。
+    mapping: /public
     enabled: true
     corsEnabled: true
     exception-handlers-enabled: true
@@ -83,9 +84,10 @@ jwt:
 
 unibackend:
   tools:
+    #自带缺省的模型开关
     starter-enabled: true
     third-enabled: true
-    public-enabled: true
+    main-enabled: true
 
 spring:
   servlet:
@@ -148,7 +150,7 @@ graphiql:
   mapping: /graphiql
   endpoint:
     graphql: /graphql
-    subscriptions: /forbidden
+    subscriptions: /subscriptions
   static:
     basePath: /
   pageTitle: GraphiQL
@@ -171,7 +173,7 @@ file:
 sei:
   visibility:
     #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
-    role: ROLE_USER
+    role:
   testMode: false
   control:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。

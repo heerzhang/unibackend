@@ -15,6 +15,6 @@ type Query {
 #主模型才有订阅，须登录用户才可发起沟通，这个权限设置不能少
 type Subscription {
   qqCommunicate: Int
-  hello: Int @authr(qx:["cmn"])
+  hello: Int @authr(qx:["null"])
 }
 

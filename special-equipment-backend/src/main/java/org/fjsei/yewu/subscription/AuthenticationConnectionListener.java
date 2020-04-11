@@ -22,6 +22,7 @@ import java.util.Map;
 
 @Component
 class AuthenticationConnectionListener implements ApolloSubscriptionConnectionListener {
+  final String AUTH_TOKEN="FqGDe03vhcblpObo)fghj851Ofg";
   @Autowired
   private JwtUserDetailsService jwtUserDetailsService;
 
@@ -30,22 +31,29 @@ class AuthenticationConnectionListener implements ApolloSubscriptionConnectionLi
 
   //首先MyCorsConfig指示CORSfilter过关,然后JwtAuthorizationTokenFilter过一遍,最后才到这里：
   //前面处理还没结束，同一个客户无法再次连接到这里来的。
-  public void onConnect(SubscriptionSession session, OperationMessage message)
-  {
+  public void onConnect(SubscriptionSession session, OperationMessage message) {
     //★［特别注意］★　若设断点调试，很可能时间错过了，就不会触发运行到这里了。
     //无法掌控http握手。运行到了这一步实际上http握手早就完成了，这里也无法获知http的相关cookie等交互信息。想认证http白搭。
-    Session sessionInternal= (Session)session.unwrap();
-    Principal principal=sessionInternal.getUserPrincipal();
+    Session sessionInternal = (Session) session.unwrap();
+    //没有登录都会导致这里=null，为何不是ROLE_ANONYMOUS的？。
+    Principal principal = sessionInternal.getUserPrincipal();
 
     log.info("onConnect with payload {}", message.getPayload().getClass());
-    //相当于token口令，代表认证账户。
-    //String token = ((Map<String, String>) message.getPayload()).get("authToken");
-    //log.info("Token: {}", token);
-
-    //Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+    if(principal == null){
+      Authentication auth= SecurityContextHolder.getContext().getAuthentication();
     //WebSocket认证特别，让Http认证过后，格外申请个一次性token并且特别用途目的coockieToken,让JS可以读取。
-    session.getUserProperties().put("CONNECT_TOKEN", principal);
-
+      if(auth==null) {
+        //相当于token口令，代表认证账户。
+        String token = ((Map<String, String>) message.getPayload()).get("authToken");
+        //log.info("Token: {}", token);
+        if(AUTH_TOKEN.equals(token))
+          session.getUserProperties().put("CONNECT_TOKEN", token);  //as a principal
+      }
+    }
+    else
+    {
+      session.getUserProperties().put("CONNECT_TOKEN", principal);
+    }
     //保存CONNECT_TOKEN起来再在Publisher<Integer> hello(DataFetchingEnvironment env)把身份信息取得。？？
     UsernamePasswordAuthenticationToken authentication =(UsernamePasswordAuthenticationToken)principal;
     SecurityContextHolder.getContext().setAuthentication(authentication);

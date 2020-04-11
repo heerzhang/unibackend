@@ -31,27 +31,38 @@ public class AuthrDirective implements SchemaDirectiveWiring {
       Object listQX = env.getDirective().getArgument("qx").getValue();
       ArrayList<String> roles = (ArrayList<String>)listQX;
       roles.stream().forEach(role -> {
-          requireRoles.add(new SimpleGrantedAuthority("ROLE_" + role));    //该字段所要求的角色之一{最少满足一个吧}
+            //若@authr(qx:["null"])就任意登录的都行。
+          if(!"null".equals(role))
+            requireRoles.add(new SimpleGrantedAuthority("ROLE_" + role));    //该字段所要求的角色之一{最少满足一个吧}
           //authr没有明确指出的其他字段采用缺省角色要求。
       });
-      //没有token登录的也Authenticated! 有anonymousUser 有ROLE_ANONYMOUS的角色；
+      //和WebSecurityConfig相关？没有token登录的也Authenticated! 有anonymousUser 有ROLE_ANONYMOUS的角色；
     GraphQLFieldDefinition field = env.getElement();
     GraphQLFieldsContainer parentType = env.getFieldsContainer();
     // build a data fetcher that transforms the given value to uppercase
     DataFetcher originalFetcher = env.getCodeRegistry().getDataFetcher(parentType, field);
     DataFetcher dataFetcher = MyDataFetcherFactories
             .permitDataFetcher(originalFetcher, ((dataFetchingEnvironment, value) -> {
-                Authentication auth= SecurityContextHolder.getContext().getAuthentication();    //当前用户是
-                if(auth!=null) {
+                if(requireRoles.isEmpty()){
+                    Authentication auth= SecurityContextHolder.getContext().getAuthentication();    //当前用户是
+                    //TODO：未登录也有auth ANONYMOUS 和配置相关？  而/subscriptions场景却是null;
+                    if(auth!=null)  return value;
+                    else{
+                        throw new IllegalArgumentException(String.format("没登录:针对%s", graphQLFieldDefinition.getName()));
+                    }
+                }
+                else{
+                    Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+                    if(auth==null)
+                        throw new IllegalArgumentException(String.format("没登录:针对%s", graphQLFieldDefinition.getName()));
                     Set<SimpleGrantedAuthority>  权限= new HashSet<SimpleGrantedAuthority>();
                     权限.addAll(requireRoles);
                     权限.retainAll(auth.getAuthorities());
                     if(权限.size() == 0)   //剩下是当前用户能匹配到的权限
                     {
-                        throw new IllegalArgumentException(String.format("没有权限:针对%s", graphQLFieldDefinition.getName()));
+                        throw new IllegalArgumentException(String.format("没权限:针对%s", graphQLFieldDefinition.getName()));
                     }
                 }
-                //未登录的也会有auth!
           return value;
         }));
 
