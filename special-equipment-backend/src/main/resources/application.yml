@@ -174,10 +174,10 @@ sei:
   visibility:
     #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
     role:
-  testMode: false
+  testMode: true
   control:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
-    permitAnyURL: false
+    permitAnyURL: true
   cache.log: false
   server.URI: http://192.168.1.105:8673
   cookie:

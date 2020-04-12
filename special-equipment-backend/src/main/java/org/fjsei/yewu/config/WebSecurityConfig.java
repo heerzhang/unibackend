@@ -154,7 +154,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //spring security判断区别:字符串加了ROLE_就是一个角色Role，如果没有加ROLE_的字符串就代表一个权限Authority!
         //        .antMatchers("/*").permitAll()
-        //        .antMatchers("/u").denyAll()
+        //        .antMatchers("/voyager").denyAll()
         // .antMatchers("/admin").hasAuthority("admin")   // 需拥有 admin 这个权限
         //  .antMatchers("/ADMIN").hasRole("ADMIN")     // 需拥有 ADMIN 这个身份
         //        .antMatchers("/article/**").permitAll()
