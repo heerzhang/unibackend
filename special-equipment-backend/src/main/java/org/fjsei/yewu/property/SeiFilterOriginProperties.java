@@ -12,7 +12,7 @@ import java.util.*;
 @PropertySource("classpath:application.yml")
 @ConfigurationProperties(prefix = "sei.filter.origin")
 public class SeiFilterOriginProperties {
-    //private final List<String>   list = new ArrayList<>();
+
     private final Map<String, String>   map = new LinkedHashMap<>();
 }
 
@@ -22,4 +22,14 @@ citycode.list[0]=wuhan
       list[2]: https://localhost:3765
 citycode.map.wuhan=4201
 citycode.map.tianjin=1200
+列表型
+  tabs:
+  - name: abc  #列表型配置自动提取模式。
+@NestedConfigurationProperty java.util.List tabs;
+@JsonSerialize(contentUsing = ResourceSerializer.class)
+graphql/kickstart/playground/boot/properties/PlaygroundTab.java
+　直接当成 map :
+             map_a:
+private Map<String, String> headers = Collections.emptyMap();
+private Map<String, String> headers;
 */

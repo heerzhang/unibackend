@@ -23,3 +23,21 @@ Cache-Control: no-cache
 {   "query": "{hello2(value:\"sdvvsd\") }" }
 
 ###
+graphql后端测试
+  query DEVICE_BY_ID($id: ID! ) {
+    all:getDeviceSelf(id: $id) {
+			id,oid,cod,isps{
+				id
+			},pos{
+				id,name
+			},ownerUnt{
+				id,name
+			},task{
+				id,date,dep,status,isps{ id,dev{id} }
+			}
+		}
+	}
+参数
+{
+  "id": 1
+}

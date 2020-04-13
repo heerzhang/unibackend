@@ -1,10 +1,11 @@
 package org.fjsei.yewu.graphql;
 
+import graphql.kickstart.servlet.GraphQLConfiguration;
+import graphql.kickstart.servlet.GraphQLHttpServlet;
 import graphql.kickstart.tools.*;
 import graphql.schema.GraphQLCodeRegistry;
 import graphql.schema.GraphQLSchema;
-import graphql.servlet.GraphQLConfiguration;
-import graphql.servlet.GraphQLHttpServlet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

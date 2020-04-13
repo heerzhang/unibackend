@@ -5,10 +5,8 @@ directive @range(
 ) on ARGUMENT_DEFINITION
 
 type Query {
-    hello2(value: String!): String
-    hello: String  @fetch(from : "zhuanyi")
-    limitedValue(value: Float! @range(min: 1.0, max: 999.0)): Float @authr(qx:["USER"])
-    zhuanyi: String
+    hello2(value: String!): String @uppercase
+    limitedValue(value: Float! @range(min: 1.0, max: 999.0)): Float @authr(qx:["Ma"])
 }
 
 #不能重复定义type的;其它Query只能用extend type Query；extend type Mutation之类的。

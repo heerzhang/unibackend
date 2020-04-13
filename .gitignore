@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gradle/
+.idea/
+special-equipment-backend/out/
+tmlog.lck
+tmlog187.log
+special-equipment-backend/src/main/resources/application.yml

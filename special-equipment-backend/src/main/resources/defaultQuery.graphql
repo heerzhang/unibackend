@@ -1,4 +1,8 @@
-#用于调试使用的
+query ED_TEST
+{
+    hello2(value:"sadf23ggg xSSD")
+}
+
 query SPEED_TEST
 {
     findAllEQPs

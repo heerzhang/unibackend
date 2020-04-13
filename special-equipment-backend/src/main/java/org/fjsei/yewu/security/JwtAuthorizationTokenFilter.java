@@ -65,7 +65,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             response.setHeader("Access-Control-Allow-Origin", originHeads);
         }
         if (request.getMethod().equals("OPTIONS")){     //浏览器自主决定的请求，不是用户决定。
-            logger.debug("浏览器的预请求的处理..");
+            //logger.debug("浏览器的预请求的处理..");
             //这一步只有http初始化可能发生也是时间过期了才有。　而ws://都没有走到这里。
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
@@ -97,24 +97,22 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                     return;      //没必要授权的，只在开发测试阶段使用的URL
                 }
             }
-            //logger.info("processing authentication for '{}'={},q={}", request.getPathInfo(), request.getRequestURL(), request.getServletPath());
-            //response.setHeader("Access-Control-Allow-Origin",filterOrigin);
+
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Connection", "keep-alive");
-            response.setHeader("Vary", "Origin");
+            //response.setHeader("Vary", "Origin");     ??重复了
 
             final String requestHeader = request.getHeader(this.tokenHeader);       //取名字是Authorization的参数；
-            String username = null;
             String authToken = null;
             //注销时：OPTIONS过后requestHeader="";    ?Bearer 和token= 不是同一个参数。
             //?标准没Bearer ;
             //新版graphiQL的客户端都会给服务器Authorization: Bearer ? + cockie=俩个token都带来
             if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
-                //作废！   这个分支实际都没用了
+                //浏览器上人工添加Authorization token来做验证权限的场景走这个分支
                 authToken = requestHeader.substring(7);
             }
             else {    //没有Authorization: Bearer开头;
-                //为何点内部链接就不行，非但刷新才可以走Bearer　那个逻辑呢？，只有Cookie: token= 没有authorization:
+                //graphQL的playground工具(相当集成在后端上的endpoint)无法带上Cookie必须走Bearer开头。
                 //調試這位置，只有運行request.getCookies()后，request才有cookie；这块是实时交互式的读取浏览器的数据？不是浏览器发送请求包已经就带的数据。
                 Cookie[] cookies=request.getCookies();
                 if(cookies!=null) {
@@ -125,31 +123,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                 }
             }
 
-
-            Authentication authFilter= SecurityContextHolder.getContext().getAuthentication();
-            if(authFilter!=null)       logger.info("過濾器-auth{}",authFilter.getAuthorities());
-            else    logger.info("過濾器-auth{没东西}");
-
-            if("/subscriptions".equals(servletPath)) {
-                //authToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU4NTg2MTYxNCwiaWF0IjoxNTg1ODU2MjE0fQ.xvHZrOaEE8jQXyMOi45boBtKvjCn-mCizLhT8mBftKrP9fGSEVHj2CIrxCtfGVhxZ4z3OwpsAEXBEUkXLCIK0A";
-            //jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
-                //这位置有小概率直接获得auth非null的。
-                Authentication auth0= SecurityContextHolder.getContext().getAuthentication();
-                //【协议调试地狱】这个位置若设置断点观察就会破坏协议，导致不正常；设了断点auth大多是null，不设断点正常跑却大多是auth获得授权用户！奇葩啊！
-                jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
-                Authentication auth= SecurityContextHolder.getContext().getAuthentication();
-                if(auth!=null) {
-                    logger.info("进入subsc07riptions=V的过滤报位置竟然有auth{}稀奇！", auth.getAuthorities());
-                    chain.doFilter(request, response);
-                    return;
-                }
-                else {
-                    logger.info("进入的auth{}! 没东西,{}",requestHeader,authToken);
-                    chain.doFilter(request, response);
-                    return;
-                }
-            }
-
+            //if("/subscriptions".equals(servletPath)) { }
             //尝试建立用户身份权限信息注册设置到spring security层。但是Session .STATELESS每一次请求包都需要再次设置身份信息。
             jwtTokenUtil.continuedTokenLifeAuthentication(this.userDetailsService, request, response, authToken);
             //還未登錄的用戶請求Authentication .getAuthentication()這個位置還是null;就是graphql驗證和做登录處理需要允許直接通過。
@@ -161,6 +135,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
     }
 }
+
 
 
 /*

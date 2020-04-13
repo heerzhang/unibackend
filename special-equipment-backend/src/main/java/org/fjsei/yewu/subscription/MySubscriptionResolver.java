@@ -2,7 +2,7 @@ package org.fjsei.yewu.subscription;
 
 import graphql.kickstart.tools.GraphQLSubscriptionResolver;
 import graphql.schema.DataFetchingEnvironment;
-import graphql.servlet.context.GraphQLWebSocketContext;
+
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

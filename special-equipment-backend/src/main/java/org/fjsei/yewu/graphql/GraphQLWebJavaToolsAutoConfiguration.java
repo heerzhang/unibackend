@@ -1,7 +1,10 @@
 package org.fjsei.yewu.graphql;
 
+import graphql.kickstart.servlet.config.DefaultGraphQLSchemaServletProvider;
+import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
+import graphql.kickstart.spring.web.boot.GraphQLServletProperties;
 import graphql.kickstart.tools.*;
-import com.oembedler.moon.graphql.boot.GraphQLServletProperties;
+
 import graphql.kickstart.execution.config.GraphQLSchemaProvider;
 import graphql.kickstart.tools.boot.*;
 import graphql.language.Argument;
@@ -12,8 +15,7 @@ import graphql.schema.*;
 import graphql.schema.idl.SchemaDirectiveWiring;
 import graphql.schema.visibility.DefaultGraphqlFieldVisibility;
 import graphql.schema.visibility.GraphqlFieldVisibility;
-import graphql.servlet.config.DefaultGraphQLSchemaServletProvider;
-import graphql.servlet.config.GraphQLSchemaServletProvider;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
