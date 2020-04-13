@@ -42,6 +42,7 @@ dependencies {
 
 
     implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
+    //graphiql工具,来两竞争对手altair和Playground。
     implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"

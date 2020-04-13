@@ -61,6 +61,9 @@ graphql:
     enabled: true
     corsEnabled: true
     exception-handlers-enabled: true
+    tracing-enabled: true
+    actuator-metrics: true
+    contextSetting: PER_REQUEST_WITH_INSTRUMENTATION
 
 logging:
   file:

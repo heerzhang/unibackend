@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import java.util.function.Consumer;
 
+//参看：https://github.com/graphql-java-kickstart/graphql-spring-boot
 //配置额外增加的graphql 多个接口。
 
 //[注意] 5.7版本com.coxautodev.graphql.tools包名改了，而6.0版本graphql.kickstart.tools包。

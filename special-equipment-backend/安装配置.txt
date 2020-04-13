@@ -19,8 +19,7 @@ java还未支持协程Fiber；js其实单线程。
 Spring WebFlux 默认是使用 Netty 作为 Web 容器的。Undertow 用的人比较少，。
 
 https://github.com/graphql-java-kickstart/samples
-com.coxautodev.graphql.tools包名都改graphql.kickstart.tools 升级有问题
-import graphql.kickstart.tools.GraphQLQueryResolver; 这个不能切换包名！
+
 
 windows 10中Tomcat安装和部署的教程  https://www.jb51.net/article/173324.htm ; 端口号冲突 JRE=jdk目录 .bin\startup.bat。
 @SpringBootApplication没有web.xml而老Spring MVC项目web.xml添filter-mapping、servlet-mapping的。https://www.pocketdigi.com/20170527/1576.html
@@ -111,4 +110,4 @@ websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录�
 单个订阅endpoint后端token不代表安全域接口只代表用户ID；
 Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符; 正则表达式匹配?
 @PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
-
+prisma=类比后端graphQL服务器。
