@@ -95,6 +95,7 @@ public class BaseMutation implements GraphQLMutationResolver {
 
     @Autowired
     private final JwtTokenUtil jwtTokenUtil=new JwtTokenUtil();
+
     @Value("${sei.cookie.domain:}")
     private final String  cookieDomain="";
 
@@ -307,7 +308,8 @@ public class BaseMutation implements GraphQLMutationResolver {
            HttpServletResponse response=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
            Cookie cookie =new Cookie("token", token);
            //Domain是针对后端服务器，前端跨域，浏览器处理时和前端是那个的一点关系都没有。
-            cookie.setDomain(cookieDomain);
+            //若undertow不能加域名IP, 而tomcat可以加IP的。
+            //cookie.setDomain(cookieDomain);
             cookie.setHttpOnly(true);
             cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
             //Path就是servlet URL的接口路径，不能嵌套在其它servlet的底下;

@@ -61,6 +61,9 @@ graphql:
     enabled: true
     corsEnabled: true
     exception-handlers-enabled: true
+    tracing-enabled: true
+    actuator-metrics: true
+    contextSetting: PER_REQUEST_WITH_INSTRUMENTATION
 
 logging:
   file:
@@ -144,27 +147,43 @@ spring:
   cache:
 
 
-graphiql:
-  #生产系统的graphiql必需要关闭！
+graphql.playground:
+  mapping: /playground
+  endpoint: /graphql
+  subscriptionsEndpoint: /subscriptions
   enabled: true
-  mapping: /graphiql
-  endpoint:
-    graphql: /graphql
-    subscriptions: /subscriptions
-  static:
-    basePath: /
-  pageTitle: GraphiQL
+  pageTitle: 调试后端接口用
   cdn:
     enabled: false
-    version: 0.11.11
-  props:
-    resources:
-      defaultQuery: defaultQuery.graphql
-    variables:
-      editorTheme: "solarized light"
+    version: latest
+  settings:
+    editor.cursorShape: line
+    editor.fontFamily: "'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace"
+    editor.fontSize: 14
+    editor.reuseHeaders: true
+    editor.theme: dark
+    general.betaUpdates: false
+    prettier.printWidth: 80
+    prettier.tabWidth: 2
+    prettier.useTabs: false
+    request.credentials: omit
+    schema.polling.enable: true
+    schema.polling.endpointFilter: "*localhost*"
+    schema.polling.interval: 2000
+    schema.disableComments: true
+    tracing.hideTracingResponse: true
   headers:
-  #用这会必然带上Bearer　，但是时间固定,超时,若走cockie模式就不会,而两token也不同的。graphiql浏览器读的。
-  #Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZXJ6aGFuZyIsImV4cCI6MTU0OTk2MzUyNywiaWF0IjoxNTQ5OTU4MTI3fQ.z96CaGdjhI1OhudZlNTNcJWrRBEETFsliVI0x3_mrqRj2mOjLU0IOV1G3_WEufGMyfJ_MBK0jNYHF8drlAqD2A"
+    headerFor: AllTabs
+  tabs:
+  - name: 对后端测试
+    query: classpath:defaultQuery.graphql
+    headers:
+      Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNTg2NzU3NzE5LCJpYXQiOjE1ODY3NTIzMTl9.9qU6eIgppjF4dC3FbWycb4fdsSmVPIuj1UIncMIdil3mjJig-_gy63OUx6CRQX65QVrEK4d-Kbt5PajqH9Y36A
+    variables: classpath:variables.json
+    responses:
+  #  - classpath:exampleResponse1.json
+  #  - classpath:exampleResponse2.json
+
 
 file:
   #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
@@ -174,10 +193,10 @@ sei:
   visibility:
     #ROLE_USER graphql模型文件中没@authr(qx明确指的将用的角色缺省值,仅针对主安全域graphql设置的。
     role:
-  testMode: false
+  testMode: true
   control:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
-    permitAnyURL: false
+    permitAnyURL: true
   cache.log: false
   server.URI: http://27.151.117.65:8673
   cookie:
@@ -200,5 +219,3 @@ sei:
       map[http://localhost:3000]:
       map[http://localhost:3100]:
       map[http://192.168.171.3:3000]:
-
-
