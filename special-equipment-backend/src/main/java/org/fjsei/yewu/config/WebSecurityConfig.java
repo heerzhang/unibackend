@@ -78,13 +78,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         if(isTestMode) {
             //开启graphiql测试工具
             web.ignoring().antMatchers(
-                    HttpMethod.POST,
-                    "/subscriptions/*","/auth"
+                    HttpMethod.POST, "/auth"
             ).and()
                     .ignoring()
                     .antMatchers(
                             HttpMethod.GET,
-                            "/teacher/**", "/graphiql", "/test/**", "/vendor/**","/subscriptions"
+                            "/teacher/**", "/graphiql", "/test/**"
                     ).and()
                     .ignoring()
                     .antMatchers(
@@ -92,6 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/graphql","/auth"
                     );
 
+            //若ignoring(HttpMethod.GET, "/subscriptions")将会导致subscriptions场景auth就算有token却也是null的。
             //若（isTestMode+isPermitAnyURL）任何人可随意访问任何接口，这时JWTcookies=null就被许可通行。
         }
         else {
@@ -165,7 +165,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         middleRegistry.anyRequest().authenticated();
 
         //控制要不要验证权限。
-        //支持访问http://localhost:8083/voyager 这里并不需要添加路径啊？
 
         //httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.addFilterAfter(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -190,4 +189,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 }
 
 
-//graphiQL+新特性voyager 引入的 /vendor/* 路径；
+//voyager支持包 引入的 "/vendor/**"路径；voyager实用性不强，摆设罢了，删除掉不再支持。

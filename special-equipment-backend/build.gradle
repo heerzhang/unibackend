@@ -43,7 +43,6 @@ dependencies {
 
     implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
     implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
-    implementation "com.graphql-java-kickstart:voyager-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
 
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 

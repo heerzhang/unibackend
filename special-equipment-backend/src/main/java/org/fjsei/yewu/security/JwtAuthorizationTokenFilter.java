@@ -90,7 +90,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             }
 
             if(isTestMode) {
-                if (servletPath.startsWith("/test/") || servletPath.startsWith("/vendor/")
+                if (servletPath.startsWith("/test/")
                         || servletPath.startsWith("/favicon.ico"))
                 {
                     chain.doFilter(request, response);

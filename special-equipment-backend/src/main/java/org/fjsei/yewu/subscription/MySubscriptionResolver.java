@@ -54,18 +54,22 @@ class MySubscriptionResolver implements GraphQLSubscriptionResolver {
   {
     Authentication auth= SecurityContextHolder.getContext().getAuthentication();
     if(auth==null){
-      //作废！   到这这一步，ws:/握手已经结束，开始发送正常业务数据。
-      //权限认证实际在前面的步骤。
-      GraphQLWebSocketContext context = env.getContext();
-      Optional<Authentication> authentication = Optional.ofNullable(context.getSession())
+      //到这这一步，ws:/握手已经结束，开始发送正常业务数据。
+      //权限认证实际在前面的步骤。 实际上，没有登录用户的任何订阅都是：publisher不会执行的！
+      return publisher;
+      /*      GraphQLWebSocketContext context = env.getContext();
+       Optional<Authentication> authentication = Optional.ofNullable(context.getSession())
               .map(Session::getUserProperties)
               .map(props -> props.get("CONNECT_TOKEN"))
               .map(Authentication.class::cast);
-      log.info("Subscribe to publisher with token: {}", authentication);
-      //仅在握手时有authentication认证，正常数据包无法得知认证信息。
-      authentication.ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+        log.info("Subscribe to publisher with token: {}", authentication);
+        仅在握手时有authentication认证，正常数据包无法得知认证信息。
+        authentication.ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+      */
     }
-    log.info("Security context principal: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    else {
+      log.info("Security context principal: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
     //后；发布开始。
     //从这里开始ws://协议层次和 publisher 一点关系都没有?。return null;并不意味ws:/连接要关闭的。
     return publisher;
