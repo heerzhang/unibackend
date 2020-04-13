@@ -7,7 +7,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group 'industry-services-com'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 
 repositories {
@@ -18,13 +18,13 @@ compileJava {
     targetCompatibility = 13
 }
 
-//对照更新依据https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
+//版本升级更新依据https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
 ext['kotlin.version'] = '1.3.71'
 
 
 configurations {
     //编译排除掉 tomcat
-   // compile.exclude module: 'spring-boot-starter-tomcat'
+    compile.exclude module: 'spring-boot-starter-tomcat'
 }
 
 
@@ -34,12 +34,12 @@ dependencies {
 
     //graphql脱离web/MVC,  实际上spring-boot-starter-web对标spring-boot-starter-webflux关系二选一。
     //假如spring-boot-starter-web不添加照样跑，但是URL验证部分可能无法通过，想要测试graphiQL网页或者其它REST接口就需要它。
-    //异步资源支持？ 'spring-boot-starter-web',改成 'spring-boot-starter-webflux' 替换副作用吗？
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //异步资源支持？ 'spring-boot-starter-web',改成 'spring-boot-starter-webflux' 替换副作用吗？没用到新的特性部分就可兼容。
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     //添加依赖
-  //  implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
 
 
     implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
@@ -57,7 +57,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation group: 'com.h2database', name: 'h2', version:'1.4.200'
     compile group: 'com.oracle', name: 'ojdbc6', version:'11.2.0.3'
-    // implementation(project(":graphql-spring-boot-starter"))
+    /// implementation(project(":graphql-spring-boot-starter"))
     implementation "io.jsonwebtoken:jjwt:0.9.1"
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
@@ -65,7 +65,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
     //hibernate-ehcache依赖于net.sf.ehcache　2.10.6旧版本，必须要配套的版本。
-    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.13.Final') {
+    compile(group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.14.Final') {
         exclude(module: 'ehcache-core')
     }
 
@@ -78,7 +78,7 @@ dependencies {
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
     //compile "org.springframework.boot:spring-boot-starter-security"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.13'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     
 }
