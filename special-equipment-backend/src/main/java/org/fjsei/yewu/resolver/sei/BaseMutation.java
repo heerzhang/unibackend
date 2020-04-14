@@ -270,7 +270,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         SecurityContextHolder.getContext().setAuthentication(null);
         HttpServletResponse response=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         Cookie cookie =new Cookie("token", "");
-        cookie.setDomain(cookieDomain);
+       // cookie.setDomain(cookieDomain);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(1);
         cookie.setPath("/");
@@ -316,13 +316,6 @@ public class BaseMutation implements GraphQLMutationResolver {
             cookie.setPath("/");
            //cookie.setSecure(true);     //HTTPS才允許設置的。
            response.addCookie(cookie);
-           /* cookie =new Cookie("token", token);
-            cookie.setDomain(cookieDomain);
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
-            cookie.setPath("/subscriptions");
-           response.addCookie(cookie);
-           */
         }
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         Long  userid= ((JwtUser)(auth.getPrincipal())).getId();

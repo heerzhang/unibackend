@@ -36,6 +36,17 @@ app:
 
 trace: false
 debug: true
+#监控信息，生产环境要权限或者控制
+management:
+  endpoint:
+    #shutdown.enabled: true 宕机
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        exclude: heapdump,env
 
 server:
   port: 8673

@@ -41,3 +41,6 @@ graphql后端测试
 {
   "id": 1
 }
+关机
+POST http://localhost:8673/actuator/shutdown
+Content-Type: application/json; charset=utf-8

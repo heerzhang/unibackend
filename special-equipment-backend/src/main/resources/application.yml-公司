@@ -36,6 +36,17 @@ app:
 
 trace: false
 debug: true
+#监控信息，生产环境要权限或者控制
+management:
+  endpoint:
+    #shutdown.enabled: true 宕机
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        exclude: heapdump,env
 
 server:
   port: 8673
@@ -141,49 +152,14 @@ spring:
   main:
     allow-bean-definition-overriding: true
   mvc:
-    view:
-      prefix: /
-      #suffix: .jsp
   cache:
 
 
-graphql.playground:
-  mapping: /playground
-  endpoint: /graphql
-  subscriptionsEndpoint: /subscriptions
-  enabled: true
-  pageTitle: 调试后端接口用
-  cdn:
-    enabled: false
-    version: latest
-  settings:
-    editor.cursorShape: line
-    editor.fontFamily: "'Source Code Pro', 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace"
-    editor.fontSize: 14
-    editor.reuseHeaders: true
-    editor.theme: dark
-    general.betaUpdates: false
-    prettier.printWidth: 80
-    prettier.tabWidth: 2
-    prettier.useTabs: false
-    request.credentials: omit
-    schema.polling.enable: true
-    schema.polling.endpointFilter: "*localhost*"
-    schema.polling.interval: 2000
-    schema.disableComments: true
-    tracing.hideTracingResponse: true
-  headers:
-    headerFor: AllTabs
-  tabs:
-  - name: 对后端测试
-    query: classpath:defaultQuery.graphql
-    headers:
-      Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNTg2NzU3NzE5LCJpYXQiOjE1ODY3NTIzMTl9.9qU6eIgppjF4dC3FbWycb4fdsSmVPIuj1UIncMIdil3mjJig-_gy63OUx6CRQX65QVrEK4d-Kbt5PajqH9Y36A
-    variables: classpath:variables.json
-    responses:
+#graphql.playground:
+ #   editor.fontFamily: "'Source Code Pro','Monaco', monospace"
+  #  responses:
   #  - classpath:exampleResponse1.json
-  #  - classpath:exampleResponse2.json
-
+  #  - classpath:variables.json
 
 file:
   #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
