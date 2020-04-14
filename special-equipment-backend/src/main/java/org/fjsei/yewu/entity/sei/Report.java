@@ -76,8 +76,8 @@ public class Report  implements SimpleReport {
     //@PostAuthorize对实体类不起作用，对行动类有效？    @PostAuthorize("hasRole('ADMIN')") !;
     public Date getUpLoadDate() {
         long rights = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().filter(authority ->
-                authority.equals(new SimpleGrantedAuthority("ROLE_ADMIN"))
-                || authority.equals(new SimpleGrantedAuthority("ROLE_USER"))  ).count();
+                authority.equals(new SimpleGrantedAuthority("ROLE_cmnAdmin"))
+                || authority.equals(new SimpleGrantedAuthority("ROLE_Ma"))  ).count();
 
         if(rights>0)
             return upLoadDate;

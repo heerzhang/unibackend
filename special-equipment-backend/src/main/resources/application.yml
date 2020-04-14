@@ -35,7 +35,7 @@ app:
 
 
 trace: false
-debug: true
+debug: false
 #监控信息，生产环境要权限或者控制
 management:
   endpoint:
@@ -81,7 +81,8 @@ logging:
     path: E:\\del\\logs
   level:
     root: INFO
-    org.springframework.web: DEBUG
+    #级别是=DEBUG
+    org.springframework.web: INFO
     org.hibernate: ERROR
     com:
       oembedler:
@@ -122,8 +123,6 @@ spring:
         #default-jta-timeout: 2600000
         #max-timeout: 30000000
         enable-logging: true
-  #log-dir: classpath:newlog
-  #transaction-manager-id: txManager
   jpa:
     properties:
       javax:
@@ -135,7 +134,7 @@ spring:
       hibernate:
         #default_schema: newsei   还是一个个指定好
         #看SQL打印　true 　false
-        show_sql: true
+        show_sql: false
         #统计对单个hibernate session会话的总结
         generate_statistics: true
         ##      dialect: org.hibernate.dialect.Oracle10gDialect

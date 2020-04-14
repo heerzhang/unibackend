@@ -61,31 +61,9 @@ Webflux核心使用了异步资源加载！需要ReactiveMongoRepository，无�
 web容器更换Undertow依赖支持HTTP、HTTPS、HTTP/2多路复用机制；  http://www.imooc.com/article/274138
 免费申请SSL证书  https://freessl.org
 
-Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
-（在Redisson PRO版本中可用）实现了具有本地缓存​​支持的Hibernate缓存。
-implementation 'org.redisson:redisson-spring-boot-starter:3.10.2'   https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
-compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
- compile 'org.redisson:redisson-hibernate-53:3.10.2'
-<Directive> directives ("authr"))("qx"); equals("authenticate") || fieldName.equals("logout") || fieldName.equals("newUser"))equals("auth") )
-新建文本文档.txt
-<Directive> directives ("authr"))("qx");
-        /**
-         * @param fieldVisibility the field visibility
-         * @return this builder
-         * @deprecated use {@link
-         graphql.schema.GraphQLCodeRegistry.Builder#fieldVisibility(graphql.schema.visibility.GraphqlFieldVisibility)
-         } instead
-         */
-        @Deprecated   graphql/schema/GraphQLSchema. Builder{}
-        public Builder fieldVisibility(GraphqlFieldVisibility fieldVisibility) {
-            this.codeRegistry = this.codeRegistry.transform(builder -> builder.fieldVisibility(fieldVisibility));
-            return this;
-        }
-报错extend type Query {} extend type Mutation {}不能允许为空的。
 POST http://localhost:8673/graphql
 Content-Type: application/json; charset=utf-8
 Cache-Control: no-cache
-
 {   "query": "{hello2(value1:\"sdsR65adaf\") }" }
   @Bean
   @ConditionalOnMissingBean
@@ -93,21 +71,17 @@ Cache-Control: no-cache
     return new DefaultGraphQLSchemaServletProvider(schema);
   }
 import { WebSocketLink } from 'apollo-link-ws';有加了一层。
-
-document.cookie = 'key=val'
 new WebSocket('ws://localhost:8673/subscriptions')
-WebSocket握手请求：
-个请求必须包含一个Upgrade header字段，它的值必须包含"websocket"。
-请求必须包含一个Connection header字段，它的值必须包含"Upgrade"。
-请求必须包含一个名为 Sec-WebSocket-Key的header字段。
-包含一个 Origin header字段。
-请求可能如cookie（RFC6265）或者认证相关的header字段如Authorization字段（RFC2616）。
-服务端 cookie.setHttpOnly(false); 前端 启动时已经有cookie= token=可以获取。 ！ 走ws自己的内部认证控制环节可以的。
-服务端 cookie.setHttpOnly(true); 前端 启动时已经有cookie= null; 无法获知！！。只能单独搞一个token;
 websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录注册的servlet优先抢走处理。
 谷歌Chrome引入SameSite cookie将提高隐私安全性能，可保证仅通过HTTPS连接访问跨站cookie。限制cookie被第三方网站追踪。
-证书相关authenticate(String name,String password) logout() timeArrivedRegenerateToken； generateToken(UserDetails userDetails);JwtUser implements UserDetails;
-单个订阅endpoint后端token不代表安全域接口只代表用户ID；
 Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符; 正则表达式匹配?
 @PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
 prisma=类比后端graphQL服务器。
+
+Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
+（在Redisson PRO版本中可用）实现了具有本地缓存​​支持的Hibernate缓存。
+implementation 'org.redisson:redisson-spring-boot-starter:3.10.2'   https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
+compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
+ compile 'org.redisson:redisson-hibernate-53:3.10.2'
+
+
