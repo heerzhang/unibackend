@@ -36,6 +36,7 @@ dependencies {
     //假如spring-boot-starter-web不添加照样跑，但是URL验证部分可能无法通过，想要测试graphiQL网页或者其它REST接口就需要它。
     //异步资源支持？ 'spring-boot-starter-web',改成 'spring-boot-starter-webflux' 替换副作用吗？没用到新的特性部分就可兼容。
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    //健康检查、审计、统计和监控: 暴露HTTP或者JMX来监控和管理应用/health /metrics /loggers　。
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     //添加依赖

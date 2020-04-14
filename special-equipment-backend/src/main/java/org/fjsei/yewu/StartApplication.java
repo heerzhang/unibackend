@@ -70,3 +70,4 @@ public class StartApplication {
 //hibernate-ehcache不支持3代的，所以出现告警WARN  org.hibernate.orm.deprecation - HHH020100:  新版本ehcache3不能用,要配套ehcache2；
 //注入配置参数对象的模式@EnableConfigurationProperties， 否则启动时找不到bean；
 //SpringBoot-2.1.1使用https 需要  https://www.cnblogs.com/yvanchen1992/p/10111534.html
+//Actuator:在运行时改变日志等级     https://www.jianshu.com/p/d5943e303a1f
