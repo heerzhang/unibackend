@@ -83,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .ignoring()
                     .antMatchers(
                             HttpMethod.GET,
-                            "/teacher/**", "/graphiql", "/test/**"
+                            "/teacher/**", "/graphiql", "/test/**", "/vendor/**"
                     ).and()
                     .ignoring()
                     .antMatchers(
