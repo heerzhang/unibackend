@@ -63,7 +63,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
-    //hibernate-ehcache依赖于net.sf.ehcache　2.10.6旧版本，必须要配套的版本。
+    //hibernate-ehcache依赖于net.sf.ehcache　2.10.6旧版本，必须要配套的版本。 
     compile(group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.14.Final') {
         exclude(module: 'ehcache-core')
     }
@@ -75,6 +75,10 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-devtools')
 
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
+
+    implementation 'org.redisson:redisson-spring-boot-starter:3.12.4'
+    implementation 'org.redisson:redisson-hibernate-53:3.12.4'
+    
     
     //compile "org.springframework.boot:spring-boot-starter-security"
     testCompile group: 'junit', name: 'junit', version: '4.13'

@@ -20,7 +20,6 @@ Spring WebFlux 默认是使用 Netty 作为 Web 容器的。Undertow 用的人�
 
 https://github.com/graphql-java-kickstart/samples
 
-
 windows 10中Tomcat安装和部署的教程  https://www.jb51.net/article/173324.htm ; 端口号冲突 JRE=jdk目录 .bin\startup.bat。
 @SpringBootApplication没有web.xml而老Spring MVC项目web.xml添filter-mapping、servlet-mapping的。https://www.pocketdigi.com/20170527/1576.html
 Jenkins发布部署 Kubernetes集群；拉取源码选择git,http://代码服务器（gitbucket）；GitBucket自己的GitHub。码云Gitee= Git代码托管;网站配置免费SSL证书;
@@ -79,9 +78,11 @@ Spring Security——基于表达式的权限控制，Spring 表达式语言(Spr
 prisma=类比后端graphQL服务器。
 
 Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
-（在Redisson PRO版本中可用）实现了具有本地缓存​​支持的Hibernate缓存。
-implementation 'org.redisson:redisson-spring-boot-starter:3.10.2'   https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
-compile group: 'org.redisson', name: 'redisson-hibernate-53', version: '3.12.3'
- compile 'org.redisson:redisson-hibernate-53:3.10.2'
-
-
+用redis来实现分布式缓存。rediss://	 https://redisson.org/
+ClusteredLocalCachedRedisRegionFactory 开源https://github.com/redisson/redisson/tree/master/redisson-hibernate
+仅限于Redisson PRO版本  https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
+分=开源版本{等同Jedis哪个}和商业版(Redisson PRO)商业版收费标准　https://www.iteye.com/blog/aperise-2396196
+Redisson和Hibernate框架整合 http://www.voidcc.com/redisson
+开启 redis-server.exe redis.windows.conf  https://www.cnblogs.com/wuwuyong/p/11697643.html
+maven jar冲突问题<exclusions><exclusion>  　
+高版本org.ehcache 3;　https://github.com/adamzareba/company-structure-hibernate-cache/blob/master/pom.xml
