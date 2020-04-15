@@ -86,3 +86,4 @@ Redisson和Hibernate框架整合 http://www.voidcc.com/redisson
 开启 redis-server.exe redis.windows.conf  https://www.cnblogs.com/wuwuyong/p/11697643.html
 maven jar冲突问题<exclusions><exclusion>  　
 高版本org.ehcache 3;　https://github.com/adamzareba/company-structure-hibernate-cache/blob/master/pom.xml
+http://www.ehcache.org/documentation/3.8/
