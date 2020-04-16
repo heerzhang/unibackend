@@ -99,3 +99,5 @@ https://blog.csdn.net/chengjili9361/article/details/100832591
 https://blog.csdn.net/chengjili9361/article/details/100832593
 https://blog.csdn.net/chengjili9361/article/details/100832595
 Hazelcast服务端安装　https://blog.csdn.net/RL_LEEE/article/details/100549658
+直接使用HazelcastLocalCacheRegionFactory
+hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory

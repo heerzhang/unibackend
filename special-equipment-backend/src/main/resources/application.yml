@@ -133,6 +133,9 @@ spring:
       hibernate.format_sql: true
       hibernate.use_sql_comments: true
       hibernate:
+        javax:
+          cache:
+            missing_cache_strategy: create
         #default_schema: newsei   还是一个个指定好
         #看SQL打印　true 　false
         show_sql: true
@@ -141,12 +144,13 @@ spring:
         ##      dialect: org.hibernate.dialect.Oracle10gDialect
         hbm2ddl:
           auto: update
-        #指定缓存provider
+        #替换缓存provider
         cache:
-          region.factory_class:
           #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: false
-          use_query_cache: false
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
     generate-ddl: true
     open-in-view: true
   main:
