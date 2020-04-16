@@ -143,10 +143,10 @@ spring:
           auto: update
         #指定缓存provider
         cache:
-          region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+          region.factory_class:
           #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: true
-          use_query_cache: true
+          use_second_level_cache: false
+          use_query_cache: false
     generate-ddl: true
     open-in-view: true
   main:
@@ -155,7 +155,7 @@ spring:
   cache:
 
 
-  #graphql.playground:
+  #graphql.playground:    # false
   #   editor.fontFamily: "'Source Code Pro','Monaco', monospace"
   #  responses:
   #  - classpath:exampleResponse1.json
