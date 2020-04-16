@@ -76,7 +76,7 @@ websocket和http的endpoint是路径/A/B，不可以嵌套，否则上级目录�
 Spring Security——基于表达式的权限控制，Spring 表达式语言(Spring EL)；SpEL 操作符; 正则表达式匹配?
 @PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
 prisma=类比后端graphQL服务器。
-
+jcache是一种缓存门面规范，并不包含具体缓存实现;
 Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
 用redis来实现分布式缓存。rediss://	 https://redisson.org/
 ClusteredLocalCachedRedisRegionFactory 开源https://github.com/redisson/redisson/tree/master/redisson-hibernate
@@ -87,3 +87,15 @@ Redisson和Hibernate框架整合 http://www.voidcc.com/redisson
 maven jar冲突问题<exclusions><exclusion>  　
 高版本org.ehcache 3;　https://github.com/adamzareba/company-structure-hibernate-cache/blob/master/pom.xml
 http://www.ehcache.org/documentation/3.8/
+JCache provider,使用 EhCache3构建二级缓存：RegionFactory是核心。　https://blog.csdn.net/github_39602765/article/details/89053497
+应当要用@hibernate.Cache 不能直接用 @Cacheable;　看来Geode不支持JSR107(JCache)；
+org.hibernate:hibernate-ehcache:建立在Ehcache 2上；现推荐hibernate-jcache它可支持Ehcache 3包。
+redis竞争对手Hazelcast来了。
+1 本地缓存Ehcache、Caffeine; ; 2 分布式缓存 Client-Server模式缓存Redis分布式缓存Redis;
+EhCache3支持到了分布式，但它还是基于Java进程的缓存;
+进程本地缓存之王Caffeine Cache；Ehcache3.x集成； https://cloud.tencent.com/developer/article/1497595
+boot 2.1.4 hibernate二级缓存 Hazelcast实现
+https://blog.csdn.net/chengjili9361/article/details/100832591
+https://blog.csdn.net/chengjili9361/article/details/100832593
+https://blog.csdn.net/chengjili9361/article/details/100832595
+Hazelcast服务端安装　https://blog.csdn.net/RL_LEEE/article/details/100549658

@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -22,7 +23,7 @@ import javax.persistence.PersistenceContext;
 主程序、启动类; 相当于API网关。
 集成ehcache二级缓存 https://blog.csdn.net/yiduyangyi/article/details/54176453
 */
-///@EnableCaching		用法不同的机制。
+///@EnableCaching  属于spring自带cache机制。
 
 
 @EnableConfigurationProperties({
