@@ -147,8 +147,8 @@ spring:
         #替换缓存provider
         cache:
           #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: true
-          use_query_cache: true
+          use_second_level_cache: false
+          use_query_cache: false
           region:
             factory_class: com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
     generate-ddl: true
