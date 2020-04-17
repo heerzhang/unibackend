@@ -77,29 +77,16 @@ Spring Security——基于表达式的权限控制，Spring 表达式语言(Spr
 @PreAuthorize("hasRole('ROLE_'.concat(this.class.simpleName))")
 prisma=类比后端graphQL服务器。
 jcache是一种缓存门面规范，并不包含具体缓存实现;
-Hibernate用于二级缓存的另一选项：Redisson，它允许将Redis用作Hibernate缓存  https://www.cnblogs.com/xyy2019/p/11759795.html
-用redis来实现分布式缓存。rediss://	 https://redisson.org/
+org.hibernate:hibernate-ehcache:建立在Ehcache 2上；现推荐hibernate-jcache它可支持Ehcache 3包。
+高版本ehcache 3;　http://www.ehcache.org/documentation/3.8/
+1 本地缓存Ehcache、Caffeine; ; 2 分布式缓存 Client-Server模式缓存Redis分布式缓存Redis;
+Hazlecast的商用授权下载商用版本这些配置才能生效？ssl传输Wan。
 ClusteredLocalCachedRedisRegionFactory 开源https://github.com/redisson/redisson/tree/master/redisson-hibernate
 仅限于Redisson PRO版本  https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
-分=开源版本{等同Jedis哪个}和商业版(Redisson PRO)商业版收费标准　https://www.iteye.com/blog/aperise-2396196
-Redisson和Hibernate框架整合 http://www.voidcc.com/redisson
-开启 redis-server.exe redis.windows.conf  https://www.cnblogs.com/wuwuyong/p/11697643.html
+
+！！Redisson文档细节，Hibernate版本还算独立的？　 http://www.voidcc.com/redisson
+开启 redis-server.exe redis.windows.conf   https://www.cnblogs.com/wuwuyong/p/11697643.html
 maven jar冲突问题<exclusions><exclusion>  　
-高版本org.ehcache 3;　https://github.com/adamzareba/company-structure-hibernate-cache/blob/master/pom.xml
-http://www.ehcache.org/documentation/3.8/
-JCache provider,使用 EhCache3构建二级缓存：RegionFactory是核心。　https://blog.csdn.net/github_39602765/article/details/89053497
-应当要用@hibernate.Cache 不能直接用 @Cacheable;　看来Geode不支持JSR107(JCache)；
-org.hibernate:hibernate-ehcache:建立在Ehcache 2上；现推荐hibernate-jcache它可支持Ehcache 3包。
-redis竞争对手Hazelcast来了。
-1 本地缓存Ehcache、Caffeine; ; 2 分布式缓存 Client-Server模式缓存Redis分布式缓存Redis;
-EhCache3支持到了分布式，但它还是基于Java进程的缓存;
-进程本地缓存之王Caffeine Cache；Ehcache3.x集成； https://cloud.tencent.com/developer/article/1497595
-boot 2.1.4 hibernate二级缓存 Hazelcast实现
-https://blog.csdn.net/chengjili9361/article/details/100832591
-https://blog.csdn.net/chengjili9361/article/details/100832593
-https://blog.csdn.net/chengjili9361/article/details/100832595
-Hazelcast服务端安装　https://blog.csdn.net/RL_LEEE/article/details/100549658
-直接使用HazelcastLocalCacheRegionFactory
-hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
-Hazlecast的商用授权下载商用版本这些配置才能生效？ssl传输Wan。
+Redisson 是一个在 Redis 的基础上实现的 Java 驻内存数据网格；
+redisson详细配置多方案　https://blog.csdn.net/zilong_zilong/article/details/78252037
 

@@ -43,3 +43,7 @@ Redisson允许将Redis用作Hibernate缓存
 <property name="hibernate.cache.region.factory_class" value="org.redisson.hibernate.RedissonLocalCachedRegionFactory" />
 
 redisson.yaml：这是单点的配置 https://blog.csdn.net/panzm_csdn/article/details/79700101
+cd E:\del\Redis　安装目录并输入命令redis-server.exe redis.windows.conf
+正式有redis-5.0.5版本；Redis没有正式Windows。https://github.com/tporadowski/redis
+非收费版 Could not load　CachedRedisRegionFactory；　https://yq.aliyun.com/articles/554753?type=2
+

@@ -76,7 +76,9 @@ dependencies {
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
     implementation "org.hibernate:hibernate-jcache:5.4.14.Final"
-
+    //缓存提供者provider部分
+    implementation 'org.redisson:redisson-spring-boot-starter:3.12.5'
+    implementation 'org.redisson:redisson-hibernate-53:3.12.5'
 
     
     runtime('org.springframework.boot:spring-boot-devtools')
