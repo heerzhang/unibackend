@@ -1,0 +1,13 @@
+singleServerConfig:
+  address: "redis://127.0.0.1:6379"
+---
+Fast:
+  ttl: 144000
+  maxIdleTime: 72000
+  localCacheOptions:
+    invalidationPolicy: "ON_CHANGE"
+    evictionPolicy: "NONE"
+    cacheSize: 0
+    timeToLiveInMillis: 0
+    maxIdleInMillis: 0
+
