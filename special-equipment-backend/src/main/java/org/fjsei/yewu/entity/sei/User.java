@@ -30,7 +30,7 @@ import java.util.Set;
 @Entity
 @Table(name = "USERS",
         uniqueConstraints={@UniqueConstraint(columnNames={"username"})} )
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Fast")
 public class User implements Person {
     //注意id可能带来麻烦，数据库重整，可seq却从小开始，报唯一性约束错！select user_seq.nextval from dual;
     //旧表可修改initialValue到旧的表最大ID值，ID最多64位，就是19个数字的字符串，相当于说是无限大的。
@@ -77,7 +77,7 @@ public class User implements Person {
     @JoinTable(  name = "USER_AUTHORITY",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Fast")
     private Set<Authority> authorities;
     //上面Set若是换成List就会导致启动失败hibernate.loader.MultipleBagFetchException: cannot simultaneously fetch multiple bags
     //上面Lazy导致前端无法登陆。
