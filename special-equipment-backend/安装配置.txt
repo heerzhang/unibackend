@@ -90,3 +90,9 @@ maven jar冲突问题<exclusions><exclusion>  　
 Redisson 是一个在 Redis 的基础上实现的 Java 驻内存数据网格；
 redisson详细配置多方案　https://blog.csdn.net/zilong_zilong/article/details/78252037
 
+被保存了却过期不了啊
+https://github.com/redisson/redisson/tree/master/redisson-hibernate/redisson-hibernate-53/src/test/java/org/redisson/hibernate
+
+props.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");　https://yq.aliyun.com/articles/554753?type=2
+hibernate-redis.properties文件
+

@@ -150,7 +150,8 @@ spring:
           use_second_level_cache: true
           use_query_cache: true
           region:
-            factory_class: com.hazelcast.hibernate.HazelcastLocalCacheRegionFactory
+            #非商业收费版本只能用最差那一个SingletonRedisRegionFactory。分开Hibernate版本RedissonRegionFactory
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
     generate-ddl: true
     open-in-view: true
   main:
