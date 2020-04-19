@@ -96,3 +96,5 @@ https://github.com/redisson/redisson/tree/master/redisson-hibernate/redisson-hib
 props.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");　https://yq.aliyun.com/articles/554753?type=2
 hibernate-redis.properties文件
 
+Redission说明书： https://github.com/redisson/redisson/tree/master/redisson-hibernate
+
