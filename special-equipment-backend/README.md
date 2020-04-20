@@ -57,5 +57,6 @@ http://www.voidcc.com/redisson/redisson-integration-with-hibernate
         cfg.setProperty("hibernate.cache.redisson.item.expiration.max_idle_time", "1000");
     public static final String TTL_SUFFIX = ".expiration.time_to_live";
     public static final String MAX_IDLE_SUFFIX = ".expiration.max_idle_time";
-Region名字实际出现在服务端dump.db内。
+Region名字实际出现在服务端dump.rdb内。过期时间在数据缓存时就定了不能更改，删除redis服务器dump.rdb才重置。
+timeToLiveSeconds="120"
 

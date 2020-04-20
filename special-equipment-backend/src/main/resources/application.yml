@@ -126,13 +126,6 @@ spring:
   #transaction-manager-id: txManager
   jpa:
     properties:
-      redis:
-        expiryInSeconds:
-          default: 21000
-          hibernate:
-            common: 67000
-            Fast: 37000
-
       javax:
         persistence:
           sharedCache.mode: ENABLE_SELECTIVE
@@ -156,15 +149,11 @@ spring:
           redisson:
             Fast:
               expiration:
-                time_to_live: 17000
-                max_idle_time: 19000
-
+                time_to_live: 99000
+                #max_idle_time: 27000
           #二级缓存关闭启用的2个总开关,关不了集合字段
           use_second_level_cache: true
           use_query_cache: true
-          provider_configuration_file_resource_path: hibernate-redis.properties
-          region_prefix: hibernate
-          #use_structured_entries: true
           region:
             #非商业收费版本只能用最差那一个SingletonRedisRegionFactory。分开Hibernate版本RedissonRegionFactory
             factory_class: org.redisson.hibernate.RedissonRegionFactory
