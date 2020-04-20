@@ -147,9 +147,9 @@ spring:
         #替换缓存provider
         cache:
           redisson:
-            Fast:
-              expiration:
-                time_to_live: 99000
+            Fast.expiration.time_to_live: 18000
+            Medium.expiration.time_to_live: 47000
+            Slow.expiration.time_to_live: 117000
                 #max_idle_time: 27000
           #二级缓存关闭启用的2个总开关,关不了集合字段
           use_second_level_cache: true

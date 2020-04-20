@@ -60,3 +60,12 @@ http://www.voidcc.com/redisson/redisson-integration-with-hibernate
 Region名字实际出现在服务端dump.rdb内。过期时间在数据缓存时就定了不能更改，删除redis服务器dump.rdb才重置。
 timeToLiveSeconds="120"
 
+@Cache(都有 region = "Fast")， 查询result?；
+default-update-timestamps-region   timestamps   .eviction.max_entries .expiration.time_to_live
+default-query-results-region   query   
+.expiration.max_idle_time 
+.expiration.time_to_live 
+Medium entity  .expiration.time_to_live .expiration.max_idle_time
+Fast  collection 
+Region名字实际出现在服务端dump.db内。
+mapCache.fastPut(key, value, ttl 17, TimeUnit.MILLISECONDS, maxIdle 19, TimeUnit.MILLISECONDS); one thousandth of a second.
