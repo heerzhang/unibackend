@@ -61,7 +61,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
     implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
-    //implementation 'org.springframework.boot:spring-boot-starter-cache'
+    //可选择？
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    //可选择？
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
     //implementation 'org.hibernate:hibernate-ehcache:5.4.14.Final'
     //hibernate-ehcache依赖于net.sf.ehcache 2 旧版本，要配套的版本。 

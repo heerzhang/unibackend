@@ -25,7 +25,7 @@ import javax.persistence.PersistenceContext;
 */
 ///@EnableCaching  属于spring自带cache机制。
 
-
+@EnableCaching
 @EnableConfigurationProperties({
         MyGraphQLToolsProperties.class, FileStorageProperties.class
 })

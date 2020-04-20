@@ -89,6 +89,7 @@ ClusteredLocalCachedRedisRegionFactory 开源https://github.com/redisson/redisso
 maven jar冲突问题<exclusions><exclusion>  　
 Redisson 是一个在 Redis 的基础上实现的 Java 驻内存数据网格；
 redisson详细配置多方案　https://blog.csdn.net/zilong_zilong/article/details/78252037
+详细redisson配置 https://github.com/redisson/redisson/wiki/2.-Configuration
 
 被保存了却过期不了啊
 https://github.com/redisson/redisson/tree/master/redisson-hibernate/redisson-hibernate-53/src/test/java/org/redisson/hibernate
@@ -96,5 +97,5 @@ https://github.com/redisson/redisson/tree/master/redisson-hibernate/redisson-hib
 props.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");　https://yq.aliyun.com/articles/554753?type=2
 hibernate-redis.properties文件
 
-Redission说明书： https://github.com/redisson/redisson/tree/master/redisson-hibernate
+Redission说明书是redis客户端： https://github.com/redisson/redisson/tree/master/redisson-hibernate
 

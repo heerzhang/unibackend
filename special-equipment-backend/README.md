@@ -57,4 +57,5 @@ http://www.voidcc.com/redisson/redisson-integration-with-hibernate
         cfg.setProperty("hibernate.cache.redisson.item.expiration.max_idle_time", "1000");
     public static final String TTL_SUFFIX = ".expiration.time_to_live";
     public static final String MAX_IDLE_SUFFIX = ".expiration.max_idle_time";
+Region名字实际出现在服务端dump.db内。
 
