@@ -126,6 +126,13 @@ spring:
   #transaction-manager-id: txManager
   jpa:
     properties:
+      redis:
+        expiryInSeconds:
+          hibernate:
+            Fast: 131
+            query: 141
+          default: 163
+
       javax:
         persistence:
           sharedCache.mode: ENABLE_SELECTIVE
@@ -146,11 +153,33 @@ spring:
           auto: update
         #替换缓存provider
         cache:
+          redisson:
+            #若Redis歇菜，不报错给前端，变为等待
+            fallback: true
+            config: redisson.yaml
+            #如果用JNDI减少Redisson实例数
+            jndi_name: redisson_instance
+            query:
+              expiration.time_to_live: 43000
+            timestamps:
+              expiration.time_to_live: 122000
+            naturalid:
+              expiration.time_to_live: 112000
+            entity:
+              expiration.time_to_live: 93000
+            collection:
+              expiration.time_to_live: 71000
+            Slow:
+              expiration.time_to_live: 120000
+            Medium:
+              expiration.time_to_live: 58000
+            Fast:
+              expiration.time_to_live: 23000
           #二级缓存关闭启用的2个总开关,关不了集合字段
           use_second_level_cache: true
           use_query_cache: true
           region:
-            #非商业收费版本只能用最差那一个SingletonRedisRegionFactory。分开Hibernate版本RedissonRegionFactory
+            #非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
             factory_class: org.redisson.hibernate.RedissonRegionFactory
     generate-ddl: true
     open-in-view: true

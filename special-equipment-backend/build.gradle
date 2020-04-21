@@ -61,27 +61,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
     implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
-    //可选择？
-    implementation 'org.springframework.boot:spring-boot-starter-cache'
-    //可选择？
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-
-    //implementation 'org.hibernate:hibernate-ehcache:5.4.14.Final'
-    //hibernate-ehcache依赖于net.sf.ehcache 2 旧版本，要配套的版本。 
-   /* compile(group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.4.14.Final') {
-        exclude(module: 'ehcache-core')
-    }
-    */
-
-    //implementation 'org.ehcache:ehcache:3.8.1'
-   ///compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
-    implementation "org.hibernate:hibernate-jcache:5.4.14.Final"
     //缓存提供者provider部分(IMDG内存数据网格库)
-    implementation 'org.redisson:redisson-spring-boot-starter:3.12.5'
     implementation 'org.redisson:redisson-hibernate-53:3.12.5'
 
     
