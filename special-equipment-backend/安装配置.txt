@@ -81,21 +81,14 @@ org.hibernate:hibernate-ehcache:建立在Ehcache 2上；现推荐hibernate-jcach
 高版本ehcache 3;　http://www.ehcache.org/documentation/3.8/
 1 本地缓存Ehcache、Caffeine; ; 2 分布式缓存 Client-Server模式缓存Redis分布式缓存Redis;
 Hazlecast的商用授权下载商用版本这些配置才能生效？ssl传输Wan。
-ClusteredLocalCachedRedisRegionFactory 开源https://github.com/redisson/redisson/tree/master/redisson-hibernate
-仅限于Redisson PRO版本  https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
+ClusteredLocalCachedRedisRegionFactory仅限于Redisson PRO版本  https://stackoverflow.com/questions/7650129/redis-as-hibernate-second-level-cache
 
 ！！Redisson文档细节，Hibernate版本还算独立的？　 http://www.voidcc.com/redisson
 开启 redis-server.exe redis.windows.conf   https://www.cnblogs.com/wuwuyong/p/11697643.html
 maven jar冲突问题<exclusions><exclusion>  　
-Redisson 是一个在 Redis 的基础上实现的 Java 驻内存数据网格；
+
 redisson详细配置多方案　https://blog.csdn.net/zilong_zilong/article/details/78252037
-详细redisson配置 https://github.com/redisson/redisson/wiki/2.-Configuration
-
-被保存了却过期不了啊
-https://github.com/redisson/redisson/tree/master/redisson-hibernate/redisson-hibernate-53/src/test/java/org/redisson/hibernate
-
-props.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");　https://yq.aliyun.com/articles/554753?type=2
 hibernate-redis.properties文件
-
-Redission说明书是redis客户端： https://github.com/redisson/redisson/tree/master/redisson-hibernate
+redis官方文档；每种集成框架模式场合的配置都有差异,缓存对接目的地不同: https://github.com/redisson/redisson/wiki/Table-of-Content；
+IMDG缓存到底和那一个框架hibenate做集成的 https://github.com/redisson/redisson/tree/master/redisson-hibernate
 

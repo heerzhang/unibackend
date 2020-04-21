@@ -1,5 +1,7 @@
 singleServerConfig:
   address: "redis://127.0.0.1:6379"
+
+#针对Spring Cache. YAML config format框架集成模式
 ---
 Fast:
   ttl: 144000
