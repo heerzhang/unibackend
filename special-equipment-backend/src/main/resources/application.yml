@@ -126,6 +126,13 @@ spring:
   #transaction-manager-id: txManager
   jpa:
     properties:
+      redis:
+        expiryInSeconds:
+          hibernate:
+            Fast: 131
+            query: 141
+          default: 163
+
       javax:
         persistence:
           sharedCache.mode: ENABLE_SELECTIVE
@@ -147,10 +154,15 @@ spring:
         #替换缓存provider
         cache:
           redisson:
-            Fast.expiration.time_to_live: 18000
+            Fast.expiration.time_to_live: 11000
             Medium.expiration.time_to_live: 47000
             Slow.expiration.time_to_live: 117000
-                #max_idle_time: 27000
+            #如果用JNDI减少Redisson实例数
+            jndi_name: redisson_instance
+            #若Redis歇菜，直通数据库
+            fallback: false
+            config: redisson.yaml
+               #max_idle_time: 27000
           #二级缓存关闭启用的2个总开关,关不了集合字段
           use_second_level_cache: true
           use_query_cache: true
@@ -184,9 +196,9 @@ sei:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
-  server.URI: http://192.168.1.105:8673
+  server.URI: http://27.151.117.65:8673
   cookie:
-    domain: 192.168.1.105
+    domain: 27.151.117.65
   filter:
     #浏览器用Access-Control-Max-Age
     maxage: 3600
