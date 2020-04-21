@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Fast")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
@@ -31,7 +31,7 @@ public class Task {
     //一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
     //默认fetch= FetchType.LAZY; 而mappedBy代表对方维护关系  EAGER
     @OneToMany(mappedBy = "task" ,fetch = FetchType.LAZY)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region ="Fast")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<ISP>  isps;
 
     private String dep;  //类型弱化? ,应该是部门表的ID!

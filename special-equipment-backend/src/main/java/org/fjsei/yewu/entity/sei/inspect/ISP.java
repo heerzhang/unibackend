@@ -22,7 +22,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table( uniqueConstraints = {@UniqueConstraint(columnNames={"dev_id", "task_id"})} )
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Fast")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
 public class ISP {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
@@ -48,7 +48,7 @@ public class ISP {
     //这地方维护多对多关系，版本升级导致中间表ISP_ISP_MEN变成ISP_USERS；？需要自己指定表名,且字段名都也改了"ISPMEN_ID"　ISP_MEN_ID？
     @ManyToMany
     @JoinTable(name="ISP_ISP_MEN",joinColumns={@JoinColumn(name="ISP_ID")},inverseJoinColumns={@JoinColumn(name="ISP_MEN_ID")})
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region ="Fast")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<User> ispMen;       //= new HashSet<>()
     //审核人员就一个
     //@ManyToOne(fetch = FetchType.LAZY)       //？分开的sql语句;

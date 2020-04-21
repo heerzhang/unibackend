@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//同名冲突！@Cache不是来自javax.persistence.*;的，所以小心添加org.hibernate.annotations.Cache;在其上方。
+//同名冲突！@Cache不是来自javax.persistence.*的，所以添加org.hibernate.annotations.Cache在其上方。或直接@org.hibernate.annotations.Cache上了。
 
 //云数据库网关服务 支持跨DB实例SQL关联查询; 但是无法确保事务，数据一致性毛病？
 
@@ -35,12 +35,14 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @Entity
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Fast")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class EQP {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
+
+    //JPA中，使用@Version来做乐观锁的事务控制。对比的,悲观锁限制并发所以很少被用的。
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
     private Timestamp version;
@@ -74,7 +76,7 @@ public class EQP {
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     @ManyToMany(mappedBy="devs" ,fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region ="Fast")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Task> task= new HashSet<>();
 
     //单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
@@ -84,7 +86,7 @@ public class EQP {
     //先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
     //缺省FetchType.EAGER  LAZY
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region ="Fast")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<ISP>  isps;
 
 
@@ -160,3 +162,5 @@ join爆炸记录数范例 @NamedEntityGraph( name="EQP.task",attributeNodes={　
 //注解定制索引，没啥实际意义。
 //@Table(indexes={ @Index(name="type_idx",columnList="type"),
 //         　 @Index(name="factoryNo_idx",columnList="factoryNo")  } )
+
+//二级缓存可移植性@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast") 这里region是按照配置来区分的区分标识，竟然不省略。
