@@ -1,11 +1,14 @@
+#针对jedis/Redis客户端和分布式redis服务器的配置。
 singleServerConfig:
   address: "redis://127.0.0.1:6379"
+ # database: 0
 
-#针对Spring Cache. YAML config format框架集成模式
+
+#针对Spring Cache. YAML config format框架集成模式, 和Hibernate二级缓存无关的。
 ---
-Fast:
-  ttl: 144000
-  maxIdleTime: 72000
+someRegion:
+  ttl: 70000
+  maxIdleTime: 40000
   localCacheOptions:
     invalidationPolicy: "ON_CHANGE"
     evictionPolicy: "NONE"
@@ -13,3 +16,5 @@ Fast:
     timeToLiveInMillis: 0
     maxIdleInMillis: 0
 
+#codec:
+ # class: "org.redisson.codec.JsonJacksonCodec"
