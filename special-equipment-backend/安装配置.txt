@@ -93,3 +93,146 @@ redis官方文档；每种集成框架模式场合的配置都有差异,缓存�
 IMDG缓存到底和那一个框架hibenate做集成的 https://github.com/redisson/redisson/tree/master/redisson-hibernate
 修改redisson超时设置后要删除redis存储文件才行。若有region有用于COLLECTION> ENTITY > NATURAL_ID按这顺序配ttl时间。
 
+
+
+
+获取SSL证书
+证书获取有两种方式，一种是自己通过jdk的keytool命令生成，一种是通过证书授权机构购买，本文为了方便采用第二种从阿里云购买证书。
+
+去阿里云购买证书（免费版），并提交审核资料
+
+图片描述
+
+图片描述
+
+图片描述
+
+图片描述
+
+图片描述
+
+下载SSL证书
+图片描述
+
+图片描述
+
+在证书目录下执行阿里云提供的命令，密码都填 pfx-password.txt 中的内容（三次），会生成 javalsj.jks 文件。
+
+keytool -importkeystore -srckeystore 214533136960974.pfx -destkeystore javalsj.jks -srcstoretype PKCS12 -deststoretype JKS
+图片描述
+
+在Spring Boot中启动HTTPS和HTTP2
+将javalsj.jks复制到Spring Boot应用的resources目录下
+图片描述
+
+在application.properties中配置证书及端口，密码填写第3步中的密码
+
+##################################---Undertow服务器支持HTTPS服务---##############################################
+server.http2.enabled=true
+server.servlet.context-path=/blog
+custom.server.http.port=8080
+server.port=8443
+server.ssl.key-store=classpath:javalsj.jks
+server.ssl.key-store-password=214533136960974
+
+server.undertow.worker-threads=20
+server.undertow.buffer-size=512
+server.undertow.io-threads=2
+图片描述
+此配置会使Undertow容器监听8443端口，那么只有在域名前添加 https://才能访问网站内容，添加http://则不行，所以需要让Undertow容器监听8080端口，并将8080端口的所有请求重定向到8443端口，即完成http到https的跳转。
+
+将HTTP重定向到HTTPS（可选）
+工程使用Gradle集成轻量级高性能非阻塞服务器undertow所需要的jar包：
+compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow'
+然后编写代码如下：
+
+package com.javalsj.blog.configuration;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import io.undertow.Undertow;
+import io.undertow.servlet.api.SecurityConstraint;
+import io.undertow.servlet.api.SecurityInfo;
+import io.undertow.servlet.api.TransportGuaranteeType;
+import io.undertow.servlet.api.WebResourceCollection;
+
+/**
+ * @description 采用Undertow作为服务器,支持Https服务配置
+ * @author WANGJIHONG
+ * @date 2018年3月7日 下午8:34:18
+ * @Copyright 版权所有 (c) www.javalsj.com
+ * @memo 备注信息
+ */
+@Configuration
+public class WebServerConfiguration {
+
+    /**
+     * http服务端口
+     */
+    @Value("${custom.server.http.port}")
+    private Integer httpPort;
+
+    /**
+     * https服务端口
+     */
+    @Value("${server.port}")
+    private Integer httpsPort;
+
+    /**
+     * 采用Undertow作为服务器。
+     * Undertow是一个用java编写的、灵活的、高性能的Web服务器，提供基于NIO的阻塞和非阻塞API，特点：
+     * 非常轻量级，Undertow核心瓶子在1Mb以下。它在运行时也是轻量级的，有一个简单的嵌入式服务器使用少于4Mb的堆空间。
+     * 支持HTTP升级，允许多个协议通过HTTP端口进行多路复用。
+     * 提供对Web套接字的全面支持，包括JSR-356支持。
+     * 提供对Servlet 3.1的支持，包括对嵌入式servlet的支持。还可以在同一部署中混合Servlet和本机Undertow非阻塞处理程序。
+     * 可以嵌入在应用程序中或独立运行，只需几行代码。
+     * 通过将处理程序链接在一起来配置Undertow服务器。它可以对各种功能进行配置，方便灵活。
+     */
+    @Bean
+    public ServletWebServerFactory undertowFactory() {
+        UndertowServletWebServerFactory undertowFactory = new UndertowServletWebServerFactory();
+        undertowFactory.addBuilderCustomizers((Undertow.Builder builder) -> {
+            builder.addHttpListener(httpPort, "0.0.0.0");
+            // 开启HTTP2
+            builder.setServerOption(UndertowOptions.ENABLE_HTTP2, true);
+        });
+        undertowFactory.addDeploymentInfoCustomizers(deploymentInfo -> {
+            // 开启HTTP自动跳转至HTTPS
+            deploymentInfo.addSecurityConstraint(new SecurityConstraint()
+                    .addWebResourceCollection(new WebResourceCollection().addUrlPattern("/*"))
+                    .setTransportGuaranteeType(TransportGuaranteeType.CONFIDENTIAL)
+                    .setEmptyRoleSemantic(SecurityInfo.EmptyRoleSemantic.PERMIT))
+                    .setConfidentialPortManager(exchange -> httpsPort);
+        });
+        return undertowFactory;
+    }
+
+}
+图片描述
+
+验证HTTPS和HTTP2开启成功
+重启服务，即完成了HTTP到HTTPS的升级，且能自动跳转HTTPS，让网站更安全。输入http://localhost:8080/blog/swagger-ui.html后回车地址栏自动跳转至https://localhost:8443/blog/swagger-ui.html，如图：
+
+图片描述
+
+使用Chrome浏览器的console控制台，输入脚本后回车查看HTTP2是否开启，脚本如下：
+
+(function(){
+    // 保证这个方法只在支持loadTimes的chrome浏览器下执行
+    if(window.chrome && typeof chrome.loadTimes === 'function') {
+        var loadTimes = window.chrome.loadTimes();
+        var spdy = loadTimes.wasFetchedViaSpdy;
+        var info = loadTimes.npnNegotiatedProtocol || loadTimes.connectionInfo;
+        // 就以 「h2」作为判断标识
+        if(spdy && /^h2/i.test(info)) {
+            return console.info('本站点使用了HTTP/2');
+        }
+    }
+    console.warn('本站点没有使用HTTP/2');
+})();
+
+

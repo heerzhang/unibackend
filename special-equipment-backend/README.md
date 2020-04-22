@@ -42,12 +42,5 @@ hibernate的二级缓存  https://blog.csdn.net/panzm_csdn/article/details/79700
 单机Redis多个实例 初始化  https://www.jianshu.com/p/e90317668ae2
 非收费版 Could not load　CachedRedisRegionFactory；　https://yq.aliyun.com/articles/554753?type=2
 配置例子  Redission说明书：  https://github.com/redisson/redisson/tree/master/redisson-hibernate
-小院，多个模式：  http://www.voidcc.com/redisson/redisson-integration-with-hibernate
+小院，Redission多个模式：  http://www.voidcc.com/redisson/redisson-integration-with-hibernate
 
-"redisson.yaml" org/hibernate/cfg/Configuration
-        cfg.setProperty("hibernate.cache.redisson.item.eviction.max_entries", "100");
-        cfg.setProperty("hibernate.cache.redisson.item.expiration.time_to_live", "1500");
-        cfg.setProperty("hibernate.cache.redisson.item.expiration.max_idle_time", "1000");
-    public static final String TTL_SUFFIX = ".expiration.time_to_live";
-    public static final String MAX_IDLE_SUFFIX = ".expiration.max_idle_time";
-当前query cahche有　13秒左右过期。

@@ -50,6 +50,8 @@ management:
 
 server:
   port: 8673
+  http2:
+    enabled: true
   undertow:
     io-threads: 2
     worker-threads: 12
@@ -57,13 +59,13 @@ server:
     direct-buffers: true
   ssl:
     #对https,http的协议切换
-    enabled: false
+    #enabled: false
     #生成证书的名字
-    key-store: SeiYewu.keystore
+    key-store: classpath:coco.jks
     #密钥库密码
     key-store-password: 123456
-    key-store-type: JKS
-    key-alias: SeiYewu
+    #key-store-type: JKS
+    #key-alias: SeiYewu
 
 graphql:
   servlet:
@@ -207,9 +209,9 @@ sei:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
-  server.URI: http://192.168.1.105:8673
+  server.URI: http://27.151.117.65:8673
   cookie:
-    domain: 192.168.1.105
+    domain: 27.151.117.65
   filter:
     #浏览器用Access-Control-Max-Age
     maxage: 3600
