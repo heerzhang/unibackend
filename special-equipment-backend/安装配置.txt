@@ -236,4 +236,6 @@ public class WebServerConfiguration {
 })();
 
 https://localhost:3765/页面是通过https加载的，但请求了不安全的资源“http://hanyeyinyong2.123nat.com:8673/graphql”。此请求已被阻止；内容必须通过HTTPS提供。
-
+react-dev-utils/webpackHotDevClient.js
+    pathname: '/sockjs-node',  ws wss
+瀏覽器設置 不安全 内容 默認 屏蔽掉； 'ws://localhost:3765/sockjs-node' failed: Connection closed
