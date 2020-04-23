@@ -33,8 +33,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     private final String tokenHeader;
 
     //注入application.yml配置
-    @Value("${sei.filter.maxage:1}")
-    private final String filterMaxage;
+    @Value("${sei.filter.optionsAge:600}")
+    private final String optionsCacheTime;
     @Value("${sei.testMode:false}")
     private boolean  isTestMode;
     @Value("${sei.server.URI:}")
@@ -48,7 +48,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.tokenHeader = tokenHeader;
-        filterMaxage="";
+        optionsCacheTime="";
         serverURI="";
     }
 
@@ -69,7 +69,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             //这一步只有http初始化可能发生也是时间过期了才有。　而ws://都没有走到这里。
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-            response.setHeader("Access-Control-Max-Age", filterMaxage);
+            response.setHeader("Access-Control-Max-Age", optionsCacheTime);
             response.setHeader("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Authorization,token");
             response.setHeader("Connection", "keep-alive");
             response.setHeader("Vary", "Origin, Access-Control-Request-Headers");

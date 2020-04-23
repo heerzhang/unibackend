@@ -43,4 +43,24 @@ hibernate的二级缓存  https://blog.csdn.net/panzm_csdn/article/details/79700
 非收费版 Could not load　CachedRedisRegionFactory；　https://yq.aliyun.com/articles/554753?type=2
 配置例子  Redission说明书：  https://github.com/redisson/redisson/tree/master/redisson-hibernate
 小院，Redission多个模式：  http://www.voidcc.com/redisson/redisson-integration-with-hibernate
+开启http2后Header变成小写字母且keep-alive没有了，wss/https类比端口若不同无应答。
+https://hanyeyinyong2.123nat.com:8673/graphql
+http://hanyeyinyong2.123nat.com:3765/
 
+webpackHotDevClient.js
+
+使用Chrome浏览器的console控制台，输入脚本后回车查看HTTP2是否开启，脚本如下：
+
+(function(){
+    // 保证这个方法只在支持loadTimes的chrome浏览器下执行
+    if(window.chrome && typeof chrome.loadTimes === 'function') {
+        var loadTimes = window.chrome.loadTimes();
+        var spdy = loadTimes.wasFetchedViaSpdy;
+        var info = loadTimes.npnNegotiatedProtocol || loadTimes.connectionInfo;
+        // 就以 「h2」作为判断标识
+        if(spdy && /^h2/i.test(info)) {
+            return console.info('本站点使用了HTTP/2');
+        }
+    }
+    console.warn('本站点没有使用HTTP/2');
+})();

@@ -235,4 +235,5 @@ public class WebServerConfiguration {
     console.warn('本站点没有使用HTTP/2');
 })();
 
+https://localhost:3765/页面是通过https加载的，但请求了不安全的资源“http://hanyeyinyong2.123nat.com:8673/graphql”。此请求已被阻止；内容必须通过HTTPS提供。
 

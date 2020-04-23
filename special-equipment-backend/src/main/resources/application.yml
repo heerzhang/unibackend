@@ -35,7 +35,7 @@ app:
 
 
 trace: false
-debug: true
+debug: false
 #监控信息，生产环境要权限或者控制
 management:
   endpoint:
@@ -52,20 +52,18 @@ server:
   port: 8673
   http2:
     enabled: true
+  ssl:
+    #对https,http的协议切换
+    enabled: true
+    #自己生成SSL证书,有效期3个月
+    key-store: classpath:coco.jks
+    key-store-password: 123456
+    #key-store-type: JKS    #key-alias:
   undertow:
     io-threads: 2
     worker-threads: 12
     buffer-size: 512
     direct-buffers: true
-  ssl:
-    #对https,http的协议切换
-    #enabled: false
-    #生成证书的名字
-    key-store: classpath:coco.jks
-    #密钥库密码
-    key-store-password: 123456
-    #key-store-type: JKS
-    #key-alias: SeiYewu
 
 graphql:
   servlet:
@@ -209,12 +207,12 @@ sei:
     #若PermitAnyURL false true 那么：不登录REST就能随意访问，但是graphQL没变化。
     permitAnyURL: true
   cache.log: false
+  #端口影射心跳
   server.URI: http://27.151.117.65:8673
-  cookie:
-    domain: 27.151.117.65
+  #cookie.domain: 27.151.117.65     #没必要设
   filter:
-    #浏览器用Access-Control-Max-Age
-    maxage: 3600
+    #预检请求缓存Access-Control-Max-Age 单位秒，浏览器dev可设置disable cache；
+    optionsAge: 1200
     #允许接入cors前端各服务器地址
     origin:
       map[https://27.151.117.65:3765]:
@@ -230,3 +228,7 @@ sei:
       map[http://localhost:3000]:
       map[http://localhost:3100]:
       map[http://192.168.171.3:3000]:
+      map[http://hanyeyinyong2.123nat.com:3765]:
+      map[https://hanyeyinyong2.123nat.com:3765]:
+
+
