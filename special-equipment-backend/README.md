@@ -55,12 +55,15 @@ webpackHotDevClient.js
     // 保证这个方法只在支持loadTimes的chrome浏览器下执行
     if(window.chrome && typeof chrome.loadTimes === 'function') {
         var loadTimes = window.chrome.loadTimes();
+        console.warn('wwe额外人',loadTimes);
         var spdy = loadTimes.wasFetchedViaSpdy;
         var info = loadTimes.npnNegotiatedProtocol || loadTimes.connectionInfo;
         // 就以 「h2」作为判断标识
         if(spdy && /^h2/i.test(info)) {
             return console.info('本站点使用了HTTP/2');
         }
+        console.warn('为额外',spdy,";info:",info);
     }
     console.warn('本站点没有使用HTTP/2');
 })();
+有域名可网上申请SSL证书。nat123免费二级域名http://www.nat123.com/ 用户 herzhang;
