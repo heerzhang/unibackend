@@ -214,6 +214,7 @@ public class JwtTokenUtil implements Serializable {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
         cookie.setPath("/");
+        cookie.setSecure(true);
         response.addCookie(cookie);
         logger.info("authorizated user '{}', timeArrivedRegenerateToken", userDetails.getUsername());
     }

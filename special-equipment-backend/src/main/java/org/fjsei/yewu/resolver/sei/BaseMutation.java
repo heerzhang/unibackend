@@ -274,6 +274,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(1);
         cookie.setPath("/");
+        cookie.setSecure(true);
         response.addCookie(cookie);
         return true;
     }
@@ -314,7 +315,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
             //Path就是servlet URL的接口路径，不能嵌套在其它servlet的底下;
             cookie.setPath("/");
-           //cookie.setSecure(true);     //HTTPS才允許設置的。
+            cookie.setSecure(true);     //只有HTTPS SSL才允許設。
            response.addCookie(cookie);
         }
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();
