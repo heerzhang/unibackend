@@ -12,6 +12,9 @@ import javax.persistence.*;
 
 //实体和Repository类可随意地在多个数据库中间搬迁；每个数据库有独立的目录包。但是最好简单名不要相同。
 //每个数据源库都要明确一看就知道是哪一个数据库的实体（Repository目录相互不同），简名最好区分咯；不然名字相同就混乱。
+//若H2测试数据库；Schema默认Public；还要添加Schema一个: HRUSER，俩个分离的账户或用户库。若Oracle实际Dblink连接的其它库。云数据库代理网关的机制。Java类全名唯一性。
+//Table先属于某个schema,定义schema又属于某database三级结构！建database时默认建名public的schema;但不能加参数catalog！ catalog是系统级schema,用于存储系统函数系统元数据。
+
 
 @Getter
 @Setter
