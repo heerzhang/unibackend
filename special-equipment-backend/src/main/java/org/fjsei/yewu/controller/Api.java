@@ -1,7 +1,7 @@
 package org.fjsei.yewu.controller;
 
 import org.fjsei.yewu.entity.sdn.TestBean;
-import org.fjsei.yewu.entity.sei.EQP;
+import md.specialEqp.EQP;
 import org.fjsei.yewu.service.core.RestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

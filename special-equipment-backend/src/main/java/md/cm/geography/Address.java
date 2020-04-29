@@ -2,7 +2,7 @@ package md.cm.geography;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.fjsei.yewu.entity.sei.EQP;
+import md.specialEqp.EQP;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.*;

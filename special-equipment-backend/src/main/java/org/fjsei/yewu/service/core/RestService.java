@@ -1,8 +1,8 @@
 package org.fjsei.yewu.service.core;
 
 
-import org.fjsei.yewu.entity.sei.EQP;
-import org.fjsei.yewu.entity.sei.Teacher;
+import md.specialEqp.EQP;
+import org.fjsei.yewu.repository.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 

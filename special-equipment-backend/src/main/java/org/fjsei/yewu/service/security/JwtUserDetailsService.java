@@ -1,7 +1,7 @@
 package org.fjsei.yewu.service.security;
 
-import org.fjsei.yewu.entity.sei.User;
-import org.fjsei.yewu.entity.sei.UserRepository;
+import md.system.User;
+import md.system.UserRepository;
 import org.fjsei.yewu.security.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

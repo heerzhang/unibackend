@@ -1,7 +1,7 @@
 package org.fjsei.yewu;
 
 import org.fjsei.yewu.graphql.MyGraphQLToolsProperties;
-import org.fjsei.yewu.model.Author;
+import org.fjsei.yewu.repository.Author;
 import org.fjsei.yewu.property.FileStorageProperties;
 import org.fjsei.yewu.repository.AuthorRepository;
 import org.fjsei.yewu.repository.BookRepository;

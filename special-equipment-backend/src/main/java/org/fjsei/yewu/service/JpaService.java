@@ -2,7 +2,7 @@ package org.fjsei.yewu.service;
 
 
 import org.fjsei.yewu.entity.sdn.Student;
-import org.fjsei.yewu.entity.sei.Teacher;
+import org.fjsei.yewu.repository.Teacher;
 
 import java.util.List;
 

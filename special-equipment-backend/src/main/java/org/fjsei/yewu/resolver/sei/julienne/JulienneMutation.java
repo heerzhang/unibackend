@@ -1,12 +1,16 @@
 package org.fjsei.yewu.resolver.sei.julienne;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import org.fjsei.yewu.entity.sei.*;
-import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
-import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
-import org.fjsei.yewu.entity.sei.julienne.Following;
-import org.fjsei.yewu.entity.sei.julienne.Recipe;
-import org.fjsei.yewu.entity.sei.julienne.RecipeRepository;
+import md.system.AuthorityRepository;
+import md.system.User;
+import md.system.UserRepository;
+import md.cm.unit.UnitRepository;
+import md.specialEqp.*;
+import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.TaskRepository;
+import md.julienne.Following;
+import md.julienne.Recipe;
+import md.julienne.RecipeRepository;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;

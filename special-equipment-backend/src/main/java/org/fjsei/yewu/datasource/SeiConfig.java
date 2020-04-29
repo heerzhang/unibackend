@@ -36,7 +36,7 @@ import java.util.Map;
     entityManagerFactoryRef = "entityManagerFactorySei",
     transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
-    basePackages = {"org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md"})
+    basePackages = {"org.fjsei.yewu.repository","md"})
 public class SeiConfig {
 
     @Resource
@@ -68,7 +68,7 @@ public class SeiConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySei(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(seiDataSource)
-            .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md")
+            .packages("org.fjsei.yewu.repository","md")
             .persistenceUnit("seiPersistenceUnit")
          //.properties(getVendorProperties())　　实际环境Oracle连接特别得慢！　本地H2测试库连接很快。
             .build();

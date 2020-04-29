@@ -1,24 +1,17 @@
 package org.fjsei.yewu.service.core;
 
-import org.fjsei.yewu.entity.sei.EQP;
-import org.fjsei.yewu.entity.sei.EQPRepository;
-import org.fjsei.yewu.entity.sei.Teacher;
-import org.fjsei.yewu.entity.sei.TeacherDao;
-import org.hibernate.Cache;
-import org.hibernate.SessionFactory;
-import org.hibernate.jpa.HibernateEntityManagerFactory;
-import org.hibernate.stat.Statistics;
+import md.specialEqp.EQP;
+import md.specialEqp.EQPRepository;
+import org.fjsei.yewu.repository.Teacher;
+import org.fjsei.yewu.repository.TeacherDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 

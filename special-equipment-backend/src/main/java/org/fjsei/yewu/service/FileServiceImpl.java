@@ -1,7 +1,7 @@
 package org.fjsei.yewu.service;
 
-import org.fjsei.yewu.entity.sei.File;
-import org.fjsei.yewu.entity.sei.FileRepository;
+import md.computer.File;
+import md.computer.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package org.fjsei.yewu.controller.sdn.api;
 
-import org.fjsei.yewu.entity.sei.EQP;
+import md.specialEqp.EQP;
 import org.fjsei.yewu.service.sdn.WeixingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

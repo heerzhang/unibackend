@@ -2,8 +2,8 @@ package org.fjsei.yewu.resolver;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.fjsei.yewu.exception.BookNotFoundException;
-import org.fjsei.yewu.model.Author;
-import org.fjsei.yewu.model.Book;
+import org.fjsei.yewu.repository.Author;
+import org.fjsei.yewu.repository.Book;
 import org.fjsei.yewu.repository.AuthorRepository;
 import org.fjsei.yewu.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;

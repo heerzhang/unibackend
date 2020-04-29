@@ -3,7 +3,7 @@ package org.fjsei.yewu.service.sdn;
 import org.fjsei.yewu.controller.sdn.api.WeixingInput;
 import org.fjsei.yewu.controller.sdn.api.WeixingOutput;
 import org.fjsei.yewu.entity.sdn.Student;
-import org.fjsei.yewu.entity.sei.Teacher;
+import org.fjsei.yewu.repository.Teacher;
 
 import java.util.List;
 

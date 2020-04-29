@@ -1,10 +1,14 @@
 package org.fjsei.yewu.resolver.sei.oldsys;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import org.fjsei.yewu.entity.sei.*;
-import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
-import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
-import org.fjsei.yewu.entity.sei.oldsys.*;
+import md.system.AuthorityRepository;
+import md.system.User;
+import md.system.UserRepository;
+import md.cm.unit.UnitRepository;
+import md.specialEqp.*;
+import org.fjsei.yewu.entity.fjtj.*;
+import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.TaskRepository;
 import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;

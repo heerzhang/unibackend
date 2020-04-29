@@ -1,6 +1,5 @@
 package org.fjsei.yewu.repository;
 
-import org.fjsei.yewu.model.TbUntMge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

@@ -1,7 +1,7 @@
 package org.fjsei.yewu.third;
 
-import org.fjsei.yewu.model.Author;
-import org.fjsei.yewu.model.Book;
+import org.fjsei.yewu.repository.Author;
+import org.fjsei.yewu.repository.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;

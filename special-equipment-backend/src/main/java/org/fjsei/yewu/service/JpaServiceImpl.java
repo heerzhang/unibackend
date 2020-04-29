@@ -1,14 +1,18 @@
 package org.fjsei.yewu.service;
 
+import md.system.User;
+import md.system.UserRepository;
+import md.specialEqp.*;
 import org.fjsei.yewu.entity.sdn.Student;
 import org.fjsei.yewu.entity.sdn.StudentDao;
-import org.fjsei.yewu.entity.sei.*;
-import org.fjsei.yewu.entity.sei.inspect.ISP;
-import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
-import org.fjsei.yewu.entity.sei.inspect.Task;
-import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
+import md.specialEqp.inspect.ISP;
+import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.Task;
+import md.specialEqp.inspect.TaskRepository;
 import md.cm.geography.Address;
 import md.cm.geography.AddressRepository;
+import org.fjsei.yewu.repository.Teacher;
+import org.fjsei.yewu.repository.TeacherDao;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

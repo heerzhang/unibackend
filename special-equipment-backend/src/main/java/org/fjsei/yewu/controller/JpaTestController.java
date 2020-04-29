@@ -1,7 +1,7 @@
 package org.fjsei.yewu.controller;
 
 import org.fjsei.yewu.entity.sdn.Student;
-import org.fjsei.yewu.entity.sei.Teacher;
+import org.fjsei.yewu.repository.Teacher;
 import org.fjsei.yewu.service.JpaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
