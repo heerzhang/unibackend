@@ -288,6 +288,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             User userHasName =userRepository.findByUsername(name);
             Assert.isTrue(userHasName == null,"密码错:"+name);
             Assert.isTrue(userHasName != null,"没用户:"+name);
+            //todo:　异常处理人性化
         }
         logger.debug("checking authentication for user '{}'", name);
         if(user==null)  return false;

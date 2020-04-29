@@ -52,10 +52,12 @@ dependencies {
 
     compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     compile "org.springframework.boot:spring-boot-starter-websocket"
-    //关系数据库部分
+    //分布式数据库    　关系数据库部分
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation group: 'com.h2database', name: 'h2', version:'1.4.200'
     compile group: 'com.oracle', name: 'ojdbc6', version:'11.2.0.3'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
+    
     /// implementation(project(":graphql-spring-boot-starter"))
     implementation "io.jsonwebtoken:jjwt:0.9.1"
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
@@ -64,7 +66,7 @@ dependencies {
 
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
-    //缓存提供者provider部分(IMDG内存数据网格库)
+    //分布式缓存服务器　　提供者provider部分(IMDG内存数据网格库)
     implementation 'org.redisson:redisson-hibernate-53:3.12.5'
 
     
