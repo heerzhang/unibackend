@@ -10,7 +10,7 @@ import org.fjsei.yewu.entity.sei.inspect.Task;
 import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
 import org.fjsei.yewu.input.DeviceCommonInput;
-import org.fjsei.yewu.model.geography.*;
+import md.cm.geography.*;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;

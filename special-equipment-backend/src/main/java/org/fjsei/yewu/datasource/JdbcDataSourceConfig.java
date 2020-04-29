@@ -16,6 +16,10 @@ import javax.sql.DataSource;
  底层的Jdbc数据源配置类;这个也必须配置，否则错误非常隐蔽与深处。
  **/
 
+
+//数据库只有1个: sei ; 其他都是旧平台搞的库。
+
+
 @Configuration
 public class JdbcDataSourceConfig {
     //只能一个 是有@Primary 注释的 数据源。

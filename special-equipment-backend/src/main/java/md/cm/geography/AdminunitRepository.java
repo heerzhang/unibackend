@@ -1,4 +1,4 @@
-package org.fjsei.yewu.model.geography;
+package md.cm.geography;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

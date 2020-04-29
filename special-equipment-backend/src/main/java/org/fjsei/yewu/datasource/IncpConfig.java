@@ -17,12 +17,8 @@ import javax.sql.DataSource;
 import java.util.Map;
 
 
-/**
- * @program: 创建EntityManagerConfig配置类
- * @description:
- * @author:
- * @create: 2018-05-04 10:54
- **/
+//旧平台　对接的监察平台库。
+
 
 @Configuration
 @EnableTransactionManagement

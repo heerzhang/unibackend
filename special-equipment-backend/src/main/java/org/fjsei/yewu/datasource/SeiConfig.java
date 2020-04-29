@@ -28,13 +28,15 @@ import java.util.Map;
 //解决了问题：@ManyToMany或@OneToMany的Many多的那一方，一定用Set容器来存放，而不能用List集合。
 
 
+//我的主库,  basePackages子目录可以
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
     entityManagerFactoryRef = "entityManagerFactorySei",
     transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
-    basePackages = {"org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model"})
+    basePackages = {"org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md"})
 public class SeiConfig {
 
     @Resource
@@ -66,7 +68,7 @@ public class SeiConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySei(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(seiDataSource)
-            .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model")
+            .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md")
             .persistenceUnit("seiPersistenceUnit")
          //.properties(getVendorProperties())　　实际环境Oracle连接特别得慢！　本地H2测试库连接很快。
             .build();
@@ -86,3 +88,7 @@ public class SeiConfig {
 
 }
 
+
+
+//大库只有一个的。   basePackages = {"org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md"})
+//模型包包路径两配置     .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md")

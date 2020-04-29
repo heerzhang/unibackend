@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.fjsei.yewu.entity.sei.inspect.ISP;
 import org.fjsei.yewu.entity.sei.inspect.Task;
-import org.fjsei.yewu.model.geography.Address;
-import org.hibernate.annotations.Cache;
+import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

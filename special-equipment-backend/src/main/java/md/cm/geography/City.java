@@ -1,4 +1,4 @@
-package org.fjsei.yewu.model.geography;
+package md.cm.geography;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -20,6 +20,7 @@ import java.util.Map;
 
 //解决了问题：@ManyToMany或@OneToMany的Many多的那一方，一定用Set容器来存放，而不能用List集合。
 
+//旧平台的主库(测试时接入测试平台，但正式转换后是接入旧平台生产环境的正式库)
 
 @Configuration
 @EnableTransactionManagement

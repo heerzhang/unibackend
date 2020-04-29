@@ -1,7 +1,6 @@
 package org.fjsei.yewu.resolver.sei.inspect;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import graphql.schema.DataFetchingEnvironment;
 import org.fjsei.yewu.entity.sei.*;
 import org.fjsei.yewu.entity.sei.inspect.ISP;
 import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
@@ -10,7 +9,7 @@ import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
 import org.fjsei.yewu.input.WhereTree;
 import org.fjsei.yewu.jpa.ModelFiltersImpl;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
-import org.fjsei.yewu.model.geography.AddressRepository;
+import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.hibernate.Metamodel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;

@@ -4,7 +4,7 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import org.fjsei.yewu.entity.sei.*;
 import org.fjsei.yewu.entity.sei.inspect.ISPRepository;
 import org.fjsei.yewu.entity.sei.inspect.TaskRepository;
-import org.fjsei.yewu.model.geography.AddressRepository;
+import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.slf4j.Logger;
