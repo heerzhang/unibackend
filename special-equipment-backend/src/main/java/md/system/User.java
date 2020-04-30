@@ -49,10 +49,11 @@ public class User implements Person {
     @Size(min = 2, max = 30)
     private String username;
 
-    @Size(min = 6, max = 50)
+    //@ColumnTransformer()实际用底层数据库内部FUNCTION fjsei.decrypt 比较查询。 password字段须改blob，程序Jdbc明文，数据库存储密文。
+    @Size(min = 6, max = 128)
     @ColumnTransformer(
-            read = "decrypt(PASSWORD)",
-            write = "encrypt(nvl(?, 'null'))"
+            read = "AES_DECRYPT(PASSWORD,'wo0dey7y')",
+            write = "AES_ENCRYPT(?,'wo0dey7y')"
     )
     private String password;
 
