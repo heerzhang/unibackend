@@ -8,6 +8,7 @@ import md.julienne.Following;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.security.JwtUser;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,6 +50,10 @@ public class User implements Person {
     private String username;
 
     @Size(min = 6, max = 50)
+    @ColumnTransformer(
+            read = "decrypt(PASSWORD)",
+            write = "encrypt(nvl(?, 'null'))"
+    )
     private String password;
 
     @Size(min = 1, max = 20)
