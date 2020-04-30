@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${sei.control.permitAnyURL:false}")
     private Boolean isPermitAnyURL;
 
-
+    //这里AuthenticationManagerBuilder还属于较为上层的介入通道或模式机制 JDBC，inMemory，DAO提供用户信息库的。
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
          // auth.userDetailsService(jwtUserDetailsService)
@@ -59,8 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
            // .passwordEncoder(passwordEncoderBean());
     }
 
+    //没用到endpoint接口/login请求/logout"记住我"指定数据源Cookie页面跳转，自然走的不是springSecurity自带的很多功能封装点块，我们没走AuthenticationProvider这条路。
     @Bean
     public AuthenticationProvider authenticationProvider(){
+        //DaoAuthenticationProvider用于响应UsernamePasswordAuthenticationToken身份验证请求
+        //实际我们没有用DaoAuthenticationProvider，但我们提供了和DaoAuthenticationProvider同样的功能，属于同一个层次或点位嫁接位置的。
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(jwtUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoderBean());
@@ -186,6 +189,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //除上面外的所有请求全部需要鉴权认证
         middleRegistry.anyRequest().authenticated();
 
+        //没用middleRegistry.and().formLogin()所以很多springSecurity包模块就没用没效，实际上我们做了同样的功能替换掉。
         //控制要不要验证权限。
 
         //httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
