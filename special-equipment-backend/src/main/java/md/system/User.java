@@ -8,6 +8,7 @@ import md.julienne.Following;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.security.JwtUser;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +34,9 @@ import java.util.Set;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
 public class User implements Person {
     //注意id可能带来麻烦，数据库重整，可seq却从小开始，报唯一性约束错！select user_seq.nextval from dual;
-    //旧表可修改initialValue到旧的表最大ID值，ID最多64位，就是19个数字的字符串，相当于说是无限大的。
+    //若加@SequenceGenerator()旧表可修改initialValue到旧的表最大ID值，ID最多64位，就是19个数字的字符串，相当于说是无限大的。
+    //不经过SequenceGenerator人工导入数据引起问题：后续@GeneratedValue若是遇见已经存在id就失败。尽量共用sequenceName，物理数据库设置sequence的next_val；
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", initialValue = 1, allocationSize = 1, sequenceName = "user_seq")

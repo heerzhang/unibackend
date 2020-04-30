@@ -14,7 +14,11 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-//实体类不可搞 interface： ？可能死循环, 返回结果集只能使用接口/不能做实体转换。
+/*实体类不可搞 interface： ？可能死循环, 返回结果集只能使用接口/不能做实体转换。
+ @Id采用GenerationType.SEQUENCE,共用sequenceName要确保旧数据失效清除周期一致，ID若要循环到最大极限值回到1起点后了若还有小数字ID就麻烦了。
+ mySQL修改Id自增起点：  select next_val as id_val from SEQUENCE_COMMON  for update；   update SEQUENCE_COMMON set next_val= ?  where next_val=?
+ Hibernate提供@GenericGenerator(strategy = "uuid")不能用，Long与String不兼容；只好麻烦点，旧数据维护要看id设置找底层数据库支持修改next_val:initialValue。
+*/
 
 @Getter
 @Setter

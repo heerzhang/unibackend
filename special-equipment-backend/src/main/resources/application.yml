@@ -4,11 +4,11 @@ app:
   datasource:
     #源程序中@ConfigurationProperties(prefix="app.datasource.sei")和这里名字要一致。
     #若没有Oracle可用，本机可使用H2数据库测试就行。　可能要修改Hibernate中配置数据库方言设置。
-    sei7:
+    sei:
       url: jdbc:mysql://localhost:3306/fjsei?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: herzhang
       password: 123a456d
-    sei:
+    sei8:
       url: jdbc:h2:tcp://localhost/~/sei2
       username: sa
       password:
@@ -19,12 +19,12 @@ app:
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
     #旧平台正式运行。 测试104.34
-    fjtj7:
+    fjtj:
       url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
       #url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
-    fjtj:
+    fjtj6:
       url: jdbc:h2:tcp://localhost/~/fjtj
       username: sa
       password:
@@ -56,10 +56,11 @@ management:
 server:
   port: 8673
   http2:
-    enabled: true
+    #使用2版本,若没开https/ssl自动降级1.1版
+    enabled: false
   ssl:
-    #对https,http的协议切换
-    enabled: true
+    #使用https的1.1版
+    enabled: false
     #自己生成SSL证书,有效期3个月
     key-store: classpath:coco.jks
     key-store-password: 123456
@@ -158,8 +159,8 @@ spring:
           auto: update
         cache:
           #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: false
-          use_query_cache: false
+          use_second_level_cache: true
+          use_query_cache: true
           region:
             #缓存provider:非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
             factory_class: org.redisson.hibernate.RedissonRegionFactory
