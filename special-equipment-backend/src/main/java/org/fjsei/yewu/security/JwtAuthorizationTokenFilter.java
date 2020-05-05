@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-
+//Spring Security 登录密码验证过程 UsernamePasswordAuthenticationFilter 实际功能和这个类似的。而这里我们自己做了。
+//UsernamePasswordAuthenticationFilter在调用http.formLogin()时用，登录请求"/login"，登录loginProcessingUrl委托认证管理器authenticationManager来验证登录。
 
 //过滤器实际也是注入的。
 @Component

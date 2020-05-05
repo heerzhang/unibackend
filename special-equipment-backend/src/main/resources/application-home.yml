@@ -56,10 +56,10 @@ management:
 server:
   port: 8673
   http2:
-    enabled: true
+    enabled: false
   ssl:
     #对https,http的协议切换
-    enabled: true
+    enabled: false
     #自己生成SSL证书,有效期3个月
     key-store: classpath:coco.jks
     key-store-password: 123456
@@ -158,8 +158,8 @@ spring:
           auto: update
         cache:
           #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: true
-          use_query_cache: true
+          use_second_level_cache: false
+          use_query_cache: false
           region:
             #缓存provider:非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
             factory_class: org.redisson.hibernate.RedissonRegionFactory

@@ -27,6 +27,8 @@ import org.springframework.web.cors.CorsUtils;
 
 //两地方@Configuration都做WebSecurityConfigurerAdapter报错@Order on WebSecurityConfigurers must be unique. Order of 100 was already used on WebSecurityConfig。
 //加spring-boot-starter-security包注意必须处理，否则都报错；加了这个后 原来报错401变成403。
+//对比者shiro文檔Spring Security体系及其核心    https://www.kancloud.cn/liquanqiang/spring-security/750414
+
 
 @Configuration
 @EnableWebSecurity
@@ -69,20 +71,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setPasswordEncoder(passwordEncoderBean());
         return authenticationProvider;
     }
-/*
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new Md5PasswordEncoder();
-    }
 
+/*
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
     }
 */
+
     @Bean
     public PasswordEncoder passwordEncoderBean() {
-        return new BCryptPasswordEncoder();
+        //随机“盐”，版本長度參數也在密文里面,60个字符。1秒验证; https://www.kancloud.cn/liquanqiang/spring-security/757177
+        PasswordEncoder encoder=new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y,13);
+        //实际电脑性能调整。Salt防彩虹表攻击，自适应功能，增加迭代计数以使其执行更慢，在增加计算能力仍然能保持抵抗暴力攻击。
+        return encoder;
     }
 
     @Bean
@@ -211,8 +213,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-
 }
 
 
+
+//Authentication：登录，验证用户是不是拥有相应的身份； Authorization：授权，即权限验证，验证某个用户是否拥有某个角色。  @PreAuthorize("hasAnyRole('admin','user')")
 //voyager支持包 引入的 "/vendor/**"路径；voyager实用性不强，摆设罢了，删除掉不再支持。

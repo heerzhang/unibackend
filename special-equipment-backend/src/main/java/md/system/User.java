@@ -51,10 +51,6 @@ public class User implements Person {
 
     //@ColumnTransformer()实际用底层数据库内部FUNCTION fjsei.decrypt 比较查询。 password字段须改blob，程序Jdbc明文，数据库存储密文。
     @Size(min = 6, max = 128)
-    @ColumnTransformer(
-            read = "AES_DECRYPT(PASSWORD,'wo0dey7y')",
-            write = "AES_ENCRYPT(?,'wo0dey7y')"
-    )
     private String password;
 
     @Size(min = 1, max = 20)
@@ -252,4 +248,6 @@ JPA 如何指定底层数据库的存储空间文件，分区文件。
 /*修改数据源NativeQuery, 配置schema; {h-schema}占位符Hibernate语法；不用建同义词synonym
     @Query("select * from {h-schema}user", nativeQuery=true)
  spring.jpa.properties.hibernate.default_schema=my_schema
+ 字段加密@ColumnTransformer(read="AES_DECRYPT(PASSWORD,'x')",write="AES_ENCRYPT(?,'x')") 可移植性差，数据库函数或存储过程和物理数据库相关。
 */
+

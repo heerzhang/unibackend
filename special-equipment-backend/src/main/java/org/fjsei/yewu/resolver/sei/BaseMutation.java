@@ -33,6 +33,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +105,11 @@ public class BaseMutation implements GraphQLMutationResolver {
 
     @Value("${sei.cookie.domain:}")
     private final String  cookieDomain="";
+    @Value("${server.ssl.enabled:false}")
+    private boolean  isSSLenabled;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public EQP newEQP(String cod, String type, String oid) {
@@ -247,8 +254,9 @@ public class BaseMutation implements GraphQLMutationResolver {
         }
         else return false;
         User user = new User(username, null);
-        //Todo： 加入MD5 Hash 保密存储。    账户重名的验证。
-        user.setPassword(password);
+        //Todo： 账户重名的验证。
+        String dbmima=passwordEncoder.encode(password);
+        user.setPassword(dbmima);
         user.setMobile(mobile);
         user.setAuthName(eName);
         user.setAuthType(external);
@@ -279,7 +287,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(1);
         cookie.setPath("/");
-        cookie.setSecure(true);
+        cookie.setSecure(isSSLenabled);
         response.addCookie(cookie);
         return true;
     }
@@ -288,12 +296,15 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public boolean authenticate(String name,String password) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        User user = userRepository.findByUsernameAndPassword(name, password);
+        User user = userRepository.findByUsername(name);
         if(user==null){
-            User userHasName =userRepository.findByUsername(name);
-            Assert.isTrue(userHasName == null,"密码错:"+name);
-            Assert.isTrue(userHasName != null,"没用户:"+name);
+            Assert.isTrue(user != null,"没用户:"+name);
             //todo:　异常处理人性化
+        }
+        //经验证BCryptPasswordEncoder只能支持最大72个字符密码长度，后面超过部分被直接切除掉了。
+        boolean isMatch=passwordEncoder.matches(password,user.getPassword());
+        if(!isMatch){
+            Assert.isTrue(isMatch,"密码错:"+name);
         }
         logger.debug("checking authentication for user '{}'", name);
         if(user==null)  return false;
@@ -321,7 +332,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
             //Path就是servlet URL的接口路径，不能嵌套在其它servlet的底下;
             cookie.setPath("/");
-            cookie.setSecure(true);     //只有HTTPS SSL才允許設。
+            cookie.setSecure(isSSLenabled);     //只有HTTPS SSL才允許設。
            response.addCookie(cookie);
         }
         Authentication auth= SecurityContextHolder.getContext().getAuthentication();

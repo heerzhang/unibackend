@@ -43,7 +43,8 @@ public class JwtTokenUtil implements Serializable {
     private Long expiration;
     @Value("${sei.cookie.domain:}")
     private final String  cookieDomain="";
-
+    @Value("${server.ssl.enabled:false}")
+    private boolean  isSSLenabled;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -214,7 +215,7 @@ public class JwtTokenUtil implements Serializable {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(5400);      //这个时间和token内部声称的时间不同，这给浏览器用的 = 1.5个小时。
         cookie.setPath("/");
-        cookie.setSecure(true);
+        cookie.setSecure(isSSLenabled);
         response.addCookie(cookie);
         logger.info("authorizated user '{}', timeArrivedRegenerateToken", userDetails.getUsername());
     }
