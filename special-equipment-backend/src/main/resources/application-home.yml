@@ -215,6 +215,7 @@ sei:
   #端口影射心跳
   server.URI: http://27.151.117.65:8673
   #cookie.domain: 27.151.117.65     #没必要设
+  BCrypt.strength: 12
   filter:
     #预检请求缓存Access-Control-Max-Age 单位秒，浏览器dev可设置disable cache；
     optionsAge: 1200

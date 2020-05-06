@@ -56,10 +56,10 @@ management:
 server:
   port: 8673
   http2:
-    enabled: true
+    enabled: false
   ssl:
-    #对https,http的协议切换
-    enabled: true
+    #对https,http的协议切换 false true
+    enabled: false
     #自己生成SSL证书,有效期3个月
     key-store: classpath:coco.jks
     key-store-password: 123456
@@ -215,6 +215,7 @@ sei:
   #端口影射心跳
   server.URI: http://27.151.117.65:8673
   #cookie.domain: 27.151.117.65     #没必要设
+  BCrypt.strength: 8
   filter:
     #预检请求缓存Access-Control-Max-Age 单位秒，浏览器dev可设置disable cache；
     optionsAge: 1200

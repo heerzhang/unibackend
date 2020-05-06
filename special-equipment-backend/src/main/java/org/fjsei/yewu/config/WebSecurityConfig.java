@@ -52,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Boolean isTestMode;
     @Value("${sei.control.permitAnyURL:false}")
     private Boolean isPermitAnyURL;
+    @Value("${sei.BCrypt.strength:11}")
+    private int bCryptStrength;
 
     //这里AuthenticationManagerBuilder还属于较为上层的介入通道或模式机制 JDBC，inMemory，DAO提供用户信息库的。
     @Autowired
@@ -81,9 +83,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoderBean() {
-        //随机“盐”，版本長度參數也在密文里面,60个字符。1秒验证; https://www.kancloud.cn/liquanqiang/spring-security/757177
-        PasswordEncoder encoder=new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y,13);
-        //实际电脑性能调整。Salt防彩虹表攻击，自适应功能，增加迭代计数以使其执行更慢，在增加计算能力仍然能保持抵抗暴力攻击。
+        //随机盐參數也在密文里面,只能支持72个字符密码长度！速度很慢，故意的？1秒验证; https://www.kancloud.cn/liquanqiang/spring-security/757177
+        //参数修改后，数据库遗留Hash密码不需要重新生成，旧Hash照样能够验证匹配的！前端js里面有同样功能bcrypt库，也是从DB数据库读取hash来核对验证的。
+        PasswordEncoder encoder=new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2Y, bCryptStrength);
+        //慢哈希是指执行这个哈希函数非常慢! 实际电脑性能调整。Salt防彩虹表攻击，自适应功能，增加迭代计数以使其执行更慢，在增加计算能力仍然能保持抵抗暴力攻击。
+        //参数strength调节对性能服务器CPU影响：strength取值20耗时242s,取15耗时8s,取14耗时4s,取13耗时2s,而strength缺省=10的;看实际生产环境承受能力确定strength。
+        //strength亦称为LOG ROUND参数是做加密时重复处理的轮数，且复杂度是指数级递增，默认10的是2的10次方; 实际生成hash长度大约23字节的空间=184位。
         return encoder;
     }
 
