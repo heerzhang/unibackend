@@ -35,6 +35,7 @@ public class Report  implements SimpleReport {
 
     private Date upLoadDate;
     private String path;
+    //TODO: 多次ISP汇集做一份报告Report?  管道单元有多对多，管道单元还有内部单元编码？管道单元忽视ISP的标识?
     //单次ISP如果多个报告，每个报告单独打印，单独编制特定编号的报告，单独链接；主报告1+N。
     @ManyToOne
     @JoinColumn

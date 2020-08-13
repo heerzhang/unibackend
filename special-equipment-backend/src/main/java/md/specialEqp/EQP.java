@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class EQP {
     @Id
@@ -58,8 +59,12 @@ public class EQP {
    // @PropertyDef(label="监察识别码")    数据库建表注释文字。
     @Column(length =128, unique = true)
     private String oid;
+    //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
+    private String type;    //EQP_TYPE{首1个字符} ,
+    private String sort;    //类别代码 EQP_SORT{首2个字符} ,
+    private String vart;    //设备品种代码 EQP_VART{首3个字符}
 
-    private String type;
+
     @ManyToOne
     @JoinColumn
     private Unit ownerUnt;

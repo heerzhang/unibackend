@@ -2,6 +2,7 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import md.specialEqp.type.Elevator;
 import md.system.Authority;
 import md.system.AuthorityRepository;
 import md.system.User;
@@ -26,6 +27,8 @@ import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.pojo.sei.DeviceSnapshot;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
+import org.jetbrains.annotations.NotNull;
+import org.redisson.misc.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,10 +45,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
 //@Transactional类完全限定名：而不是javax.的那一个。
@@ -537,7 +537,16 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
-
+    public Iterable<Elevator> findAllEQPsFilter2(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+        List<Elevator>  elevators = new ArrayList<Elevator>();
+        List<EQP> eqps= (List<EQP>) findAllEQPsFilter( where,  offset,  first, orderBy,  asc);
+        eqps.stream().forEach(item -> {
+            if(item instanceof Elevator)
+                elevators.add((Elevator)item);
+        });
+        //elevators.addAll(eqps);
+        return elevators;
+    }
 }
 
 

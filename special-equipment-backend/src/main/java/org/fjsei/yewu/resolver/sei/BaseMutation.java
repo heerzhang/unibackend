@@ -1,6 +1,7 @@
 package org.fjsei.yewu.resolver.sei;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.specialEqp.type.Elevator;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -115,7 +116,13 @@ public class BaseMutation implements GraphQLMutationResolver {
     public EQP newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         EQP eQP = new EQP(cod,type,oid);
+      //  EQP eQP = new 电梯(cod,type,oid);
+        eQP.setSort("31");
+        eQP.setVart("311");
         eQPRepository.save(eQP);
+        EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
+        if( !(sec instanceof Elevator) )
+            return eQP;
         return eQP;
     }
     //Town + address

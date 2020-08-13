@@ -94,3 +94,8 @@ IMDG缓存到底和那一个框架hibenate做集成的 https://github.com/rediss
 修改redisson超时设置后要删除redis存储文件才行。若有region有用于COLLECTION> ENTITY > NATURAL_ID按这顺序配ttl时间。
 启动指定profiles; java -jar -Dspring.profiles.active=dev  demo-0.jar  //application-dev.properties：开发
 Spring-security-oauth2之DaoAuthenticationProvider用于响应UsernamePasswordAuthenticationToken身份验证请求
+Infinispan 支持hibernate分布式二级缓存　Key/Value数据库　　@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")
+Hibernate手册type(p)=A; type(p) in (B,C);  coalesce(name,nick,''); date<{d '2000-01-01'}; current_timestamp() year(current_date()) locate(,,)
+　 not member of;  maxelement(holidays)；where kit member of m.kittens；where 3 > all elements(p.scores)；
+HQL统计select new map( max(c.bodyWeight) as max, min() as min, count(*) as n ) from Cat c；new list(,name ,); CAST(实体类);
+

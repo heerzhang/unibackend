@@ -48,3 +48,5 @@ hibernate的二级缓存  https://blog.csdn.net/panzm_csdn/article/details/79700
 mySQL启动数据库：net start mysql   登录：mysql -u root -p  
 https://hanyeyinyong2.123nat.com:3765       前端升级了开发模式wss可用。
 
+中文变量名 卡在graphQL的语法解析上。
+
