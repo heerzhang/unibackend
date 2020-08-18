@@ -1,7 +1,6 @@
 package org.fjsei.yewu.resolver.sei;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import md.specialEqp.type.Elevator;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -34,7 +33,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -78,6 +76,8 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private EQPRepository eQPRepository;
     @Autowired
+    private ElevatorRepository elevatorRepository;
+    @Autowired
     private ISPRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
@@ -120,9 +120,8 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQP.setSort("31");
         eQP.setVart("311");
         eQPRepository.save(eQP);
-        EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
-        if( !(sec instanceof Elevator) )
-            return eQP;
+        //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
+        //if( !(sec instanceof Elevator) )       return eQP;
         return eQP;
     }
     //Town + address
@@ -388,6 +387,26 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQP.setCod(info.getCod());
         eQP.setOid(info.getOid());
         eQPRepository.save(eQP);
+        return eQP;
+    }
+    @Transactional
+    public Elevator buildElevator(Long id, Long ownerId, DeviceCommonInput info) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Elevator eQP = elevatorRepository.findById(id).orElse(null);
+        Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
+        //Todo: 行政部分+用户定义名
+        Address position= addressRepository.findByName(info.getAddress());
+        if(position==null){
+            position=new Address();
+            //Todo: 行政部分 独立了。
+            position.setName(info.getAddress());
+            addressRepository.save(position);
+        }
+        Unit ownerUnit= unitRepository.findById(ownerId).orElse(null);
+        Assert.isTrue(position != null,"未找到position:"+position);
+        Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
+        eQP.setLiftHeight("243.5");
+        elevatorRepository.save(eQP);
         return eQP;
     }
 

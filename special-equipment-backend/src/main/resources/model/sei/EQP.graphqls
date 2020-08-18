@@ -1,5 +1,5 @@
 #给前端看的模型须能在同名POJO实体类中匹配getxxx()方法,注意中文空格和英文不同。
-type EQP{
+type EQP implements Equipment{
     id:ID!
     cod: String!
     oid: String
@@ -13,28 +13,28 @@ type EQP{
     factoryNo: String
     task: [Task]
     isps: [ISP]
+    valid: Boolean
     #外模型看到的字段和POJO可不同
     meDoIsp: [ISP]
-    valid: Boolean
 }
 
-type Elevator implements EQP{
-   liftHeight: String
-}
+
+
+
+
 
 extend type Query {
     getDevice(id:ID!): EQP
     getDeviceSelf(id:ID!): EQP
     findEQPbyCod(cod: String!): EQP
-    #不能用type定义的对象类型来做输入参数，报错to be a GraphQLInputType#
     findEQPLike(filter: DeviceCommonInput): [EQP]!
     findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [EQP]!
     getAllEQP: [EQP]!
     countAllEQP: Long!
     countAllEQPsFilter(filter: DeviceCommonInput!): Long!
-    countAllEQPsWhere(where: WhereTree): Long!
-    findAllEQPsFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
-    findAllEQPsFilter2(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [Elevator]!
+    #升级弃用countAllEQPsWhere(where: WhereTree): Long!
+    findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
+    #findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
 extend type Mutation {

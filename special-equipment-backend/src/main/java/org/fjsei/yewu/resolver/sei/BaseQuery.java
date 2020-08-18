@@ -2,7 +2,7 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import md.specialEqp.type.Elevator;
+import md.computer.File;
 import md.system.Authority;
 import md.system.AuthorityRepository;
 import md.system.User;
@@ -15,6 +15,7 @@ import org.fjsei.yewu.entity.fjtj.*;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
+import org.fjsei.yewu.filter.Equipment;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
 import org.fjsei.yewu.input.ComplexInput;
@@ -27,8 +28,6 @@ import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.pojo.sei.DeviceSnapshot;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
-import org.jetbrains.annotations.NotNull;
-import org.redisson.misc.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,6 +67,8 @@ public class BaseQuery implements GraphQLQueryResolver {
     @Autowired
     private EQPRepository eQPRepository;
     @Autowired
+    private ElevatorRepository elevatorRepository;
+    @Autowired
     private ISPRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
@@ -99,7 +100,7 @@ public class BaseQuery implements GraphQLQueryResolver {
 
     //前端实际不可能用！把数据库全部都同时查入后端内存，太耗；查询只能缩小范围都得分页查，就算原子更新操作也不能全表一个个update，大的表可执行力太差！
     @Deprecated
-    public Iterable<EQP> findAllEQPs_留后端自己内部用吧() {
+    public Iterable<EQP> findAllEQPs_删除() {
        String partcod="";
        String partoid="";
        Pageable pageable = PageOffsetFirst.of(0, 35, Sort.by(Sort.Direction.ASC,"oid"));         //Integer.parseInt(10)
@@ -505,8 +506,13 @@ public class BaseQuery implements GraphQLQueryResolver {
         //是否需要重新初始化技术参数设备基本字段呢？
         return report;
     }
-    //前端设备列表
-    public Iterable<EQP> findAllEQPsFilter(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public  EQP findAllEQPsFilter222(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+        //List<Elevator> list =elevatorRepository.findAll();
+        return null;
+    }
+    //升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
+    //graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退出前端动态解释型领域，只剩下给不想写HQL代码的后端程序静态型用。
+    public Iterable<EQP> findAllEQPsFilter_delete(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
@@ -537,16 +543,53 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
-    public Iterable<Elevator> findAllEQPsFilter2(WhereTree where, int offset, int first, String orderBy, boolean asc) {
-        List<Elevator>  elevators = new ArrayList<Elevator>();
-        List<EQP> eqps= (List<EQP>) findAllEQPsFilter( where,  offset,  first, orderBy,  asc);
-        eqps.stream().forEach(item -> {
-            if(item instanceof Elevator)
-                elevators.add((Elevator)item);
+    public Iterable<EQP> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
+        if(first<=0)   first=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, first);
+        else
+            pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+
+        ModelFiltersImpl<EQP> modelFilters = new ModelFiltersImpl<EQP>(null);
+        Specification<EQP> specification = new Specification<EQP>() {
+            @Override
+            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);
+                modelFilters.effectCount(2000);    //像回调函数一样。
+                return null;
+            }
+        };
+
+        modelFilters.initialize(specification,emSei);
+       // modelFilters.effectWhereTree(where);
+        /* 这下面对照是这样的： query级缓存时间内，数据库人工修改的，前端靠findAllEQPsFilter查的会滞后才显示。
+            注意query-results缓存时间内select from结果集不变，但是列表中某单一个实体的字段却可变动的；人工删除实体会报错。
+            @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
+            Page<EQP> findAll(@Nullable Specification<EQP> spec, Pageable pageable);
+        */
+        Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
+        return list;
+    }
+
+    public Iterable<Equipment> findAllEQPsFilter2(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+        List<Equipment>  elevators = new ArrayList<Equipment>();
+        Iterable<EQP> eqps= findAllEQPsFilter( where,  offset,  first, orderBy,  asc);
+        eqps.forEach(item -> {
+           // if(item instanceof Equipment)
+                elevators.add(item);
         });
-        //elevators.addAll(eqps);
+        Iterable<Elevator> elevatorslst = elevatorRepository.findAll();
+        elevatorslst.forEach(item -> {
+            // if(item instanceof Equipment)
+            elevators.add(item);
+        });
         return elevators;
     }
+
 }
 
 

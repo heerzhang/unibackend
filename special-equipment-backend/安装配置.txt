@@ -94,8 +94,14 @@ IMDG缓存到底和那一个框架hibenate做集成的 https://github.com/rediss
 修改redisson超时设置后要删除redis存储文件才行。若有region有用于COLLECTION> ENTITY > NATURAL_ID按这顺序配ttl时间。
 启动指定profiles; java -jar -Dspring.profiles.active=dev  demo-0.jar  //application-dev.properties：开发
 Spring-security-oauth2之DaoAuthenticationProvider用于响应UsernamePasswordAuthenticationToken身份验证请求
-Infinispan 支持hibernate分布式二级缓存　Key/Value数据库　　@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")
+Infinispan 支持hibernate分布式二级缓存　Key/Value数据库　　@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")如对数据没有强一致性诉求可考虑采用异步模式(建议Replication Queue)；
+"分布式数据网格”Hazlecast IMDG商用版本这些配置才能生效？ssl传输/WAN/。 而Apache Ignite据说最牛。
 Hibernate手册type(p)=A; type(p) in (B,C);  coalesce(name,nick,''); date<{d '2000-01-01'}; current_timestamp() year(current_date()) locate(,,)
 　 not member of;  maxelement(holidays)；where kit member of m.kittens；where 3 > all elements(p.scores)；
 HQL统计select new map( max(c.bodyWeight) as max, min() as min, count(*) as n ) from Cat c；new list(,name ,); CAST(实体类);
 
+GraphQL Schema 图数据库Dgraph; Union联合类型成员须是具体对象类型，不能用接口或其他联合型来 | ; input型给后端便利。C implements F 要求A必须包含F的全部字段并相同，
+ 内联片段 ... on A { adds }; Union是变体=得使用条件片段... on W 解析__typename; implements B,C{ }; type D{x: unionX;} ; 无法A extend B{};
+GraphQL接口返回[union]的对Java实体类有限制严格/报错no class could be found for that type。
+
+jpa继承 之类，graphq找不到它？？ 倒置 Equipment/EQP 反的？

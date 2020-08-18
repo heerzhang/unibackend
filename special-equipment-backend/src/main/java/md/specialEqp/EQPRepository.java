@@ -2,7 +2,6 @@ package md.specialEqp;
 
 
 import md.cm.unit.Unit;
-import md.specialEqp.type.电梯;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

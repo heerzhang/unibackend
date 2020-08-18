@@ -61,7 +61,7 @@ query Counter_All
 }
 
 
-query Look_Relations($where:WhereTree,$offset:Int!,$first:Int,$orderBy:String,$asc:Boolean)
+query Look_Relations($where:WhereTree已淘汰,$offset:Int!,$first:Int,$orderBy:String,$asc:Boolean)
 {
   isps:findAllISPfilter(where:$where,
                offset:$offset,first:$first,orderBy:$orderBy,asc:$asc)

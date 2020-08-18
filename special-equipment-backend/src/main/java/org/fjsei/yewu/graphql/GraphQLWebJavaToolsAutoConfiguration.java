@@ -51,8 +51,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class GraphQLWebJavaToolsAutoConfiguration {
     //@Autowired  private MyGraphQLToolsProperties props;
-    @Autowired(required = false)
-    private SchemaParserDictionary dictionary;
+    //@Autowired(required = false)    private SchemaParserDictionary dictionary;
     @Autowired(required = false)
     private GraphQLScalarType[] scalars;
     @Autowired(required = false)
@@ -78,7 +77,8 @@ public class GraphQLWebJavaToolsAutoConfiguration {
             SchemaStringProvider schemaStringProvider,
             SchemaParserOptions.Builder optionsBuilder
     ) throws IOException {
-        SchemaParserBuilder builder = dictionary != null ? new SchemaParserBuilder(dictionary) : new SchemaParserBuilder();
+        SchemaParserBuilder builder = new SchemaParserBuilder();
+        //SchemaParserBuilder builder = dictionary != null ? new SchemaParserBuilder(dictionary) : new SchemaParserBuilder();
          //builder.访问不到codeRegistry
         List<String> schemaStrings = schemaStringProvider.schemaStrings();
         schemaStrings.forEach(builder::schemaString);

@@ -1,0 +1,21 @@
+type Elevator implements Equipment {
+    id:ID!
+
+    liftHeight: String
+}
+
+interface Equipment {
+    id:ID!
+
+}
+
+extend type Query {
+
+    findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
+}
+
+extend type Mutation {
+    buildElevator(id:ID!, owner: ID!, info: DeviceCommonInput) : Elevator
+
+}
+

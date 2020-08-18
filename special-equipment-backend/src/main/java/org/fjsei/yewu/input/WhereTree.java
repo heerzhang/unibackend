@@ -4,6 +4,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+//20200817后版本不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
+//graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退出前端动态解释型领域，只剩下给不想写HQL代码的后端程序静态型用 = 作废WhereTree了。
+
 //逻辑bool表达式的根结点(或中间结点)
 //谓词Predicate:"and or"；
 //子查询Subquery没多大意义，通过业务层面变换消除，就不考虑。

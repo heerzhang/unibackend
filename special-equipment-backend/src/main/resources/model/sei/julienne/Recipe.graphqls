@@ -20,7 +20,7 @@ type Following{
 extend type Query {
     findRecipe(id:ID!):Recipe
     useFollowing(toUser: Boolean): [Following]
-    findAllRecipeFilter(where: WhereTree, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Recipe]!
+    #升级弃用findAllRecipeFilter(where: WhereTree, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Recipe]!
 }
 
 extend type Mutation {

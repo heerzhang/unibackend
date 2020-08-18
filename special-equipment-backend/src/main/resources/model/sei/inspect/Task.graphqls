@@ -11,7 +11,7 @@ type Task{
 extend type Query {
     findAllTasks: [Task]!
     countTask(dep: String, status: String):Long
-    findAllTaskFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [Task]!
+    #升级弃用findAllTaskFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [Task]!
 }
 
 extend type Mutation {

@@ -7,6 +7,7 @@ import md.cm.unit.Unit;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
+import org.fjsei.yewu.filter.Equipment;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -35,9 +36,9 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+//@Inheritance(strategy=InheritanceType.JOINED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
-public class EQP {
+public class EQP implements  Equipment{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
