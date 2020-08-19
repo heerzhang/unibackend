@@ -8,6 +8,8 @@ type Elevator implements Equipment,Jidianlei {
     liftHeight: String
 }
 
+
+
 interface Equipment {
     id:ID!
     cod: String!
@@ -16,15 +18,15 @@ interface Equipment {
     vart: String!
 }
 
-type Escalator implements Equipment,Jidianlei {
+type Escalator implements Equipment,Jidianlei{
     id:ID!
     cod: String!
-    oid: String
     type: String!
     sort: String!
     vart: String!
-    liftHeight: String
     steps: String
+        oid: String
+        liftHeight: String
 }
 
 extend type Query {

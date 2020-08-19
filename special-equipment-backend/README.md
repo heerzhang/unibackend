@@ -65,6 +65,8 @@ graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退�
 graphQL接口方法或Object Type模型至少有一处有引用到的；才可以进入SchemaClassScanner.dictionary法眼，否则找不到:Type S implements I{}模型。
 　　Union联合类型成员须是具体对象类型，不能用接口或其他联合型来 | ;   内置模型PageInfo {endCursor,}关联Relay/Edges/connection；
 *.graphqls模型内定义implements和java实体类定义implements两个都是必须的/是独立验证的；B implements I{}。 能支持没有java继承关系类合并查询做graphQL接口返回结果类型/都做implements I{}方式。
+type N{}和interface N{}可以同名N。interface B{b..};C implements B{c..}不需要java类配合的,但是这里c..字段必须包含全部的B字段b..一个都不能少！！interface N{}不需要java中定义N的/无关联java的interface implements。
+graphQL Union=|必须是Object Type,不检查查询结果类;但是只能用...on{}取字段。 　enum D { EAST }是字符常量。
 
 
 type EQP{

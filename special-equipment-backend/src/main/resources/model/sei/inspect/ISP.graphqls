@@ -6,7 +6,7 @@ type ISP{
     checkMen: User
     nextIspDate: String
     conclusion: String
-    #安全考虑用SimpleReport代替Report就无法内省流出保密字段
+    #安全考虑用SimpleReport代替Report就无法内省流出保密字段,实际做不到前端可以查Report
     reps: [SimpleReport]
 }
 

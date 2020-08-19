@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
-public class EQP implements  Equipment{
+public class EQP extends   Equipment{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")

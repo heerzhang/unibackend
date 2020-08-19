@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Elevator  extends EQP  implements Equipment{
+public class Elevator  extends EQP {
 
 
     private String liftHeight;

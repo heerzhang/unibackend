@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Escalator extends Elevator  implements Equipment{
+public class Escalator extends Elevator {
 
 
     private String steps;
