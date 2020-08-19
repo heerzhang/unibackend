@@ -1,4 +1,4 @@
-type Elevator implements Equipment,Jidianlei {
+type Elevator{
     id:ID!
     cod: String!
     oid: String
@@ -8,17 +8,7 @@ type Elevator implements Equipment,Jidianlei {
     liftHeight: String
 }
 
-
-
-interface Equipment {
-    id:ID!
-    cod: String!
-    type: String!
-    sort: String!
-    vart: String!
-}
-
-type Escalator implements Equipment,Jidianlei{
+type Escalator{
     id:ID!
     cod: String!
     type: String!
@@ -28,6 +18,8 @@ type Escalator implements Equipment,Jidianlei{
         oid: String
         liftHeight: String
 }
+
+union Equipment = Elevator | Escalator | EQP
 
 extend type Query {
 
