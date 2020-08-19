@@ -16,7 +16,7 @@ IDEA直接配置加上jar远端库=使用阿里的依赖库=https://www.cnblogs.
 java还未支持协程Fiber；js其实单线程。
 使用 Undertow 替换掉 Tomcat;  工程：compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '2.2.5.RELEASE'
 移除SpringMvc相关组件以及Tomcat，Jetty，Undertow等Web容器，使用Netty构建HttpServer来实现轻量级的RestfulAPIs。
-Spring WebFlux 默认是使用 Netty 作为 Web 容器的。Undertow 用的人比较少，。
+高性能 Web 服务框架=Undertow、Vert.x 和 Netty ;  Spring WebFlux 默认是使用 Netty 作为 Web 容器的。
 
 https://github.com/graphql-java-kickstart/samples
 

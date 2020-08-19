@@ -1,4 +1,4 @@
-package md.specialEqp;
+package md.specialEqp.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,12 +14,8 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Elevator  implements Equipment{
+public class Elevator  extends EQP  implements Equipment{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
-    @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
-    protected Long id;
 
     private String liftHeight;
  /*

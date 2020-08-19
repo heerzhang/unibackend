@@ -1,6 +1,9 @@
 package org.fjsei.yewu.resolver.sei;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.specialEqp.type.Elevator;
+import md.specialEqp.type.ElevatorRepository;
+import md.specialEqp.type.Escalator;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -407,6 +410,13 @@ public class BaseMutation implements GraphQLMutationResolver {
         Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
         eQP.setLiftHeight("243.5");
         elevatorRepository.save(eQP);
+        return eQP;
+    }
+    @Transactional
+    public Escalator buildEscalator(Long id, Long ownerId, DeviceCommonInput info) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Escalator eQP =new Escalator();
+
         return eQP;
     }
 

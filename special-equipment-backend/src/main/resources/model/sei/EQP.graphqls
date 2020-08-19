@@ -18,10 +18,10 @@ type EQP implements Equipment{
     meDoIsp: [ISP]
 }
 
-
-
-
-
+interface Jidianlei {
+    oid: String
+    liftHeight: String
+}
 
 extend type Query {
     getDevice(id:ID!): EQP

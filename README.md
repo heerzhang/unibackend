@@ -7,5 +7,5 @@
 看下载URL是国内的aliyun还是缺省https://plugins.gradle.org/m2/。
 graphQL input递归,会导致*** java.lang.instrument ASSERTION FAILED ***: "!errorOutstanding" with message transform method call failed at JPLISAgent.c line: 873
        装载*.graphqls配置失败
-
+graphQL用interface只能限定前端查询指定类型约束的可见字段，但无法限制前端修改查询结果的实际Type/通过它获得interface定义范围以外的字段。
 

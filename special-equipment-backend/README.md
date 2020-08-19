@@ -60,8 +60,8 @@ input关键字来到定义输入类型，不直接用Object是为了避开循环
 升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
 graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退出前端动态解释型领域，只剩下给不想写HQL代码的后端程序静态型用。
 这O.p()/O.getP()/O.p三者是统一的。graphql接口不支持重载的虽然java同名函数参数类型不同可支持。
-不用interface直接用union和实体类继承可以做graphql统一接口返回类型union，这方法前端... on EQP需要写重复字段;
-若graphQL模型定义A implements I{}的，对照地java实体类同样需要A implements I{}；
+不用interface直接用union和实体类继承可以做graphql统一接口返回类型union，这方法前端... on EQP需要写重复字段; ... on X{ }这若X纯粹模型文件定义的非java类也可以。
+若graphQL模型定义A implements I{}的，对照地java实体类同样需要A implements I{}；　不涉及接口返回类型的implements{前端用到的}可以不用在java中定义。
 graphQL接口方法或Object Type模型至少有一处有引用到的；才可以进入SchemaClassScanner.dictionary法眼，否则找不到:Type S implements I{}模型。
 　　Union联合类型成员须是具体对象类型，不能用接口或其他联合型来 | ;   内置模型PageInfo {endCursor,}关联Relay/Edges/connection；
 *.graphqls模型内定义implements和java实体类定义implements两个都是必须的/是独立验证的；B implements I{}。 能支持没有java继承关系类合并查询做graphQL接口返回结果类型/都做implements I{}方式。

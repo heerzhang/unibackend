@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @Entity
-//@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy=InheritanceType.JOINED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class EQP implements  Equipment{
     @Id

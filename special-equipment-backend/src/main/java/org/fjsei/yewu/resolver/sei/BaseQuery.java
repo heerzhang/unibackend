@@ -2,7 +2,8 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import md.computer.File;
+import md.specialEqp.type.Elevator;
+import md.specialEqp.type.ElevatorRepository;
 import md.system.Authority;
 import md.system.AuthorityRepository;
 import md.system.User;

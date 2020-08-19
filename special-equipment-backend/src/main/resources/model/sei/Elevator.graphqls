@@ -1,12 +1,30 @@
-type Elevator implements Equipment {
+type Elevator implements Equipment,Jidianlei {
     id:ID!
-
+    cod: String!
+    oid: String
+    type: String!
+    sort: String!
+    vart: String!
     liftHeight: String
 }
 
 interface Equipment {
     id:ID!
+    cod: String!
+    type: String!
+    sort: String!
+    vart: String!
+}
 
+type Escalator implements Equipment,Jidianlei {
+    id:ID!
+    cod: String!
+    oid: String
+    type: String!
+    sort: String!
+    vart: String!
+    liftHeight: String
+    steps: String
 }
 
 extend type Query {
@@ -16,6 +34,6 @@ extend type Query {
 
 extend type Mutation {
     buildElevator(id:ID!, owner: ID!, info: DeviceCommonInput) : Elevator
-
+    buildEscalator(id:ID!, owner: ID!, info: DeviceCommonInput) : Escalator
 }
 
