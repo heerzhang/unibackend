@@ -1,12 +1,9 @@
 package md.specialEqp.type;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import md.specialEqp.EQP;
-import org.fjsei.yewu.filter.Equipment;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 

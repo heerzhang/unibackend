@@ -1,21 +1,21 @@
-#给前端看的模型须能在同名POJO实体类中匹配getxxx()方法,注意中文空格和英文不同。
-type EQP{
+interface Equipment{
+    id:ID!
+    cod: String!
+    type: String!
+    sort: String!
+    vart: String!
+    oid: String
+    instDate: String
+}
+type EQP implements Equipment{
     id:ID!
     cod: String!
     oid: String
     type: String!
     sort: String!
     vart: String!
-    ownerUnt: Unit
-    pos: Address
-    maintUnt: Unit
     instDate: String
     factoryNo: String
-    task: [Task]
-    isps: [ISP]
-    valid: Boolean
-    #外模型看到的字段和POJO可不同
-    meDoIsp: [ISP]
 }
 
 

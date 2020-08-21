@@ -6,6 +6,8 @@ import graphql.kickstart.tools.*;
 import graphql.schema.GraphQLCodeRegistry;
 import graphql.schema.GraphQLSchema;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,6 +30,8 @@ public class MainGraphQLServlet extends GraphQLHttpServlet {
   @Qualifier("mainSchemaParser")
   SchemaParser schemaParser;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
   @Override
   protected GraphQLConfiguration getConfiguration() {
     try {
@@ -38,7 +42,8 @@ public class MainGraphQLServlet extends GraphQLHttpServlet {
         Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
         return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();
     } catch (Exception ex) {
-      System.out.println("装载*.graphqls配置失败");
+      //System.out.println("装载*.graphqls失败"+ex.toString());
+        logger.error("装载*.graphqls失败", ex);
       return null;
     }
   }

@@ -1,25 +1,30 @@
-type Elevator{
+type Elevator implements Equipment,IfElevator{
+    id:ID!
+     cod: String!
+     oid: String
+     type: String!
+     sort: String!
+     vart: String!
+     instDate: String
+     liftHeight: String
+     factoryNo: String
+}
+
+type Escalator implements Equipment,IfElevator{
     id:ID!
     cod: String!
     oid: String
     type: String!
     sort: String!
     vart: String!
+    instDate: String
+    liftHeight: String
+    steps: String
+    factoryNo: String
+}
+interface IfElevator{
     liftHeight: String
 }
-
-type Escalator{
-    id:ID!
-    cod: String!
-    type: String!
-    sort: String!
-    vart: String!
-    steps: String
-        oid: String
-        liftHeight: String
-}
-
-union Equipment = Elevator | Escalator | EQP
 
 extend type Query {
 

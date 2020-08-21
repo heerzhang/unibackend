@@ -16,7 +16,7 @@ import org.fjsei.yewu.entity.fjtj.*;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
-import org.fjsei.yewu.filter.Equipment;
+import md.specialEqp.Equipment;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
 import org.fjsei.yewu.input.ComplexInput;

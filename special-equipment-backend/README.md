@@ -67,6 +67,7 @@ graphQL接口方法或Object Type模型至少有一处有引用到的；才可�
 *.graphqls模型内定义implements和java实体类定义implements两个都是必须的/是独立验证的；B implements I{}。 能支持没有java继承关系类合并查询做graphQL接口返回结果类型/都做implements I{}方式。
 type N{}和interface N{}可以同名N。interface B{b..};C implements B{c..}不需要java类配合的,但是这里c..字段必须包含全部的B字段b..一个都不能少！！interface N{}不需要java中定义N的/无关联java的interface implements。
 graphQL Union=|必须是Object Type,不检查查询结果类;但是只能用...on{}取字段。 　enum D { EAST }是字符常量。
+GraphQLObjectType GraphQLInterfaceType 之间不可以相同名字的类型定义。union与interface之间也不可同名字，否则后面的覆盖前面的。
 
 
 type EQP{
