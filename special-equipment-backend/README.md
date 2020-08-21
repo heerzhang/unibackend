@@ -122,3 +122,8 @@ type Elevator {
     valid: Boolean
     liftHeight: String
 }
+ignite-spring-data　并非JPA;
+F:\22222\ignite-jpa-master　ignite被删　只有.xml??
+SaleemKhair-l2cache-ignite-integration-hibernate-master / ignite-hibernate_5.1 ignite-hibernate-core
+https://github.com/develiberta/ignite-jpa-postgresql 多出CacheStore转JpaRepository，ignite-indexing 没配置hibernate
+
