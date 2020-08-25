@@ -140,7 +140,8 @@ spring:
 
       javax:
         persistence:
-          sharedCache.mode: ENABLE_SELECTIVE
+          #2020/8/24 前ENABLE_SELECTIVE
+          sharedCache.mode: ALL
       #开启查询缓存factory_class    cache.use_query_cache: true
       hibernate.format_sql: true
       hibernate.use_sql_comments: true
@@ -162,7 +163,12 @@ spring:
           use_query_cache: true
           region:
             #缓存provider:非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
-            factory_class: org.redisson.hibernate.RedissonRegionFactory
+            #-cache 9.25  org.infinispan.hibernate.cache.main.InfinispanRegionFactory ;9.21  org.infinispan.hibernate.cache.commons.InfinispanRegionFactory
+            # org.hibernate.cache.infinispan.JndiInfinispanRegionFactory　　　org.infinispan.hibernate.cache.v53.InfinispanRegionFactory
+            factory_class: infinispan
+          infinispan:
+            cfg: infinispan-configs-local.xml
+            #cachemanager: java:CacheManager
           redisson:
             #若Redis歇菜，不报错给前端，变为等待
             fallback: true

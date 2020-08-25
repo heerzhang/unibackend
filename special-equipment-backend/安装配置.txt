@@ -95,10 +95,9 @@ IMDG缓存到底和那一个框架hibenate做集成的 https://github.com/rediss
 启动指定profiles; java -jar -Dspring.profiles.active=dev  demo-0.jar  //application-dev.properties：开发
 Spring-security-oauth2之DaoAuthenticationProvider用于响应UsernamePasswordAuthenticationToken身份验证请求
 Infinispan 支持hibernate分布式二级缓存　Key/Value数据库　　@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "")如对数据没有强一致性诉求可考虑采用异步模式(建议Replication Queue)；
-　infinispan-hibernate-cache-v53　  compile group: 'org.infinispan', name: 'infinispan-core', version: '11.0.3.Final'
-"分布式数据网格”Hazlecast IMDG商用版本这些配置才能生效？ssl传输/WAN/。
-ignite在SQL层还不支持事务一致性=还只能算是K/V缓存，它不是关系数据库，节点平等;可作Hibernate二级缓存+Spring缓存；ignite可用上SSL and TLS传输；可自动集成外部数据库；off-heap内存。
-ignite支持Hibernate L2/Spring Cache/MyBatis分别有各自的方案  https://apacheignite-mix.readme.io/docs/hibernate-l2-cache　安装https://apacheignite.readme.io/docs/getting-started
+ 配置Infinispan例子 https://infinispan.org/tutorials/
+ignite可用上SSL and TLS传输；在SQL层还不支持事务一致性，ignite不是关系数据库;  "分布式数据网格”Hazlecast IMDG商用版本这些配置才能生效？ssl传输/WAN/。
+ignite支持Hibernate L2/Spring Cache{+JCache}/MyBatis分别有各自的方案  https://apacheignite-mix.readme.io/docs/hibernate-l2-cache
 Hibernate手册type(p)=A; type(p) in (B,C);  coalesce(name,nick,''); date<{d '2000-01-01'}; current_timestamp() year(current_date()) locate(,,)
 　 not member of;  maxelement(holidays)；where kit member of m.kittens；where 3 > all elements(p.scores)；
 HQL统计select new map( max(c.bodyWeight) as max, min() as min, count(*) as n ) from Cat c；new list(,name ,); CAST(实体类);

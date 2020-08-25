@@ -13,5 +13,5 @@ graphQL用interface只能限定前端查询指定类型约束的可见字段，�
  接口返回union类型的前端必须使用...on A/I{ }选择实体Type或者interface才能用{Fragment不可缺}=也能读出不在interface声明的隐藏Type{}字段!。
 接口返回union的graphQL验证较轻(和java对应函数返回类型可不一致的)会延迟到实际执行JPA读取时刻。union组合若不包括继承子类的子Type对于java返回父interface的函数在读JPA时报错,union定义必须全包java的interface派生实体。
 标准graphQL规范 https://github.com/graphql/graphql-spec/tree/master/spec
-Controller在GraphQL内部提供了，GraphQLXxResolver相当于Sevice层，Repository这层{JPA/SpringData/WebFlux/Ignite缓存提供者}，再往下才是Model/Entity/PoJo;堆叠4个层次。
+Controller在GraphQL内部提供{REST}，GraphQLXxResolver相当于Sevice层{Dao}，Repository这层{JPA/IMDG/SpringData/WebFlux}，再往下才是model/Entity/PoJo;堆叠4个层次。
 

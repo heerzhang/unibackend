@@ -68,7 +68,23 @@ dependencies {
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
     //分布式缓存服务器　　提供者provider部分(IMDG内存数据网格库)
-    implementation 'org.redisson:redisson-hibernate-53:3.12.5'
+    //implementation 'org.redisson:redisson-hibernate-53:3.12.5'
+    //compile group: 'org.infinispan', name: 'infinispan-hibernate-cache-v53', version: '11.0.3.Final'
+    //implementation 'org.infinispan:infinispan-spring-boot-starter-remote:2.3.3.Final'
+
+    // https://mvnrepository.com/artifact/org.infinispan/infinispan-core
+    //compile group: 'org.infinispan', name: 'infinispan-core', version: '11.0.3.Final'
+    implementation "org.infinispan:infinispan-core:$LIB_INFINISPAN_VER"
+    implementation "org.infinispan:infinispan-commons:$LIB_INFINISPAN_VER"
+    implementation "org.infinispan:infinispan-jboss-marshalling:$LIB_INFINISPAN_VER"
+    implementation "org.infinispan:infinispan-hibernate-cache-v53:$LIB_INFINISPAN_VER"
+    //compile group: 'org.infinispan', name: 'infinispan-hibernate-cache-v53', version: "$LIB_INFINISPAN_VER"
+
+
+    //旧版吗？ 'org.hibernate', name: 'hibernate-infinispan',  deprecated  - use org.infinispan:infinispan-hibernate-cache-v53
+    //compile group: 'org.infinispan', name: 'infinispan-hibernate-cache', version: '9.2.1.Final' 最新 '9.2.5.Final'改名字了?
+
+
 
     //在2.3.2.RELEASE版本缺了添加
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
