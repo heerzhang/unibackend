@@ -8,7 +8,7 @@
 <infinispan
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:infinispan:config:11.0 https://infinispan.org/schemas/infinispan-config-11.0.xsd"
-        xmlns="urn:infinispan:config:11.0">
+        xmlns="urn:infinispan:config:10.1.8">
 
 
    <!-- This configuration is suitable for non-clustered environments, where only single instance accesses the DB -->

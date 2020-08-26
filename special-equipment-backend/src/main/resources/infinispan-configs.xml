@@ -8,14 +8,14 @@
 <infinispan
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:infinispan:config:11.0 https://infinispan.org/schemas/infinispan-config-11.0.xsd"
-        xmlns="urn:infinispan:config:11.0">
+        xmlns="urn:infinispan:config:10.1.8">
 
    <jgroups>
       <stack-file name="hibernate-jgroups" path="${hibernate.cache.infinispan.jgroups_cfg:default-configs/default-jgroups-tcp.xml}"/>
    </jgroups>
 
    <cache-container name="SampleCacheManager" statistics="false" default-cache="the-default-cache" shutdown-hook="DEFAULT">
-      <transport stack="hibernate-jgroups" cluster="infinispan-hibernate-cluster"/>
+      <transport stack="hibernate-jgroups" cluster="cluster"/>
 
       <local-cache-configuration name="the-default-cache" statistics="false" />
 
@@ -24,14 +24,12 @@
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
       </invalidation-cache-configuration>
 
       <replicated-cache-configuration name="replicated-entity" remote-timeout="20000" statistics="false" statistics-available="false">
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
       </replicated-cache-configuration>
 
       <!-- A config appropriate for query caching. Does not replicate queries. -->
@@ -39,7 +37,6 @@
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
       </local-cache-configuration>
 
       <!-- A query cache that replicates queries. Replication is asynchronous. -->
@@ -47,7 +44,6 @@
          <locking concurrency-level="1000" acquire-timeout="15000" isolation="READ_COMMITTED"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
       </replicated-cache-configuration>
 
       <!-- Optimized for timestamp caching. A clustered timestamp cache
@@ -59,7 +55,7 @@
          <transaction mode="NONE"/>
          <expiration interval="0"/>
          <!--  Don't ever evict modification timestamps -->
-         <memory when-full="NONE"/>
+
       </replicated-cache-configuration>
 
       <!-- When providing custom configuration, always make this cache local and non-transactional.

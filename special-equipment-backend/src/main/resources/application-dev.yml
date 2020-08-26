@@ -131,12 +131,12 @@ spring:
   #transaction-manager-id: txManager
   jpa:
     properties:
-      redis:
-        expiryInSeconds:
-          hibernate:
-            Fast: 131
-            query: 141
-          default: 163
+      #redis:
+        #expiryInSeconds:
+         # hibernate:
+         #   Fast: 131
+         #   query: 141
+         # default: 163
 
       javax:
         persistence:
@@ -158,7 +158,7 @@ spring:
         hbm2ddl:
           auto: update
         cache:
-          #二级缓存关闭启用的2个总开关,关不了集合字段
+          #二级缓存关闭启用的2个总开关,关不了集合字段false true
           use_second_level_cache: true
           use_query_cache: true
           region:
@@ -167,12 +167,13 @@ spring:
             # org.hibernate.cache.infinispan.JndiInfinispanRegionFactory　　　org.infinispan.hibernate.cache.v53.InfinispanRegionFactory
             factory_class: infinispan
           infinispan:
-            cfg: infinispan-configs-local.xml
+            #关键配置文件
+            cfg: infinispan-configs.xml
             #cachemanager: java:CacheManager
           redisson:
             #若Redis歇菜，不报错给前端，变为等待
             fallback: true
-            config: redisson.yaml
+            #config: redisson.yaml
             #如果用JNDI减少Redisson实例数
             jndi_name: redisson_instance
             query:
@@ -208,6 +209,10 @@ spring:
 file:
   #上传文件root,在此上扩展子目录,不带F:就是当前程序运行盘的。
   upload-dir: F:/Users/uploads
+
+infinispan:
+  remote:
+    #config-xml: infinispan-configs.xml
 
 sei:
   visibility:
