@@ -140,12 +140,15 @@ spring:
 
       javax:
         persistence:
-          #2020/8/24 前ENABLE_SELECTIVE
-          sharedCache.mode: ALL
+          #ENABLE_SELECTIVE允许选择实体类 ALL全部类都做缓存
+          sharedCache.mode: ENABLE_SELECTIVE
       #开启查询缓存factory_class    cache.use_query_cache: true
       hibernate.format_sql: true
       hibernate.use_sql_comments: true
       hibernate:
+        connection:
+          #provider_disables_autocommit: true
+        #id.new_generator_mappings: true
         javax:
           cache:
             missing_cache_strategy: create
@@ -161,15 +164,33 @@ spring:
           #二级缓存关闭启用的2个总开关,关不了集合字段false true
           use_second_level_cache: true
           use_query_cache: true
+          #use_minimal_puts: true
           region:
             #缓存provider:非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
             #-cache 9.25  org.infinispan.hibernate.cache.main.InfinispanRegionFactory ;9.21  org.infinispan.hibernate.cache.commons.InfinispanRegionFactory
             # org.hibernate.cache.infinispan.JndiInfinispanRegionFactory　　　org.infinispan.hibernate.cache.v53.InfinispanRegionFactory
             factory_class: infinispan
           infinispan:
-            #关键配置文件
+            #关键配置infinispan-cfg.xml,不填就用缺省文件org/infinispan/hibernate/cache/commons/builder/infinispan-configs.xml
             cfg: infinispan-cfg.xml
+            #jgroups_cfg: default-jgroups.xml
             #cachemanager: java:CacheManager
+            #statistics: true
+            Slow:
+              expiration.max_idle: 800000
+              expiration.lifespan: 1800000
+            Medium:
+              expiration.max_idle: 300000
+              expiration.lifespan: 600000
+            Fast:
+              expiration.max_idle: 90000
+              expiration.lifespan: 150000
+            entity:
+              #expiration.lifespan: 3600000
+              #eviction.max_entries: 1000
+            md:
+              system.User.expiration.max_idle: 30
+
           redisson:
             #若Redis歇菜，不报错给前端，变为等待
             fallback: true
@@ -186,12 +207,7 @@ spring:
               expiration.time_to_live: 300000
             collection:
               expiration.time_to_live: 300000
-            Slow:
-              expiration.time_to_live: 1800000
-            Medium:
-              expiration.time_to_live: 600000
-            Fast:
-              expiration.time_to_live: 150000
+
     generate-ddl: true
     open-in-view: true
   main:
@@ -215,8 +231,9 @@ infinispan:
     enabled: true
     marshaller: org.infinispan.commons.marshall.JavaSerializationMarshaller
     java-serial-whitelist: md.*
-    server-list: 127.0.0.1:11222
+    #server-list: 127.0.0.1:11222
     #config-xml: infinispan-configs.xml
+    #cluster-name: my-infinispan-cluster
 
 sei:
   visibility:

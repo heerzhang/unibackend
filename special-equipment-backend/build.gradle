@@ -30,8 +30,8 @@ configurations {
 
 dependencyManagement {
     imports {
-       //maven等价<artifactId>infinispan-bom</artifactId><type>pom</type><scope>import</scope> 管理版本号的。 
-        mavenBom 'org.infinispan:infinispan-bom:11.0.3.Final' 
+       //管理版本号<artifactId>infinispan-bom</artifactId><type>pom</type><scope>import</scope>
+       mavenBom 'org.infinispan:infinispan-bom:11.0.3.Final'     //没完没了暂时屏蔽
     }
 }
 
@@ -62,15 +62,8 @@ dependencies {
     compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     compile "org.springframework.boot:spring-boot-starter-websocket"
     //本starter实际自带"org.infinispan:infinispan-core:""org.infinispan:infinispan-core:"只10.1.8版本的。
-    implementation "org.infinispan:infinispan-spring-boot-starter-remote:2.3.2.Final"
-    //版本相关性太强了，运行可能报错！　 10.1.8' 改成　11.xx' 
-    //implementation "org.infinispan:infinispan-core:$LIB_INFINISPAN_VER"
-    //implementation "org.infinispan:infinispan-commons:$LIB_INFINISPAN_VER"
-    //implementation "org.infinispan:infinispan-jboss-marshalling:$LIB_INFINISPAN_VER"
-    //implementation "org.infinispan:infinispan-client-hotrod:$LIB_INFINISPAN_VER"
-    
-    //implementation "org.infinispan:infinispan-server-hotrod:$LIB_INFINISPAN_VER"
-    //implementation "org.infinispan:infinispan-clustered-counter:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-spring-boot-starter-remote:2.3.2.Final"
+
 
     //分布式数据库    　关系数据库部分
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -87,7 +80,20 @@ dependencies {
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     
     //分布式缓存服务器　　提供者provider部分(IMDG内存数据网格库)
+    implementation "org.springframework.boot:spring-boot-starter-cache"
+    implementation "javax.cache:cache-api:1.1.1"
+    implementation "org.infinispan:infinispan-spring-boot-starter-embedded:2.3.2.Final"
     implementation "org.infinispan:infinispan-hibernate-cache-v53:$LIB_INFINISPAN_VER"
+
+    //版本相关性太强了，运行可能报错！　 10.1.8' 改成　11.xx'
+    //implementation "org.infinispan:infinispan-core:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-commons:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-jboss-marshalling:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-client-hotrod:$LIB_INFINISPAN_VER"
+
+    //implementation "org.infinispan:infinispan-server-hotrod:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-clustered-counter:$LIB_INFINISPAN_VER"
+
     //旧版吗？ 'org.hibernate', name: 'hibernate-infinispan',  deprecated  - use org.infinispan:infinispan-hibernate-cache-v53
     //compile group: 'org.infinispan', name: 'infinispan-hibernate-cache', version: '9.2.1.Final' 最新 '9.2.5.Final'改名字了?
 

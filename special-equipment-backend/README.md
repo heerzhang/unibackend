@@ -128,10 +128,12 @@ infinispan概念部署模式Cache Manager有俩个形式：Embedded是同一个J
 cache六个模式：2=Local单机，5=Distributed模式集群多份冗余，3=Invalidation改删除，4=Replicated全拷{<10节点}。 Local Caches就是单个服务器版{节点间不共享}，Clustered就是多服务器。 乐观锁抛出异常。
 4种Clustered集群模式(3,4,5)都要JGroups预配传输协议。5Distributed模式也会有local cache吗？-> L1 is enabled暂时节点内(非默认开)；不建议异步通信;异步模式时read-committed isolation实际用repeatable-read实现；
 集群才需配<transport stack="udp" cluster="myName"/>{stack文件=default-jgroups-udp.xml/端口IP超时}； 集群JGroups定义stacks{UDP/TCP}; <jgroups>自定义。
-RemoteCacheManager配置要经过HotRod{需配IP+Port}；外Storage不支持TX一致性？file-store可以，不能用NFS做Store。
+RemoteCacheManager配置要经过HotRod{需配IP+Port}；外Storage不支持TX一致性？file-store可以，不能用NFS做Store。 cache模式1=<local-cache name="A" simple-cache="true">;
 C\S模式客户端连接到Infinispan服务器只需指定任意服务器的IP地址和端口号即可。服务器会将拓扑信息发给客户端，变化新的拓扑信息也会同步到客户端，
 使得当客户端连接的服务器异常时，客户仍可正常访问。hash分布感知将节点选择落在客户端完成; <jgroups>定义AUTH/ENCRYPT{节点间}。如何验证HotRod客户端身份密码？
 服务器urn:infinispan:server底下定义<endpoints> security realm认证用户；　文档https://infinispan.org/docs/stable/titles/server/server.html#securing_access
 客户端的配置文件会覆盖服务器端的配置?
-服务端关掉了，cache依然存在可用？，hibernate搞得？
-
+服务端集群都关掉了，cache依然存在可用？，hibernate搞得？似乎另外还有缓存;
+infinispan缺省缓存13分钟。CLI命令手册https://infinispan.org/docs/stable/titles/cli/cli.html
+hibernate L2C 对于Repository的函数须各自声明Cache才能缓存。
+服务端集群都关掉org.infinispan.client.hotrod.exceptions　 Connection refused: no further information: /127.0.0.1:11222

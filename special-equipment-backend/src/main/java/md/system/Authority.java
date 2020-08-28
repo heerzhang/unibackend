@@ -1,5 +1,7 @@
 package md.system;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedList;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTHORITY" )
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
 public class Authority {
 
     @Id

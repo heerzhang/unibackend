@@ -5,33 +5,30 @@
   ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
   ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
   -->
-<infinispan
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:infinispan:config:11.0 https://infinispan.org/schemas/infinispan-config-11.0.xsd"
-        xmlns="urn:infinispan:config:11.0">
+<infinispan>
 
-   <cache-container name="SampleCacheManager" statistics="false" default-cache="mySimpleCache" shutdown-hook="DEFAULT">
-      <transport  cluster="cluster"/>
+   <jgroups>
+      <stack-file name="hibernate-jgroups" path="${hibernate.cache.infinispan.jgroups_cfg:default-configs/default-jgroups-tcp.xml}"/>
+   </jgroups>
+
+   <cache-container name="SampleCacheManager" statistics="false" default-cache="the-default-cache" shutdown-hook="DEFAULT">
+      <transport stack="hibernate-jgroups" cluster="cluster"/>
 
       <local-cache-configuration name="the-default-cache" statistics="false" />
-
-      <local-cache name="mySimpleCache" simple-cache="true">
-         <!-- expiration, eviction, security... -->
-      </local-cache>
 
       <!-- Default configuration is appropriate for entity/collection caching. -->
       <invalidation-cache-configuration name="entity" remote-timeout="20000" statistics="false" statistics-available="false">
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
+
       </invalidation-cache-configuration>
 
       <replicated-cache-configuration name="replicated-entity" remote-timeout="20000" statistics="false" statistics-available="false">
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
+
       </replicated-cache-configuration>
 
       <!-- A config appropriate for query caching. Does not replicate queries. -->
@@ -39,7 +36,7 @@
          <locking concurrency-level="1000" acquire-timeout="15000"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
+
       </local-cache-configuration>
 
       <!-- A query cache that replicates queries. Replication is asynchronous. -->
@@ -47,7 +44,7 @@
          <locking concurrency-level="1000" acquire-timeout="15000" isolation="READ_COMMITTED"/>
          <transaction mode="NONE" />
          <expiration max-idle="100000" interval="5000"/>
-         <memory max-count="10000"/>
+
       </replicated-cache-configuration>
 
       <!-- Optimized for timestamp caching. A clustered timestamp cache
