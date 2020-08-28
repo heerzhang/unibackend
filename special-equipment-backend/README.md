@@ -137,3 +137,5 @@ C\S模式客户端连接到Infinispan服务器只需指定任意服务器的IP�
 infinispan缺省缓存13分钟。CLI命令手册https://infinispan.org/docs/stable/titles/cli/cli.html
 hibernate L2C 对于Repository的函数须各自声明Cache才能缓存。
 服务端集群都关掉org.infinispan.client.hotrod.exceptions　 Connection refused: no further information: /127.0.0.1:11222
+无法用infinispan-spring-boot-starter-remote只能-embedded部署模式，端口不是独立服务器11222而是Embedded方式自己集群搞的7800{default-jgroups-tcp.xml这里配}。
+
