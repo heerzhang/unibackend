@@ -10,14 +10,14 @@
         xsi:schemaLocation="urn:infinispan:config:11.0 https://infinispan.org/schemas/infinispan-config-11.0.xsd"
         xmlns="urn:infinispan:config:11.0">
 
-   <jgroups>
-      <stack-file name="hibernate-jgroups" path="${hibernate.cache.infinispan.jgroups_cfg:default-configs/default-jgroups-tcp.xml}"/>
-   </jgroups>
-
-   <cache-container name="SampleCacheManager" statistics="false" default-cache="the-default-cache" shutdown-hook="DEFAULT">
-      <transport stack="hibernate-jgroups" cluster="infinispan-hibernate-cluster"/>
+   <cache-container name="SampleCacheManager" statistics="false" default-cache="mySimpleCache" shutdown-hook="DEFAULT">
+      <transport  cluster="cluster"/>
 
       <local-cache-configuration name="the-default-cache" statistics="false" />
+
+      <local-cache name="mySimpleCache" simple-cache="true">
+         <!-- expiration, eviction, security... -->
+      </local-cache>
 
       <!-- Default configuration is appropriate for entity/collection caching. -->
       <invalidation-cache-configuration name="entity" remote-timeout="20000" statistics="false" statistics-available="false">

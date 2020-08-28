@@ -168,7 +168,7 @@ spring:
             factory_class: infinispan
           infinispan:
             #关键配置文件
-            cfg: infinispan-configs.xml
+            cfg: infinispan-cfg.xml
             #cachemanager: java:CacheManager
           redisson:
             #若Redis歇菜，不报错给前端，变为等待
@@ -212,6 +212,10 @@ file:
 
 infinispan:
   remote:
+    enabled: true
+    marshaller: org.infinispan.commons.marshall.JavaSerializationMarshaller
+    java-serial-whitelist: md.*
+    server-list: 127.0.0.1:11222
     #config-xml: infinispan-configs.xml
 
 sei:

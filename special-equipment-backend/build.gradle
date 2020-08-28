@@ -28,8 +28,16 @@ configurations {
     compile.exclude module: 'spring-boot-starter-tomcat'
 }
 
+dependencyManagement {
+    imports {
+       //maven等价<artifactId>infinispan-bom</artifactId><type>pom</type><scope>import</scope> 管理版本号的。 
+        mavenBom 'org.infinispan:infinispan-bom:11.0.3.Final' 
+    }
+}
+
 
 dependencies {
+    // compile 'org.springframework.integration:spring-integration-core'
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
     compileOnly('org.projectlombok:lombok')
 
@@ -56,12 +64,13 @@ dependencies {
     //本starter实际自带"org.infinispan:infinispan-core:""org.infinispan:infinispan-core:"只10.1.8版本的。
     implementation "org.infinispan:infinispan-spring-boot-starter-remote:2.3.2.Final"
     //版本相关性太强了，运行可能报错！　 10.1.8' 改成　11.xx' 
-    implementation "org.infinispan:infinispan-core:$LIB_INFINISPAN_VER"
-    implementation "org.infinispan:infinispan-commons:$LIB_INFINISPAN_VER"
-    implementation "org.infinispan:infinispan-jboss-marshalling:$LIB_INFINISPAN_VER"
-    implementation "org.infinispan:infinispan-client-hotrod:$LIB_INFINISPAN_VER"
-    implementation "org.infinispan:infinispan-server-hotrod:$LIB_INFINISPAN_VER"
-    implementation "org.infinispan:infinispan-clustered-counter:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-core:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-commons:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-jboss-marshalling:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-client-hotrod:$LIB_INFINISPAN_VER"
+    
+    //implementation "org.infinispan:infinispan-server-hotrod:$LIB_INFINISPAN_VER"
+    //implementation "org.infinispan:infinispan-clustered-counter:$LIB_INFINISPAN_VER"
 
     //分布式数据库    　关系数据库部分
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
