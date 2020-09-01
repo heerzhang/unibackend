@@ -69,7 +69,6 @@ type N{}和interface N{}可以同名N。interface B{b..};C implements B{c..}不�
 graphQL Union=|必须是Object Type,不检查查询结果类;但是只能用...on{}取字段。 　enum D { EAST }是字符常量。
 GraphQLObjectType GraphQLInterfaceType 之间不可以相同名字的类型定义。union与interface之间也不可同名字，否则后面的覆盖前面的。
 
-
 type EQP{
     id:ID!
     cod: String!
@@ -123,19 +122,19 @@ type Elevator {
     liftHeight: String
 }
 
-调试导致infinispan：org.jgroups.protocols.TP.receive报错 LOOP　java.lang.ClassNotFoundException: org.infinispan.server.hotrod.CheckAddressTask$CheckAddressTaskExternalizer
-infinispan概念部署模式Cache Manager有俩个形式：Embedded是同一个JVM，而C\S,Remote＝靠TCP连接到集群或单机版服务器{JVM独立}=应用通过客户端API HotRod访问；
-cache六个模式：2=Local单机，5=Distributed模式集群多份冗余，3=Invalidation改删除，4=Replicated全拷{<10节点}。 Local Caches就是单个服务器版{节点间不共享}，Clustered就是多服务器。 乐观锁抛出异常。
+infinispan概念部署模式Cache Manager有俩个形式：Embedded，+而C\S,Remote；
+cache六个模式：2=Local单机，5=Distributed模式集群多份冗余，3=Invalidation改删除，4=Replicated全拷{<10节点}。 Local Cache是单个服务器版。 乐观锁抛出异常。
 4种Clustered集群模式(3,4,5)都要JGroups预配传输协议。5Distributed模式也会有local cache吗？-> L1 is enabled暂时节点内(非默认开)；不建议异步通信;异步模式时read-committed isolation实际用repeatable-read实现；
-集群才需配<transport stack="udp" cluster="myName"/>{stack文件=default-jgroups-udp.xml/端口IP超时}； 集群JGroups定义stacks{UDP/TCP}; <jgroups>自定义。
-RemoteCacheManager配置要经过HotRod{需配IP+Port}；外Storage不支持TX一致性？file-store可以，不能用NFS做Store。 cache模式1=<local-cache name="A" simple-cache="true">;
+集群才需配<transport stack="udp" cluster="myName"/> 集群JGroups定义stacks{UDP/TCP};。
+RemoteCacheManager配置要经过HotRod{需配IP+Port}；外Storage不支持TX一致性？file-store可以，不能用NFS做Store。
 C\S模式客户端连接到Infinispan服务器只需指定任意服务器的IP地址和端口号即可。服务器会将拓扑信息发给客户端，变化新的拓扑信息也会同步到客户端，
-使得当客户端连接的服务器异常时，客户仍可正常访问。hash分布感知将节点选择落在客户端完成; <jgroups>定义AUTH/ENCRYPT{节点间}。如何验证HotRod客户端身份密码？
+hash分布感知将节点选择落在客户端完成; <jgroups>定义AUTH/ENCRYPT{节点间}。如何验证HotRod客户端身份密码？
 服务器urn:infinispan:server底下定义<endpoints> security realm认证用户；　文档https://infinispan.org/docs/stable/titles/server/server.html#securing_access
-客户端的配置文件会覆盖服务器端的配置?
-服务端集群都关掉了，cache依然存在可用？，hibernate搞得？似乎另外还有缓存;
-infinispan缺省缓存13分钟。CLI命令手册https://infinispan.org/docs/stable/titles/cli/cli.html
+infinispan缺省缓存100s。 CLI命令手册https://infinispan.org/docs/stable/titles/cli/cli.html
 hibernate L2C 对于Repository的函数须各自声明Cache才能缓存。
-服务端集群都关掉org.infinispan.client.hotrod.exceptions　 Connection refused: no further information: /127.0.0.1:11222
 无法用infinispan-spring-boot-starter-remote只能-embedded部署模式，端口不是独立服务器11222而是Embedded方式自己集群搞的7800{default-jgroups-tcp.xml这里配}。
+缺省是=Invalidation(synchronous)模式{节省集群流量}；缺省逐出唤醒间隔为5秒，最大条目数为10000，到期前的最大空闲时间为100秒。需要集群服务器的挂钟同步才能。
+支持组合：non-transactional；distributed/replicated；不能设置Eviction。　hibernate.cache.use_minimal_puts 应该开启？
+Spring的@Cacheable做法是用infinispan-spring5-embedded或infinispan-spring5-remote不经过hibernate；若-remote情况设置hotrod-client.properties。做Spring Session场景@EnableInfinispanRemoteHttpSession。
+Hibernate OGM缺点不能做复杂关系查询=NoSQL。
 

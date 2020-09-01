@@ -14,5 +14,5 @@ graphQL用interface只能限定前端查询指定类型约束的可见字段，�
 接口返回union的graphQL验证较轻(和java对应函数返回类型可不一致的)会延迟到实际执行JPA读取时刻。union组合若不包括继承子类的子Type对于java返回父interface的函数在读JPA时报错,union定义必须全包java的interface派生实体。
 标准graphQL规范 https://github.com/graphql/graphql-spec/tree/master/spec
 Controller在GraphQL内部提供{REST}，GraphQLXxResolver相当于Sevice层{Dao}，Repository这层{JPA/IMDG/SpringData/WebFlux}，再往下才是model/Entity/PoJo;堆叠4个层次。
+遇到加Infinispan-starter-remote无法执行，IDEA调出RUN: Shorten command line @argFiles(java9+);
 
-加starter-remote无法执行，调RUN: Shorten command line @argFiles(java9+);
