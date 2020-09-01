@@ -54,5 +54,3 @@ gradle.println "gradleHomeDir:${gradle.gradleHomeDir}"
 gradle.println "gradleUserHomeDir:${gradle.gradleUserHomeDir}"
 //gradle的版本号
 gradle.println "gradleVersion:${gradle.gradleVersion}"
-//gralde当前构建的启动参数
-gradle.println "startParameter:${gradle.startParameter}"

@@ -77,8 +77,9 @@ dependencies {
     //分布式缓存服务器　　提供者provider部分(IMDG内存数据网格库)
     implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "javax.cache:cache-api:1.1.1"
-    //不能用infinispan-spring-boot-starter-remote只能-embedded
+    //不能用infinispan-spring-boot-starter-remote只能用*-embedded   版控迁移infinispan自己控'12.0.0.Dev02'
     implementation "org.infinispan:infinispan-spring-boot-starter-embedded:2.3.2.Final"
+    //这里-v53针对Hibernate适配的版本；　LIB_INFINISPAN_VER是infinispan自己版本；
     implementation "org.infinispan:infinispan-hibernate-cache-v53:$LIB_INFINISPAN_VER"
 
     //在2.3.2.RELEASE版本缺了添加
