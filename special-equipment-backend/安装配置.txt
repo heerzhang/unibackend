@@ -109,3 +109,4 @@ Infinispan配置文档 https://infinispan.org/docs/stable/titles/integrating/int
 Hibernate cache策略: transactional等同read-write策略处理。
 Infinispan集群<stack-file path="/default-jgroups-tcp.xml}"/>配置在infinispan-core.jar/default-configs/下。<transport cluster="infinispan-hibernate-cluster"/>是集群群号。
 接入许可在<server><security><security-realms><security-realm >设置认证<server-identities><ssl>。
+H2L查询缓存"query"默认对应Infinispan配置文件里面"local-query";<memory max-count="K"/>这对查询Hash-Key个数限制而不是结果集的条数限制=K*N。

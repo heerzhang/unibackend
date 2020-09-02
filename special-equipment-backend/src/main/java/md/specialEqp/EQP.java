@@ -65,7 +65,7 @@ public class EQP implements Equipment{
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
 
 
-    @ManyToOne
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit ownerUnt;
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。

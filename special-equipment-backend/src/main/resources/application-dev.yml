@@ -170,16 +170,17 @@ spring:
               expiration.max_idle: 800000
               expiration.lifespan: 1800000
               eviction.wake_up_interval: 60000
-              memory.size: 1000000000
+              memory.size: 2000000000
             Medium:
               expiration.max_idle: 300000
               expiration.lifespan: 600000
               eviction.wake_up_interval: 20000
-              memory.size: 1000000000
+              memory.size: 2000000000
             Fast:
               expiration.max_idle: 90000
               expiration.lifespan: 150000
-              memory.size: 1000000000
+              eviction.wake_up_interval: 7000
+              memory.size: 2000000000
 
     generate-ddl: true
     open-in-view: true

@@ -3,6 +3,7 @@ package md.specialEqp.type;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Entity;
 
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class Escalator extends Elevator {
 
 
