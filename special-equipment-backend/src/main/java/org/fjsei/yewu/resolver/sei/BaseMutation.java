@@ -395,28 +395,19 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Elevator buildElevator(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Elevator eQP = elevatorRepository.findById(id).orElse(null);
-        Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
-        //Todo: 行政部分+用户定义名
-        Address position= addressRepository.findByName(info.getAddress());
-        if(position==null){
-            position=new Address();
-            //Todo: 行政部分 独立了。
-            position.setName(info.getAddress());
-            addressRepository.save(position);
-        }
-        Unit ownerUnit= unitRepository.findById(ownerId).orElse(null);
-        Assert.isTrue(position != null,"未找到position:"+position);
-        Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
-        eQP.setLiftHeight("243.5");
-        elevatorRepository.save(eQP);
-        return eQP;
+        EQP eQP = eQPRepository.findById(id).orElse(null);
+        Assert.isTrue(eQP == null,"找到eQP:"+eQP);
+        Elevator elevator =new Elevator(info.getCod(),"typ01",info.getOid());
+        elevator.setLiftHeight("565555");
+        elevatorRepository.save(elevator);
+        return elevator;
     }
     @Transactional
     public Escalator buildEscalator(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Escalator eQP =new Escalator();
-
+        Escalator eQP =new Escalator(info.getCod(),"typ02",info.getOid());
+        eQP.setSteps("344222.ss");
+        eQPRepository.save(eQP);
         return eQP;
     }
 

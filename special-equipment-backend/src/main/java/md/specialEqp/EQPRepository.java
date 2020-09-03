@@ -40,6 +40,8 @@ public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificatio
         @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
         Page<EQP> findAll(@Nullable Specification<EQP> spec, Pageable pageable);
 
+        @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
+        Page<EQP> findAll(Pageable pageable);
         //可定义差异化的查询策略QueryHints。针对同样的HQL也可重复建多函数。
         /* 不同名称的接口函数能够差异化对待：
                 @Query("select t from Dict t where t.name = ?1")

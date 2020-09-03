@@ -5,9 +5,9 @@ type Elevator implements Equipment,IfElevator{
      type: String!
      sort: String!
      vart: String!
-     instDate: String
+
      liftHeight: String
-     factoryNo: String
+
 }
 
 type Escalator implements Equipment,IfElevator{
@@ -17,10 +17,10 @@ type Escalator implements Equipment,IfElevator{
     type: String!
     sort: String!
     vart: String!
-    instDate: String
+
     liftHeight: String
     steps: String
-    factoryNo: String
+
 }
 interface IfElevator{
     liftHeight: String

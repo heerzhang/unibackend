@@ -5,7 +5,6 @@ interface Equipment{
     sort: String!
     vart: String!
     oid: String
-    instDate: String
 }
 type EQP implements Equipment{
     id:ID!
@@ -14,7 +13,7 @@ type EQP implements Equipment{
     type: String!
     sort: String!
     vart: String!
-    instDate: String
+
     factoryNo: String
 }
 

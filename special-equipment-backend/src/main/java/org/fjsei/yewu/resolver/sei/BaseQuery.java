@@ -544,7 +544,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
-    public Iterable<EQP> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<EQP> findAllEQPsFilter_删除(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
@@ -566,7 +566,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         };
 
         modelFilters.initialize(specification,emSei);
-       // modelFilters.effectWhereTree(where);
+        //modelFilters.effectWhereTree(where);
+
         /* 这下面对照是这样的： query级缓存时间内，数据库人工修改的，前端靠findAllEQPsFilter查的会滞后才显示。
             注意query-results缓存时间内select from结果集不变，但是列表中某单一个实体的字段却可变动的；人工删除实体会报错。
             @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
@@ -575,7 +576,20 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
+    public Iterable<EQP> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
+        if(first<=0)   first=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, first);
+        else
+            pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
+        Page<EQP> list = eQPRepository.findAll(pageable);
+        return list;
+    }
     public Iterable<Equipment> findAllEQPsFilter2(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         List<Equipment>  elevators = new ArrayList<Equipment>();
         Iterable<EQP> eqps= findAllEQPsFilter( where,  offset,  first, orderBy,  asc);
@@ -583,11 +597,13 @@ public class BaseQuery implements GraphQLQueryResolver {
            // if(item instanceof Equipment)
                 elevators.add(item);
         });
+        /*
         Iterable<Elevator> elevatorslst = elevatorRepository.findAll();
         elevatorslst.forEach(item -> {
             // if(item instanceof Equipment)
             elevators.add(item);
         });
+        */
         return elevators;
     }
 
