@@ -13,9 +13,9 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+//@Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorValue(value="电梯")
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
+//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class Elevator  extends EQP {
 
 
