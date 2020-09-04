@@ -16,8 +16,7 @@ import javax.persistence.InheritanceType;
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "SortTYPE")
+//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Vessel extends EQP {
 
 

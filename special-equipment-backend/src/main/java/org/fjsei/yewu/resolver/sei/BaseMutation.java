@@ -446,7 +446,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         return  prevOid;
     }
     @Transactional
-    public String testEQPStreamModify(String cod,String oid) {
+    public String testEQPStreamModify222(String cod,String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         String  prevOid="not find,is null?";
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
@@ -457,6 +457,28 @@ public class BaseMutation implements GraphQLMutationResolver {
         {
             prevOid = eQP.getOid();
             eQP.setOid(oid);
+            eQPRepository.save(eQP);
+        }
+        if(eqpObjs.size()>1)    prevOid="超过1个的eqp?";
+        return  prevOid;
+    }
+    @Transactional
+    public String testEQPStreamModify(String cod,String oid) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        String  prevOid="not find,is null?";
+        //必须加这2行，否则可能无法获取最新DB数据，可能不被认定为必须做DB更新。
+        emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
+        emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH);
+        //虽然findAll()被注解@QueryHints(HINT_CACHEABLE,true)了！　可是这里是不会从缓存读的，都会直接查数据库。
+        List<EQP> eqpList= eQPRepository.findAll();     //较慢:所有数据都装载了
+        List<EQP> eqpObjs=eqpList.stream().filter(e -> e.getCod().equals(cod)).collect(Collectors.toList());
+        for (EQP eQP:eqpObjs)
+        {
+            prevOid = eQP.getOid();
+            if(eQP instanceof Elevator)
+                ((Elevator) eQP).setLiftHeight("ss231");
+            if(eQP instanceof Escalator)
+                ((Escalator) eQP).setSteps("4FsF");
             eQPRepository.save(eQP);
         }
         if(eqpObjs.size()>1)    prevOid="超过1个的eqp?";

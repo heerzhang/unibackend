@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import javax.persistence.QueryHint;
 import java.util.List;
 
+//派生继承子类 不需要再做JpaRepository，做了也只能查询本子类以及更低层次之类．
 
 public interface ElevatorRepository extends JpaRepository<Elevator, Long>, JpaSpecificationExecutor<Elevator> {
 

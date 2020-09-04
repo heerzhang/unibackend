@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-//@DiscriminatorColumn
+@DiscriminatorColumn
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Medium")
 public class EQP implements Equipment{
     @Id
@@ -49,8 +49,6 @@ public class EQP implements Equipment{
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
     private Timestamp version;
-  //  @Transient
-  //  private String dtype;    //从hibernate取的继承类区分标识
 
     @Size(min = 5, max = 30)
     @Column( unique = true)

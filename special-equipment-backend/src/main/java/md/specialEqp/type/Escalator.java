@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue(value="自动扶梯")
+//@DiscriminatorValue(value="自动扶梯")
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
 public class Escalator extends Elevator {
 

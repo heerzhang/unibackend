@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @Getter
 @Setter
 @Entity
-@DiscriminatorValue(value="移动式压力容器")
+//@DiscriminatorValue(value="移动式压力容器")
 public class MobileVessel extends Vessel {
 
 
