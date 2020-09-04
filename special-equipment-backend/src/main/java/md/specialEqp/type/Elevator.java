@@ -9,13 +9,15 @@ import org.hibernate.annotations.DiscriminatorOptions;
 
 import javax.persistence.*;
 
+//子类不能再做@org.hibernate.annotations.Cache()注解的。
+//@DiscriminatorValue(value="电梯")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-//@Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorValue(value="电梯")
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+//@DiscriminatorColumn(name = "SortTYPE")
 public class Elevator  extends EQP {
 
 

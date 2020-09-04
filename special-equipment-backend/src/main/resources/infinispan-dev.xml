@@ -22,19 +22,19 @@
         <distributed-cache name="myDefault-che" configuration="my-cache-template" statistics="true"
                            owners="2"  />
 
-        <!-- Default configuration is appropriate for entity/collection caching. -->
+        <!-- 其它默认实体Default configuration is appropriate for entity/collection caching. -->
         <invalidation-cache-configuration name="entity" remote-timeout="20000" statistics="false" statistics-available="false">
             <locking concurrency-level="1000" acquire-timeout="15000"/>
             <transaction mode="NONE" />
-            <expiration max-idle="100000" interval="8000"/>
+            <expiration max-idle="20000" lifespan="600000" interval="8000"/>
             <memory max-count="440000"/>
         </invalidation-cache-configuration>
 
-        <!-- A config appropriate for query caching. Does not replicate queries. -->
+        <!-- 查询缓存设置A config appropriate for query caching. Does not replicate queries. -->
         <local-cache-configuration name="local-query" statistics="false" statistics-available="false">
             <locking concurrency-level="1000" acquire-timeout="15000"/>
             <transaction mode="NONE" />
-            <expiration max-idle="100000" interval="8000"/>
+            <expiration max-idle="180000" lifespan="600000" interval="8000"/>
             <memory max-count="30000"/>
         </local-cache-configuration>
 

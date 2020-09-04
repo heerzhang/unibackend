@@ -169,17 +169,17 @@ spring:
             Slow:
               expiration.max_idle: 800000
               expiration.lifespan: 1800000
-              eviction.wake_up_interval: 60000
+              eviction.wake_up_interval: 35000
               memory.size: 2000000000
             Medium:
-              expiration.max_idle: 300000
-              expiration.lifespan: 600000
-              eviction.wake_up_interval: 20000
+              expiration.max_idle: 40000
+              expiration.lifespan: 80000
+              eviction.wake_up_interval: 13000
               memory.size: 2000000000
             Fast:
               expiration.max_idle: 90000
               expiration.lifespan: 150000
-              eviction.wake_up_interval: 7000
+              eviction.wake_up_interval: 5000
               memory.size: 2000000000
 
     generate-ddl: true

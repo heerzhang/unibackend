@@ -21,7 +21,7 @@ public class Escalator extends Elevator {
 
     public  Escalator(String cod,String type,String oid){
         super(cod,type,oid);
-        steps="3stp";
+        steps="150";
     }
 
 }

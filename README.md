@@ -16,3 +16,9 @@ graphQL用interface只能限定前端查询指定类型约束的可见字段，�
 Controller在GraphQL内部提供{REST}，GraphQLXxResolver相当于Sevice层{Dao}，Repository这层{JPA/IMDG/SpringData/WebFlux}，再往下才是model/Entity/PoJo;堆叠4个层次。
 遇到加Infinispan-starter-remote无法执行，IDEA调出RUN: Shorten command line @argFiles(java9+);
 
+Null违例情况下查询缓存更新OK后再去点查询竟然看到更旧数据！查询不能替换掉实体缓存，graphql直接上实体缓存，须设更短更新时间或者杜绝非经过本系统去更新数据库。
+人工修改数据库不会立刻反馈到本系统的缓存！人工删除实体可导致缓存查询爆错误。继承子类不能再做@org.hibernate.annotations.Cache()注解=抵消上级注解。查询缓存仅存储ID的,具体字段要从实体缓存读。
+实体继承策略3种：SINGLE_TABLE策略(1 table,类个数不限|<500个+合计字段数<1000);JOINED策略(1+N table);TABLE_PER_CLASS策略{类个数<10+合计字段数<500个}。继承@MappedSuperclass抽象父类{不能有@Entity注解}。
+Hibernate生成查询语句都是预定义=所有字段和jion表都是全写上的=实体继承导致SQL文本长度很大。JDBC性能考虑实体继承局限性:
+JOINED实体继承策略局限:同根类个数<100+同根所有实体合计字段数<3000个,继承层次树最深20层。同一个根层次树继承策略只能定义一次，子类层次树底下就不能再变更继承策略。
+

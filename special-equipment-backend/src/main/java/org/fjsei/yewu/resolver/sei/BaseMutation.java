@@ -393,7 +393,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         return eQP;
     }
     @Transactional
-    public Elevator buildElevator(Long id, Long ownerId, DeviceCommonInput info) {
+    public Elevator buildElevator_222(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         EQP eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP == null,"找到eQP:"+eQP);
@@ -403,9 +403,17 @@ public class BaseMutation implements GraphQLMutationResolver {
         return elevator;
     }
     @Transactional
-    public Escalator buildEscalator(Long id, Long ownerId, DeviceCommonInput info) {
+    public Elevator buildElevator(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Escalator eQP =new Escalator(info.getCod(),"typ02",info.getOid());
+        Elevator elevator =new Elevator(cod,type,oid);
+        elevator.setLiftHeight("565555");
+        elevatorRepository.save(elevator);
+        return elevator;
+    }
+    @Transactional
+    public Escalator buildEscalator(String cod, String type, String oid) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Escalator eQP =new Escalator(cod,type,oid);
         eQP.setSteps("344222.ss");
         eQPRepository.save(eQP);
         return eQP;
