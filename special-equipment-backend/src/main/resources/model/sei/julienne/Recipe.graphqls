@@ -16,6 +16,12 @@ type Following{
     confirmed: Boolean
 }
 
+type JanusGraphModel{
+    id: ID!
+    title: String!
+    author: String
+}
+
 
 extend type Query {
     findRecipe(id:ID!):Recipe
@@ -30,5 +36,6 @@ extend type Mutation {
     confirmFollow(userId: ID!): Boolean!
     delRequestFollow(toUser: ID!): Boolean!
     dismissFollowOf(fromUser: ID!): Boolean!
+    newJanusGraphModel(key: String!,value: String!, uuid:ID) : JanusGraphModel!
 }
 

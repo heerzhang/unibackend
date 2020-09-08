@@ -21,5 +21,8 @@ Null违例情况下查询缓存更新OK后再去点查询竟然看到更旧数�
 实体继承策略3种：SINGLE_TABLE策略(1 table,类个数不限|<500个+合计字段数<1000);JOINED策略(1+N table);TABLE_PER_CLASS策略{类个数<10+合计字段数<500个}。继承@MappedSuperclass抽象父类{不能有@Entity注解}。
 Hibernate生成查询语句都是预定义=所有字段和jion表都是全写上的=实体继承导致SQL文本长度很大。JDBC性能考虑实体继承局限性:
 JOINED实体继承策略局限:同根类个数<100+同根所有实体合计字段数<3000个,继承层次树最深20层。同一个根层次树继承策略只能定义一次，子类层次树底下就不能再变更继承策略。
-mysql数据库对表数量限制=OS可开文件句柄数65535个; Mysql按主键ID查询很快，存储N亿都没问题！InnoDB单表限制1017列。Row最大长缺省8KB可设置16KB最大。
+mysql对表数量限制=OS可开文件句柄数65535个; Mysql按主键ID查询很快，存储N亿都没问题！InnoDB单表限制1017列。Row最大长缺省8KB可设置16KB最大。
+mysql集群NDB支持20320个(表＋索引)；单张表限制512个列；NDB=分布式内存数据库,不能使用Innodb。最多支持145个节点；MySQL Group Replication组复制(基于Paxos协议), 分区发生脑裂,一组最多9个服务器。
+MGR集群=mysql组复制必须存储在InnoDB,最多9个节点。MySQL Cluster或MySQL NDB Cluster是一个完全独立的产品=差异竞争对手，而这些服务器均不需要MySQL服务器实例。InnoDB Cluster几乎与MySQL Cluster完全无关！NDB=基于集群的存储。官网MySQL Cluster安装包是NDB。
+MySQL Cluster使用NDB存储引擎，不需要在群集内的任何节点上安装MySQL Server软件; 对比的InnoDB Cluster却是为安装了MySQL Server软件的服务器提供了一种在它们之间复制数据的机制。MGR用InnoDB引擎简单。ndb cluster对于硬件环境要求比较高，不能跨IDC。适用于并发高小事务。
 

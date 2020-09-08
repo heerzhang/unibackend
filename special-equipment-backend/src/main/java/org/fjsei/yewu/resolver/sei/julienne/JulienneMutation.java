@@ -1,6 +1,7 @@
 package org.fjsei.yewu.resolver.sei.julienne;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.julienne.JanusGraphModel;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -26,6 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 
 //实际相当于controller;
@@ -89,6 +91,15 @@ public class JulienneMutation implements GraphQLMutationResolver {
 
         recipeRepository.save(recipe);
         return recipe;
+    }
+    @Transactional
+    public JanusGraphModel newJanusGraphModel(String title, String author,String uuid) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        JanusGraphModel janusGraphModel = new JanusGraphModel(title, author);
+        //图数据库的API方式像SQL的JDBC的API接口做法。比如JanusGraphModel**Repository   .save()  .FindAll();就不能用JPA做了。
+        final String cassandraId = UUID.randomUUID().toString();     //16个字节,graphQL的ID!类型实际无约束的。
+        janusGraphModel.setId(uuid); //存储层用Cassandra+Spark
+        return janusGraphModel;
     }
     //发起关注
     @Transactional

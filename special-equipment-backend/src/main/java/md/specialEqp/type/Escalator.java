@@ -3,6 +3,8 @@ package md.specialEqp.type;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import md.cm.unit.Unit;
+import md.specialEqp.inspect.ISP;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.DiscriminatorValue;
@@ -14,7 +16,7 @@ import javax.persistence.Entity;
 @Entity
 //@DiscriminatorValue(value="自动扶梯")
 //@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Slow")
-public class Escalator extends Elevator {
+public class Escalator extends Elevator{
 
 
     private String steps;

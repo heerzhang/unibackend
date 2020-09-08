@@ -136,5 +136,7 @@ hibernate L2C 对于Repository的函数须各自声明Cache才能缓存。
 缺省是=Invalidation(synchronous)模式{节省集群流量}；缺省逐出唤醒间隔为5秒，最大条目数为10000，到期前的最大空闲时间为100秒。需要集群服务器的挂钟同步才能。
 支持组合：non-transactional；distributed/replicated；不能设置Eviction。　hibernate.cache.use_minimal_puts 应该开启？
 Spring的@Cacheable做法是用infinispan-spring5-embedded或infinispan-spring5-remote不经过hibernate；若-remote情况设置hotrod-client.properties。做Spring Session场景@EnableInfinispanRemoteHttpSession。
-Hibernate OGM缺点不能做复杂关系查询=NoSQL。
+Hibernate OGM缺点不能做复杂关系查询=NoSQL。 图数据库JanusGraph, Cassandra+Spark；SparkSQL/并行；Cassandra/HBase; Elasticsearch；Gremlin Groovy；若存储引擎是BerkeleyDB那支持ACID，但Cassandra或HBase不支持ACID。
+若用BerkeleyDB做的存储后端：适合在最多达1亿个顶点的中小型图形，被限制在单个计算机运行，​​因此并发请求数也受到限制；为了不耗尽内存，建议图遍历时禁用事务！Cassandra集群400台计算机300TB数据。Elasticsearch集群；
+分布式系统强一致性的需求可实现＝Quorum协议 W+R>N/记录的最新版；Quorum类比Paxos算法；这里一致性实际理解是分区P容忍性。
 
