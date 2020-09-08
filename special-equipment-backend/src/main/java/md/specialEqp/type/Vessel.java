@@ -16,10 +16,8 @@ import javax.persistence.InheritanceType;
 @Getter
 @Setter
 @Entity
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Vessel extends EQP {
-
-
+    //2000压力容器	 TB_VESSEL_PARA
     private String volume;
 
     public Vessel(String cod, String type, String oid){

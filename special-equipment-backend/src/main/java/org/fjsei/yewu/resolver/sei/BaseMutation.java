@@ -3,7 +3,6 @@ package org.fjsei.yewu.resolver.sei;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
-import md.specialEqp.type.Escalator;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -410,14 +409,6 @@ public class BaseMutation implements GraphQLMutationResolver {
         elevatorRepository.save(elevator);
         return elevator;
     }
-    @Transactional
-    public Escalator buildEscalator(String cod, String type, String oid) {
-        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Escalator eQP =new Escalator(cod,type,oid);
-        eQP.setSteps("344222.ss");
-        eQPRepository.save(eQP);
-        return eQP;
-    }
 
     @Transactional
     public EQP testEQPModify(Long id, String oid) {
@@ -477,8 +468,6 @@ public class BaseMutation implements GraphQLMutationResolver {
             prevOid = eQP.getOid();
             if(eQP instanceof Elevator)
                 ((Elevator) eQP).setLiftHeight("ss231");
-            if(eQP instanceof Escalator)
-                ((Escalator) eQP).setSteps("4FsF");
             eQPRepository.save(eQP);
         }
         if(eqpObjs.size()>1)    prevOid="超过1个的eqp?";

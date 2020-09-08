@@ -10,18 +10,6 @@ type Elevator implements Equipment,IfElevator{
 
 }
 
-type Escalator implements Equipment,IfElevator{
-    id:ID!
-    cod: String!
-    oid: String
-    type: String!
-    sort: String!
-    vart: String!
-
-    liftHeight: String
-    steps: String
-
-}
 interface IfElevator{
     liftHeight: String
 }
@@ -33,6 +21,6 @@ extend type Query {
 
 extend type Mutation {
     buildElevator(cod: String!, type: String!, oid: String) : Elevator
-    buildEscalator(cod: String!, type: String!, oid: String) : Escalator
+
 }
 

@@ -18,8 +18,7 @@ import javax.persistence.*;
 @Entity
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Elevator  extends EQP {
-
-
+    //3000电梯  TB_ELEV_PARA  电梯技术参数表
     private String liftHeight;
 
     public  Elevator(String cod,String type,String oid){
