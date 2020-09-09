@@ -29,5 +29,6 @@ public class PipingUnit {
     //单项管道检验总长度;  LAY_MODE=!埋地||LAY_MODE=!架空     //PIPELINE_MEDIUM==钢制&&PIPELINE_LEVEL=!GA
     //TB_PIPELINE_UNIT_PARA.LAY_MODE   is '敷设方式'         ??JSON非结构化
     //TB_PIPELINE_UNIT_PARA.V_LAY_MODE  is '计费用-敷设方式（架空、埋地、其他）' ？？标准化Enum?
+    //NOMINAL_DIA>=50.0&&NOMINAL_DIA<=150.0  + length;
 }
 

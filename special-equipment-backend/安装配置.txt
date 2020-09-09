@@ -110,3 +110,12 @@ Hibernate cache策略: transactional等同read-write策略处理。
 Infinispan集群<stack-file path="/default-jgroups-tcp.xml}"/>配置在infinispan-core.jar/default-configs/下。<transport cluster="infinispan-hibernate-cluster"/>是集群群号。
 接入许可在<server><security><security-realms><security-realm >设置认证<server-identities><ssl>。
 H2L查询缓存"query"默认对应Infinispan配置文件里面"local-query";<memory max-count="K"/>这对查询Hash-Key个数限制而不是结果集的条数限制=K*N。
+
+MySQL性能问题都是内存规模受限。innodb_buffer_pool_size=7G默认128M。
+索引列不允许NULL列?; 离散度大（不同的值多）的列，放在联合索引前面。没有索引的列不要做orderBy;聚簇索引；锁表update where like “%a”；
+InnoDB用聚簇索引、索引就是数据，顺序存储，能缓存索引也能缓存数据；需要确保查询是通过索引完成；避免主键更新=会带来大量数据移动。
+非单调的主键造成插入记录频繁调整B+Tree存储，必需ID自增字段，而不能用字符串主键和uuid主键PRIMARY KEY;也不搞多字段联合主键,只能定义一个主键，联合索引若有自动增长列则必须是第一列。
+运行良好==〉普通表1000万条* 576B/row=5.4GB；单表最多撑死2千万条row。 表空间的最大容量为64TB/单表。
+索引字段类型，影响性能，int最好，字符类型略差;复合索引a,b,c；在a,a b,a b c情况会用到；函数表达式不使用索引; like ‘a%’可以用上索引。全文索引like ‘%A%’派上用场;fn(A)=‘V’不能走索引应改成A=fn(‘V’);
+Elasticsearch分布式索引引擎。swagger-REST；findAll findBy从REST替换掉；deleteBy update add两个Repository都需做copyProperties；
+一小部分实体做ES索引的Repository，前端API/Repository替换成ES索引的graphQL内省eqp{,unit{id,.}}会自动选JPA：？;限制搜索的使用最好都能从elasticsearch跳转。shard分片基数,replicas复制副本+1数；index实体索引；
