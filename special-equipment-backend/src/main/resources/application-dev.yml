@@ -19,7 +19,7 @@ app:
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
     #旧平台正式运行。 测试104.34
-    fjtj:
+    fjtj7:
       url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
       #url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
       username: fjseiinuser
@@ -140,7 +140,7 @@ spring:
       hibernate.use_sql_comments: true
       hibernate:
         connection:
-          #provider_disables_autocommit: true
+        #provider_disables_autocommit: true
         #id.new_generator_mappings: true
         javax:
           cache:
@@ -188,7 +188,10 @@ spring:
     allow-bean-definition-overriding: true
   mvc:
   cache:
-
+  data:
+    elasticsearch:
+      #cluster-name: docker-cluster
+      #cluster-nodes: locahost:9300
 
   #graphql.playground:    # false
   #   editor.fontFamily: "'Source Code Pro','Monaco', monospace"
@@ -201,13 +204,13 @@ file:
   upload-dir: F:/Users/uploads
 
 infinispan:
-  #remote:
-    #enabled: true
-    #marshaller: org.infinispan.commons.marshall.JavaSerializationMarshaller
-    #java-serial-whitelist: md.*
-    #server-list: 127.0.0.1:11222
-    #config-xml: infinispan-configs.xml
-    #cluster-name: my-infinispan-cluster
+#remote:
+#enabled: true
+#marshaller: org.infinispan.commons.marshall.JavaSerializationMarshaller
+#java-serial-whitelist: md.*
+#server-list: 127.0.0.1:11222
+#config-xml: infinispan-configs.xml
+#cluster-name: my-infinispan-cluster
 
 sei:
   visibility:

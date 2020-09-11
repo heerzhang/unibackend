@@ -30,6 +30,7 @@ extend type Query {
     #升级弃用countAllEQPsWhere(where: WhereTree): Long!
     findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
     #findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
+    findAllEQPsFilter1(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
 extend type Mutation {

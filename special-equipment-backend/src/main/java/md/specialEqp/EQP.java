@@ -1,19 +1,22 @@
 package md.specialEqp;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import md.cm.unit.Unit;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DiscriminatorOptions;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +35,9 @@ import java.util.stream.Collectors;
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 
 
+@Document(indexName = "eqps", type = "eqp")
+@Data
+@EqualsAndHashCode(of = {"id"})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,6 +56,7 @@ public class EQP implements Equipment{
     @Version
     private Timestamp version;
 
+    @Field
     @Size(min = 5, max = 30)
     @Column( unique = true)
     private String cod;         //设备号
@@ -59,6 +66,7 @@ public class EQP implements Equipment{
     private Boolean valid=true;
 
    // @PropertyDef(label="监察识别码")    数据库建表注释文字。
+    @Field
     @Column(length =128, unique = true)
     private String oid;
     //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
@@ -79,6 +87,10 @@ public class EQP implements Equipment{
     @JoinColumn
     private Unit maintUnt;
     private Date instDate;
+
+    @Field(type = FieldType.Date, format = DateFormat.date_time)
+    private Instant nextIspDate1;
+
     private String factoryNo; //出厂编号
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER

@@ -16,6 +16,7 @@ import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
+import org.fjsei.yewu.index.sei.EQPIndexRepository;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import md.cm.geography.*;
 import org.fjsei.yewu.security.JwtTokenUtil;
@@ -78,6 +79,8 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private EQPRepository eQPRepository;
     @Autowired
+    private EQPIndexRepository eqpIndexRepository;
+    @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
     private ISPRepository iSPRepository;
@@ -124,6 +127,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQPRepository.save(eQP);
         //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
         //if( !(sec instanceof Elevator) )       return eQP;
+        eqpIndexRepository.save(eQP);
         return eQP;
     }
     //Town + address

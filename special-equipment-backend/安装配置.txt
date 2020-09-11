@@ -119,3 +119,6 @@ InnoDB用聚簇索引、索引就是数据，顺序存储，能缓存索引也�
 索引字段类型，影响性能，int最好，字符类型略差;复合索引a,b,c；在a,a b,a b c情况会用到；函数表达式不使用索引; like ‘a%’可以用上索引。全文索引like ‘%A%’派上用场;fn(A)=‘V’不能走索引应改成A=fn(‘V’);
 Elasticsearch分布式索引引擎。swagger-REST；findAll findBy从REST替换掉；deleteBy update add两个Repository都需做copyProperties；
 一小部分实体做ES索引的Repository，前端API/Repository替换成ES索引的graphQL内省eqp{,unit{id,.}}会自动选JPA：？;限制搜索的使用最好都能从elasticsearch跳转。shard分片基数,replicas复制副本+1数；index实体索引；
+ELK是Elasticsearch、Logstash、Kibana日志收集分析系统@Slf4j/logback-spring.xml；spring-kafka消息引擎。
+Docker-compose/Docker Hub；Kubernetes（K8s）；VMware虚拟docker不共存；Ubuntu/CentOS/Debian；
+Elasticsearch接口改成@Query注解模式了。

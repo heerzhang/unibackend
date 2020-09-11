@@ -19,6 +19,7 @@ import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.Equipment;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
+import org.fjsei.yewu.index.sei.EQPIndexRepository;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.WhereTree;
@@ -67,6 +68,8 @@ public class BaseQuery implements GraphQLQueryResolver {
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
     private EQPRepository eQPRepository;
+    @Autowired
+    private EQPIndexRepository eqpIndexRepository;
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
@@ -597,16 +600,17 @@ public class BaseQuery implements GraphQLQueryResolver {
            // if(item instanceof Equipment)
                 elevators.add(item);
         });
-        /*
-        Iterable<Elevator> elevatorslst = elevatorRepository.findAll();
+        return elevators;
+    }
+    public Iterable<Equipment> findAllEQPsFilter1(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+        List<Equipment>  elevators = new ArrayList<Equipment>();
+        Iterable<EQP> elevatorslst = eqpIndexRepository.findAll();
         elevatorslst.forEach(item -> {
             // if(item instanceof Equipment)
             elevators.add(item);
         });
-        */
         return elevators;
     }
-
 }
 
 

@@ -1,7 +1,8 @@
 /*
 新倒腾的工程时候，应该修改本文，故意触发让gradle执行更新。右侧条gradle配置按钮-Use default gradle wrapper模式local gradle distribution模式切换看。
 否则https://maven缺省站点，速度实在太慢了！而且很可能某些包下载遭遇失败。gradle配置按钮-gradle JVM版本太高报错选择低版本，可切换JVM看。
-初始化后，IDEA 的配置 project模块， @lambok 等配置。
+初始化后，IDEA 的配置 project模块， @lambok kotlin 等配置。
+再重启配置/Compiler/Anntation../Enable Anntation processing;   
 */
 
 
