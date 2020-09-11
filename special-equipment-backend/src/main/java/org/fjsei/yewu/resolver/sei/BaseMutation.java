@@ -552,7 +552,18 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQPRepository.save(eqp);
         return eqp!=null;
     }
-
+    @Transactional
+    public boolean removeEQP(Long eqpId)
+    {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        EQP eqp = eQPRepository.findById(eqpId).orElse(null);
+        Assert.isTrue(eqp != null,"未找到EQP:"+eqpId);
+        eQPRepository.delete(eqp);
+        boolean hasEqp2 = eqpIndexRepository.existsById(eqpId);
+        if(hasEqp2)   eqpIndexRepository.deleteById(eqpId);
+        //eQPRepository.flush();
+        return eqp!=null;
+    }
 }
 
 

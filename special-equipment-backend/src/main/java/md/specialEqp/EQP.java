@@ -54,7 +54,7 @@ public class EQP implements Equipment{
     //JPA中，使用@Version来做乐观锁的事务控制。对比的,悲观锁限制并发所以很少被用的。
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
-    private Timestamp version;
+    private int  version;   //之前Timestamp类型ES过不了
 
     @Field
     @Size(min = 5, max = 30)

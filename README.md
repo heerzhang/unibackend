@@ -25,4 +25,8 @@ mysql对表数量限制=OS可开文件句柄数65535个; Mysql按主键ID查询�
 mysql集群NDB支持20320个(表＋索引)；单张表限制512个列；NDB=分布式内存数据库,不能使用Innodb。最多支持145个节点；MySQL Group Replication组复制(基于Paxos协议), 分区发生脑裂,一组最多9个服务器。
 MGR集群=mysql组复制必须存储在InnoDB,最多9个节点。MySQL Cluster或MySQL NDB Cluster是一个完全独立的产品=差异竞争对手，而这些服务器均不需要MySQL服务器实例。InnoDB Cluster几乎与MySQL Cluster完全无关！NDB=基于集群的存储。官网MySQL Cluster安装包是NDB。
 MySQL Cluster使用NDB存储引擎，不需要在群集内的任何节点上安装MySQL Server软件; 对比的InnoDB Cluster却是为安装了MySQL Server软件的服务器提供了一种在它们之间复制数据的机制。MGR用InnoDB引擎简单。ndb cluster对于硬件环境要求比较高，不能跨IDC。适用于并发高小事务。
+ES搜索引擎甚至比在本地MySQL通过主键的查询速度还快。es 久了会产生大量冗余数据，影响检索销量，可reindex，甚至从源一次，假如存储仅剩es 就麻烦了！
+用Elasticsearch无法替代支持严格事务要求的关系数据库，不推荐完全用ES作为主要存储，每容量成本也比数据库高。ES改数据代价高，容量较低。
+ES有索引更新延迟大,不能支持强实时性的要求。重要的数据别放里面！若遇到强关系关联数据的还是不行。　mysql-ES同步机制。
+若数据库更新，debezium--MySqlConnector驱动发起的变更源消息，再转给spring-kafka消息集群来收集分发。
 
