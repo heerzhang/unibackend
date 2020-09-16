@@ -16,7 +16,8 @@ import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
-import org.fjsei.yewu.index.sei.EQPIndexRepository;
+import org.fjsei.yewu.index.sei.EqpEs;
+import org.fjsei.yewu.index.sei.EqpEsRepository;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import md.cm.geography.*;
 import org.fjsei.yewu.security.JwtTokenUtil;
@@ -24,6 +25,7 @@ import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -79,7 +82,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private EQPRepository eQPRepository;
     @Autowired
-    private EQPIndexRepository eqpIndexRepository;
+    private EqpEsRepository eqpEsRepository;
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
@@ -117,19 +120,35 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EQP newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = new EQP(cod,type,oid);
-      //  EQP eQP = new 电梯(cod,type,oid);
-        eQP.setSort("31");
-        eQP.setVart("311");
-        eQPRepository.save(eQP);
-        //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
-        //if( !(sec instanceof Elevator) )       return eQP;
-        eqpIndexRepository.save(eQP);
+        // EQP eQP = new EQP(cod,type,oid);
+        Elevator eQP = new Elevator(cod,type,oid);
+        eQP.setSort("3s1");
+        eQP.setVart("Ccd2gnEDdf");
+        Task task=new Task();
+        task.setDep("zhongGuoren");
+        eQP.getTask().add(task);
+        EqpEs eqpEs=new EqpEs();
+
+        try {
+            eQPRepository.saveAndFlush(eQP);
+            //这里保存若事务异常就导致下面ES更新无法回滚了。
+            //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
+            //if( !(sec instanceof Elevator) )       return eQP;
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+        BeanUtils.copyProperties(eQP,eqpEs);
+        //ES不支持事务与回滚。
+        eqpEsRepository.save(eqpEs);
+        //这个时间保存ES若异常可自动取消eQPRepository.saveAndFlush的操作结果。
         return eQP;
     }
+
     //Town + address
     @Transactional
     public Adminunit initAdminunit(Long townId, String prefix, String areacode, String zipcode) {
@@ -559,8 +578,8 @@ public class BaseMutation implements GraphQLMutationResolver {
         EQP eqp = eQPRepository.findById(eqpId).orElse(null);
         Assert.isTrue(eqp != null,"未找到EQP:"+eqpId);
         eQPRepository.delete(eqp);
-        boolean hasEqp2 = eqpIndexRepository.existsById(eqpId);
-        if(hasEqp2)   eqpIndexRepository.deleteById(eqpId);
+        boolean hasEqp2 = eqpEsRepository.existsById(eqpId);
+        if(hasEqp2)   eqpEsRepository.deleteById(eqpId);
         //eQPRepository.flush();
         return eqp!=null;
     }

@@ -17,6 +17,15 @@ type EQP implements Equipment{
     factoryNo: String
 }
 
+type EqpEs implements Equipment{
+    id:ID!
+    cod: String!
+    oid: String
+    type: String!
+    sort: String!
+    vart: String!
+    factoryNo: String
+}
 
 extend type Query {
     getDevice(id:ID!): EQP

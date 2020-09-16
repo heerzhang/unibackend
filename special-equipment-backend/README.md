@@ -140,3 +140,12 @@ Hibernate OGM缺点不能做复杂关系查询=NoSQL。 图数据库JanusGraph, 
 若用BerkeleyDB做的存储后端：适合在最多达1亿个顶点的中小型图形，被限制在单个计算机运行，​​因此并发请求数也受到限制；为了不耗尽内存，建议图遍历时禁用事务！Cassandra集群400台计算机300TB数据。Elasticsearch集群；
 分布式系统强一致性的需求可实现＝Quorum协议 W+R>N/记录的最新版；Quorum类比Paxos算法；这里一致性实际理解是分区P容忍性。
 
+Elasticsearch去规范化，join不能跨索引，ES子文档和父文档都必须位于相同的索引和相同的分片中。 child/parent;不建议用多级关系。 每个关系级都会在增内存计算开销。应该对数据进行非规范化!
+每个索引仅允许一个join字段映射。可以有多个子级，但只能有一个父级parent=多对多被掐掉。
+死机导致损坏而报错C:\Users/AppData\Local\Temp/servlet-sessions\spring-boot.session删除重启。
+@ManyToOne字段会提前读取，指出@ManyToOne(fetch= FetchType.LAZY)懒读。
+@DiscriminatorColumn只能标注在顶层的类中，而不能标注在子类中+只在继承策略为“SINGLE_TABLE”和“JOINED”时使用。。
+MySQL普通表最多撑死2千万条Row。
+索引字段类型，影响性能，int最的，字符类型略差;复合索引a,b,c；在a,a b,a b c情况会用到；
+函数表达式不使用索引; like ‘a%’可以用上索引。
+全文索引like ‘%A%’派上用场;fn(A)=‘V’不能走索引应改成A=fn(‘V’);

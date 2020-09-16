@@ -36,9 +36,9 @@ import java.util.Map;
     entityManagerFactoryRef = "entityManagerFactorySei",
     transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
-    basePackages = {"org.fjsei.yewu.repository","md","org.fjsei.yewu.index.sei"},
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ElasticsearchRepository.class))
-@EnableElasticsearchRepositories(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ElasticsearchRepository.class))
+    basePackages = {"org.fjsei.yewu.repository","md","org.fjsei.yewu.index.sei"})
+@EnableElasticsearchRepositories(
+        basePackages = {"org.fjsei.yewu.index.sei"})
 public class SeiConfig {
 
     @Resource
@@ -70,7 +70,7 @@ public class SeiConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySei(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(seiDataSource)
-            .packages("org.fjsei.yewu.repository","md")
+            .packages("org.fjsei.yewu.repository","md","org.fjsei.yewu.index.sei")
             .persistenceUnit("seiPersistenceUnit")
          //.properties(getVendorProperties())　　实际环境Oracle连接特别得慢！　本地H2测试库连接很快。
             .build();
@@ -94,3 +94,16 @@ public class SeiConfig {
 
 //大库只有一个的。   basePackages = {"org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md"})
 //模型包包路径两配置     .packages("org.fjsei.yewu.entity.sei","org.fjsei.yewu.repository","org.fjsei.yewu.model","md")
+
+/* 最早是
+@EnableTransactionManagement
+@EnableJpaRepositories(
+    entityManagerFactoryRef = "entityManagerFactorySei",
+    transactionManagerRef = "transactionManager",
+    repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
+    basePackages = {"org.fjsei.yewu.repository","md"},
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ElasticsearchRepository.class))
+@EnableElasticsearchRepositories(
+        basePackages = {"org.fjsei.yewu.index.sei"},
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ElasticsearchRepository.class))
+ */

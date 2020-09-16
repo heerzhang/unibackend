@@ -7,6 +7,7 @@ import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DiscriminatorOptions;
+//import org.springframework.data.annotation.Transient;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -34,12 +35,7 @@ import java.util.stream.Collectors;
 //EntityGraph存在理由:提示JPA去屏蔽LAZY，用JOIN FETCH一次关联表全查，减少SQL语句(规避了1+N 问题)，从而提高速度；但也失去懒加载优点。https://blog.csdn.net/dm_vincent/article/details/53366934
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 
-
-@Document(indexName = "eqps", type = "eqp")
 @Data
-@EqualsAndHashCode(of = {"id"})
-@Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -118,6 +114,7 @@ public class EQP implements Equipment{
     //大规模数据集查询不可用它，效率太慢，应该。。
     //本函数执行之前，JPA数据实际已都取完成了。
     //安全考虑，过滤isps字段合理输出,代替原来缺省的getXXX
+    //@org.springframework.data.annotation.Transient  俩个注解都一样
     @Transient
     public Set<ISP>  meDoIsp(){         //若是getMeDoIsp()名字，REST会使用它序列化输出,getXXX都是。
         Long curruser=(long)5;  //临时test: JwtUser.getUserId();

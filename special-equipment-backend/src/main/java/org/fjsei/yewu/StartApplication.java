@@ -71,4 +71,8 @@ public class StartApplication {
 //hibernate-ehcache不支持3代的，所以出现告警WARN  org.hibernate.orm.deprecation - HHH020100:  新版本ehcache3不能用,要配套ehcache2；
 //注入配置参数对象的模式@EnableConfigurationProperties， 否则启动时找不到bean；
 //SpringBoot-2.1.1使用https 需要  https://www.cnblogs.com/yvanchen1992/p/10111534.html
-//Actuator:在运行时改变日志等级     https://www.jianshu.com/p/d5943e303a1f
+/*Actuator:在运行时改变日志等级     https://www.jianshu.com/p/d5943e303a1f
+前后端非分离架构Spring MVC当中的M存数据K/V即Model(模型)，V=模板引擎生成HTML，C=@RequestMapping("/users")。
+Spring Web Flow构建于Spring MVC之上，跨多HTTP请求，具有状态，处理事务数据。　@EnableSpringDataWebSupport；
+HATEOAS是REST架构约束，client不用事先知道服务步骤，不用硬编码URI；服务器还可以在不破坏和客户端交互情况下，更改URI；属Spring MVC时。
+*/

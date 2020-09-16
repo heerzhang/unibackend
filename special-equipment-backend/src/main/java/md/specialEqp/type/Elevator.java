@@ -23,7 +23,7 @@ public class Elevator  extends EQP {
 
     public  Elevator(String cod,String type,String oid){
         super(cod,type,oid);
-        liftHeight="300米";
+        liftHeight="253Meters";
     }
 
 }

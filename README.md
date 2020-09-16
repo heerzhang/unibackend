@@ -1,6 +1,6 @@
 # unibackend
 行业后端
-
+graphQL文档 https://www.graphql-java.com/documentation/
 网页POST https://hanyeyinyong2.123nat.com:8673/graphql net::ERR_CERT_COMMON_NAME_INVALID 域名服务提供商有问题。
 
 更新触发Gradle报错：右侧条gradle配置按钮-Use default gradle wrapper模式+gradle JVM版本12.1选;某些包下载遭遇失败,刷新重做，
@@ -29,4 +29,13 @@ ES搜索引擎甚至比在本地MySQL通过主键的查询速度还快。es 久�
 用Elasticsearch无法替代支持严格事务要求的关系数据库，不推荐完全用ES作为主要存储，每容量成本也比数据库高。ES改数据代价高，容量较低。
 ES有索引更新延迟大,不能支持强实时性的要求。重要的数据别放里面！若遇到强关系关联数据的还是不行。　mysql-ES同步机制。
 若数据库更新，debezium--MySqlConnector驱动发起的变更源消息，再转给spring-kafka消息集群来收集分发。
+
+图数据库不支持严格的事务，而是最终一致性。spark sql适用OLAP/数据仓库,可跨数据源join，例如hdfs与mysql表join；spark.sql可利用ES的索引与搜索能力。
+PySpark由python语言+Spark用的库,Spark作业job。
+Elasticsearch-hadoop/spark是被动组件，允许Hadoop作业将其用作库source，并通过Elasticsearch for spark/Hadoop与Elasticsearch进行交互;保存到ES,随后从ES读取。
+SparkSQL要扫描全库数据,所以慢。若对存储在hdfs海量数据字段建立索引，存在Elasticsearch中；根据Spark SQL字段条件，核心是通过Elasticsearch查询满足条件的Document ID，结果呢Spark直读记录就能加速海量OLAP查询。
+Elasticsearch反而是用来帮助Spark做OLAP，而不是反过来的构想：用Spark来帮助Elasticsearch提速，完全相反。加载数据到ES中；
+利用Spark读写Elasticsearch，那么从RDBMS读取后倒腾给ES,花费了3.6h = 超慢!,Spark用于统计应用场景=ETL/聚合/多源数据。
+QueryDSL与SpringDataJPA同层，它也是基于各种ORM之上的一个通用查询框架，使用它可以写出“Java代码的sql”；
+ES join性能差，nested query；has_child and has_parent within a single index；不像RDBMS表的join;
 

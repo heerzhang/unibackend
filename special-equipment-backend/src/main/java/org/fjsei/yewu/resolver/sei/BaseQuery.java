@@ -2,7 +2,6 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.Authority;
 import md.system.AuthorityRepository;
@@ -19,7 +18,8 @@ import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.Equipment;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
-import org.fjsei.yewu.index.sei.EQPIndexRepository;
+import org.fjsei.yewu.index.sei.EqpEs;
+import org.fjsei.yewu.index.sei.EqpEsRepository;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.WhereTree;
@@ -69,7 +69,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     @Autowired
     private EQPRepository eQPRepository;
     @Autowired
-    private EQPIndexRepository eqpIndexRepository;
+    private EqpEsRepository eqpEsRepository;
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
@@ -604,7 +604,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
     public Iterable<Equipment> findAllEQPsFilter1(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Iterable<EQP> elevatorslst = eqpIndexRepository.findAll();
+        Iterable<EqpEs> elevatorslst = eqpEsRepository.findAll();
         elevatorslst.forEach(item -> {
             // if(item instanceof Equipment)
             elevators.add(item);
