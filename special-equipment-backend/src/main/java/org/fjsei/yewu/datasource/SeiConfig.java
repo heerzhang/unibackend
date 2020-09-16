@@ -29,6 +29,7 @@ import java.util.Map;
 
 //我的主库,  basePackages子目录可以
 //多个数据源数据库，@EnableJpaRepositories不是单个StartApplication上面直接注解，需要独立多个注解。
+//依靠PojoXxxRepository所在的目录来区分到底是JPA还Elasticsearch或MongoDb存储库，且和POJO类所在目录没关系。
 
 @Configuration
 @EnableTransactionManagement
@@ -36,7 +37,7 @@ import java.util.Map;
     entityManagerFactoryRef = "entityManagerFactorySei",
     transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
-    basePackages = {"org.fjsei.yewu.repository","md","org.fjsei.yewu.index.sei"})
+    basePackages = {"org.fjsei.yewu.repository","md"})
 @EnableElasticsearchRepositories(
         basePackages = {"org.fjsei.yewu.index.sei"})
 public class SeiConfig {
@@ -70,7 +71,7 @@ public class SeiConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySei(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(seiDataSource)
-            .packages("org.fjsei.yewu.repository","md","org.fjsei.yewu.index.sei")
+            .packages("org.fjsei.yewu.repository","md")
             .persistenceUnit("seiPersistenceUnit")
          //.properties(getVendorProperties())　　实际环境Oracle连接特别得慢！　本地H2测试库连接很快。
             .build();

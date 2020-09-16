@@ -29,6 +29,7 @@ type EqpEs implements Equipment{
 
 extend type Query {
     getDevice(id:ID!): EQP
+    getEqpEs(id:ID!): EqpEs
     getDeviceSelf(id:ID!): EQP
     findEQPbyCod(cod: String!): EQP
     findEQPLike(filter: DeviceCommonInput): [EQP]!

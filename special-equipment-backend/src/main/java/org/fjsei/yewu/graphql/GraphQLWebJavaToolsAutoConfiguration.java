@@ -218,4 +218,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     public XXQuery  query(AuthorRepository authorRepository, BookRepository bookRepository,) {
         return new XXQuery(authorRepository, bookRepository,);
     }
+核心data fetcher，graphql.schema.PropertyDataFetcher 针对 map{K/V} 和 POJO类的模式 都能支持；
+graphQL模型定义type M implements X 那么必须在接口方法中引用该type至少到一次，否则报错Object type 'EqpEs' implements a known interface, but no class could be found for that type name。
 */
+

@@ -306,7 +306,9 @@ public class BaseQuery implements GraphQLQueryResolver {
         //单层eqp.getTask().stream().count();  //.collect(Collectors.toSet())
         //两层eqp.getTask().stream().forEach(t->t.getIsps().stream().count());
     }
-
+    public EqpEs getEqpEs(Long id) {
+        return eqpEsRepository.findById(id).orElse(null);
+    }
     //前端路由乱来？不是正常的url也来这里了： java.lang.Long` from String "favicon.ico": not a valid Long value
     public EQP getDeviceSelf(Long id) {
         EQP eqp=eQPRepository.findById(id).orElse(null);
