@@ -149,3 +149,4 @@ MySQL普通表最多撑死2千万条Row。
 索引字段类型，影响性能，int最的，字符类型略差;复合索引a,b,c；在a,a b,a b c情况会用到；
 函数表达式不使用索引; like ‘a%’可以用上索引。
 全文索引like ‘%A%’派上用场;fn(A)=‘V’不能走索引应改成A=fn(‘V’);
+graphql定义的type若遇interface union的必须最少在接口函数中引用一次。

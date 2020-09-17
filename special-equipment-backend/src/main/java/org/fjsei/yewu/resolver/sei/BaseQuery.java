@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.util.Streamable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
 //@Transactional类完全限定名：而不是javax.的那一个。
@@ -606,7 +608,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
     public Iterable<Equipment> findAllEQPsFilter1(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Iterable<EqpEs> elevatorslst = eqpEsRepository.findAll();
+        Streamable<EqpEs> elevatorslst = eqpEsRepository.findByCodContaining(where.getCod());
         elevatorslst.forEach(item -> {
             // if(item instanceof Equipment)
             elevators.add(item);

@@ -8,6 +8,14 @@ type Task{
     isps: [ISP]
 }
 
+type TaskEs{
+    id: ID!
+    dep: String
+    date: String
+    status: String
+    endDate: String
+}
+
 extend type Query {
     findAllTasks: [Task]!
     countTask(dep: String, status: String):Long

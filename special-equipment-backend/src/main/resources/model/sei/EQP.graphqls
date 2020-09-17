@@ -25,6 +25,7 @@ type EqpEs implements Equipment{
     sort: String!
     vart: String!
     factoryNo: String
+    task: [TaskEs!]
 }
 
 extend type Query {

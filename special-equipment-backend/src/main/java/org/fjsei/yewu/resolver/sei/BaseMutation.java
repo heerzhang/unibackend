@@ -1,5 +1,6 @@
 package org.fjsei.yewu.resolver.sei;
 
+import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
@@ -123,16 +124,30 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional(rollbackFor = Exception.class)
     public EQP newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        // EQP eQP = new EQP(cod,type,oid);
-        Elevator eQP = new Elevator(cod,type,oid);
-        eQP.setSort("3s1");
-        eQP.setVart("Ccd2gnEDdf");
+        EQP eQP = new EQP(cod,type,oid);
+        eQP.setSort("三方大的");
+        eQP.setVart("Ccvs第三方大师傅得f");
         Task task=new Task();
-        task.setDep("zhongGuoren");
-        eQP.getTask().add(task);
-        EqpEs eqpEs=new EqpEs();
+        task.setDep("12111kk234fv");
 
+        eQP.getTask().add(task);
+        List<EQP> devs=new ArrayList<>();
+        devs.add(eQP);
+        //多对多保存复杂一点，必须都给set上。
+        task.setDevs(devs);
+
+        Task task2=new Task();
+        task2.setDep("aAxwxxxx3f4fv");
+        eQP.getTask().add(task2);
+        List<EQP> devs2=new ArrayList<>();
+        devs2.add(eQP);
+        task2.setDevs(devs2);
+
+        task.setStatus("STOPted");
+        task2.setStatus("RuningYe");
         try {
+            taskRepository.save(task);
+            taskRepository.save(task2);
             eQPRepository.saveAndFlush(eQP);
             //这里保存若事务异常就导致下面ES更新无法回滚了。
             //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
@@ -142,8 +157,16 @@ public class BaseMutation implements GraphQLMutationResolver {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
-        BeanUtils.copyProperties(eQP,eqpEs);
+       // EqpEs eqpEs=new EqpEs();
+        //嵌套对象会直接引用ref的=浅层拷贝。嵌套的关联对象给Elasticsearch也是全量都存储的。
+      //直接用BeanUtils.copyProperties(eQP,eqpEs); 　 若有字段嵌套对象类型不一样的就会报错。
+        String json = JSON.toJSONString(eQP);
+        EqpEs eqpEs=JSON.parseObject(json, EqpEs.class);   //遇到某字段的属于嵌套对象类型并且该字段对象类型还变化的情况也可顺利转换。
+        eqpEs.getTask().forEach(item -> {
+            //   item.setDevs(null);
+        });
         //ES不支持事务与回滚。
+        //相互关联导致的ES存储死循环：EqpEs->task->EQP->task,这样task id自循环导致。表现为newEQP函数上事务上死锁。
         eqpEsRepository.save(eqpEs);
         //这个时间保存ES若异常可自动取消eQPRepository.saveAndFlush的操作结果。
         return eQP;

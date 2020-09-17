@@ -6,6 +6,7 @@ import md.cm.unit.Unit;
 import md.specialEqp.Equipment;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.Task;
+import org.elasticsearch.common.util.set.Sets;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -54,10 +55,12 @@ public class EqpEs implements Equipment{
 
     @Field(type = FieldType.Date, format = DateFormat.date_time)
     private Instant nextIspDate1;
-
+   // @GeoPointField
+   // @Field(ignoreFields=) 只是忽略注解下的字段中的字段，而不是忽略这个字段本身；
     private String factoryNo;   //出厂编号
-
-    private Set<Task> task= new HashSet<>();
+    //这个注释加不加都一样的。
+    @Field(type = FieldType.Nested)
+    private Set<TaskEs> task = Sets.newHashSet();
    // private Set<ISP>  isps;
 
     public EqpEs(String cod, String type, String oid){
@@ -69,11 +72,15 @@ public class EqpEs implements Equipment{
 
 
 /* 清空elasticsearch-7.9.1\data底下数据可清理旧数据库。数据文件名字格式都会变的；lucene数据存储。
-单条记录底下一个字段内容(String)在ES磁盘文件上竟然保存8次，为何?在segment小的时候，segment的所有文件内容都保存在cfs文件中，cfe文件保存了lucene各文件在cfs文件的位置信息
-;除了id/bool的字段外,集合对象字段例外。8次实际上=lucene中各类型数据。
+单条记录底下一个字段内容(String)在ES磁盘文件上竟然保存(8份/嵌套6份)，在segment小的时候，segment的所有文件内容都保存在cfs文件中，cfe文件保存了lucene各文件在cfs文件的位置信息
+;除了id/bool的字段外,集合对象字段例外。　8份实际上=lucene中各数据结构类型。
 Elasticsearch除了存储原始正排数据、倒排索引，还存储了一份列式存储docvalues，用作分析和排序。列式存储用作聚合和排序;
 Lucene段要合并：索引段粒度越小，性能低/耗内存。频繁的文档更改导致大量小索引段Segment，从而导致文件句柄打开过多问题。
 分词字段：maxFieldLength=1000;默认；一个Field中最大Term数目，超过部分忽略，不会index到field中，所以也就搜索不到。
+@lombok.Data相当于@Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode，@lombok.Value这5个注解的合集。
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)类继承时;
+@lombok.Builder(toBuilder = true)
+@Getter
 
 */
 

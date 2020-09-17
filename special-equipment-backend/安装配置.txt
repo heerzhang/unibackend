@@ -122,3 +122,4 @@ Elasticsearch分布式索引引擎。swagger-REST；findAll findBy从REST替换�
 ELK是Elasticsearch、Logstash、Kibana日志收集分析系统@Slf4j/logback-spring.xml；spring-kafka消息引擎。
 Docker-compose/Docker Hub；Kubernetes（K8s）；VMware虚拟docker不共存；Ubuntu/CentOS/Debian；
 Elasticsearch接口改成@Query注解模式了。
+循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。

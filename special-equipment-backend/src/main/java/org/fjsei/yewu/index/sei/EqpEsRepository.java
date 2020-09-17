@@ -11,7 +11,7 @@ import org.springframework.data.util.Streamable;
 
 import java.util.stream.Stream;
 
-//一份数据写入es会产生多份数据用于不同查询方式，比原数据占更多磁盘空间。很需要紧凑POJO模型，避免多余字段。
+//一份数据写入es会产生多份数据(8份/嵌套6份)用于不同查询方式，比原数据占更多磁盘空间。很需要紧凑POJO模型，避免多余字段。
 //实体关系也要去范式或变换，专门给ES新建单独的Bean来映射存储。
 //@Document()注解的实体类的继承子类也是可以存储给ES的，子类类型字段也都会存储的。缺省所有字段都会存储；
 //@Transactional对ElasticsearchRepository没作用，JPA保存异常回滚的时候ES无法自动取消回滚该条数据。
@@ -41,10 +41,10 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
 
     //７ 用ElasticsearchOperations.index　或.queryForObject(GetQuery.来直接set/get。ElasticsearchRestTemplate接口实现;
 
-    Slice<EQP> findByCodLike(String cod, Pageable pageable);
-    Streamable<EQP> findByCodContaining(String cod);
+    Slice<EqpEs> findByCodLike(String cod, Pageable pageable);
+    Streamable<EqpEs> findByCodContaining(String cod);
 
-    Stream<EQP> readAllByCodNotNull();
+    Stream<EQP> readAllByCodIsNotNull();
     @Query("select e from EQP e")
     Stream<EQP> streamAllPaged(Pageable pageable);
     //Stream务必要用close()关闭。
@@ -80,6 +80,9 @@ MongoDB 4.0 事务功能有一些限制，但事务资源占用超过一定阈�
     事务修改产生的 oplog 不能超过 16mb，这个主要是 MongoDB 文档大小的限制， oplog 也是一个普通的文档，也必须遵守这个约束。
 MongoDB是非关系型数据库不支持join表关联别指望了，spring-data-mongodb。 支持副本集多文档事务，4.2 版本支持分片集群事务，附加限制如下：
 　当一个事务写入多个碎片时，并不是所有外部读取操作都需要等待提交事务的结果在碎片中可见。例如，如果提交了一个事务，而write 1在shard a上可见，而write 2在shard B上尚不可见，则外部read at read关注点“local”可以读取write 1的结果而不看到write 2。
-
+直接用BeanUtils.copyProperties(eQP,eqpEs)　若有字段嵌套对象类型不一样的就会报错。
+　JSON.parseObject(JSON.toJSONString(eQP), EqpEs.class)　遇到某字段的属于嵌套对象类型并且该字段对象类型还变化的情况也可顺利转换。
+循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。
+elasticsearch   autocomplete   自动提词   自动补全
 */
 
