@@ -11,6 +11,8 @@ import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
 import md.specialEqp.*;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.fjsei.yewu.entity.fjtj.*;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
@@ -20,6 +22,8 @@ import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
 import org.fjsei.yewu.index.sei.EqpEs;
 import org.fjsei.yewu.index.sei.EqpEsRepository;
+import org.fjsei.yewu.index.sei.UnitEs;
+import org.fjsei.yewu.index.sei.UnitEsRepository;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.WhereTree;
@@ -84,6 +88,8 @@ public class BaseQuery implements GraphQLQueryResolver {
     private ReportRepository reportRepository;
     @Autowired
     private UnitRepository unitRepository;
+    @Autowired
+    private UnitEsRepository unitEsRepository;
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
@@ -335,6 +341,10 @@ public class BaseQuery implements GraphQLQueryResolver {
 
     public EQP findEQPbyCod(String cod) {
         return eQPRepository.findByCod(cod);
+    }
+    public Iterable<UnitEs> findUnitbyName(String name) {
+        MatchQueryBuilder searchByCountries = QueryBuilders.matchQuery("name", name);
+        return unitEsRepository.search(searchByCountries);
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
     public String auth() {

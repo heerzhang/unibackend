@@ -7,10 +7,17 @@ type Unit{
     owns: [EQP]
     maints: [EQP]
 }
-
+type UnitEs{
+    id:ID!
+    name: String!
+    address: String
+    linkMen: String
+    phone: String
+}
 
 extend type Query {
     findAllUnits: [Unit]!
+    findUnitbyName(name: String!): [UnitEs]!
 }
 
 extend type Mutation {

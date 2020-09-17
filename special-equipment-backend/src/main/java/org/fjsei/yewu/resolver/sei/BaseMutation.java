@@ -19,6 +19,8 @@ import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
 import org.fjsei.yewu.index.sei.EqpEs;
 import org.fjsei.yewu.index.sei.EqpEsRepository;
+import org.fjsei.yewu.index.sei.UnitEs;
+import org.fjsei.yewu.index.sei.UnitEsRepository;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import md.cm.geography.*;
 import org.fjsei.yewu.security.JwtTokenUtil;
@@ -97,6 +99,8 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private UnitRepository unitRepository;
     @Autowired
+    private UnitEsRepository unitEsRepository;
+    @Autowired
     private AddressRepository addressRepository;
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -152,6 +156,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             //这里保存若事务异常就导致下面ES更新无法回滚了。
             //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
             //if( !(sec instanceof Elevator) )       return eQP;
+            //TODO: flush tasks ... 尽量确保JPA不出现异常否则ES就不一致了。
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -169,6 +174,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         //相互关联导致的ES存储死循环：EqpEs->task->EQP->task,这样task id自循环导致。表现为newEQP函数上事务上死锁。
         eqpEsRepository.save(eqpEs);
         //这个时间保存ES若异常可自动取消eQPRepository.saveAndFlush的操作结果。
+        //运行到这还处于Transactional范围下，可是Elasticsearch已经发给服务器去处理了，JPA却还没有交给数据库去存储。
         return eQP;
     }
 
@@ -284,12 +290,21 @@ public class BaseMutation implements GraphQLMutationResolver {
         return task;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
+    @PreAuthorize("hasRole('Ma')")
+    @Transactional(rollbackFor = Exception.class)
     public Unit newUnit(String name, String address) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Unit unit = new Unit(name, address);
-        unitRepository.save(unit);
+        try {
+            unitRepository.saveAndFlush(unit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+        UnitEs unitEs=new UnitEs();
+        BeanUtils.copyProperties(unit,unitEs);
+        unitEsRepository.save(unitEs);
         return unit;
     }
     //无需登录授权访问的特殊函数，graphQL不要返回太多内容如User;
