@@ -123,3 +123,6 @@ ELK是Elasticsearch、Logstash、Kibana日志收集分析系统@Slf4j/logback-sp
 Docker-compose/Docker Hub；Kubernetes（K8s）；VMware虚拟docker不共存；Ubuntu/CentOS/Debian；
 Elasticsearch接口改成@Query注解模式了。
 循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。
+但是FST只能用于前缀查找，这也是Completion Suggester的局限所在,只能从左到右第一个字符开始的滚动提示。
+ElasticSearch使用completion实现补全功能，局限性。 https://blog.csdn.net/qushaming/article/details/90479091
+
