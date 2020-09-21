@@ -375,11 +375,16 @@ public class BaseQuery implements GraphQLQueryResolver {
     //随意都能匹配到啊
     public Iterable<UnitEs> findUnitbyName(String name) {
         MatchQueryBuilder searchByCountries = QueryBuilders.matchQuery("name", name);
-        return unitEsRepository.search(searchByCountries);
+        Iterable<UnitEs> list=unitEsRepository.search(searchByCountries);
+        return list;
     }
 
     public Iterable<String> findUnitbyNameCompl(String name) {
         List<String> list=listSuggestCompletion("name", name,20,"unit","UnitEs",elasticsearchRestTemplate);
+        return list;
+    }
+    public Iterable<String> findUnitbyNameCompl2(String name) {
+        List<String> list=listSuggestCompletion7("name", name,20,"unit","UnitEs",elasticsearchRestTemplate);
         return list;
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
@@ -793,14 +798,14 @@ public class BaseQuery implements GraphQLQueryResolver {
 
         return	null;
     }
-    //测试可以！但是只能当个汉字的搜；
+    //测试可以！但是只能单个汉字的搜；
     public List<String> listSuggestCompletion(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
     {
         RestHighLevelClient client = new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("localhost", 9200, "http")));
         SuggestionBuilder completionSuggestionBuilder =
-                SuggestBuilders.completionSuggestion("suggest").prefix(suggestValue);
+                            SuggestBuilders.completionSuggestion("suggest").prefix(suggestValue);
         SuggestBuilder suggestBuilder = new SuggestBuilder();
         suggestBuilder.addSuggestion("suggest-title", completionSuggestionBuilder);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -826,9 +831,11 @@ public class BaseQuery implements GraphQLQueryResolver {
         }
         return	null;
     }
-    //不行，找不到任何提示
+    //不行，找不到任何提示，用法和模式不匹配
     public List<String> listSuggestCompletion7(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
     {
+        //SuggestionBuilder completionSuggestionFuzzyBuilder = SuggestBuilders.completionSuggestion("suggest") 找不到任何hits;
+        //改成.completionSuggestion(suggestField) 不认识'name'
         SuggestionBuilder completionSuggestionFuzzyBuilder = SuggestBuilders.completionSuggestion("suggest")
                 .prefix(suggestValue, Fuzziness.AUTO);
         IndexCoordinates indexCoordinates=elasticsearchTemplate__.getIndexCoordinatesFor(UnitEs.class);      //Class<?> clasz

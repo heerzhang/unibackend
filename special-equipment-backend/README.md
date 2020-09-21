@@ -150,3 +150,5 @@ MySQL普通表最多撑死2千万条Row。
 函数表达式不使用索引; like ‘a%’可以用上索引。
 全文索引like ‘%A%’派上用场;fn(A)=‘V’不能走索引应改成A=fn(‘V’);
 graphql定义的type若遇interface union的必须最少在接口函数中引用一次。
+IK分词器安装　插件　https://blog.csdn.net/lgb190730/article/details/107882929?utm_medium=distribute.pc_relevant.none-task-blog-title-8&spm=1001.2101.3001.4242
+分词插件，版本必须和ES配套;　https://www.cnblogs.com/gwyy/p/12205257.html
