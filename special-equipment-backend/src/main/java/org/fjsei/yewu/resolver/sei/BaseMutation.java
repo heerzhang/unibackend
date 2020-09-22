@@ -304,6 +304,8 @@ public class BaseMutation implements GraphQLMutationResolver {
         }
         UnitEs unitEs=new UnitEs();
         BeanUtils.copyProperties(unit,unitEs);
+        unitEs.setLinkMen("何尔章");
+        unitEs.setPhone("电话号码");
         unitEsRepository.save(unitEs);
         return unit;
     }

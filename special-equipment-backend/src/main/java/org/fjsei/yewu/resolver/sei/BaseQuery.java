@@ -831,22 +831,11 @@ public class BaseQuery implements GraphQLQueryResolver {
         }
         return	null;
     }
-    //不行，找不到任何提示，用法和模式不匹配
+    //匹配太多了
     public List<String> listSuggestCompletion7(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
     {
-        //SuggestionBuilder completionSuggestionFuzzyBuilder = SuggestBuilders.completionSuggestion("suggest") 找不到任何hits;
-        //改成.completionSuggestion(suggestField) 不认识'name'
-        SuggestionBuilder completionSuggestionFuzzyBuilder = SuggestBuilders.completionSuggestion("suggest")
-                .prefix(suggestValue, Fuzziness.AUTO);
-        IndexCoordinates indexCoordinates=elasticsearchTemplate__.getIndexCoordinatesFor(UnitEs.class);      //Class<?> clasz
-        SearchResponse searchResponse= elasticsearchTemplate__.suggest(new SuggestBuilder().addSuggestion("suggest-title",completionSuggestionFuzzyBuilder), indexCoordinates);
-        CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest-title");
-        for (CompletionSuggestion.Entry entry : completionSuggestion.getEntries()) {
-            for (CompletionSuggestion.Entry.Option option : entry) {
-                String suggestText = option.getText().string();
-                System.out.println(suggestText);
-            }
-        }
+        MatchQueryBuilder searchByCountries = QueryBuilders.matchQuery("name", suggestValue);
+        Iterable<UnitEs> list=unitEsRepository.search(searchByCountries);
         return	null;
     }
 }
