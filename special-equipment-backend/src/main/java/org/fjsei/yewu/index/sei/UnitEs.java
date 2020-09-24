@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Document(indexName = "unit")
 @Data
 @NoArgsConstructor
-@Mapping(mappingPath = "unites.json")       //没看到效果
+//@Mapping(mappingPath = "unites.json")       //没看到效果
 public class UnitEs {
     @Id
     protected Long id;
@@ -17,15 +17,20 @@ public class UnitEs {
     //Keyword做搜索很正常。可是加上analyzer = "ik_max_word", searchAnalyzer = "ik_smart"就全变Text嵌Keyword，而且其它字段也跟着一起变。
     //@Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word")
     //@Field(analyzer ="ik_smart", searchAnalyzer ="ik_smart")        //ik分词器没能设置上,其它字段也跟着一起变。
-    @Field(type = FieldType.Auto, ignoreAbove = 260 ,analyzer ="ik_smart")
+   // @Field(type = FieldType.Auto, ignoreAbove = 260 ,analyzer ="ik_smart")
+    @MultiField(mainField= @Field(type=FieldType.Text, analyzer="ik_smart", searchAnalyzer="ik_smart"),
+            otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=320)
+            }
+    )
     private String name;        //企业或机构名，人名，楼盘称谓。
 
     //不做注解的话String默认生成mapping是Text底下再嵌套Keyword的类型;字符串将默认被同时映射成text和keyword类型.
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word")
     private String address;     //详细住址，首要办公地点，楼盘地址。
 
-    //@Field(type = FieldType.Auto)
+    @Field(type = FieldType.Auto)
     private String linkMen;     //负责管理人的个人名字
-    //@Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Keyword)
     private String phone;       //消息联系的主要手机号
 }
 
@@ -38,7 +43,7 @@ public class UnitEs {
 倒排索引与搜索引擎　https://zhuanlan.zhihu.com/p/101586644
 没有设置analyzer = "ik_" 汉语默认都单个汉字来分词的。
 配置：　@Setting(settingPath = "es-config/elastic-analyzer.json")
-还有一种使用@Mapping(mappingPath = "productIndex.json")代替@Field注解;
+还有一种使用@Mapping(mappingPath = "productIndex.json")代替@Field注解;        没看到效果
 内置的分词器 https://blog.csdn.net/lgb190730/article/details/107882929?utm_medium=distribute.pc_relevant.none-task-blog-title-8&spm=1001.2101.3001.4242
 ik_max_word分词器　https://github.com/medcl/elasticsearch-analysis-ik
 从ES查看index的映射URL=  http://localhost:9200/unit/_mapping
@@ -67,5 +72,9 @@ completion suggester比这Edge N-Grams{等于search-as-you-type}更高效快;但
 @Setting(settingPath = "es-config/elastic-analyzer.json")
 @Mapping(mappingPath = "unites.json")  通过@Mapping注解来自定义生成Mapping。resources目录/articlesearch_mapping.json。
 针对FieldType.Keyword的查询可用findAllByNameContains(),相当模糊查询%A%;
-
+    @MultiField(mainField= @Field(type = FieldType.Text, analyzer="ik_smart", searchAnalyzer="ik_smart"),
+            otherFields={ @InnerField(suffix="keyword",type =FieldType.Keyword, ignoreAbove = 278)
+            }
+    )
+    private String name;
 */
