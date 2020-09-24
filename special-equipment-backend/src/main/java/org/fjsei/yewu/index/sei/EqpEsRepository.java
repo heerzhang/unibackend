@@ -21,7 +21,8 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
     //１最简单用普通函数名来解析的模式：
 
     //２类似这条路子：直接操作HQL或者SQL，底下存储引擎支持的原生语言。
-    //也可以支持elasticsearch包带入的@Query(原生DSL语句)模式：
+    //也可以支持elasticsearch包带入的@Query(原生DSL语句)模式：?：任意字符 *：0个或任意多个字符
+    //Dsl方式POST index/_search发送JSON格式如 "query": {"wildcard": {"shopInfoName.keyword": { "value": "*自营*" } } }
     @Query("{\"match\": {\"cod\": {\"query\": \"?0\"}}}")
     Page<EQP> findByCod(String cod, Pageable pageable);
 
@@ -36,10 +37,12 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
 
     //５最后一种路子：Hibernate提供的CriteriaQuery 。
 
-    //６定做的路子NativeSearchQueryBuilder　SearchQuery；
+    //６用API 定做的路子NativeSearchQueryBuilder　SearchQuery；
     //Elasticsearch有一个滚动API,返回流stream = elasticsearchTemplate.searchForStream(searchQuery；stream.next()。
-
-    //７ 用ElasticsearchOperations.index　或.queryForObject(GetQuery.来直接set/get。ElasticsearchRestTemplate接口实现;
+    //DSL多条件搜索FunctionScoreQueryBuilder SearchQuery ; 例子https://www.cnblogs.com/ysq0908/p/12316858.html
+    //用ElasticsearchRestTemplate接口; ElasticsearchOperations.index　或.queryForObject(GetQuery.来直接set/get。
+    //SearchQuery multiMatchQuery.must MatchQueryBuilder.operator wildcardQuery rangeQuery .withPageable  Template.queryForList;
+    //BoolQueryBuilder.should(QueryBuilders.matchPhraseQuery("name", parm))  '。>'等特殊字符,例子https://elasticsearch.cn/question/5494
 
     Slice<EqpEs> findByCodLike(String cod, Pageable pageable);
     Streamable<EqpEs> findByCodContaining(String cod);

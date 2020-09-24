@@ -373,18 +373,24 @@ public class BaseQuery implements GraphQLQueryResolver {
         return eQPRepository.findByCod(cod);
     }
     //随意都能匹配到啊
+    public Iterable<UnitEs> findUnitbyNameAnd2(String name,String name2) {
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameMatchesAndNameMatches(name,name2);
+        return list;
+    }
     public Iterable<UnitEs> findUnitbyName(String name) {
-        MatchQueryBuilder searchByCountries = QueryBuilders.matchQuery("name", name);
-        Iterable<UnitEs> list=unitEsRepository.search(searchByCountries);
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameContains(name);
         return list;
     }
-
-    public Iterable<String> findUnitbyNameCompl(String name) {
-        List<String> list=listSuggestCompletion("name", name,20,"unit","UnitEs",elasticsearchRestTemplate);
+    public Iterable<UnitEs> findUnitbyName1(String name) {
+        Iterable<UnitEs> list=unitEsRepository.findAllByName_KeywordContains(name);
         return list;
     }
-    public Iterable<String> findUnitbyNameCompl2(String name) {
-        List<String> list=listSuggestCompletion7("name", name,20,"unit","UnitEs",elasticsearchRestTemplate);
+    public Iterable<UnitEs> findUnitbyName2(String name) {
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameMatchePhrase(name);
+        return list;
+    }
+    public Iterable<UnitEs> findUnitbyNameArr(String[] names) {
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameIn(names);
         return list;
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
@@ -666,178 +672,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         });
         return elevators;
     }
-    public List<String> listSuggestCompletion2(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
-    {
-        CompletionSuggestionBuilder suggestion = SuggestBuilders
-                .completionSuggestion(suggestField).prefix(suggestValue).size(20).skipDuplicates(true);
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("suggest2", suggestion);
-        IndexCoordinates indexCoordinates=elasticsearchTemplate__.getIndexCoordinatesFor(UnitEs.class);      //Class<?> clasz
-        SearchResponse response = elasticsearchTemplate__.suggest(suggestBuilder, indexCoordinates);
-        Suggest suggest = response.getSuggest();
-        List<String> suggests = Arrays.asList();
-        suggests.forEach((s)->{
-            System.out.println(s);
-        });
 
-        return	 suggests;
-    }
-    public List<String> listSuggestCompletion1(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
-    {
-        CompletionSuggestionBuilder suggestionBuilderDistrict = new CompletionSuggestionBuilder(suggestField).prefix(suggestValue).size(suggestMaxCount);
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("student_suggest", suggestionBuilderDistrict);//添加suggest
-        //设置查询builder的index,type,以及建议
-        if(elasticsearchTemplate__==null)
-            System.out.println( "this is Template null  ***************************************************");
-        IndexCoordinates indexCoordinates=elasticsearchTemplate__.getIndexCoordinatesFor(UnitEs.class);      //Class<?> clasz
-
-    //    SearchRequestBuilder requestBuilder
-        SearchResponse    response= elasticsearchTemplate__.suggest(suggestBuilder,indexCoordinates);
-     //   System.out.println(requestBuilder.toString());
-        //   SearchResponse response = requestBuilder.get();
-        Suggest suggest = response.getSuggest();
-
-        Set<String> suggestSet = new HashSet<>();//set
-        int maxSuggest = 0;
-        if (suggest != null) {
-            Suggest.Suggestion result = suggest.getSuggestion("student_suggest");//获取suggest,name任意string
-            for (Object term : result.getEntries()) {
-
-                if (term instanceof CompletionSuggestion.Entry) {
-                    CompletionSuggestion.Entry item = (CompletionSuggestion.Entry) term;
-                    if (!item.getOptions().isEmpty()) {
-                        //若item的option不为空,循环遍历
-                        for (CompletionSuggestion.Entry.Option option : item.getOptions()) {
-                            String tip = option.getText().toString();
-                            if (!suggestSet.contains(tip)) {
-                                suggestSet.add(tip);
-                                ++maxSuggest;
-                            }
-                        }
-                    }
-                }
-                if (maxSuggest >= suggestMaxCount) {
-                    break;
-                }
-            }
-        }
-
-        List<String> suggests = Arrays.asList(suggestSet.toArray(new String[]{}));
-
-        suggests.forEach((s)->{
-            System.out.println(s);
-        });
-
-        return	 suggests;
-    }
-    //测试AnnotatedCompletionEntity 替换成 UnitEs
-
-    static class AnnotatedCompletionEntityBuilder {
-
-        private UnitEs result;
-
-        public AnnotatedCompletionEntityBuilder(Long id) {
-            UnitEs unitEs= new UnitEs();
-            unitEs.setId(id);
-            result=unitEs;
-        }
-
-        public AnnotatedCompletionEntityBuilder name(String name) {
-            result.setName(name);
-            return this;
-        }
-
-        public AnnotatedCompletionEntityBuilder suggest(String[] input) {
-            return suggest(input, null);
-        }
-
-        public AnnotatedCompletionEntityBuilder suggest(String[] input, Integer weight) {
-            Completion suggest = new Completion(input);
-            suggest.setWeight(weight);
-            result.setSuggest(suggest);
-            return this;
-        }
-
-        public UnitEs build() {
-            return result;
-        }
-
-        public IndexQuery buildIndex() {
-            IndexQuery indexQuery = new IndexQuery();
-            indexQuery.setId(result.getId().toString());
-            indexQuery.setObject(result);
-            return indexQuery;
-        }
-    }
-    public List<String> listSuggestCompletion3(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
-    {
-       // IndexInitializer.init(elasticsearchTemplate__.indexOps(UnitEs.class));
-        List<IndexQuery> indexQueries = new ArrayList<>();
-        indexQueries.add(new AnnotatedCompletionEntityBuilder(1L).name("Mewes Kochheim1")
-                .suggest(new String[] { "Mewes Kochheim1" }, 4).buildIndex());
-        indexQueries.add(new AnnotatedCompletionEntityBuilder(2L).name("Mewes Kochheim2")
-                .suggest(new String[] { "Mewes Kochheim2" }, 1).buildIndex());
-        indexQueries.add(new AnnotatedCompletionEntityBuilder(3L).name("Mewes Kochheim3")
-                .suggest(new String[] { "Mewes Kochheim3" }, 2).buildIndex());
-        indexQueries.add(new AnnotatedCompletionEntityBuilder(4L).name("Mewes Kochheim4")
-                .suggest(new String[] { "Mewes Kochheim4" }, Integer.MAX_VALUE).buildIndex());
-
-        elasticsearchTemplate__.bulkIndex(indexQueries, IndexCoordinates.of("unit"));
-        elasticsearchTemplate__.indexOps(UnitEs.class).refresh();
-
-        SuggestionBuilder completionSuggestionFuzzyBuilder = SuggestBuilders.completionSuggestion("suggest").prefix(suggestValue,
-                Fuzziness.AUTO);
-
-        // when
-        SearchResponse suggestResponse = ((AbstractElasticsearchTemplate) elasticsearchTemplate__).suggest(
-                new SuggestBuilder().addSuggestion("test-suggest", completionSuggestionFuzzyBuilder),
-                IndexCoordinates.of(index_));
-        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("test-suggest");
-        List<CompletionSuggestion.Entry.Option> options = completionSuggestion.getEntries().get(0).getOptions();
-
-        return	null;
-    }
-    //测试可以！但是只能单个汉字的搜；
-    public List<String> listSuggestCompletion(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
-    {
-        RestHighLevelClient client = new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost("localhost", 9200, "http")));
-        SuggestionBuilder completionSuggestionBuilder =
-                            SuggestBuilders.completionSuggestion("suggest").prefix(suggestValue);
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("suggest-title", completionSuggestionBuilder);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.suggest(suggestBuilder);
-        searchSourceBuilder.query(QueryBuilders.prefixQuery(suggestField, suggestValue)).fetchSource(true);
-        searchSourceBuilder.size(5);
-        searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(index_);
-        searchRequest.source(searchSourceBuilder);
-        try {
-            SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-            CompletionSuggestion completionSuggestion = searchResponse.getSuggest().getSuggestion("suggest-title");
-            //只能单一一个汉字的，不能多个字的提示。
-            for (CompletionSuggestion.Entry entry : completionSuggestion.getEntries()) {
-                for (CompletionSuggestion.Entry.Option option : entry) {
-                    String suggestText = option.getText().string();
-                    System.out.println(suggestText);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return	null;
-    }
-    //匹配太多了
-    public List<String> listSuggestCompletion7(String suggestField, String suggestValue, Integer suggestMaxCount, String index_, String indexType_, ElasticsearchRestTemplate elasticsearchTemplate__)
-    {
-        MatchQueryBuilder searchByCountries = QueryBuilders.matchQuery("name", suggestValue);
-        Iterable<UnitEs> list=unitEsRepository.search(searchByCountries);
-        return	null;
-    }
 }
 
 

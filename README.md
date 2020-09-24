@@ -38,4 +38,4 @@ Elasticsearch反而是用来帮助Spark做OLAP，而不是反过来的构想：�
 利用Spark读写Elasticsearch，那么从RDBMS读取后倒腾给ES,花费了3.6h = 超慢!,Spark用于统计应用场景=ETL/聚合/多源数据。
 QueryDSL与SpringDataJPA同层，它也是基于各种ORM之上的一个通用查询框架，使用它可以写出“Java代码的sql”；
 ES join性能差，nested query；has_child and has_parent within a single index；不像RDBMS表的join;
-
+探究ES 明明存在，怎么搜索都搜不出来呢?　性能　查全率　查准率  https://cloud.tencent.com/developer/article/1380213

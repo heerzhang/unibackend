@@ -18,8 +18,10 @@ type UnitEs{
 extend type Query {
     findAllUnits: [Unit]!
     findUnitbyName(name: String!): [UnitEs]!
-    findUnitbyNameCompl(name: String!): [String]!
-    findUnitbyNameCompl2(name: String!): [String]!
+    findUnitbyName1(name: String!): [UnitEs]!
+    findUnitbyName2(name: String!): [UnitEs]!
+    findUnitbyNameAnd2(name: String!, name2:String): [UnitEs]!
+    findUnitbyNameArr(names: [String]): [UnitEs]!
 }
 
 extend type Mutation {
