@@ -138,7 +138,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     @PersistenceContext(unitName = "entityManagerFactorySei")
     private EntityManager emSei;
     @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private ElasticsearchRestTemplate  esTemplate;
 
     //前端实际不可能用！把数据库全部都同时查入后端内存，太耗；查询只能缩小范围都得分页查，就算原子更新操作也不能全表一个个update，大的表可执行力太差！
     @Deprecated
@@ -372,9 +372,13 @@ public class BaseQuery implements GraphQLQueryResolver {
     public EQP findEQPbyCod(String cod) {
         return eQPRepository.findByCod(cod);
     }
-    //随意都能匹配到啊
+    public Iterable<UnitEs> findUnitbyNameAnd(String name,String name2) {
+        if(name2==null) name2="";
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameQueryPhrase2(name,name2);
+        return list;
+    }
     public Iterable<UnitEs> findUnitbyNameAnd2(String name,String name2) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameMatchesAndNameMatches(name,name2);
+        Iterable<UnitEs> list=unitEsRepository.findAllByNameSqueryPhrase2(name,name2);
         return list;
     }
     public Iterable<UnitEs> findUnitbyName(String name) {

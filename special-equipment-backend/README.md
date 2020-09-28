@@ -152,3 +152,6 @@ MySQL普通表最多撑死2千万条Row。
 graphql定义的type若遇interface union的必须最少在接口函数中引用一次。
 IK分词器安装　插件　https://blog.csdn.net/lgb190730/article/details/107882929?utm_medium=distribute.pc_relevant.none-task-blog-title-8&spm=1001.2101.3001.4242
 分词插件，版本必须和ES配套;　https://www.cnblogs.com/gwyy/p/12205257.html
+
+单位列表查询3类接口：搜索，精确搜索，查找。搜索=ES中用match_phrase，精确搜索=ES中用wildcard，查找=数据库中Like查询。性能是高到底的。
+

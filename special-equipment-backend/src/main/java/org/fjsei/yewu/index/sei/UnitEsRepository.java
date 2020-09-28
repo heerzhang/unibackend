@@ -68,7 +68,20 @@ public interface UnitEsRepository extends ElasticsearchRepository<UnitEs, Long> 
     //@Field(analyzer ="ik_smart", searchAnalyzer ="ik_smart")很好；
     @Query("{\"match_phrase\": {\"name\": {\"query\": \"?0\"}}}")
     Streamable<UnitEs> findAllByNameMatchePhrase(String name);
+    @Query("{\"match_phrase\": {\"name\": {\"query\": \"?0\"}}}")
+    Streamable<UnitEs> findAllByNameMatchePhrase2(String name,String name2);
+
+    //@Query("{\"query_string\": {\"query\": \"?0 ?1\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}") 短语内部单词顺序可以打乱也能匹配：对"name": "纬亿惠州","name2": "锂能" 可匹配到；
+    //@Query("{\"query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}") 对"name": "纬亿惠州","name2": "锂能" 匹配不到；
+    //"股份有限公司"也必须一起输入，它被当成一个token单词了，'股份有限公司'若再做拆分做输入参数就无法匹配{ik_smart分词器条件下的}。输入当中标点符号等会被filter给舍弃掉。"有限公司"可以匹配'责任有限公司';
+    //针对人名字段来做Text分词搜索的，有可能查不到人名。找不到情况下，应该转而使用keyword字段wildcard模糊查找。
+    @Query("{\"query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}")
+    Streamable<UnitEs> findAllByNameQueryPhrase2(String name,String name2);
+    //实际等价于query_string上面这个DSL。这里俩个输入参数 ?0 ?1 都是短语phrase可多次单词组成，两个参数逻辑&&AND关系能缩小匹配结果列表。相当于match_phrase但是多个输入。
+    @Query("{\"simple_query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}")
+    Streamable<UnitEs> findAllByNameSqueryPhrase2(String name,String name2);
 }
+
 
 
 /*
@@ -86,4 +99,34 @@ wildcard query 扫描所有倒排索引, 性能较差。
 用 NGram 切分（按照字符切分，最大最小字符数都设置为1），然后查询的时候使用 match_phrase_query 即可，应该比通配符wildcard高效;ngram分词器min_gram max_gram切的粒度太细占存储。
 前端用户自主选择matchPhraseQuery"match_phrase"还是termQuery"term"　ES模糊与精准查询： https://blog.csdn.net/frgzs/article/details/88427444
 match query比phrase match的性能要高10倍; 精确字段查询使用matchPhrase ; rescoring，计分。
+match_phrase查询API手册：　https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
+wildcard query　term query　terms query　prefix query　range query都属于不分词的精确匹配，而full-text queries是才分词的。
+Text类型不要用term查询而应该用match query;
+全文搜索中：phrase就是分词后的固定多词语顺序和单词间隔的{ match_phrase query : 默认max_expansions=50个单词最多了}。boost=增强分数;
+multi_match query 是对多个字段{标题+简介2个字段}都去搜同一个query string的。
+"query_string":容易报错{二次封装：描述字符串和语法拆解，first_name转义\ 短语引号"John Smith" \"}。 "simple_query_string"更易于使用。
+term查询是精确查询的{Text字段不要用term查询}。 terms是OR逻辑满足一个term就匹配上。terms_set查询可以指定最少满足的terms的个项数{minimum_should_match_field可定制，针对数组型字段}。
+wildcard查询很耗时，wildcard不能用在Text类型字段。
+"query_string" : { "query" :... 这样的DSL片段=属于全文搜索分词！：要分词的查询。供专业用户使用,语法严格容易报错{转义字符\\保留字符多+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /}。
+query_string无法对nested字段生效；必须单独用nested query来做。
+object字段类型　"fields" : ["city.*"],可代表内嵌对象city底下的多个字段搜索。举例如下：
+"query_string" : { "query" : "city.\\*:(this AND that OR thus)"   }
+"query_string":　{ "query":　"NOT(\"?\" \"?\")",  "fields":　["name"]　}　这里的?是Spring Repository自动带入的变量,而"?" "?"是ES语法要求，JSON语法{\"query\": "\?0\"}。
+"query_string": {"query":"\"?\" \"?\"",  "fields":["name"，]} 对Text字段的,只能单个单词搜索,两个??代表两个输入参数，然后逻辑OR||合并匹配的；单个参数输入多单词反而无法匹配到{分词！}。
+simple_query_string查询是傻瓜接口语法但是不会报错只会忽略掉；有个特别功能可以设置"flags": "OR|AND|PREFIX"来过滤实际要用到的语法保留字符(操作符)。" 包裹phrases短语多单词匹配；
+分词之后单词叫token；这时phrase就表示多个token组成的，也就是正常输入和用户要搜索的那一串文本=叫做phrase{包含一个有顺序和间隔的几个token分词/单词}。
+simple_query_string相比query_string接口语法功能稍微受到裁剪/制约，少了普通用户都用不到的功能。　举例如下：
+"simple_query_string" : {
+    "query": "\"fried eggs\" +(eggplant | potato) -frittata", 说明只有"fried eggs\"是短语(全字符串精确匹配)。其它比如frittata都是单词。
+    "fields": ["title^5", "body"],
+    "default_operator": "and"
+}
+分词搜索输入当中标点符号等会被filter给舍弃掉。输入"有限公司"可以匹配'责任有限公司'，但是不能匹配'股份有限公司'的公司名字。
+输入"责任有限"　无法匹配到，　但是输入"责任"　反而却能匹配到。｛解释：分词后和原来存储不一样的，原来存储的是＇责任有限公司＇｝；姓名汉语的也会拆分姓+名;
+禁用 wildcard模糊匹配 ,让Elasticsearch飞起来: https://blog.csdn.net/laoyang360/article/details/85109769?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-2.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-2.nonecase
+写入使用ik_max_word，查询时用ik_smart并对查询词的长度进行限制（避免被外部用户叠词攻击）  https://yuerblog.cc/2019/12/06/
+根据业务场景，进行恰当内存的分配; 关闭Swap 性能：  https://zhuanlan.zhihu.com/p/67600167
+默认分词器standard作中文分词查询不好。 若设置ik分词时查询性能则是standard分词的2-3倍。 https://wenku.baidu.com/view/82b082b5998fcc22bcd10df4.html
+elasticsearch 性能测试; jmeter 压力测试工具    https://www.cnblogs.com/sesexxoo/p/6190583.html
 */
+

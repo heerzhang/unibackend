@@ -39,3 +39,5 @@ Elasticsearch反而是用来帮助Spark做OLAP，而不是反过来的构想：�
 QueryDSL与SpringDataJPA同层，它也是基于各种ORM之上的一个通用查询框架，使用它可以写出“Java代码的sql”；
 ES join性能差，nested query；has_child and has_parent within a single index；不像RDBMS表的join;
 探究ES 明明存在，怎么搜索都搜不出来呢?　性能　查全率　查准率  https://cloud.tencent.com/developer/article/1380213
+Elasticsearch最精彩部分是Text类型字段，全文搜索Full text query{用到分词器，match查询不是严格精确字符串匹配的}。
+

@@ -20,6 +20,7 @@ extend type Query {
     findUnitbyName(name: String!): [UnitEs]!
     findUnitbyName1(name: String!): [UnitEs]!
     findUnitbyName2(name: String!): [UnitEs]!
+    findUnitbyNameAnd(name: String!, name2:String): [UnitEs]!
     findUnitbyNameAnd2(name: String!, name2:String): [UnitEs]!
     findUnitbyNameArr(names: [String]): [UnitEs]!
 }

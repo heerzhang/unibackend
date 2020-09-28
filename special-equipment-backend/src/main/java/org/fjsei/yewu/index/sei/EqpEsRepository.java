@@ -37,7 +37,7 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
 
     //５最后一种路子：Hibernate提供的CriteriaQuery 。
 
-    //６用API 定做的路子NativeSearchQueryBuilder　SearchQuery；
+    //６用ES底层API路子 NativeSearchQueryBuilder BoolQueryBuilder., SearchQuery；
     //Elasticsearch有一个滚动API,返回流stream = elasticsearchTemplate.searchForStream(searchQuery；stream.next()。
     //DSL多条件搜索FunctionScoreQueryBuilder SearchQuery ; 例子https://www.cnblogs.com/ysq0908/p/12316858.html
     //用ElasticsearchRestTemplate接口; ElasticsearchOperations.index　或.queryForObject(GetQuery.来直接set/get。
