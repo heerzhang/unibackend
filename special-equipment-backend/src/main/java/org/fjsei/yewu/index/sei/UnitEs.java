@@ -32,6 +32,7 @@ public class UnitEs {
 
     @Field(type = FieldType.Auto)
     private String linkMen;     //负责管理人的个人名字
+    //Keyword字段rangeQuery逻辑若是字段null的，gte(99) gte("99")竟然为真，被解释成"from":"to"。
     @Field(type = FieldType.Keyword)
     private String phone;       //消息联系的主要手机号
 }
@@ -101,8 +102,9 @@ searchQuery = new NativeSearchQueryBuilder().withQuery(
         )
 ).withPageable(pageable).build();
 List<Article> list= elasticsearchTemplate.queryForList(searchQuery, Article.class);  .withIndices("var_pmid")
-ElasticsearchRestTemplate    IndexCoordinates
+IndexCoordinates indexCoordinates=ElasticsearchRestTemplate.getIndexCoordinatesFor(UnitEs.class);
 BoolQueryBuilder nameMatch = QueryBuilders.boolQuery()
+    QueryBuilders.prefixQuery(suggestField, Value)
 QueryBuilders.boolQuery().      builder.must(specMatch);
 SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(queryStringQuery(word)).withPageable(pageable).build();
 new NativeSearchQueryBuilder().withQuery(matchQuery("content", content)).withPageable
@@ -124,5 +126,8 @@ termsQuery("userId", ids).  多取值的参数任一个匹配。
     .should代表返回的文档可能满足should子句的条件，多个should时满足任何一个就可以，通过minimum_should_match设置至少满足几个。
     .mustNot代表必须不满足子句的条件。
 bool查询使用Must_not或者filter过滤器的不计算相关度_score，所以性能好。
+terms_set  针对集合数组字段{1个doc内部nested？1:N关联字段}的单一字段的去匹配多个输入短语/多字符串。
+multi_match  针对多个字段一起都来搜索某个输入字符串匹配。
+长的文本字段用FieldType.Keyword比用FieldType.Text更占用内存存储。
 */
 

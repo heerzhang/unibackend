@@ -23,6 +23,7 @@ extend type Query {
     findUnitbyNameAnd(name: String!, name2:String): [UnitEs]!
     findUnitbyNameAnd2(name: String!, name2:String): [UnitEs]!
     findUnitbyNameArr(names: [String]): [UnitEs]!
+    getUnitbyFilter(as: UnitCommonInput): [UnitEs]!
 }
 
 extend type Mutation {

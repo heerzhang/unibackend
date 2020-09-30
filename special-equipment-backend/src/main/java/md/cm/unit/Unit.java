@@ -41,3 +41,12 @@ public class Unit {
         return  this.maints;
     }
 }
+
+
+/*
+应和大库思维，把unit 使用单位，继续拆分成了：person + company 优化存储语义；前端界面提前区分两种unit。
+company 法人单位,其他组织
+person 个人
+unit是业务代理者，company和person是通用的基础库。
+
+*/

@@ -154,4 +154,5 @@ IK分词器安装　插件　https://blog.csdn.net/lgb190730/article/details/107
 分词插件，版本必须和ES配套;　https://www.cnblogs.com/gwyy/p/12205257.html
 
 单位列表查询3类接口：搜索，精确搜索，查找。搜索=ES中用match_phrase，精确搜索=ES中用wildcard，查找=数据库中Like查询。性能是高到底的。
+十九种Elasticsearch搜索方式,数据量很大用MySQL会造成慢查询=想改用Elasticsearch;  https://blog.csdn.net/valada/article/details/105607918
 

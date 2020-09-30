@@ -128,5 +128,35 @@ simple_query_string相比query_string接口语法功能稍微受到裁剪/制约
 根据业务场景，进行恰当内存的分配; 关闭Swap 性能：  https://zhuanlan.zhihu.com/p/67600167
 默认分词器standard作中文分词查询不好。 若设置ik分词时查询性能则是standard分词的2-3倍。 https://wenku.baidu.com/view/82b082b5998fcc22bcd10df4.html
 elasticsearch 性能测试; jmeter 压力测试工具    https://www.cnblogs.com/sesexxoo/p/6190583.html
+rangeQuery("name").gte("99")    范围查询 >a&&<b之内的。
+prefixQuery("linkMen.keyword",as.getLinkMen()) 这里prefixQuery对Text字段没意义，需要针对复合内嵌字段keyword来做。
+boolQuery().包括四种must，filter, should,must_Not。用filter代替must来提高性能：filter不会像Must一样计算分值{Text分词的分值才有意义}，逻辑语义上filter等价must。
+例子　"bool" : { "must" : [ 　{ "match_phrase" : {　}  ]  };     boolQuery().filter();   非全文搜索的直接用filter代替must；
+should至少有一个语句要匹配，与 OR 等价。
+*match*开头的和*query_string结束的或明显打分有关的语法标签：这些都是Text全文检索；剩下的就是正常的结构化匹配/没有分词的通常意义查询或过滤。
+ES多条件查询must和should不能直接跟随地并列在一起的：应当改成嵌套的　(x && y)　&&　( A || B)　逻辑表达形式，如下：
+"bool": {
+	"must": [{
+			"bool": {
+				"must": [{　　　x && y      ]
+			     }, {
+			"bool": {
+				"should": [{　　　A || B     ]
+				}
+    	]
+    }
+全文检索matchPhraseQuery，可调整slop参数。  matchPhraseQuery("name",as.getName()).slop(2) 容许相差slop个数的单词(顺序调换或多出单词)但是单词缺少绝对不行的。
+参数slop() 容许短语匹配相差slop数：有些看着像差异很大，实际也就slop个单词的差别程度，只能多，输入该有的单词都必须有。
+．minimumShouldMatch(2) 提示逻辑OR的最少满足项目数。
+.filter() 或者bool底下.must_Not() 这两种查询的算是过滤器（不计算_score的）。
+termQuery()是精确字符匹配的所以不能用在Text字段上，
+termsQuery(,[a,b])任意一个都算=逻辑||OR。　"term"是单个短语串精确匹配，"terms"是多个短语串当中任意一个精确匹配。
+terms_set　 TermsSetQueryBuilder 针对集合数组型字段的匹配:类似1:N数据库的１对多关系字段。termsSetQueryBuilder.setMinimumShouldMatchField竟然是用一个字段来做配置；minimum_should_match_script也真的慢。
+"minimum_should_match_script": { "source": "Math.min(params.num_terms, doc['required_matches'].value)" } 其中params.num_terms是在terms搜索输入元素个数;doc['required_matches'].value是文档记录字段值。
+termsSetQueryBuilder必须配置匹配数/啰嗦?。　termsSetQueryBuilder.setMinimumShouldMatchScript(new Script("2"));　 这里"2"表示最少匹配到2个。
+这个terms_set 就是比termsQuery多出能够控制集合字段 底下满足匹配的个数／最少有多少个。
+termsLookupQuery（）竟然关联到其他的index索引数据库去了/index_type/id:。跨越索引关联关系。
+multi_match  针对多个字段一起来搜索匹配。
+existsQuery { "exists": {  "field": "user" }} 如果字段是空字符串""或者包含null的数组[null,"foo"]，那么会被当作逻辑true。
 */
 

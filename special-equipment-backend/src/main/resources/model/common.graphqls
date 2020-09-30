@@ -37,6 +37,9 @@ input CaseExpression {
    w:ExpressItem,  b: WhereTree,   t:ExpressItem
 }
 
+input UnitCommonInput {name: String, address: String, linkMen: String, phone:String
+    }
+
 #复合众多参数Input types may be lists of another input type, or a non‐null variant of any other input type像JS对象样
 input ComplexInput { username: String, mobile: String, dev:DeviceCommonInput }
 

@@ -21,7 +21,10 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermsSetQueryBuilder;
+import org.elasticsearch.script.Script;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -42,6 +45,7 @@ import org.fjsei.yewu.index.sei.UnitEs;
 import org.fjsei.yewu.index.sei.UnitEsRepository;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
+import org.fjsei.yewu.input.UnitCommonInput;
 import org.fjsei.yewu.input.WhereTree;
 import org.fjsei.yewu.jpa.ModelFiltersImpl;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
@@ -54,13 +58,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.AbstractElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.completion.Completion;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Streamable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,7 +82,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
@@ -395,6 +400,29 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
     public Iterable<UnitEs> findUnitbyNameArr(String[] names) {
         Iterable<UnitEs> list=unitEsRepository.findAllByNameIn(names);
+        return list;
+    }
+    public Iterable<UnitEs> getUnitbyFilter(UnitCommonInput as) {
+      //  Script script=new Script("2" );
+        List<String> values=new LinkedList<>();
+        values.add("电话号码");
+        values.add("电话");
+        TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        matchPhraseQuery("linkMen",as.getLinkMen()).slop(7)
+                ).must(
+                        termsSetQueryBuilder.setMinimumShouldMatchField("address")
+                )
+        ).build();
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(UnitEs.class);
+         // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
+                //queryForList(searchQuery, UnitEs.class,indexCoordinates);
+        SearchHits<UnitEs> searchHits = esTemplate.search(searchQuery, UnitEs.class, indexCoordinates);
+        List<SearchHit<UnitEs>> hits=searchHits.getSearchHits();
+        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
+        Iterable<UnitEs> list= (List<UnitEs>) SearchHitSupport.unwrapSearchHits(hits);
+        String sql=searchQuery.getQuery().toString();
         return list;
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
