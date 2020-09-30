@@ -39,10 +39,7 @@ import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.Equipment;
 import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
-import org.fjsei.yewu.index.sei.EqpEs;
-import org.fjsei.yewu.index.sei.EqpEsRepository;
-import org.fjsei.yewu.index.sei.UnitEs;
-import org.fjsei.yewu.index.sei.UnitEsRepository;
+import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.UnitCommonInput;
@@ -422,6 +419,42 @@ public class BaseQuery implements GraphQLQueryResolver {
         List<SearchHit<UnitEs>> hits=searchHits.getSearchHits();
         //Iterable<UnitEs> list=esTemplate.search(searchQuery);
         Iterable<UnitEs> list= (List<UnitEs>) SearchHitSupport.unwrapSearchHits(hits);
+        String sql=searchQuery.getQuery().toString();
+        return list;
+    }
+    public Iterable<CompanyEs> getCompanyEsbyFilter(UnitCommonInput as) {
+        //List<String> values=new LinkedList<>();
+        //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        matchPhraseQuery("linkMen",as.getLinkMen()).slop(7)
+                )
+        ).build();
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(CompanyEs.class);
+        // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
+        //queryForList(searchQuery, UnitEs.class,indexCoordinates);
+        SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
+        List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
+        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
+        Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
+        String sql=searchQuery.getQuery().toString();
+        return list;
+    }
+    public Iterable<PersonEs> getPersonEsbyFilter(UnitCommonInput as) {
+        //List<String> values=new LinkedList<>();
+        //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        matchPhraseQuery("name",as.getLinkMen()).slop(0)
+                )
+        ).build();
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(PersonEs.class);
+        // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
+        //queryForList(searchQuery, UnitEs.class,indexCoordinates);
+        SearchHits<PersonEs> searchHits = esTemplate.search(searchQuery, PersonEs.class, indexCoordinates);
+        List<SearchHit<PersonEs>> hits=searchHits.getSearchHits();
+        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
+        Iterable<PersonEs> list= (List<PersonEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
         return list;
     }

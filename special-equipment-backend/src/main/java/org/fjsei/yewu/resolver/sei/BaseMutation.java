@@ -2,6 +2,10 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.cm.base.Company;
+import md.cm.base.CompanyRepository;
+import md.cm.base.Person;
+import md.cm.base.PersonRepository;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.AuthorityRepository;
@@ -17,12 +21,10 @@ import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
-import org.fjsei.yewu.index.sei.EqpEs;
-import org.fjsei.yewu.index.sei.EqpEsRepository;
-import org.fjsei.yewu.index.sei.UnitEs;
-import org.fjsei.yewu.index.sei.UnitEsRepository;
+import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import md.cm.geography.*;
+import org.fjsei.yewu.input.UnitCommonInput;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
@@ -110,6 +112,12 @@ public class BaseMutation implements GraphQLMutationResolver {
     private AdminunitRepository adminunitRepository;
     @Autowired
     private HrUserinfoRepository hrUserinfoRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired   private CompanyEsRepository companyEsRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired   private PersonEsRepository personEsRepository;
 
     @PersistenceContext(unitName = "entityManagerFactorySei")
     private EntityManager emSei;                //EntityManager相当于hibernate.Session：
@@ -307,6 +315,46 @@ public class BaseMutation implements GraphQLMutationResolver {
         unitEs.setLinkMen("何尔章");
         unitEs.setPhone("电话号码");
         unitEsRepository.save(unitEs);
+        return unit;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Unit newUnitCompany(UnitCommonInput upar, Long id) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Company company=new Company();
+        BeanUtils.copyProperties(upar,company);
+        Unit unit = new Unit();
+        unit.setCompany(company);
+        try {
+            companyRepository.saveAndFlush(company);
+            unitRepository.saveAndFlush(unit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+        CompanyEs unitEs=new CompanyEs();
+        BeanUtils.copyProperties(company,unitEs);
+        companyEsRepository.save(unitEs);
+        return unit;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Unit newUnitPerson(UnitCommonInput upar, Long id) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Person company=new Person();
+        BeanUtils.copyProperties(upar,company);
+        Unit unit = new Unit();
+        unit.setPerson(company);
+        try {
+            personRepository.saveAndFlush(company);
+            unitRepository.saveAndFlush(unit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+        PersonEs unitEs=new PersonEs();
+        BeanUtils.copyProperties(company,unitEs);
+        personEsRepository.save(unitEs);
         return unit;
     }
     //无需登录授权访问的特殊函数，graphQL不要返回太多内容如User;

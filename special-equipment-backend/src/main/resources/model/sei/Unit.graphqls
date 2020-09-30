@@ -14,6 +14,23 @@ type UnitEs{
     linkMen: String
     phone: String
 }
+type CompanyEs{
+    id:ID!
+    name: String!
+    no: String
+    address: String
+    linkMen: String
+    phone: String
+}
+type PersonEs{
+    id:ID!
+    name: String!
+    no: String
+    gender: String
+    address: String
+    phone: String
+    occupation: String
+}
 
 extend type Query {
     findAllUnits: [Unit]!
@@ -24,9 +41,13 @@ extend type Query {
     findUnitbyNameAnd2(name: String!, name2:String): [UnitEs]!
     findUnitbyNameArr(names: [String]): [UnitEs]!
     getUnitbyFilter(as: UnitCommonInput): [UnitEs]!
+    getCompanyEsbyFilter(as: UnitCommonInput): [CompanyEs]!
+    getPersonEsbyFilter(as: UnitCommonInput): [PersonEs]!
 }
 
 extend type Mutation {
     newUnit(name: String!, address: String) : Unit!
+    newUnitCompany(unit: UnitCommonInput!, id: ID) : Unit!
+    newUnitPerson(unit: UnitCommonInput!, id: ID) : Unit!
 }
 
