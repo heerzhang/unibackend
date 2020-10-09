@@ -317,6 +317,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         unitEsRepository.save(unitEs);
         return unit;
     }
+    //仅用于测试的；
     @Transactional(rollbackFor = Exception.class)
     public Unit newUnitCompany(UnitCommonInput upar, Long id) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
@@ -332,9 +333,9 @@ public class BaseMutation implements GraphQLMutationResolver {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
-        CompanyEs unitEs=new CompanyEs();
-        BeanUtils.copyProperties(company,unitEs);
-        companyEsRepository.save(unitEs);
+        CompanyEs companyEs=new CompanyEs();
+        BeanUtils.copyProperties(company,companyEs);
+        companyEsRepository.save(companyEs);
         return unit;
     }
     @Transactional(rollbackFor = Exception.class)
@@ -352,9 +353,9 @@ public class BaseMutation implements GraphQLMutationResolver {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
-        PersonEs unitEs=new PersonEs();
-        BeanUtils.copyProperties(company,unitEs);
-        personEsRepository.save(unitEs);
+        PersonEs personEs=new PersonEs();
+        BeanUtils.copyProperties(company,personEs);
+        personEsRepository.save(personEs);
         return unit;
     }
     //无需登录授权访问的特殊函数，graphQL不要返回太多内容如User;

@@ -7,7 +7,8 @@ import md.specialEqp.EQP;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.util.Set;
+//不采用接口/微服务/Rest方式，扯皮和费用授权问题多；反正这个大数据类别的事实上的实时一致性要求很低。
+//采用本地维护模式，只能自己拷贝数据/一部分我方用到的大数据，面临更新滞后和不一致问题？本地建库表no是外部大数据库关键ID标识，id是我方内部1:1对应ID。
 
 @Getter
 @Setter

@@ -70,7 +70,7 @@ public class EQP implements Equipment{
     private String sort;    //类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
 
-
+    //索引会被自动创建的。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit ownerUnt;

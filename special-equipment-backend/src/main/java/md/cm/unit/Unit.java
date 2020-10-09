@@ -9,6 +9,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Set;
+//设备中的单位， 即可以是公司，也可以是个人。company和person是大数据的影子实体类/只能读。Unit是本地附加的属性。
+//搜索引擎ES找到company或者person的id后，就能通过Unit的关联ID和数据库索引快速找到其它相关的字段属性，比如owns设备集合。
+
 
 @Getter
 @Setter
@@ -20,6 +23,7 @@ public class Unit {
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
     //该字段淘汰：避免多头维护数据，直接引用关联属性类company或person中的name字段,与Unit是1对1关系。
+    //不建议保留name字段。name搜索都绕道company或person,实在必要可以unit.company OR unit.person is。
     private String name;
     private String address;
     private String linkMen;
@@ -32,6 +36,9 @@ public class Unit {
     //懒加载的坏处，该字段代码不能直接使用，必须绕道，从反向关系依据id倒着查。
     @OneToMany(mappedBy = "maintUnt")
     private Set<EQP> maints;    //维保设备集合
+
+    //这里company,person两个，若采用接口/微服务/Rest方式，实际上本地无需DB库表实体类，只需要外部大数据库no以及类型标识。
+    //但我这里采用本地维护模式，Company和Person可以直接使用来关联,两个id，不需要类型标识。
 
     //1:1关联； Adminunit本id对应Town的ID； 本来应当这张表添加1:1关联id字段。
     //1 ：1关系，关系是本类来维护，添加外键指向对方实体表的主键；
@@ -62,6 +69,6 @@ public class Unit {
 应和大库思维，把unit 使用单位，继续拆分成了：person + company 优化存储语义；前端界面提前区分两种unit。
 company 法人单位,其他组织
 person 个人
-unit是业务代理者，company和person是通用的基础库。
+unit是业务代理者，company和person是通用的大数据基础库。
 company和person两个实体类的库表数据很可能来自外部同步过来的，数据维护负责是其他方面的人。
 */
