@@ -155,4 +155,29 @@ IK分词器安装　插件　https://blog.csdn.net/lgb190730/article/details/107
 
 单位列表查询3类接口：搜索，精确搜索，查找。搜索=ES中用match_phrase，精确搜索=ES中用wildcard，查找=数据库中Like查询。性能是高到底的。
 十九种Elasticsearch搜索方式,数据量很大用MySQL会造成慢查询=想改用Elasticsearch;  https://blog.csdn.net/valada/article/details/105607918
+graphql-java-tools 6.1版本开始不能用WhereTree来做前端查询，input类型递归不能搞了；弃用部分如下：
+    enum LJ_TYPE { AND, OR, NOT, DSELF }
+    enum OPERATOR { EQ,NE,GE,LE,GT,LT,BTW,IN,LK,
+            EMPTY,NULL,EXI,NEXI,TRUE,FALSE,NNULL,NEMPTY  }
+    input WhereLeaf { s:String, o:OPERATOR, l:ExpressItem, r:ExpressItem,
+        sv:String, sa:[String], dt:String, dv:Float, lv:Int,
+        dta:[String], da:[Float], la:[Int]
+        }
+    input WhereTree { lj:LJ_TYPE,  a:WhereLeaf, as:[WhereLeaf],
+        w:WhereTree, ws:[WhereTree], sup:WhereTree
+     }
+    input ExpressItem {
+        y:String, l:ExpressItem, r:ExpressItem, s:String,
+        sub:SubSelect, cwt:[CaseExpression], a:[ExpressItem],
+        sv:String, lv:Int, dv:Float, dt:String,
+        bv:Boolean, len:Int
+    }
+    input SubSelect {
+         s:String, e:ExpressItem,  from:String,
+         where: WhereTree,  grp:[ExpressItem], hav:WhereTree
+    }
+    input CaseExpression {
+       w:ExpressItem,  b: WhereTree,   t:ExpressItem
+    }
+    findAllEQPsFilter_delete(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
 

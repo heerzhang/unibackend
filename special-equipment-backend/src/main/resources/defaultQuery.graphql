@@ -60,7 +60,7 @@ query Counter_All
     )
 }
 
-
+ #升级弃用($where:WhereTree是递归循环不能做了。
 query Look_Relations($where:WhereTree已淘汰,$offset:Int!,$first:Int,$orderBy:String,$asc:Boolean)
 {
   isps:findAllISPfilter(where:$where,

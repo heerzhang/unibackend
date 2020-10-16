@@ -3,40 +3,13 @@ directive @authr(
     qx: [String] = ["USER"]
 ) on FIELD_DEFINITION
 
-enum LJ_TYPE { AND, OR, NOT, DSELF }
-enum OPERATOR { EQ,NE,GE,LE,GT,LT,BTW,IN,LK,
-        EMPTY,NULL,EXI,NEXI,TRUE,FALSE,NNULL,NEMPTY  }
-
 #不支持中文的名字,似乎不需要定义
 enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager }
-
 
 #输入复合对象必须POJO+Query的java代码有地方用到了才算
 input DeviceCommonInput {cod: String, address: String, oid: String, lat:String,
     ownerId:ID
     }
-
-"这里的类型自成体系和java不同的。"
-input WhereLeaf { s:String, o:OPERATOR, l:ExpressItem, r:ExpressItem,
-    sv:String, sa:[String], dt:String, dv:BigDecimal, lv:Int,
-    dta:[String], da:[BigDecimal], la:[Int]
-    }
-input WhereTree { lj:LJ_TYPE,  a:WhereLeaf, as:[WhereLeaf],
-    w:WhereTree, ws:[WhereTree], sup:WhereTree
- }
-input ExpressItem {
-    y:String, l:ExpressItem, r:ExpressItem, s:String,
-    sub:SubSelect, cwt:[CaseExpression], a:[ExpressItem],
-    sv:String, lv:Int, dv:BigDecimal, dt:String,
-    bv:Boolean, len:Int
-}
-input SubSelect {
-     s:String, e:ExpressItem,  from:String,
-     where: WhereTree,  grp:[ExpressItem], hav:WhereTree
-}
-input CaseExpression {
-   w:ExpressItem,  b: WhereTree,   t:ExpressItem
-}
 
 input UnitCommonInput {company:Boolean, name: String, no:String, address: String, linkMen: String, phone:String
     }

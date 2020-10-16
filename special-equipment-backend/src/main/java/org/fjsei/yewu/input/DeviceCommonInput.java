@@ -18,9 +18,9 @@ public class DeviceCommonInput {
     String  address;
     String  oid;
     String   lat;
+    Long    ownerId;
+    //String  ownerId;
 }
 
 
 //基本类型Built-in GraphQL::ScalarType有5种 String Int  ID  Boolean Float {精度小数点后5位}。
-
-
