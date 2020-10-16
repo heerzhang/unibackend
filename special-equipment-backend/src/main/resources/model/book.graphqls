@@ -9,7 +9,7 @@ type Book {
 #其他都是扩展的
 extend type Query {
     findAllBooks: [Book]!
-    countBooks: Long!
+    countBooks: Int!
 }
 
 extend type Mutation {

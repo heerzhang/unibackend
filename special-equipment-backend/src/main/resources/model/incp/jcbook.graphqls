@@ -8,7 +8,7 @@ type JcBook{
 
 extend type Query {
     findAllJcBooks: [JcBook]!
-    countJcBook(author: ID ):Long
+    countJcBook(author: ID ):Int
 }
 
 extend type Mutation {

@@ -12,7 +12,7 @@ type ISP{
 
 extend type Query {
     findAllISPs: [ISP]!
-    countISP(ispMen: ID ):Long
+    countISP(ispMen: ID ):Int
     getISP(id:ID!): ISP
     "type不可以做输入参数，报错Expected a GraphQLInputType,it wasn't! object type incorrectly used as input type"
     getReportOfISP(id:ID!): [SimpleReport]!

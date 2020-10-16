@@ -6,7 +6,7 @@ type Author {
 
 extend type Query {
     findAllAuthors: [Author]!
-    countAuthors: Long!
+    countAuthors: Int!
 }
 
 extend type Mutation {

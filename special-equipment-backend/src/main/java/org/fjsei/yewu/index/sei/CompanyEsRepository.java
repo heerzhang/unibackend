@@ -13,14 +13,14 @@ public interface CompanyEsRepository extends ElasticsearchRepository<CompanyEs, 
     //@Field(analyzer ="ik_smart", searchAnalyzer ="ik_smart") 完全不行!单个汉字匹配；
     //用FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart"只能单个词语匹配，多词语反而配不到=很奇怪!。
     //用FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word" 多词语反而配不到哪=很奇怪!。
-    Streamable<UnitEs> findAllByNameContains(String name);
+    Streamable<CompanyEs> findAllByNameContains(String name);
     //等价findAllByNameContains
     //FieldType.Keyword情况下和findAllByNameContains一样的，很正常的,像SQL like %A%。
-    Streamable<UnitEs> findAllByNameContaining(String name);
+    Streamable<CompanyEs> findAllByNameContaining(String name);
     //findByNameLike等价findByNameStartingWith; Contains/Containing等价"*?*"通配符查询;
     //@Field(analyzer ="ik_smart", searchAnalyzer ="ik_smart")表现正常了；
     @Query("{\"wildcard\": {\"name.keyword\": {\"value\": \"*?0*\"}}}")
-    Streamable<UnitEs> findAllByName_KeywordContains(String name);
+    Streamable<CompanyEs> findAllByName_KeywordContains(String name);
 
     //FieldType.Text字段+analyzer缺省　随意都能匹配到
     //主要问题时能匹配到的列表太多了！　"内外"匹配到。也不等价于%A%，而是name分词后截取词语匹配||OR合集，列表会暴多。
@@ -29,7 +29,7 @@ public interface CompanyEsRepository extends ElasticsearchRepository<CompanyEs, 
     //FieldType.Keyword 前缀方式匹配到，后缀不行，能全名字过滤。
     //FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word"　匹配到很多
     //等价于前缀查询　"?*"
-    Streamable<UnitEs> findAllByNameLike(String name);
+    Streamable<CompanyEs> findAllByNameLike(String name);
 
     //FieldType.Text能匹配很多，输入多个词语会变成合并||OR关系。
     //FieldType.Text字段+analyzer缺省，若用ik_smart存索引"内外部"会当作词而"内外"不能当成一个词。
@@ -39,10 +39,10 @@ public interface CompanyEsRepository extends ElasticsearchRepository<CompanyEs, 
     //FieldType.Keyword 前缀也不能匹配到，后缀不行，只能全名字过滤。
     //FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word"　匹配到很多
     //等价于match查询相关度查询，但不是matchPhraseQuery查询
-    Streamable<UnitEs> findAllByNameMatches(String name);
+    Streamable<CompanyEs> findAllByNameMatches(String name);
 
     //对FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word"可做到&&关系能缩小匹配队列。name可多词组成的；要分词的。
-    Streamable<UnitEs> findAllByNameMatchesAndNameMatches(String name, String name2);
+    Streamable<CompanyEs> findAllByNameMatchesAndNameMatches(String name, String name2);
 
     //FieldType.Text字段+analyzer缺省，只能对单个汉字匹配，多汉字不行。
     //+analyzer,只能对词语匹配，但是多个词语就不行，必须分开成[]数组，names[]是||OR其中一个能匹配,反而匹配更多了。
@@ -50,24 +50,24 @@ public interface CompanyEsRepository extends ElasticsearchRepository<CompanyEs, 
     //ik_max_word "内外"匹配到。　"生环"匹配不到
     //FieldType.Keyword 前缀也不能匹配到，后缀不行，只能全名字过滤。
     //若Keyword就等价terms
-    Streamable<UnitEs> findAllByNameIn(String[] names);
+    Streamable<CompanyEs> findAllByNameIn(String[] names);
     //没现成的，只能自己做：FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_max_word"时　效果挺不错的。
     //FieldType.Keyword字段就完全不能用！
     //@Field(analyzer ="ik_smart", searchAnalyzer ="ik_smart")很好；
     @Query("{\"match_phrase\": {\"name\": {\"query\": \"?0\"}}}")
-    Streamable<UnitEs> findAllByNameMatchePhrase(String name);
+    Streamable<CompanyEs> findAllByNameMatchePhrase(String name);
     @Query("{\"match_phrase\": {\"name\": {\"query\": \"?0\"}}}")
-    Streamable<UnitEs> findAllByNameMatchePhrase2(String name, String name2);
+    Streamable<CompanyEs> findAllByNameMatchePhrase2(String name, String name2);
 
     //@Query("{\"query_string\": {\"query\": \"?0 ?1\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}") 短语内部单词顺序可以打乱也能匹配：对"name": "纬亿惠州","name2": "锂能" 可匹配到；
     //@Query("{\"query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}") 对"name": "纬亿惠州","name2": "锂能" 匹配不到；
     //"股份有限公司"也必须一起输入，它被当成一个token单词了，'股份有限公司'若再做拆分做输入参数就无法匹配{ik_smart分词器条件下的}。输入当中标点符号等会被filter给舍弃掉。"有限公司"可以匹配'责任有限公司';
     //针对人名字段来做Text分词搜索的，有可能查不到人名。找不到情况下，应该转而使用keyword字段wildcard模糊查找。
     @Query("{\"query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}")
-    Streamable<UnitEs> findAllByNameQueryPhrase2(String name, String name2);
+    Streamable<CompanyEs> findAllByNameQueryPhrase2(String name, String name2);
     //实际等价于query_string上面这个DSL。这里俩个输入参数 ?0 ?1 都是短语phrase可多次单词组成，两个参数逻辑&&AND关系能缩小匹配结果列表。相当于match_phrase但是多个输入。
     @Query("{\"simple_query_string\": {\"query\": \"\\\"?0\\\" \\\"?1\\\"\",\"fields\":[\"name\"],\"default_operator\":\"and\"}}")
-    Streamable<UnitEs> findAllByNameSqueryPhrase2(String name, String name2);
+    Streamable<CompanyEs> findAllByNameSqueryPhrase2(String name, String name2);
 }
 
 

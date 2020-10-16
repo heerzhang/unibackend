@@ -11,34 +11,14 @@ import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
 import md.specialEqp.*;
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermsSetQueryBuilder;
-import org.elasticsearch.script.Script;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.suggest.Suggest;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.SuggestionBuilder;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.fjsei.yewu.entity.fjtj.*;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.Equipment;
-import org.fjsei.yewu.filter.Person;
 import org.fjsei.yewu.filter.SimpleReport;
+import org.fjsei.yewu.filter.UserBase;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.input.ComplexInput;
 import org.fjsei.yewu.input.DeviceCommonInput;
@@ -56,9 +36,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
-import org.springframework.data.elasticsearch.core.completion.Completion;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.jpa.domain.Specification;
@@ -74,14 +52,10 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.*;
-import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
@@ -106,6 +80,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     private EQPRepository eQPRepository;
     @Autowired
     private EqpEsRepository eqpEsRepository;
+    @Autowired   private CompanyEsRepository companyEsRepository;
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
@@ -118,8 +93,6 @@ public class BaseQuery implements GraphQLQueryResolver {
     private ReportRepository reportRepository;
     @Autowired
     private UnitRepository unitRepository;
-    @Autowired
-    private UnitEsRepository unitEsRepository;
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
@@ -272,9 +245,9 @@ public class BaseQuery implements GraphQLQueryResolver {
         return units;
     }
 
-    public Iterable<Person> findAllUsers() {
+    public Iterable<UserBase> findAllUsers() {
         List<User>  users=userRepository.findAll();
-        List<Person>  parents = new ArrayList<Person>();
+        List<UserBase>  parents = new ArrayList<UserBase>();
         parents.addAll(users);
         return  parents;  //这里返回的对象实际还是User派生类型的，只是graphQL将会把它当成接口类型Person使用。
     }
@@ -299,7 +272,7 @@ public class BaseQuery implements GraphQLQueryResolver {
       //  return userRepository.findAllByUsernameLike(input.getUsername());
         return null;
     } */
-   public Person userBasic(Long id) {
+   public UserBase userBasic(Long id) {
        return userRepository.findById(id).orElse(null);
    }
 
@@ -374,32 +347,32 @@ public class BaseQuery implements GraphQLQueryResolver {
     public EQP findEQPbyCod(String cod) {
         return eQPRepository.findByCod(cod);
     }
-    public Iterable<UnitEs> findUnitbyNameAnd(String name,String name2) {
+    public Iterable<CompanyEs> findUnitbyNameAnd(String name, String name2) {
         if(name2==null) name2="";
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameQueryPhrase2(name,name2);
+        Iterable<CompanyEs> list=companyEsRepository.findAllByNameQueryPhrase2(name,name2);
         return list;
     }
-    public Iterable<UnitEs> findUnitbyNameAnd2(String name,String name2) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameSqueryPhrase2(name,name2);
+    public Iterable<CompanyEs> findUnitbyNameAnd2(String name, String name2) {
+        Iterable<CompanyEs> list=companyEsRepository.findAllByNameSqueryPhrase2(name,name2);
         return list;
     }
-    public Iterable<UnitEs> findUnitbyName(String name) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameContains(name);
+    public Iterable<CompanyEs> findUnitbyName(String name) {
+        Iterable<CompanyEs> list=companyEsRepository.findAllByNameContains(name);
         return list;
     }
-    public Iterable<UnitEs> findUnitbyName1(String name) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByName_KeywordContains(name);
+    public Iterable<CompanyEs> findUnitbyName1(String name) {
+        Iterable<CompanyEs> list=companyEsRepository.findAllByName_KeywordContains(name);
         return list;
     }
-    public Iterable<UnitEs> findUnitbyName2(String name) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameMatchePhrase(name);
+    public Iterable<CompanyEs> findUnitbyName2(String name) {
+        Iterable<CompanyEs> list=companyEsRepository.findAllByNameMatchePhrase(name);
         return list;
     }
-    public Iterable<UnitEs> findUnitbyNameArr(String[] names) {
-        Iterable<UnitEs> list=unitEsRepository.findAllByNameIn(names);
+    public Iterable<CompanyEs> findUnitbyNameArr(String[] names) {
+        Iterable<CompanyEs> list=companyEsRepository.findAllByNameIn(names);
         return list;
     }
-    public Iterable<UnitEs> getUnitbyFilter(UnitCommonInput as) {
+    public Iterable<CompanyEs> getUnitbyFilter(UnitCommonInput as) {
       //  Script script=new Script("2" );
         List<String> values=new LinkedList<>();
         values.add("电话号码");
@@ -412,13 +385,13 @@ public class BaseQuery implements GraphQLQueryResolver {
                         termsSetQueryBuilder.setMinimumShouldMatchField("address")
                 )
         ).build();
-        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(UnitEs.class);
-         // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
-                //queryForList(searchQuery, UnitEs.class,indexCoordinates);
-        SearchHits<UnitEs> searchHits = esTemplate.search(searchQuery, UnitEs.class, indexCoordinates);
-        List<SearchHit<UnitEs>> hits=searchHits.getSearchHits();
-        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
-        Iterable<UnitEs> list= (List<UnitEs>) SearchHitSupport.unwrapSearchHits(hits);
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(CompanyEs.class);
+         // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
+                //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
+        SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
+        List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
+        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
+        Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
         return list;
     }
@@ -427,15 +400,15 @@ public class BaseQuery implements GraphQLQueryResolver {
         //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
-                        matchPhraseQuery("linkMen",as.getLinkMen()).slop(7)
+                        matchPhraseQuery("name",as.getName()).slop(5)
                 )
         ).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(CompanyEs.class);
-        // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
-        //queryForList(searchQuery, UnitEs.class,indexCoordinates);
+        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
+        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
         SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
         List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
-        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
+        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
         Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
         return list;
@@ -445,18 +418,24 @@ public class BaseQuery implements GraphQLQueryResolver {
         //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
-                        matchPhraseQuery("name",as.getLinkMen()).slop(0)
+                        matchPhraseQuery("name",as.getName()).slop(0)
                 )
         ).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(PersonEs.class);
-        // Stream<UnitEs> list= esTemplate.stream(searchQuery, UnitEs.class,indexCoordinates);
-        //queryForList(searchQuery, UnitEs.class,indexCoordinates);
+        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
+        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
         SearchHits<PersonEs> searchHits = esTemplate.search(searchQuery, PersonEs.class, indexCoordinates);
         List<SearchHit<PersonEs>> hits=searchHits.getSearchHits();
-        //Iterable<UnitEs> list=esTemplate.search(searchQuery);
+        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
         Iterable<PersonEs> list= (List<PersonEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
         return list;
+    }
+    public Iterable<?> getUnitEsFilter(UnitCommonInput as) {
+        if(as.isCompany())
+            return getCompanyEsbyFilter(as);
+        else
+            return getPersonEsbyFilter(as);
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
     public String auth() {
@@ -640,7 +619,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         //List<Elevator> list =elevatorRepository.findAll();
         return null;
     }
-    //升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
+    //2020-8-18升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
     //graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退出前端动态解释型领域，只剩下给不想写HQL代码的后端程序静态型用。
     public Iterable<EQP> findAllEQPsFilter_delete(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
@@ -736,6 +715,13 @@ public class BaseQuery implements GraphQLQueryResolver {
             elevators.add(item);
         });
         return elevators;
+    }
+    //通过ES搜到的Company或Person的id反过来映射unit_ID
+    public Unit getUnit(Long esid,boolean company) {
+        Unit unit;
+        if(company)  unit=unitRepository.findUnitByCompany_Id(esid);
+        else    unit=unitRepository.findUnitByPerson_Id(esid);
+        return unit;
     }
 
 }

@@ -17,7 +17,7 @@ type Adminunit{
 
 extend type Query {
     findAllPositions: [Address]!
-    countPositionEQP(id: ID ):Long
+    countPositionEQP(id: ID ):Int
 }
 
 extend type Mutation {

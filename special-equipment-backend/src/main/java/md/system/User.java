@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import md.specialEqp.inspect.ISP;
 import md.julienne.Following;
-import org.fjsei.yewu.filter.Person;
+import org.fjsei.yewu.filter.UserBase;
 import org.fjsei.yewu.security.JwtUser;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnTransformer;
@@ -33,7 +33,7 @@ import java.util.Set;
 @Table(name = "USERS",
         uniqueConstraints={@UniqueConstraint(columnNames={"username"})} )
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
-public class User implements Person {
+public class User implements UserBase {
     //注意id可能带来麻烦，数据库重整，可seq却从小开始，报唯一性约束错！select user_seq.nextval from dual;
     //若加@SequenceGenerator()旧表可修改initialValue到旧的表最大ID值，ID最多64位，就是19个数字的字符串，相当于说是无限大的。
     //不经过SequenceGenerator人工导入数据引起问题：后续@GeneratedValue若是遇见已经存在id就失败。尽量共用sequenceName，物理数据库设置sequence的next_val；

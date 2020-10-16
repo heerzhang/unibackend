@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface UnitRepository extends JpaRepository<Unit, Long>, JpaSpecificationExecutor<Unit> {
 
+    Unit findUnitByPerson_Id(Long id);
+    Unit findUnitByCompany_Id(Long id);
 
 }

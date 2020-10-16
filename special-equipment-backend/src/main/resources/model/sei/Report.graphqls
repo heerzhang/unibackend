@@ -29,7 +29,7 @@ interface SimpleReport {
 extend type Query {
     findAllReports: [Report]!
     findAllBaseReports: [SimpleReport]!
-    countReport(isp: ID ):Long
+    countReport(isp: ID ):Int
     getReport(id:ID!): Report
 }
 

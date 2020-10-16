@@ -3,8 +3,9 @@ package org.fjsei.yewu.index.sei;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.*;
-
 import javax.persistence.Id;
+
+//没必要在CompanyEs底下添加一个业务映射ID，也就是unit_ID字段，业务系统若是很多的话，xx_ID每个都独立。
 
 @Document(indexName = "company")
 @Data
@@ -103,7 +104,7 @@ searchQuery = new NativeSearchQueryBuilder().withQuery(
         )
 ).withPageable(pageable).build();
 List<Article> list= elasticsearchTemplate.queryForList(searchQuery, Article.class);  .withIndices("var_pmid")
-IndexCoordinates indexCoordinates=ElasticsearchRestTemplate.getIndexCoordinatesFor(UnitEs.class);
+IndexCoordinates indexCoordinates=ElasticsearchRestTemplate.getIndexCoordinatesFor(CompanyEs.class);
 BoolQueryBuilder nameMatch = QueryBuilders.boolQuery()
     QueryBuilders.prefixQuery(suggestField, Value)
 QueryBuilders.boolQuery().      builder.must(specMatch);

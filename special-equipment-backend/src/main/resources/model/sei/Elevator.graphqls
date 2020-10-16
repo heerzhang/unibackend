@@ -1,4 +1,4 @@
-type Elevator implements Equipment,IfElevator{
+type Elevator implements Equipment & IfElevator{
     id:ID!
      cod: String!
      oid: String

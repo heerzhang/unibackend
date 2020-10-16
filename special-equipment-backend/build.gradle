@@ -49,7 +49,7 @@ dependencies {
     //健康检查、审计、统计和监控: 暴露HTTP或者JMX来监控和管理应用/health /metrics /loggers　。
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
+    compile group: 'com.graphql-java-kickstart', name: 'graphql-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     //graphiql工具,竞争对手altair和{playground离不开tomcat-embed-core包}。改成Chrome开发工具apollo-client-devtools
     //implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
     
@@ -72,7 +72,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
 
-    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.73'
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.74'
     
     //分布式缓存服务器　　提供者provider部分(IMDG内存数据网格库)
     implementation "org.springframework.boot:spring-boot-starter-cache"
@@ -80,7 +80,7 @@ dependencies {
     //不能用infinispan-spring-boot-starter-remote只能用*-embedded   版控迁移infinispan自己控'12.0.0.Dev02'
     implementation "org.infinispan:infinispan-spring-boot-starter-embedded:2.3.3.Final"
     //这里-v53针对Hibernate适配的版本；　LIB_INFINISPAN_VER是infinispan自己版本；
-    implementation "org.infinispan:infinispan-hibernate-cache-v53:$LIB_INFINISPAN_VER"
+    compile group: 'org.infinispan', name: 'infinispan-hibernate-cache-v53', version: "$LIB_INFINISPAN_VER"
     //ES索引搜索引擎
     implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch"
     //在2.3.2.RELEASE版本缺了添加

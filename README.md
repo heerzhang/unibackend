@@ -42,3 +42,5 @@ ES join性能差，nested query；has_child and has_parent within a single index
 Elasticsearch最精彩部分是Text类型字段，全文搜索Full text query{用到分词器，match查询不是严格精确字符串匹配的}。
 MySQL普通索引时间复杂度都是O(log n),用索引快千倍；聚合索引必须使用AND条件，同时要符合最左原则。
 java ID最大922亿*亿;
+MySQL单表最大记录数不能超过多少？当单表数据库到达某个量级的上限时，导致内存无法存储其索引，使得之后的 SQL 查询会产生磁盘 IO，从而导致性能下降;暂以500万行作为一个标准。
+

@@ -101,8 +101,6 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private UnitRepository unitRepository;
     @Autowired
-    private UnitEsRepository unitEsRepository;
-    @Autowired
     private AddressRepository addressRepository;
     @Autowired
     private AuthorityRepository authorityRepository;
@@ -310,11 +308,11 @@ public class BaseMutation implements GraphQLMutationResolver {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;
         }
-        UnitEs unitEs=new UnitEs();
-        BeanUtils.copyProperties(unit,unitEs);
-        unitEs.setLinkMen("何尔章");
-        unitEs.setPhone("电话号码");
-        unitEsRepository.save(unitEs);
+        CompanyEs companyEs =new CompanyEs();
+        BeanUtils.copyProperties(unit, companyEs);
+        companyEs.setLinkMen("何尔章");
+        companyEs.setPhone("电话号码");
+        companyEsRepository.save(companyEs);
         return unit;
     }
     //仅用于测试的；
@@ -357,6 +355,14 @@ public class BaseMutation implements GraphQLMutationResolver {
         BeanUtils.copyProperties(company,personEs);
         personEsRepository.save(personEs);
         return unit;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Unit newUnitExternalSource(UnitCommonInput upar) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        if(upar.isCompany())
+            return   newUnitCompany(upar,0L);
+        else
+            return   newUnitPerson(upar,0L);
     }
     //无需登录授权访问的特殊函数，graphQL不要返回太多内容如User;
     @Transactional

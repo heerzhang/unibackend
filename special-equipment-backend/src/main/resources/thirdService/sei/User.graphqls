@@ -1,4 +1,4 @@
-type User implements Person {
+type User implements UserBase {
     id:ID!
     username: String!
     "字段像函数,一般用作内嵌对象约束参数：top,first,ID?"
@@ -11,7 +11,7 @@ type User implements Person {
     photoURL: String
 }
 
-interface Person {
+interface UserBase {
     id:ID!
     username: String!
     mobile: String
@@ -27,12 +27,12 @@ type Auth {
 
 
 extend type Query {
-    findAllUsers: [Person]!
+    findAllUsers: [UserBase]!
     #获取当前用户的授权角色
     auth: String!
     checkAuth: User
     findUserLike(username: String): [User]!
-    userBasic(id: ID!): Person
+    userBasic(id: ID!): UserBase
 }
 
 extend type Mutation {
