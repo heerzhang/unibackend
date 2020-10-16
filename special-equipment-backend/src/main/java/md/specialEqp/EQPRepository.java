@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.QueryHint;
@@ -19,7 +20,7 @@ import java.util.Optional;
 //对graphQL客户接口的Query操作可使用HINT_CACHEABLE；但是Mutation以及其他的要求严格一致性实时性情况，不能使用这样的函数，要新建独立函数搞。
 
 
-public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificationExecutor<EQP> {
+public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificationExecutor<EQP>, QuerydslPredicateExecutor<EQP> {
 
         //函数名字改了，那么后面参数Specification<EQP> spec就不起作用，这样Specification将没用！
         //@Query("select t from EQP t")

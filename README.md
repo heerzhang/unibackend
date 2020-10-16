@@ -43,4 +43,7 @@ Elasticsearch最精彩部分是Text类型字段，全文搜索Full text query{�
 MySQL普通索引时间复杂度都是O(log n),用索引快千倍；聚合索引必须使用AND条件，同时要符合最左原则。
 java ID最大922亿*亿;
 MySQL单表最大记录数不能超过多少？当单表数据库到达某个量级的上限时，导致内存无法存储其索引，使得之后的 SQL 查询会产生磁盘 IO，从而导致性能下降;暂以500万行作为一个标准。
+QueryDSL-JPA：当遇到复杂、投影、动态查询时我们可以考虑使用QueryDSL。它与SpringDataJPA同层级别，用它的API类库可写出“Java代码的sql”
+一种是使用JPAQueryFactory的原生API，另一种是基于QueryDslPredicateExecutor<T> 这种易用，前一种更灵活;   https://www.jianshu.com/p/69dcb1b85bbb
 
+https://github.com/Gavinkim/springboot-gradle-jpa-querydsl/blob/master/build.gradle
