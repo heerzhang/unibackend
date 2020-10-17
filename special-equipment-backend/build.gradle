@@ -25,9 +25,13 @@ ext['kotlin.version'] = '1.4.10'
 
 
 configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }    
     //编译排除掉 tomcat
     compile.exclude module: 'spring-boot-starter-tomcat'
 }
+
 
 dependencyManagement {
     imports {
@@ -96,26 +100,24 @@ dependencies {
     
     //旧版本testCompile group: 'junit', name: 'junit', version: '4.13'
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //testCompile('org.springframework.boot:spring-boot-starter-test')
 
 }
 
-def querydslSrcDir = 'src/main/generated'
 
+def querydslSrcDir = 'src/main/generated'
 querydsl {
     library = "com.querydsl:querydsl-apt"
     jpa = true
     querydslSourcesDir = querydslSrcDir
 }
-
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
-
 configurations {
     querydsl.extendsFrom compileClasspath
 }
-
 sourceSets {
     main {
         java {
@@ -123,6 +125,8 @@ sourceSets {
         }
     }
 }
+
+
 
 /* 
 这样写竟然导致启动报错 websocket 找不到 web容器，tomcat却启动中，undertow注入异常。
@@ -133,4 +137,3 @@ sourceSets {
 资料：Spring的全家桶　https://spring.io/projects/spring-boot
 而JPA关键用到ORM Hibernate Core；数据库方言https://blog.csdn.net/erlian1992/article/details/74331774　    
 */
-
