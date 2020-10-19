@@ -295,7 +295,9 @@ public class BaseMutation implements GraphQLMutationResolver {
         taskRepository.save(task);
         return task;
     }
-
+    /*Todo: 当ES保存异常时，重试会影响业务的响应即时性。若ES异常，在RMDB数据库插入一条补救任务，
+        有Worker任务会实时地扫这些数据，以RMDB为基准更新ES,通过此补偿机制，来保证ES与RMDB的最终一致性。
+    */
     @PreAuthorize("hasRole('Ma')")
     @Transactional(rollbackFor = Exception.class)
     public Unit newUnit(String name, String address) {

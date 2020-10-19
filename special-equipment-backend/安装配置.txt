@@ -128,3 +128,4 @@ ElasticSearch使用completion实现补全功能，局限性。 https://blog.csdn
 ElasticSearch使用手册宝典： https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
 版本升级到LIB_GRAPHQL_SPRING_BOOT_VER = 7.1.0后，不能用WhereTree来做前端查询了！input类型递归无法再使用！循环；导致ModelFilters这层类失去用途。
 8版本graphQL支持interface A implements B; extend interface A implements B; 标准文档https://github.com/graphql/graphql-spec
+Elasticsearch 默认堆内存是1GB;  配置https://www.elastic.co/guide/cn/elasticsearch/guide/current/heap-sizing.html

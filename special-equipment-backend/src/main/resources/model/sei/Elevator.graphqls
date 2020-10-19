@@ -16,7 +16,7 @@ interface IfElevator{
 
 extend type Query {
 
-    findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
+    findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
 extend type Mutation {

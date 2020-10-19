@@ -1,6 +1,7 @@
 package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
+import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.Authority;
@@ -432,6 +433,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         return list;
     }
     public Iterable<?> getUnitEsFilter(UnitCommonInput as) {
+       if (as==null) return null;
         if(as.isCompany())
             return getCompanyEsbyFilter(as);
         else
@@ -620,7 +622,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         return null;
     }
     //2020-8-18升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
-    //graphQL input递归无法再使用！导致ModelFilters这层类sql看来要退出前端动态解释型领域，只剩下给不想写HQL代码的后端程序静态型用。
+    //BUG导致graphQL input递归无法再使用！ModelFilters这层类sql接口预备给高权限场景使用WhereTree，普通接口走参数定做模式/多写代码。
     public Iterable<EQP> findAllEQPsFilter_delete(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
@@ -684,10 +686,10 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
-    public Iterable<EQP> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+    //普通接口为了安全只好写死代码介入过滤，不能依靠前端的输入参数WhereTree来过滤，前端可被用户随意修改的。
+    public Iterable<Equipment> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
-        //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
         if(first<=0)   first=20;
         Pageable pageable;
         if (StringUtils.isEmpty(orderBy))
@@ -695,12 +697,17 @@ public class BaseQuery implements GraphQLQueryResolver {
         else
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
-        Page<EQP> list = eQPRepository.findAll(pageable);
-        return list;
-    }
-    public Iterable<Equipment> findAllEQPsFilter2(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+        QEQP qm = QEQP.eQP;
+        BooleanBuilder builder = new BooleanBuilder();
+        if (!StringUtils.isEmpty(where.getCod()))
+            builder.and(qm.cod.contains(where.getCod()));
+        if (where.getOwnerId()!=null)
+            builder.and(qm.ownerUnt.id.eq(where.getOwnerId()));
+        if (!StringUtils.isEmpty(where.getFactoryNo()))
+            builder.and(qm.factoryNo.contains(where.getFactoryNo()));
+
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Iterable<EQP> eqps= findAllEQPsFilter( where,  offset,  first, orderBy,  asc);
+        Iterable<EQP> eqps = eQPRepository.findAll(builder,pageable);
         eqps.forEach(item -> {
            // if(item instanceof Equipment)
                 elevators.add(item);
@@ -738,5 +745,3 @@ Spring动态替换Bean 接口=BeanPostProcessor； https://www.jianshu.com/p/853
 若toPredicate内部应用：Subquery无法一次性选择多个字段出来做表达式比较条件!!，附加新建一个CriteriaQuery却又无法连接原始query报错无法serialize;
 JPA关联嵌套子查询correlate subquery；而From()是不支持子查询的。 非关联子查询指子查询可以脱离主查询独立执行；关联子查询限制是子查询不能返回多于1行的数据.
 */
-
-

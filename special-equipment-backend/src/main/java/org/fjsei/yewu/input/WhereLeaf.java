@@ -67,8 +67,10 @@ public class WhereLeaf {
     //val和arr字段二选择其一{必须至少有一个非空的值}，首选val;
     String     sv;  //5种基本类型，取值， %abc?d  ;通配符; 日期，数字型的; bool操作省略。
     Date       dt;
+    //graphQL接口层面已经改成Float
     Double      dv;
     //Boolean    bv；　布尔 就省了
+    //graphQL接口层面已经改成Int
     Long        lv;
     //这个层次也配套5种基本数据类型的位置，也可帮助简化对象表达嵌套层次。
     //如IN(1,2,3,..4)， in中的长度不能大于1000;

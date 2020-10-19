@@ -1,0 +1,24 @@
+#高权限接口才能用的
+enum LJ_TYPE { AND, OR, NOT, DSELF }
+enum OPERATOR { EQ,NE,GE,LE,GT,LT,BTW,IN,LK,
+        EMPTY,NULL,EXI,NEXI,TRUE,FALSE,NNULL,NEMPTY  }
+input WhereLeaf { s:String, o:OPERATOR, l:ExpressItem, r:ExpressItem,
+    sv:String, sa:[String], dt:String, dv:Float, lv:Int,
+    dta:[String], da:[Float], la:[Int]
+    }
+input WhereTree { lj:LJ_TYPE,  a:WhereLeaf, as:[WhereLeaf],
+    w:WhereTree, ws:[WhereTree], sup:WhereTree
+ }
+input ExpressItem {
+    y:String, l:ExpressItem, r:ExpressItem, s:String,
+    sub:SubSelect, cwt:[CaseExpression], a:[ExpressItem],
+    sv:String, lv:Int, dv:Float, dt:String,
+    bv:Boolean, len:Int
+}
+input SubSelect {
+     s:String, e:ExpressItem,  from:String,
+     where: WhereTree,  grp:[ExpressItem], hav:WhereTree
+}
+input CaseExpression {
+   w:ExpressItem,  b: WhereTree,   t:ExpressItem
+}
