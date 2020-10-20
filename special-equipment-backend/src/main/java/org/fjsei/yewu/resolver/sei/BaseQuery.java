@@ -686,16 +686,17 @@ public class BaseQuery implements GraphQLQueryResolver {
         Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
+
     //普通接口为了安全只好写死代码介入过滤，不能依靠前端的输入参数WhereTree来过滤，前端可被用户随意修改的。
-    public Iterable<Equipment> findAllEQPsFilter(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Equipment> findAllEQPsFilter(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
-        if(first<=0)   first=20;
+        if(limit<=0)   limit=20;
         Pageable pageable;
         if (StringUtils.isEmpty(orderBy))
-            pageable = PageOffsetFirst.of(offset, first);
+            pageable = PageOffsetFirst.of(offset, limit);
         else
-            pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+            pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
         QEQP qm = QEQP.eQP;
         BooleanBuilder builder = new BooleanBuilder();
