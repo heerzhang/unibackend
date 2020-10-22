@@ -158,3 +158,4 @@ IK分词器安装　插件　https://blog.csdn.net/lgb190730/article/details/107
 graphql-java-tools 6.1版本开始不能用WhereTree来做前端查询？bug?，input类型递归不能搞了；暂弃部分(高权限接口才能用的功能)如下：
     findAllEQPsFilter_delete(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
 ModelFilters这层类sql接口预备给高权限场景使用WhereTree(参数可能不受控制)，普通接口走参数定做模式/多写代码。
+union UnitEs= CompanyEs | PersonEs 报错，PersonEs必须在graphQL模型中被用到。

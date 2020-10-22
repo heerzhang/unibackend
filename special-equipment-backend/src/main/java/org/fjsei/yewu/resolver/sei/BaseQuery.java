@@ -37,6 +37,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -82,6 +83,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     @Autowired
     private EqpEsRepository eqpEsRepository;
     @Autowired   private CompanyEsRepository companyEsRepository;
+    @Autowired private PersonEsRepository personEsRepository;
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
@@ -365,8 +367,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         Iterable<CompanyEs> list=companyEsRepository.findAllByName_KeywordContains(name);
         return list;
     }
-    public Iterable<CompanyEs> findUnitbyName2(String name) {
-        Iterable<CompanyEs> list=companyEsRepository.findAllByNameMatchePhrase(name);
+    public Iterable<PersonEs> findUnitbyName2(String name) {
+        Iterable<PersonEs> list=personEsRepository.findAllByNameMatchePhrase(name);
         return list;
     }
     public Iterable<CompanyEs> findUnitbyNameArr(String[] names) {
@@ -396,48 +398,55 @@ public class BaseQuery implements GraphQLQueryResolver {
         String sql=searchQuery.getQuery().toString();
         return list;
     }
-    public Iterable<CompanyEs> getCompanyEsbyFilter(UnitCommonInput as) {
+    public Iterable<CompanyEs> getCompanyEsbyFilter(UnitCommonInput as,Pageable pageable) {
         //List<String> values=new LinkedList<>();
         //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
                         matchPhraseQuery("name",as.getName()).slop(5)
                 )
-        ).build();
+        ).withPageable(pageable).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(CompanyEs.class);
         // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
         //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
         SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
-        List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
-        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
+        AggregatedPage<SearchHit<CompanyEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
+        return (Page<CompanyEs>) SearchHitSupport.unwrapSearchHits(page);
+        /*List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
         Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
-        return list;
+        return list;*/
     }
-    public Iterable<PersonEs> getPersonEsbyFilter(UnitCommonInput as) {
-        //List<String> values=new LinkedList<>();
-        //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
+    public Iterable<PersonEs> getPersonEsbyFilter(UnitCommonInput as,Pageable pageable) {
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
                         matchPhraseQuery("name",as.getName()).slop(0)
                 )
-        ).build();
+        ).withPageable(pageable).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(PersonEs.class);
-        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
-        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
+
         SearchHits<PersonEs> searchHits = esTemplate.search(searchQuery, PersonEs.class, indexCoordinates);
-        List<SearchHit<PersonEs>> hits=searchHits.getSearchHits();
-        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
+        AggregatedPage<SearchHit<PersonEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
+        return (Page<PersonEs>) SearchHitSupport.unwrapSearchHits(page);
+        /*List<SearchHit<PersonEs>> hits=searchHits.getSearchHits();
         Iterable<PersonEs> list= (List<PersonEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
-        return list;
+        return list;*/
     }
-    public Iterable<?> getUnitEsFilter(UnitCommonInput as) {
+    public Iterable<?> getUnitEsFilter(UnitCommonInput as, int offset, int limit, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        if(limit<=0)   limit=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, limit);
+        else
+            pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
        if (as==null) return null;
         if(as.isCompany())
-            return getCompanyEsbyFilter(as);
+            return getCompanyEsbyFilter(as,pageable);
         else
-            return getPersonEsbyFilter(as);
+            return getPersonEsbyFilter(as,pageable);
     }
     //支持未登录就能查询角色{}，免去控制introsepction逻辑麻烦，把函数的输出自定义改装成普通的JSON字符串/好像REST那样的接口。
     public String auth() {

@@ -50,14 +50,14 @@ extend type Query {
     findAllUnits: [Unit]!
     findUnitbyName(name: String!): [CompanyEs]!
     findUnitbyName1(name: String!): [CompanyEs]!
-    findUnitbyName2(name: String!): [CompanyEs]!
+    findUnitbyName2(name: String!): [PersonEs]!
     findUnitbyNameAnd(name: String!, name2:String): [CompanyEs]!
     findUnitbyNameAnd2(name: String!, name2:String): [CompanyEs]!
     findUnitbyNameArr(names: [String]): [CompanyEs]!
     getUnitbyFilter(as: UnitCommonInput): [CompanyEs]!
-    getCompanyEsbyFilter(as: UnitCommonInput): [CompanyEs]!
-    getPersonEsbyFilter(as: UnitCommonInput): [PersonEs]!
-    getUnitEsFilter(as: UnitCommonInput): [UnitEs]!
+    #getCompanyEsbyFilter(as: UnitCommonInput): [CompanyEs]!
+    #getPersonEsbyFilter(as: UnitCommonInput): [PersonEs]!
+    getUnitEsFilter(as: UnitCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [UnitEs]!
     getUnit(esid: ID,company:Boolean): Unit
 }
 
