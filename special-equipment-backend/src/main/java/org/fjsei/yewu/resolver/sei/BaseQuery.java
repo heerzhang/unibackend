@@ -58,6 +58,7 @@ import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.springframework.data.elasticsearch.core.SearchHitSupport.searchPageFor;
 
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
@@ -410,8 +411,12 @@ public class BaseQuery implements GraphQLQueryResolver {
         // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
         //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
         SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
-        AggregatedPage<SearchHit<CompanyEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
-        return (Page<CompanyEs>) SearchHitSupport.unwrapSearchHits(page);
+        //AggregatedPage<SearchHit<CompanyEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
+        SearchPage<CompanyEs> page= SearchHitSupport.searchPageFor(searchHits, searchQuery.getPageable());
+        SearchHits<CompanyEs> hits=page.getSearchHits();
+        Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
+        return list;
+       // return SearchHitSupport.unwrapSearchHits(page);
         /*List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
         Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
@@ -424,14 +429,11 @@ public class BaseQuery implements GraphQLQueryResolver {
                 )
         ).withPageable(pageable).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(PersonEs.class);
-
         SearchHits<PersonEs> searchHits = esTemplate.search(searchQuery, PersonEs.class, indexCoordinates);
-        AggregatedPage<SearchHit<PersonEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
-        return (Page<PersonEs>) SearchHitSupport.unwrapSearchHits(page);
-        /*List<SearchHit<PersonEs>> hits=searchHits.getSearchHits();
+        SearchPage<PersonEs> page= SearchHitSupport.searchPageFor(searchHits, searchQuery.getPageable());
+        SearchHits<PersonEs> hits=page.getSearchHits();
         Iterable<PersonEs> list= (List<PersonEs>) SearchHitSupport.unwrapSearchHits(hits);
-        String sql=searchQuery.getQuery().toString();
-        return list;*/
+        return list;
     }
     public Iterable<?> getUnitEsFilter(UnitCommonInput as, int offset, int limit, String orderBy, boolean asc) {
         User user= checkAuth();
