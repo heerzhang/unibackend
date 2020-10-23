@@ -30,6 +30,7 @@ import java.util.Map;
 //我的主库,  basePackages子目录可以
 //多个数据源数据库，@EnableJpaRepositories不是单个StartApplication上面直接注解，需要独立多个注解。
 //依靠PojoXxxRepository所在的目录来区分到底是JPA还Elasticsearch或MongoDb存储库，且和POJO类所在目录没关系。
+//配置repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class用于替换标准的org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean
 
 @Configuration
 @EnableTransactionManagement

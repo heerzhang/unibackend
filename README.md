@@ -46,3 +46,9 @@ MySQL单表最大记录数不能超过多少？当单表数据库到达某个量
 QueryDSL-JPA：当遇到复杂、投影、动态查询时我们可以考虑使用QueryDSL。它与SpringDataJPA同层级别，用它的API类库可写出“Java代码的sql”
 一种使用JPAQueryFactory的原生API/BooleanBuilder;另一种基于QueryDslPredicateExecutor<T> 这种易用，前一种更灵活;   https://www.jianshu.com/p/69dcb1b85bbb
 querydsl编译问题：gradle面板/本工程/Tasks/build/底下clean+build，重新生成临时类src/main/generated/。
+Flux实际包括类似接口方法中offset/limit参数的对应内涵，上一层?mvc/webpage;类比.concurrent.Executors或graphQL内置异步。
+微信小程序 https://github.com/vector4wang/spring-boot-quick
+Quakus和Vert.x都是对比SpringBoot的框架。
+ElasticSearch分页3方式：1）from/size浅翻页最多10000条; 2）scroll形成快照限制用于后台任务； 3）search after不是快照+无法跳页+可深翻页id往后滚动；
+就算Flux也需分页动作，ElasticSearch能对Filter过滤器部分自动缓存，不用withPageable改成searchSourceBuilder.from()也不能避免返回总条数。
+

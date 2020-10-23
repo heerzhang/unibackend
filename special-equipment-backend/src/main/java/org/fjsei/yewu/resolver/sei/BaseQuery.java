@@ -12,7 +12,12 @@ import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
 import md.specialEqp.*;
-import org.elasticsearch.index.query.TermsSetQueryBuilder;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fjsei.yewu.entity.fjtj.*;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
@@ -399,28 +404,39 @@ public class BaseQuery implements GraphQLQueryResolver {
         String sql=searchQuery.getQuery().toString();
         return list;
     }
+    //就算异步的，也是需要分页参数，不同请求包context变动了?重新查询/数据源主动缓存加速。ES能对Filter过滤器部分自动缓存。
     public Iterable<CompanyEs> getCompanyEsbyFilter(UnitCommonInput as,Pageable pageable) {
-        //List<String> values=new LinkedList<>();
-        //TermsSetQueryBuilder termsSetQueryBuilder=new TermsSetQueryBuilder("phone",values);
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
                         matchPhraseQuery("name",as.getName()).slop(5)
                 )
         ).withPageable(pageable).build();
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(CompanyEs.class);
-        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
-        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
         SearchHits<CompanyEs> searchHits = esTemplate.search(searchQuery, CompanyEs.class, indexCoordinates);
-        //AggregatedPage<SearchHit<CompanyEs>> page = SearchHitSupport.page(searchHits, searchQuery.getPageable());
         SearchPage<CompanyEs> page= SearchHitSupport.searchPageFor(searchHits, searchQuery.getPageable());
         SearchHits<CompanyEs> hits=page.getSearchHits();
         Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
         return list;
-       // return SearchHitSupport.unwrapSearchHits(page);
-        /*List<SearchHit<CompanyEs>> hits=searchHits.getSearchHits();
-        Iterable<CompanyEs> list= (List<CompanyEs>) SearchHitSupport.unwrapSearchHits(hits);
-        String sql=searchQuery.getQuery().toString();
-        return list;*/
+    }
+    public Iterable<CompanyEs> getCompanyEsbyFilter_旧版本(UnitCommonInput as,Pageable pageable) {
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        MatchPhraseQueryBuilder matchPhraseQueryBuilder = QueryBuilders.
+                matchPhraseQuery("name",as.getName()).slop(5);
+        RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("date").from("2016-01-01 00:00:00");
+        BoolQueryBuilder childBoolQueryBuilder = new BoolQueryBuilder().must(matchPhraseQueryBuilder);
+        boolQueryBuilder.must(childBoolQueryBuilder).must(rangeQueryBuilder);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(childBoolQueryBuilder);
+        searchSourceBuilder.from((int)pageable.getOffset());
+        searchSourceBuilder.size(pageable.getPageSize());
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices("company");
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = esTemplate.execute(
+                client -> client.search(searchRequest, RequestOptions.DEFAULT)
+        );
+        int size=searchResponse.getHits().getHits().length;
+        return null;   //这种方式其实也会主动返回总数的！　"hits":{"total":{"value":13,]
     }
     public Iterable<PersonEs> getPersonEsbyFilter(UnitCommonInput as,Pageable pageable) {
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
