@@ -758,6 +758,12 @@ public class BaseQuery implements GraphQLQueryResolver {
         else    unit=unitRepository.findUnitByPerson_Id(esid);
         return unit;
     }
+    //graphQL接口名字是不允许重载的
+    public Unit unit(Long id) {
+       if(null==id) return null;
+        Unit unit=unitRepository.findById(id).orElse(null);
+        return unit;
+    }
 
 }
 

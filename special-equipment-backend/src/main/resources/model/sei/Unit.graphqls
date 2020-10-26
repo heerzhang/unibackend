@@ -1,6 +1,6 @@
 type Unit{
     id:ID!
-    name: String!
+    name: String
     address: String
     linkMen: String
     phone: String
@@ -59,6 +59,7 @@ extend type Query {
     #getPersonEsbyFilter(as: UnitCommonInput): [PersonEs]!
     getUnitEsFilter(as: UnitCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [UnitEs]!
     getUnit(esid: ID,company:Boolean): Unit
+    unit(id: ID): Unit
 }
 
 extend type Mutation {
