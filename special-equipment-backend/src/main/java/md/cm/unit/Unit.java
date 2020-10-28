@@ -1,7 +1,6 @@
 package md.cm.unit;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import md.cm.base.Company;
 import md.cm.base.Person;
 import md.specialEqp.EQP;
@@ -13,9 +12,10 @@ import java.util.Set;
 //搜索引擎ES找到company或者person的id后，就能通过Unit的关联ID和数据库索引快速找到其它相关的字段属性，比如owns设备集合。
 
 
-@Getter
-@Setter
+@AllArgsConstructor
+@Data
 @Entity
+@Builder
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region ="Slow")
 public class Unit {
     @Id
@@ -24,9 +24,12 @@ public class Unit {
     protected Long id;
     //该字段淘汰：避免多头维护数据，直接引用关联属性类company或person中的name字段,与Unit是1对1关系。
     //不建议保留name字段。name搜索都绕道company或person,实在必要可以unit.company OR unit.person is。
-    private String name;
-    private String address;
-    private String linkMen;
+    private String name;    //UNT_NAME
+    private Long oldId;      //UNT_ID
+    private Long jcId;  //JC_UNT_ID
+    private String address; //UNT_ADDR
+    private String linkMen; //UNT_LKMEN
+    private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
     private String phone;
     //加载方式修改影响很大。根据业务场景挑选。懒加载了若想关联内省查询会运行错误。
     @OneToMany(mappedBy = "ownerUnt")

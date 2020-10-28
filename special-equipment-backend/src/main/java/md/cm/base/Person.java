@@ -1,8 +1,8 @@
 package md.cm.base;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import md.specialEqp.EQP;
+import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -14,6 +14,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region ="Slow")
 public class Person {
     @Id
@@ -21,13 +24,19 @@ public class Person {
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
 
-    private String name;
-    private String no;  //身份证号码
+    private String name;    //UNT_NAME
+    private String no;  //身份证号码 UNT_ORG_COD
     private String address;     //住址，身份证地址
     private String phone;       //个人手机号
-    private String gender;        //性别
+    private String gender;        //性别 男 女 中
     private String occupation;        //职业
 
+    public void copyAs(UntMge untMge){
+        //依照老旧平台来比较修改。
+        if(no==null || !no.equals(untMge.getUNT_ORG_COD()) )               no=untMge.getUNT_ORG_COD();
+        if(phone==null || !phone.equals(untMge.getUNT_MOBILE()) )       phone=untMge.getUNT_MOBILE();
+        if(address==null || !address.equals(untMge.getUNT_ADDR()) )     address=untMge.getUNT_ADDR();
+    };
 }
 
 

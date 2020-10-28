@@ -67,5 +67,6 @@ extend type Mutation {
     newUnitCompany(unit: UnitCommonInput!, id: ID) : Unit!
     newUnitPerson(unit: UnitCommonInput!, id: ID) : Unit!
     newUnitExternalSource(unit: UnitCommonInput!) : Unit!
+    syncUnitFromOld(offset:Int, limit:Int): [String]!
 }
 

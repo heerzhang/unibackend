@@ -26,6 +26,8 @@ public class UntMge {
     private String UNT_LKMEN;      //单位联系人
     private String UNT_MOBILE;      //单位联系人手机
     private String POST_COD;      //单位邮编
+    private String INDUSTRY_PROP_COD;       //行业性质
+    private Long  JC_UNT_ID;
     //UNT_AREA_COD,
     //UNT_LAT,　UNT_LONG, 大多都没有数据的。
 }

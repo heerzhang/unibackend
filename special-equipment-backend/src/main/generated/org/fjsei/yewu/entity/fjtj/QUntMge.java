@@ -21,6 +21,10 @@ public class QUntMge extends EntityPathBase<UntMge> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath INDUSTRY_PROP_COD = createString("INDUSTRY_PROP_COD");
+
+    public final NumberPath<Long> JC_UNT_ID = createNumber("JC_UNT_ID", Long.class);
+
     public final StringPath POST_COD = createString("POST_COD");
 
     public final StringPath UNT_ADDR = createString("UNT_ADDR");

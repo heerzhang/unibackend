@@ -28,11 +28,17 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath indCod = createString("indCod");
+
+    public final NumberPath<Long> jcId = createNumber("jcId", Long.class);
+
     public final StringPath linkMen = createString("linkMen");
 
     public final SetPath<md.specialEqp.EQP, md.specialEqp.QEQP> maints = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createSet("maints", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
 
     public final SetPath<md.specialEqp.EQP, md.specialEqp.QEQP> owns = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createSet("owns", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
 

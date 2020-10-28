@@ -1,9 +1,9 @@
 package md.cm.base;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import md.cm.unit.Unit;
 import md.specialEqp.EQP;
+import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -13,6 +13,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region ="Slow")
 public class Company {
     @Id
@@ -20,16 +23,23 @@ public class Company {
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
 
-    private String name;
-    private String no;   //统一社会信用代码
-    private String address;     //首要办公地点
-    private String linkMen;     //对外 负责人
+    private String name;    //UNT_NAME
+    private String no;   //统一社会信用代码 UNT_ORG_COD
+    private String address;     //首要办公地点　UNT_ADDR
+    private String linkMen;     //对外 负责人　UNT_LKMEN
+
     private String phone;
 
     //若需要双向的1 ：1关系，关系是Unit类维护； 就把下面俩个行添加上。 太多了？很多的业务很多模块插入关联关系字段？
     //@OneToOne(mappedBy = "company")
     //private Unit  unit;       //只能有一个了。
-
+    public void copyAs(UntMge untMge){
+        //依照老旧平台来比较修改。
+        if(no==null || !no.equals(untMge.getUNT_ORG_COD()) )               no=untMge.getUNT_ORG_COD();
+        if(linkMen==null || !linkMen.equals(untMge.getUNT_LKMEN()) )       linkMen=untMge.getUNT_LKMEN();
+        if(phone==null || !phone.equals(untMge.getUNT_MOBILE()) )       phone=untMge.getUNT_MOBILE();
+        if(address==null || !address.equals(untMge.getUNT_ADDR()) )     address=untMge.getUNT_ADDR();
+    };
 
 }
 
