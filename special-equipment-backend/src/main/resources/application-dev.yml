@@ -153,7 +153,7 @@ spring:
             missing_cache_strategy: create
         #default_schema: newsei   还是一个个指定好
         #看SQL打印　true 　false
-        show_sql: true
+        show_sql: false
         #统计对单个hibernate session会话的总结
         generate_statistics: true
         ##      dialect: org.hibernate.dialect.Oracle10gDialect

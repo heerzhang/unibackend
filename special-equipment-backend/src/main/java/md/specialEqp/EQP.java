@@ -51,24 +51,56 @@ public class EQP implements Equipment{
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
     private int  version;   //之前Timestamp类型ES过不了
-
-    @Field
-    @Size(min = 5, max = 30)
-    @Column( unique = true)
-    private String cod;         //设备号
-
     //该条设备记录已被设置成了删除态不再有效，就等待以后维护程序去清理这些被历史淘汰的数据了。
     @NotNull
     private Boolean valid=true;
-
-   // @PropertyDef(label="监察识别码")    数据库建表注释文字。
+    //@PropertyDef(label="监察识别码")    数据库建表注释文字。
+    //@Column(length =128, unique = true)
     @Field
-    @Column(length =128, unique = true)
-    private String oid;
+    @Column(length =40)
+    private String oid;     //OIDNO每一个省份监察机构自己产生的易识别码。
+    @Field
+    @Size(min = 4, max = 32)
+    //@Column( unique = true)
+    private String cod;         //EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。
+
     //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
-    private String type;    //EQP_TYPE{首1个字符} ,
-    private String sort;    //类别代码 EQP_SORT{首2个字符} ,
+    private String type;    //设备种类 EQP_TYPE{首1个字符} ,
+    private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
+    private String subVart;     //SUB_EQP_VART 子设备品种？用于做报告选择模板/收费计算参数。
+    private char   reg;   //EQP_REG_STA 注册
+    private char   use;   //EQP_USE_STA 状态码
+    private char   cag;   //IN_CAG 目录属性 1:目录内，2：目录外
+    private String cert;    //EQP_USECERT_COD 使用证号
+    private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
+    private String rcod;    //EQP_REG_COD 监察注册代码
+    private String level;    //EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
+    private String factoryNo;   //FACTORY_COD  出厂编号
+    private String name;    //EQP_NAME 设备名称
+    private String inner;    //EQP_INNER_COD 单位内部编号
+    private String mod;    //EQP_MOD 设备型号
+    private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
+    private Boolean  important;   //IF_MAJEQP 是否重要特种设备
+    //private Date  instDate;
+    private Date    useDt;  //FIRSTUSE_DATE 设备投用日期
+    private Date    accpDt;  //COMPE_ACCP_DATE 竣工验收日期
+    private Date    expire;  //END_USE_DATE 使用年限到期时间//DESIGN_USE_OVERYEAR设计使用年限 到期时间
+    private Boolean  move;   //IS_MOVEEQP 是否流动设备
+    private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
+    private String addr;    //暂时用 EQP_USE_ADDR 使用地址
+    private String occasion;    //EQP_USE_OCCA 使用场合
+    private String build;    //暂用 BUILD_ID  楼盘ID
+    private float  ePrice;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
+    private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
+    private String unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
+    private String unqf2;    //NOTELIGIBLE_FALG2 不合格标志2(机电定检，内检，全面）
+    private Date    ispD1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
+    private Date    ispD2;      //LAST_ISP_DATE2
+    @Field(type = FieldType.Date, format = DateFormat.date_time)
+    private Instant nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）
+    @Field(type = FieldType.Date, format = DateFormat.date_time)
+    private Instant nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
 
     //索引会被自动创建的。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -82,12 +114,8 @@ public class EQP implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit maintUnt;
-    private Date instDate;
 
-    @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Instant nextIspDate1;
 
-    private String factoryNo; //出厂编号
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     @ManyToMany(mappedBy="devs" ,fetch = FetchType.LAZY)

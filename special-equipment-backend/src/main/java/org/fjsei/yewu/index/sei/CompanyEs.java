@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.*;
 import javax.persistence.Id;
 
 //没必要在CompanyEs底下添加一个业务映射ID，也就是unit_ID字段，业务系统若是很多的话，xx_ID每个都独立。
-
+//平均ES存储文件大小256字节/条。
 @Document(indexName = "company")
 @Data
 @NoArgsConstructor

@@ -140,6 +140,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                 builder.and(qm.name.eq(untMge.getUNT_NAME()));
                 if (untMge.getUNT_ORG_COD()!=null)
                     builder.and(qm.no.eq(untMge.getUNT_ORG_COD()));
+                //todo:不能保证唯一性，？以UNT_ID大的为准
                 Company company= companyRepository.findOne(builder).orElse(null);
                 if(null!=company){
                     //依照老旧平台来比较修改。
