@@ -1,7 +1,7 @@
 package org.fjsei.yewu.controller;
 
+import md.specialEqp.Eqp;
 import org.fjsei.yewu.entity.sdn.TestBean;
-import md.specialEqp.EQP;
 import org.fjsei.yewu.service.core.RestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +32,12 @@ public class Api {
 
     @GetMapping("/test/")
     public String findEQPByName(){
-        EQP eqp=restService.findByName("电梯AT032039");
+        Eqp eqp=restService.findByName("电梯AT032039");
         return eqp.toString();
     }
     @RequestMapping("/test/{name}")
     public String findEQPByName(@PathVariable String name) {
-        EQP eqp=restService.findByName(name);
+        Eqp eqp=restService.findByName(name);
         return eqp!=null?eqp.toString():"没找到";
     }
 }

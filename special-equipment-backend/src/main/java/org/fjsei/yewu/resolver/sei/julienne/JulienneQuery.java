@@ -53,7 +53,7 @@ public class JulienneQuery implements GraphQLQueryResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private ISPRepository iSPRepository;
     @Autowired

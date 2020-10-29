@@ -34,13 +34,13 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public final StringPath linkMen = createString("linkMen");
 
-    public final SetPath<md.specialEqp.EQP, md.specialEqp.QEQP> maints = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createSet("maints", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.Eqp, md.specialEqp.QEqp> maints = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createSet("maints", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
 
     public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
 
-    public final SetPath<md.specialEqp.EQP, md.specialEqp.QEQP> owns = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createSet("owns", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.Eqp, md.specialEqp.QEqp> owns = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createSet("owns", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
 
     public final md.cm.base.QPerson person;
 

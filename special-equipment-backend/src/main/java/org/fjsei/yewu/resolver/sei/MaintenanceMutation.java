@@ -1,6 +1,5 @@
 package org.fjsei.yewu.resolver.sei;
 
-import com.alibaba.fastjson.JSON;
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import md.cm.base.*;
@@ -8,67 +7,30 @@ import md.cm.geography.*;
 import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
-import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
-import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.AuthorityRepository;
-import md.system.User;
 import md.system.UserRepository;
-import org.fjsei.yewu.entity.fjtj.HrUserinfo;
 import org.fjsei.yewu.entity.fjtj.HrUserinfoRepository;
 import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.fjsei.yewu.entity.fjtj.UntMgeRepository;
-import org.fjsei.yewu.exception.BookNotFoundException;
 import org.fjsei.yewu.index.sei.*;
-import org.fjsei.yewu.input.DeviceCommonInput;
-import org.fjsei.yewu.input.UnitCommonInput;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
 import org.fjsei.yewu.security.JwtTokenUtil;
-import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.persistence.CacheRetrieveMode;
-import javax.persistence.CacheStoreMode;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_RETRIEVE_MODE;
-import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_STORE_MODE;
 
 //这个类名字不能重复简明！
 //后台维护
@@ -80,7 +42,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private EqpEsRepository eqpEsRepository;
     @Autowired

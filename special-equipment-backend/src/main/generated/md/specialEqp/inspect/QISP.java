@@ -26,7 +26,7 @@ public class QISP extends EntityPathBase<ISP> {
 
     public final StringPath conclusion = createString("conclusion");
 
-    public final md.specialEqp.QEQP dev;
+    public final md.specialEqp.QEqp dev;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -57,7 +57,7 @@ public class QISP extends EntityPathBase<ISP> {
     public QISP(Class<? extends ISP> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.checkMen = inits.isInitialized("checkMen") ? new md.system.QUser(forProperty("checkMen")) : null;
-        this.dev = inits.isInitialized("dev") ? new md.specialEqp.QEQP(forProperty("dev"), inits.get("dev")) : null;
+        this.dev = inits.isInitialized("dev") ? new md.specialEqp.QEqp(forProperty("dev"), inits.get("dev")) : null;
         this.task = inits.isInitialized("task") ? new QTask(forProperty("task")) : null;
     }
 

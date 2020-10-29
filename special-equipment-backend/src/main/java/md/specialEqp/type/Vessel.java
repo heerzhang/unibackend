@@ -1,14 +1,10 @@
 package md.specialEqp.type;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 //子类不能再做@org.hibernate.annotations.Cache()注解的。
 //@DiscriminatorValue(value="电梯")
@@ -16,7 +12,7 @@ import javax.persistence.InheritanceType;
 @Getter
 @Setter
 @Entity
-public class Vessel extends EQP {
+public class Vessel extends Eqp {
     //2000压力容器	 TB_VESSEL_PARA
     private String volume;
 

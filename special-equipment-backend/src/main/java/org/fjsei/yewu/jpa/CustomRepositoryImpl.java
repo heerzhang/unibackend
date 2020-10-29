@@ -42,7 +42,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable>
 
 
     //xxxRepository不需要更改 extends接口 也可以的， 也是一样能够走到这里的。
-    //interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificationExecutor<EQP>
+    //interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>
 
 
 

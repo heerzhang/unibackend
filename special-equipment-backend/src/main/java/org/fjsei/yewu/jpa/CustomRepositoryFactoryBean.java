@@ -47,7 +47,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
      * @param repositoryInterface must not be {@literal null}.
      *
      *
-     *   Class<? extends T>    : :    T实际就是 EQPRepository，等等的 xxxRepository
+     *   Class<? extends T>    : :    T实际就是 EqpRepository，等等的 xxxRepository
      */
 
     public CustomRepositoryFactoryBean(Class<? extends T> repositoryInterface) {

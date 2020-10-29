@@ -2,8 +2,7 @@ package md.specialEqp.type;
 
 import lombok.Getter;
 import lombok.Setter;
-import md.specialEqp.EQP;
-import md.specialEqp.inspect.ISP;
+import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Entity;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-public class Pipeline extends EQP {
+public class Pipeline extends Eqp {
     //8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
     private String volume;
     //管道底下的具体的许多个单元组成集合： TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA

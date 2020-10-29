@@ -30,18 +30,20 @@ import java.util.stream.Collectors;
 //懒加载导致了N+1问题(按照后面逻辑代码需求再去那可能的会执行N条SQL)，假设不用懒加载的EAGER话就会强行加载可能根本就不会用到的大量的关联数据(不是更浪费?)。
 //EntityGraph是和LAZY相反的？，总体写死掉策略搞lazy，动态的个性化查询用EntityGraph来提示{深度定制的,细化,仅针对个别使用到的字段的}，俩个机制的目标完全冲突。
 //Lazy字段才需要搞@NamedEntityGraph的，嵌套Lazy字段/下一级Lazy属性字段用@NamedSubgraph。目的提前join取数据,减少sql语句数,能提高效率。不是FetchType.LAZY的就没必要@EntityGraph。
-//举例@NamedEntityGraph(name="EQP.task",attributeNodes={@NamedAttributeNode("task"),@NamedAttributeNode("isps")}) 关联不密切的关联对象一次性join=会产生爆炸记录数；
+//举例@NamedEntityGraph(name="Eqp.task",attributeNodes={@NamedAttributeNode("task"),@NamedAttributeNode("isps")}) 关联不密切的关联对象一次性join=会产生爆炸记录数；
 //EntityGraph不可随便加;就为了多出一个isps关联对象left outer join ？,对多出join约束性少引起笛卡儿积级别记录个数爆炸，本来只有290条变成12588条了。
 //EntityGraph存在理由:提示JPA去屏蔽LAZY，用JOIN FETCH一次关联表全查，减少SQL语句(规避了1+N 问题)，从而提高速度；但也失去懒加载优点。https://blog.csdn.net/dm_vincent/article/details/53366934
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
+//字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。
 
+
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Medium")
-public class EQP implements Equipment{
+public class Eqp implements Equipment{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
@@ -70,16 +72,19 @@ public class EQP implements Equipment{
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     private String subVart;     //SUB_EQP_VART 子设备品种？用于做报告选择模板/收费计算参数。
     private char   reg;   //EQP_REG_STA 注册
-    private char   use;   //EQP_USE_STA 状态码
+    //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
+    private char   ust;   //EQP_USE_STA 状态码
     private char   cag;   //IN_CAG 目录属性 1:目录内，2：目录外
     private String cert;    //EQP_USECERT_COD 使用证号
-    private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
+    private String sNo;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
     private String level;    //EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
-    private String factoryNo;   //FACTORY_COD  出厂编号
+    private String fNo;   //FACTORY_COD  出厂编号
     private String name;    //EQP_NAME 设备名称
-    private String inner;    //EQP_INNER_COD 单位内部编号
-    private String mod;    //EQP_MOD 设备型号
+    //不能用保留字。private String inner;
+    private String  plNo;    //EQP_INNER_COD 单位内部编号place No
+    //不能用保留字。private String mod;
+    private String  model;    //EQP_MOD 设备型号
     private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
     private Boolean  important;   //IF_MAJEQP 是否重要特种设备
     //private Date  instDate;
@@ -105,17 +110,31 @@ public class EQP implements Equipment{
     //索引会被自动创建的。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit ownerUnt;
+    private Unit  owner;      //PROP_UNT_ID 产权单位
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "regu_id")
+    private Unit  regU;     //REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit  useU;     //USE_UNT_ID 使用单位ID
+
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit   mtU;     //MANT_UNT_ID 维保单位ID maintUnt
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit  makeU;     //MAKE_UNT_ID 制造单位ID
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit  insU;     //INST_UNT_ID 安装单位ID
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit  remU;     //ALT_UNT_ID 改造单位ID
+
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
     private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
-
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn
-    private Unit maintUnt;
-
-
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     @ManyToMany(mappedBy="devs" ,fetch = FetchType.LAZY)
@@ -123,7 +142,7 @@ public class EQP implements Equipment{
     private Set<Task> task= new HashSet<>();
 
     //单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
-    //EQP.TASK.ISP  EQP.ISP {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
+    //Eqp.TASK.ISP  Eqp.ISP {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
     //ISP挂接关系到EQP底下还是挂接关系到TASK底下的？不可以两者同时都挂接关联关系，那样就是多余和混淆概念或两种分歧路径，数据多了而且还产生不一致了。
     //检验单独生成，TASK和EQP多对多的；单个ISP检验为了某个EQP和某个TASK而生成的。
     //先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
@@ -133,7 +152,7 @@ public class EQP implements Equipment{
     private Set<ISP>  isps;
 
 
-    public  EQP(String cod,String type,String oid){
+    public Eqp(String cod, String type, String oid){
         this.cod=cod;
         this.type=type;
         this.oid=oid;
@@ -170,9 +189,9 @@ public class EQP implements Equipment{
 //访问延迟属性若EntityManager这个对象被关闭，我们再去访问延迟属性的话，就访问不到，并抛出延迟加载意外;spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
 //枚举，enum转换器 @Converter(autoApply = true)  ； https://thoughts-on-java.org/jpa-21-type-converter-better-way-to/
 
-/* 删除没用的头注解： 用@EntityGraph(value="EQP.task",)做查询优化可不容易掌控的；很容易出笛卡儿积爆炸问题。
+/* 删除没用的头注解： 用@EntityGraph(value="Eqp.task",)做查询优化可不容易掌控的；很容易出笛卡儿积爆炸问题。
 @NamedEntityGraphs({
-        @NamedEntityGraph(name= "EQP.task",
+        @NamedEntityGraph(name= "Eqp.task",
                 attributeNodes = {
                         @NamedAttributeNode(value= "task",subgraph= "taskg"),
                 },
@@ -182,7 +201,7 @@ public class EQP implements Equipment{
                         ),
                 }
         ) ,
-        @NamedEntityGraph(name = "EQP.isps",
+        @NamedEntityGraph(name = "Eqp.isps",
                 attributeNodes = {
                         @NamedAttributeNode(value= "isps",subgraph= "ispsg"),
                 }
@@ -195,16 +214,16 @@ public class EQP implements Equipment{
 
 /*
 @NamedEntityGraphs({  每个NamedEntityGraph都是独立无关的hints，若一个查询语句同时加上多个hint，底层它该如何协调;底层API不会精确区分把控上层应用实体的真正目的。
-        @NamedEntityGraph(name = "EQP.all",    某个场景用一个hint;
+        @NamedEntityGraph(name = "Eqp.all",    某个场景用一个hint;
                 attributeNodes = {}  )      //实际上attributeNodes可以多个，但是特别小心，关联不密切的关联对象一次性join=会产生爆炸记录数！！attributeNodes只做一个较妥。
-        @NamedEntityGraph(name = "EQP.special",    另外一个场景用另外一个hint;
+        @NamedEntityGraph(name = "Eqp.special",    另外一个场景用另外一个hint;
                 attributeNodes = {}  )
     })
-join爆炸记录数范例 @NamedEntityGraph( name="EQP.task",attributeNodes={　@NamedAttributeNode("task"),　@NamedAttributeNode("isps")　} )  无关的task+isps搞在一起＝爆炸。
+join爆炸记录数范例 @NamedEntityGraph( name="Eqp.task",attributeNodes={　@NamedAttributeNode("task"),　@NamedAttributeNode("isps")　} )  无关的task+isps搞在一起＝爆炸。
 */
 
 //注解定制索引，没啥实际意义。
 //@Table(indexes={ @Index(name="type_idx",columnList="type"),
-//         　 @Index(name="factoryNo_idx",columnList="factoryNo")  } )
+//         　 @Index(name="factoryNo_idx",columnList="fNo")  } )
 
 //二级缓存可移植性@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast") 这里region是按照配置来区分的区分标识，竟然不省略。

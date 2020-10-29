@@ -1,6 +1,6 @@
 package org.fjsei.yewu.controller.sdn.api;
 
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import org.fjsei.yewu.service.sdn.WeixingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,11 +41,11 @@ public class WeixingController {
     //测试:graphQl输入输出类型无法共享？
     @RequestMapping(method = RequestMethod.POST, value = "/sdn/api/sdn/test")
     @ResponseBody
-    public EQP apiSdnChkUntAccount(@RequestBody EQP eqp) {
+    public Eqp apiSdnChkUntAccount(@RequestBody Eqp eqp) {
         //REST和graphQL不同点！
         //REST的输入输出对象都可以不受到任何控制；可以共用，能直接把对象以及关联对象全部地序列化或者反序列化，
         //graphQL输入对象必须另外建立，好处坏处？。
-        EQP topic=new EQP();
+        Eqp topic=new Eqp();
         topic=eqp;
         return topic;
     }

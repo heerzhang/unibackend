@@ -1,7 +1,6 @@
 package md.cm.base;
 
 import lombok.*;
-import md.specialEqp.EQP;
 import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

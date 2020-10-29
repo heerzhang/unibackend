@@ -1,6 +1,5 @@
 package md.cm.base;
 
-import md.specialEqp.EQP;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

@@ -27,7 +27,7 @@ public class SysMgrMutation implements GraphQLMutationResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private ISPRepository iSPRepository;
     @Autowired

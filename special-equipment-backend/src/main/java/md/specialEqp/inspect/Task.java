@@ -2,7 +2,7 @@ package md.specialEqp.inspect;
 
 import lombok.Getter;
 import lombok.Setter;
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -25,7 +25,7 @@ public class Task {
     @JoinTable(name="TASK_DEVS", joinColumns={@JoinColumn(name="TASK_ID")}, inverseJoinColumns={@JoinColumn(name="DEVS_ID")}
                 //indexes={@Index(name="DEVS_ID_idx",columnList="DEVS_ID")}
             )
-    private List<EQP> devs;
+    private List<Eqp> devs;
 
     //对方ISP去维护这个关联关系。
     //一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；

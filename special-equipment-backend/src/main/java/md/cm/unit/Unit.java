@@ -3,7 +3,7 @@ package md.cm.unit;
 import lombok.*;
 import md.cm.base.Company;
 import md.cm.base.Person;
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -32,13 +32,13 @@ public class Unit {
     private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
     private String phone;
     //加载方式修改影响很大。根据业务场景挑选。懒加载了若想关联内省查询会运行错误。
-    @OneToMany(mappedBy = "ownerUnt")
-    private Set<EQP> owns;
+    @OneToMany(mappedBy = "owner")
+    private Set<Eqp> owns;
     //默认采用LAZY方式加载实体,懒加载时加了@Transactional的查询才能不报错，但是graphQL内省阶段是与入口函数分离的=还是报错。
     //一对多或多对多时，默认懒加载，graphQL遇到这个字段，若想要顺着关联查询下去，程序报错，等于有一种信息安全控制机制。
     //懒加载的坏处，该字段代码不能直接使用，必须绕道，从反向关系依据id倒着查。
-    @OneToMany(mappedBy = "maintUnt")
-    private Set<EQP> maints;    //维保设备集合
+    @OneToMany(mappedBy = "mtU")
+    private Set<Eqp> maints;    //维保设备集合
 
     //这里company,person两个，若采用接口/微服务/Rest方式，实际上本地无需DB库表实体类，只需要外部大数据库no以及类型标识。
     //但我这里采用本地维护模式，Company和Person可以直接使用来关联,两个id，不需要类型标识。
@@ -62,7 +62,7 @@ public class Unit {
         this.name=name;
         this.address=address;
     }
-    public Set<EQP>  getMaints() {
+    public Set<Eqp>  getMaints() {
         return  this.maints;
     }
 }

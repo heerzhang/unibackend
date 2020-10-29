@@ -241,7 +241,7 @@ JPA 如何指定底层数据库的存储空间文件，分区文件。
         主要用在主表，子表是自行定义，映射时使用两个类（集成关系），但为一个实体，保存到两个表的情况
 @SecondaryTable(name = "xx", pkJoinColumns = @PrimaryKeyJoinColumn(name = "xid"))
 　           ? ）extends从表名。
-@Table属性：( catalog 和 sechema 属性指定据库名=一般不需要){} 像个域名create table door.newsei.EQP {}
+@Table属性：( catalog 和 sechema 属性指定据库名=一般不需要){} 像个域名create table door.newsei.Eqp {}
 */
 
 //用哪个好？　@Column(size = 50)或@Size(max = 50)   https://www.cnblogs.com/ealenxie/p/10938371.html

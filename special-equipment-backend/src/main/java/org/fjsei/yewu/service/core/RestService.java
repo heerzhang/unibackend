@@ -1,7 +1,7 @@
 package org.fjsei.yewu.service.core;
 
 
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import org.fjsei.yewu.repository.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +18,13 @@ import java.util.List;
 @Transactional
 public interface RestService {
 
-    EQP findByName(String name);
+    Eqp findByName(String name);
     Teacher getTeacher(String name);
     List<Teacher> getAllTeacher();
 
     public void addTeacher(Teacher topic);
 
-    Page<EQP> findByName_Page(String name);
-    Page<EQP> findByName_Example(String name);
+    Page<Eqp> findByName_Page(String name);
+    Page<Eqp> findByName_Example(String name);
 }
 

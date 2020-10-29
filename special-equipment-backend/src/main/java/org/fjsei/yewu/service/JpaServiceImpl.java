@@ -45,7 +45,7 @@ public class JpaServiceImpl implements JpaService {
     private EntityManager emSei;
 
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private ISPRepository iSPRepository;
     @Autowired
@@ -88,19 +88,19 @@ public class JpaServiceImpl implements JpaService {
             }
             }  */
 
-   //    List<EQP> eqps=eQPRepository.findAll();   //"javax.persistence.fetchgraph" "javax.persistence.loadgraph"
+   //    List<Eqp> eqps=eQPRepository.findAll();   //"javax.persistence.fetchgraph" "javax.persistence.loadgraph"
         //？竟然没加Hint更快？
-        EntityGraph graph =emSei.getEntityGraph("EQP.task");
+        EntityGraph graph =emSei.getEntityGraph("Eqp.task");
         System.out.println("1 createQuery");
-        List<EQP> eqps = emSei.createQuery("FROM EQP a", EQP.class)
+        List<Eqp> eqps = emSei.createQuery("FROM EQP a", Eqp.class)
                 .setHint("javax.persistence.loadgraph", graph)
                 .getResultList();
 
-    //     List<EQP> eqps = emSei.createQuery("FROM EQP a", EQP.class).getResultList();
+    //     List<Eqp> eqps = emSei.createQuery("FROM Eqp a", Eqp.class).getResultList();
 
         String outprint="";
-        System.out.println("EQP a : eqps() kaishi");
-        for (EQP a : eqps) {
+        System.out.println("Eqp a : eqps() kaishi");
+        for (Eqp a : eqps) {
              outprint="作者 "
                     + a.getCod()
                     + " "
@@ -151,9 +151,9 @@ public class JpaServiceImpl implements JpaService {
         EntityManagerFactory entityManagerFactory=emSei.getEntityManagerFactory();
         Cache cache=entityManagerFactory.getCache();
         Teacher teacher=new Teacher("hua","22","bvvnn2");
-        //EntityGraph graph =emSei.getEntityGraph("EQP.task");      .setParameter( "id", 0L)
+        //EntityGraph graph =emSei.getEntityGraph("Eqp.task");      .setParameter( "id", 0L)
         System.out.println("1 createQuery");
-        List<EQP> eqps = emSei.createQuery("FROM EQP a where a.id = :name", EQP.class)
+        List<Eqp> eqps = emSei.createQuery("FROM EQP a where a.id = :name", Eqp.class)
                 .setParameter( "name", 1L)
                 .setHint(QueryHints.HINT_CACHEABLE, true)
                 .getResultList();
@@ -161,7 +161,7 @@ public class JpaServiceImpl implements JpaService {
         //.setHint( QueryHints.HINT_CACHE_REGION, "query.cache.person" )  细化控制
 
         String outprint="";
-        System.out.println("EQP a : eqps() kaishi");
+        System.out.println("Eqp a : eqps() kaishi");
         return teacher;
     }
 
@@ -236,15 +236,15 @@ public class JpaServiceImpl implements JpaService {
     public void batchAddETIU_Sub() {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Random random=new Random();
-        List<EQP> topics = new ArrayList<>();
+        List<Eqp> topics = new ArrayList<>();
         //teacherDao.findAll().forEach(topics::add);
         for(int e = 0; e < 500; e++)  {
             int uid5=random.nextInt(170)+1 +3000;
-            EQP eQP = new EQP(getRandomString(6)+"越A",String.valueOf(uid5), "起重"+getRandomString(6));
+            Eqp eQP = new Eqp(getRandomString(6)+"越A",String.valueOf(uid5), "起重"+getRandomString(6));
          //   Set<Task> task_list= new HashSet<>();  //List<Task> task_list = new ArrayList<>();
             for(int t = 0; t < 0; t++) {
                 Task task = new Task();
-                List<EQP> devs = new ArrayList<>();
+                List<Eqp> devs = new ArrayList<>();
                 devs.add(eQP);
                 task.setDevs(devs);
 
@@ -271,7 +271,7 @@ public class JpaServiceImpl implements JpaService {
            //     task_list.add(task);
             }
             //eQP.setTask(task_list);
-            eQP.setFactoryNo("越F"+getRandomString(10));
+            eQP.setFNo("越F"+getRandomString(10));
             int uid8=random.nextInt(1999)+1 +1293333;
             Address position=addressRepository.getOne((long)uid8);
             eQP.setPos(position);

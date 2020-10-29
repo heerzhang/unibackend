@@ -24,7 +24,7 @@ public class QAddress extends EntityPathBase<Address> {
 
     public final QAdminunit ad;
 
-    public final SetPath<md.specialEqp.EQP, md.specialEqp.QEQP> eqps = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createSet("eqps", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.Eqp, md.specialEqp.QEqp> eqps = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createSet("eqps", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

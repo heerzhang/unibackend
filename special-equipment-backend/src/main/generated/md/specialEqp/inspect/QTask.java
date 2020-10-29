@@ -24,7 +24,7 @@ public class QTask extends EntityPathBase<Task> {
 
     public final StringPath dep = createString("dep");
 
-    public final ListPath<md.specialEqp.EQP, md.specialEqp.QEQP> devs = this.<md.specialEqp.EQP, md.specialEqp.QEQP>createList("devs", md.specialEqp.EQP.class, md.specialEqp.QEQP.class, PathInits.DIRECT2);
+    public final ListPath<md.specialEqp.Eqp, md.specialEqp.QEqp> devs = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createList("devs", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
 
     public final StringPath fee = createString("fee");
 

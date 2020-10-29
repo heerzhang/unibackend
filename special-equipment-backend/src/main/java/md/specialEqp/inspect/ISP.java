@@ -2,7 +2,7 @@ package md.specialEqp.inspect;
 
 import lombok.Getter;
 import lombok.Setter;
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import md.specialEqp.Report;
 import md.system.User;
 import org.fjsei.yewu.filter.SimpleReport;
@@ -36,7 +36,7 @@ public class ISP {
     //我是多端我来维护关联关系，我的表有直接外键的存储。
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_id")
-    private EQP dev;
+    private Eqp dev;
 
     //单个检验记录规属于某一个TASK底下的某次;
     //一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；

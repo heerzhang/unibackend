@@ -20,7 +20,7 @@ public class DeviceCommonInput {
     String   lat;
     Long    ownerId;
     //String  ownerId;
-    String  factoryNo;
+    String  fNo;
 }
 
 

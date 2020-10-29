@@ -20,29 +20,29 @@ import java.util.Optional;
 //对graphQL客户接口的Query操作可使用HINT_CACHEABLE；但是Mutation以及其他的要求严格一致性实时性情况，不能使用这样的函数，要新建独立函数搞。
 
 
-public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificationExecutor<EQP>, QuerydslPredicateExecutor<EQP> {
+public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslPredicateExecutor<Eqp> {
 
-        //函数名字改了，那么后面参数Specification<EQP> spec就不起作用，这样Specification将没用！
-        //@Query("select t from EQP t")
-        //Page<EQP> fromSpecification(@Nullable Specification<EQP> spec,Pageable pageable);
+        //函数名字改了，那么后面参数Specification<Eqp> spec就不起作用，这样Specification将没用！
+        //@Query("select t from Eqp t")
+        //Page<Eqp> fromSpecification(@Nullable Specification<Eqp> spec,Pageable pageable);
 
         //目的提前join取数据,减少sql语句数,能提高效率。 通过@EntityGraph来指定EQP类中定义的NamedEntityGraph；可被实际证明不好使的，就不用了NamedEntityGraph。
-        ///@EntityGraph(value="EQP.task",type= EntityGraph.EntityGraphType.LOAD)
+        ///@EntityGraph(value="Eqp.task",type= EntityGraph.EntityGraphType.LOAD)
         /// @Lock(value = LockModeType.PESSIMISTIC_WRITE)       //悲观锁:自动往select from末尾加for update。
-        EQP findByCod(String cod);
+        Eqp findByCod(String cod);
 
-        /// @EntityGraph(value="EQP.task",type= EntityGraph.EntityGraphType.FETCH)
+        /// @EntityGraph(value="Eqp.task",type= EntityGraph.EntityGraphType.FETCH)
         @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-        List<EQP>  findAll();
+        List<Eqp>  findAll();
         //EntityGraph用恰当，速度提升快；join会放大记录数，若是查询结果集合记录个数不是很多，不使用@EntityGraph的有可能性会反而更快!。
         //使用@EntityGraph对查询结果集不大的情况没有性能优势，网页显示单次查询结果集都比较小的所以不需要fecth join，该场景关联对象LAZY查询N+1问题引起的性能损失也不大。
-        ///@EntityGraph(value="EQP.isps",type= EntityGraph.EntityGraphType.FETCH)         分页时加了更慢！同时使用了分页和FETCH。
+        ///@EntityGraph(value="Eqp.isps",type= EntityGraph.EntityGraphType.FETCH)         分页时加了更慢！同时使用了分页和FETCH。
         ///@EntityGraph( type= EntityGraph.EntityGraphType.FETCH,attributePaths={"task","task.isps","isps"} )
         @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-        Page<EQP> findAll(@Nullable Specification<EQP> spec, Pageable pageable);
+        Page<Eqp> findAll(@Nullable Specification<Eqp> spec, Pageable pageable);
 
         @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-        Page<EQP> findAll(Pageable pageable);
+        Page<Eqp> findAll(Pageable pageable);
         //可定义差异化的查询策略QueryHints。针对同样的HQL也可重复建多函数。
         /* 不同名称的接口函数能够差异化对待：
                 @Query("select t from Dict t where t.name = ?1")
@@ -50,16 +50,16 @@ public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificatio
                 Dict findDictByName(String name);
         */
 
-        List<EQP> findByMaintUnt(Unit maintUnit);
+        List<Eqp> findByMtU(Unit maintUnit);
 
         //@QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "false") } )
-        Optional<EQP> findById(Long id);
+        Optional<Eqp> findById(Long id);
 
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
-        long count(@Nullable Specification<EQP> spec);
+        long count(@Nullable Specification<Eqp> spec);
 
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
-        List<EQP> findAll(@Nullable Specification<EQP> spec, Sort sort);
+        List<Eqp> findAll(@Nullable Specification<Eqp> spec, Sort sort);
 
 
 }
@@ -81,7 +81,7 @@ public interface EQPRepository extends JpaRepository<EQP, Long>, JpaSpecificatio
 */
 
 //认识“JPA实例查询”的局限性；id+ X对一关联表字段也会算比较条件；    https://www.cnblogs.com/rulian/p/6533109.html
-//JpaRepository 派自 PagingAndSortingRepository 和ExampleQuery（EQP）按“实例”进行查询;    ?PageRequest
+//JpaRepository 派自 PagingAndSortingRepository 和ExampleQuery（Eqp）按“实例”进行查询;    ?PageRequest
 
 /* * 解决 懒加载 JPA 典型的 N + 1 问题
         * 多层级 区域关系；     https://www.cnblogs.com/ealenxie/p/9800818.html

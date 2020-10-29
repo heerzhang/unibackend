@@ -85,7 +85,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private EqpEsRepository eqpEsRepository;
     @Autowired
@@ -132,16 +132,16 @@ public class BaseMutation implements GraphQLMutationResolver {
     private PasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
-    public EQP newEQP(String cod, String type, String oid) {
+    public Eqp newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = new EQP(cod,type,oid);
+        Eqp eQP = new Eqp(cod,type,oid);
         eQP.setSort("三方大的");
         eQP.setVart("Ccvs第三方大师傅得f");
         Task task=new Task();
         task.setDep("12111kk234fv");
 
         eQP.getTask().add(task);
-        List<EQP> devs=new ArrayList<>();
+        List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
         //多对多保存复杂一点，必须都给set上。
         task.setDevs(devs);
@@ -149,7 +149,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Task task2=new Task();
         task2.setDep("aAxwxxxx3f4fv");
         eQP.getTask().add(task2);
-        List<EQP> devs2=new ArrayList<>();
+        List<Eqp> devs2=new ArrayList<>();
         devs2.add(eQP);
         task2.setDevs(devs2);
 
@@ -160,7 +160,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             taskRepository.save(task2);
             eQPRepository.saveAndFlush(eQP);
             //这里保存若事务异常就导致下面ES更新无法回滚了。
-            //EQP sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
+            //Eqp sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
             //if( !(sec instanceof Elevator) )       return eQP;
             //TODO: flush tasks ... 尽量确保JPA不出现异常否则ES就不一致了。
         } catch (Exception e) {
@@ -177,7 +177,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             //   item.setDevs(null);
         });
         //ES不支持事务与回滚。
-        //相互关联导致的ES存储死循环：EqpEs->task->EQP->task,这样task id自循环导致。表现为newEQP函数上事务上死锁。
+        //相互关联导致的ES存储死循环：EqpEs->task->Eqp->task,这样task id自循环导致。表现为newEQP函数上事务上死锁。
         eqpEsRepository.save(eqpEs);
         //这个时间保存ES若异常可自动取消eQPRepository.saveAndFlush的操作结果。
         //运行到这还处于Transactional范围下，可是Elasticsearch已经发给服务器去处理了，JPA却还没有交给数据库去存储。
@@ -249,10 +249,10 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Task newTask(Long devsId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = eQPRepository.findById(devsId).orElse(null);
+        Eqp eQP = eQPRepository.findById(devsId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         Task task = new Task();
-        List<EQP> devs=new ArrayList<>();
+        List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
         task.setDevs(devs);
         taskRepository.save(task);
@@ -269,10 +269,10 @@ public class BaseMutation implements GraphQLMutationResolver {
             throw new BookNotFoundException("日期like非法？", devsId);
             //前端应会得到这个反馈结果，　{data: null，errors: [{message: "日期like非法？", }]  }
         }
-        EQP eQP = eQPRepository.findById(devsId).orElse(null);
+        Eqp eQP = eQPRepository.findById(devsId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         Task task = new Task();
-        List<EQP> devs=new ArrayList<>();
+        List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
         task.setDevs(devs);
         task.setDep(dep);
@@ -289,7 +289,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Task task = taskRepository.findById(taskId).orElse(null);
         Assert.isTrue(task != null,"未找到task:"+task);
-        EQP eQP = eQPRepository.findById(devId).orElse(null);
+        Eqp eQP = eQPRepository.findById(devId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         task.getDevs().add(eQP);
         taskRepository.save(task);
@@ -470,9 +470,9 @@ public class BaseMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public EQP setEQPPosUnit(Long id, Long posId, Long ownerId, Long maintId) {
+    public Eqp setEQPPosUnit(Long id, Long posId, Long ownerId, Long maintId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = eQPRepository.findById(id).orElse(null);
+        Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         Address position= addressRepository.findById(posId).orElse(null);
         Unit ownerUnit= unitRepository.findById(ownerId).orElse(null);
@@ -480,17 +480,17 @@ public class BaseMutation implements GraphQLMutationResolver {
         Assert.isTrue(position != null,"未找到position:"+position);
         Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
         eQP.setPos(position);
-        eQP.setOwnerUnt(ownerUnit);
-        eQP.setMaintUnt(maintUnit);
+        eQP.setOwner(ownerUnit);
+        eQP.setMtU(maintUnit);
         eQPRepository.save(eQP);
         return eQP;
     }
 
     //设置基本设备信息; 参数和模型定义的同名接口的输入类型按顺序一致，否则Two different classes used for type
     @Transactional
-    public EQP buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
+    public Eqp buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = eQPRepository.findById(id).orElse(null);
+        Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         //Todo: 行政部分+用户定义名
         Address position= addressRepository.findByName(info.getAddress());
@@ -504,7 +504,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Assert.isTrue(position != null,"未找到position:"+position);
         Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
         eQP.setPos(position);
-        eQP.setOwnerUnt(ownerUnit);
+        eQP.setOwner(ownerUnit);
         //修改数据的特别权限控制嵌入这里：
         eQP.setCod(info.getCod());
         eQP.setOid(info.getOid());
@@ -514,7 +514,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Elevator buildElevator_222(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eQP = eQPRepository.findById(id).orElse(null);
+        Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP == null,"找到eQP:"+eQP);
         Elevator elevator =new Elevator(info.getCod(),"typ01",info.getOid());
         elevator.setLiftHeight("565555");
@@ -531,13 +531,13 @@ public class BaseMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public EQP testEQPModify(Long id, String oid) {
+    public Eqp testEQPModify(Long id, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         String  prevOid="is null";
         Map<String, Object>  properties1=emSei.getProperties();
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH);
-        EQP eQP =eQPRepository.findById(id).orElse(null);
+        Eqp eQP =eQPRepository.findById(id).orElse(null);
         if(eQP==null)   return  eQP;
         prevOid=eQP.getOid();
         eQP.setOid(oid);
@@ -549,7 +549,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         String  prevOid="is null";
         Map<String, Object>  properties1=emSei.getProperties();
-        EQP eQP = eQPRepository.findByCod(cod);
+        Eqp eQP = eQPRepository.findByCod(cod);
         if(eQP==null)   return  prevOid;
         prevOid=eQP.getOid();
         eQP.setOid(oid);
@@ -562,9 +562,9 @@ public class BaseMutation implements GraphQLMutationResolver {
         String  prevOid="not find,is null?";
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH);
-        List<EQP> eqpList= eQPRepository.findAll();     //较慢:所有数据都装载了
-        List<EQP> eqpObjs=eqpList.stream().filter(e -> e.getCod().equals(cod)).collect(Collectors.toList());
-        for (EQP eQP:eqpObjs)
+        List<Eqp> eqpList= eQPRepository.findAll();     //较慢:所有数据都装载了
+        List<Eqp> eqpObjs=eqpList.stream().filter(e -> e.getCod().equals(cod)).collect(Collectors.toList());
+        for (Eqp eQP:eqpObjs)
         {
             prevOid = eQP.getOid();
             eQP.setOid(oid);
@@ -581,9 +581,9 @@ public class BaseMutation implements GraphQLMutationResolver {
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH);
         //虽然findAll()被注解@QueryHints(HINT_CACHEABLE,true)了！　可是这里是不会从缓存读的，都会直接查数据库。
-        List<EQP> eqpList= eQPRepository.findAll();     //较慢:所有数据都装载了
-        List<EQP> eqpObjs=eqpList.stream().filter(e -> e.getCod().equals(cod)).collect(Collectors.toList());
-        for (EQP eQP:eqpObjs)
+        List<Eqp> eqpList= eQPRepository.findAll();     //较慢:所有数据都装载了
+        List<Eqp> eqpObjs=eqpList.stream().filter(e -> e.getCod().equals(cod)).collect(Collectors.toList());
+        for (Eqp eQP:eqpObjs)
         {
             prevOid = eQP.getOid();
             if(eQP instanceof Elevator)
@@ -594,16 +594,16 @@ public class BaseMutation implements GraphQLMutationResolver {
         return  prevOid;
     }
     @Transactional
-    public EQP testEQPCriteriaModify(String cod, String oid, String type) {
+    public Eqp testEQPCriteriaModify(String cod, String oid, String type) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         //必须加这2行，否则可能无法获取最新DB数据，可能不被认定为必须做DB更新。
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH);
         String  prevOid="not find,is null?";
         Pageable pageable = PageRequest.of(0, 50, Sort.by(Sort.Direction.ASC,"oid"));         //Integer.parseInt(10)
-        Page<EQP> allPage=eQPRepository.findAll(new Specification<EQP>() {
+        Page<Eqp> allPage=eQPRepository.findAll(new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(cod)) {
                     Path<String> p = root.get("cod");
@@ -619,8 +619,8 @@ public class BaseMutation implements GraphQLMutationResolver {
                 return null;
             }
         }, pageable);
-        List<EQP>  eqpObjs= allPage.getContent();
-        for (EQP eQP:eqpObjs)
+        List<Eqp>  eqpObjs= allPage.getContent();
+        for (Eqp eQP:eqpObjs)
         {
             prevOid = eQP.getOid();
             eQP.setOid(oid);
@@ -634,10 +634,10 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         String  prevOid="is null";
         Map<String, Object>  properties1=emSei.getProperties();
-        List<EQP> eQPs = emSei.createQuery(
-                "select DISTINCT e from EQP e where id=2119", EQP.class)
+        List<Eqp> eQPs = emSei.createQuery(
+                "select DISTINCT e from EQP e where id=2119", Eqp.class)
                 .getResultList();
-        EQP eQP= eQPs.get(0);
+        Eqp eQP= eQPs.get(0);
         if(eQP==null)   return  prevOid;
         prevOid=eQP.getOid();
         eQP.setOid(oid);
@@ -662,7 +662,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     public boolean invalidateEQP(Long eqpId,String reason)
     {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eqp = eQPRepository.findById(eqpId).orElse(null);
+        Eqp eqp = eQPRepository.findById(eqpId).orElse(null);
         Assert.isTrue(eqp != null,"未找到EQP:"+eqpId);
         eqp.setValid(false);
         eQPRepository.save(eqp);
@@ -672,7 +672,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     public boolean removeEQP(Long eqpId)
     {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        EQP eqp = eQPRepository.findById(eqpId).orElse(null);
+        Eqp eqp = eQPRepository.findById(eqpId).orElse(null);
         Assert.isTrue(eqp != null,"未找到EQP:"+eqpId);
         eQPRepository.delete(eqp);
         boolean hasEqp2 = eqpEsRepository.existsById(eqpId);
@@ -685,8 +685,8 @@ public class BaseMutation implements GraphQLMutationResolver {
 
 
 /*
-加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(EQP.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
-                或eQPRepository.findAll(new Specification<EQP>() {@Override },pageable);
+加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(Eqp.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
+                或eQPRepository.findAll(new Specification<Eqp>() {@Override },pageable);
 必须加  emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH); 加了这2条才能从DB去取最新数据。
 而这些方法无需添加也能去数据库取最新数据：eQPRepository.findByCod(cod)或emSei.createQuery("")

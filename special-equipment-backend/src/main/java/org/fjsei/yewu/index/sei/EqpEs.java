@@ -45,19 +45,19 @@ public class EqpEs implements Equipment{
     private String sort;    //类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
 
-    private Unit ownerUnt;
+    private Unit  owner;
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
 
     private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
 
-    private Unit maintUnt;
+    private Unit mtU;
   //  private Date instDate;
 
     @Field(type = FieldType.Date, format = DateFormat.date_time)
     private Instant nextIspDate1;
    // @GeoPointField
    // @Field(ignoreFields=) 只是忽略注解下的字段中的字段，而不是忽略这个字段本身；
-    private String factoryNo;   //出厂编号
+    private String fNo;   //出厂编号
     //这个注释加不加都一样的。
     @Field(type = FieldType.Nested)
     private Set<TaskEs> task = Sets.newHashSet();

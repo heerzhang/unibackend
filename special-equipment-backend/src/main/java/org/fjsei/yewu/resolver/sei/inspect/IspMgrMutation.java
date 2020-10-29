@@ -43,7 +43,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private ISPRepository iSPRepository;
     @Autowired
@@ -71,7 +71,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     public ISP newISP(Long devId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         ISP isp = new ISP();
-        EQP eQP = eQPRepository.findById(devId).orElse(null);
+        Eqp eQP = eQPRepository.findById(devId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         isp.setDev(eQP);
         iSPRepository.save(isp);
@@ -84,7 +84,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         if(user == null)     throw new BookNotFoundException("没有该账户"+username, (long)0);
         Task task = taskRepository.findById(taskId).orElse(null);
         if(task == null)     throw new BookNotFoundException("没有该任务单", taskId);
-        EQP eQP = eQPRepository.findById(devId).orElse(null);
+        Eqp eQP = eQPRepository.findById(devId).orElse(null);
         if(eQP == null)     throw new BookNotFoundException("没有该设备", devId);
         ISP isp = new ISP();
         isp.setDev(eQP);
@@ -164,7 +164,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         //这实体发现之间关联的情况越多的，删除就越麻烦咯，关系复杂。
         //ISP表与EQP都关联着Task的呢。  只好把ISP的清理当成了前置条件。
         Assert.isTrue(task.getIsps().isEmpty(),"还有ISP关联"+taskId);
-        List<EQP>  devs= task.getDevs();
+        List<Eqp>  devs= task.getDevs();
         //解除关系
         devs.forEach(dev -> dev.getTask().remove(task));
         emSei.remove(task);
@@ -195,8 +195,8 @@ public class IspMgrMutation implements GraphQLMutationResolver {
 
 
 /*
-加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(EQP.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
-                或eQPRepository.findAll(new Specification<EQP>() {@Override },pageable);
+加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(Eqp.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
+                或eQPRepository.findAll(new Specification<Eqp>() {@Override },pageable);
 必须加  emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH); 加了这2条才能从DB去取最新数据。
 而这些方法无需添加也能去数据库取最新数据：eQPRepository.findByCod(cod)或emSei.createQuery("")

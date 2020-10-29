@@ -16,7 +16,7 @@ query EQP_QUERY
 {
   findAllEQPs
   {
-    id  cod oid factoryNo ownerUnt{
+    id  cod oid fNo ownerUnt{
       id  name
     }
     isps{id conclusion }
@@ -41,7 +41,7 @@ mutation  TEST_MODIFY_EQP {
     type: "58001"
   )
   {
-    id  cod oid factoryNo ownerUnt{
+    id  cod oid fNo ownerUnt{
       id  name
     }
     isps{id checkMen{id username} conclusion}
@@ -97,7 +97,7 @@ query findEqpMge($id: ID!) {
 #       			"son":{
 #               "lj":"AND",
 #               "at":{
-#                 "sx":"factoryNo", "val":"dddcc"
+#                 "sx":"fNo", "val":"dddcc"
 #               },
 #               "son":{
 #                 "lj":"noExist",

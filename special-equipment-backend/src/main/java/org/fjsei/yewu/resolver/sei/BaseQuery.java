@@ -13,7 +13,6 @@ import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
 import md.specialEqp.*;
 import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.*;
@@ -42,7 +41,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.*;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -63,7 +61,6 @@ import java.util.*;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.*;
-import static org.springframework.data.elasticsearch.core.SearchHitSupport.searchPageFor;
 
 
 //import org.springframework.data.jpa.repository.EntityGraph;   简名同名字冲突
@@ -85,7 +82,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private EqpEsRepository eqpEsRepository;
     @Autowired   private CompanyEsRepository companyEsRepository;
@@ -126,13 +123,13 @@ public class BaseQuery implements GraphQLQueryResolver {
 
     //前端实际不可能用！把数据库全部都同时查入后端内存，太耗；查询只能缩小范围都得分页查，就算原子更新操作也不能全表一个个update，大的表可执行力太差！
     @Deprecated
-    public Iterable<EQP> findAllEQPs_删除() {
+    public Iterable<Eqp> findAllEQPs_删除() {
        String partcod="";
        String partoid="";
        Pageable pageable = PageOffsetFirst.of(0, 35, Sort.by(Sort.Direction.ASC,"oid"));         //Integer.parseInt(10)
-       Page<EQP> allPage=eQPRepository.findAll(new Specification<EQP>() {
+       Page<Eqp> allPage=eQPRepository.findAll(new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(partcod)) {
                     Path<String> p = root.get("cod");
@@ -151,35 +148,35 @@ public class BaseQuery implements GraphQLQueryResolver {
         }, pageable);
     /*
     //加了EntityGraph反而更慢HHH000104: firstResult/maxResults specified with collection fetch; applying in memory!
-             EntityGraph graph =emSei.getEntityGraph("EQP.task");
-            //emSei.createQuery("FROM EQP", EQP.class).getResultList()没.setHint(?)没法使用缓存的。
-            List<EQP> eqps = emSei.createQuery("FROM EQP", EQP.class)
+             EntityGraph graph =emSei.getEntityGraph("Eqp.task");
+            //emSei.createQuery("FROM Eqp", Eqp.class).getResultList()没.setHint(?)没法使用缓存的。
+            List<Eqp> eqps = emSei.createQuery("FROM Eqp", Eqp.class)
                     .setHint("javax.persistence.fetchgraph", graph)
               //      .setFirstResult(11)
              //      .setMaxResults(20)
                     .getResultList();
             //getResultStream().limit(10).collect(Collectors.toList()) 已经全表取到内存来了;
     */
-       List<EQP>  eqps= allPage.getContent();
+       List<Eqp>  eqps= allPage.getContent();
        return eqps;        //.subList(74070,74085);
     }
 
     //多数系统正常地，查询都是直接规定设计好了参数范围的模式，但是灵活性较差，参数个数和逻辑功能较为限制；但安全性好，就是代码上麻烦点。
-    public Iterable<EQP> findEQPLike(DeviceCommonInput filter) {
+    public Iterable<Eqp> findEQPLike(DeviceCommonInput filter) {
         return eQPRepository.findAll();
     }
 
     //orderBy 可支持直接指定某属性的下级字段。 {"orderBy": "pos.building",}
-    public Iterable<EQP> findAllEQPsFilterInput(DeviceCommonInput filter, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Eqp> findAllEQPsFilterInput(DeviceCommonInput filter, int offset, int first, String orderBy, boolean asc) {
         Pageable pageable;
 
         if(StringUtils.isEmpty(orderBy))
             pageable = PageOffsetFirst.of(offset, first);
         else
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc? Sort.Direction.ASC: Sort.Direction.DESC,orderBy));
-        Page<EQP> allPage=eQPRepository.findAll(new Specification<EQP>() {
+        Page<Eqp> allPage=eQPRepository.findAll(new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(filter.getCod())) {
                  //   Path<Task> p = root.get("task");
@@ -192,7 +189,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                    // p = root.get("isps");
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("factoryNo");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -202,21 +199,21 @@ public class BaseQuery implements GraphQLQueryResolver {
             }
         }, pageable);
 
-        List<EQP>  eqps= allPage.getContent();
+        List<Eqp>  eqps= allPage.getContent();
         return eqps;        //.subList(74070,74085)
     }
 
     public long countAllEQPsFilter(DeviceCommonInput filter) {
-        Specification<EQP> spec= new Specification<EQP>() {
+        Specification<Eqp> spec= new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(filter.getCod())) {
                     Path<String> p = root.get("type");
                     predicateList.add(cb.like(p,"%" + filter.getCod() + "%"));
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("factoryNo");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -246,9 +243,9 @@ public class BaseQuery implements GraphQLQueryResolver {
             emSei.joinTransaction();
         List<Unit>  units=unitRepository.findAll();
         units.stream().forEach(item -> {
-            //Set<EQP> eqps=item.getMaints();   懒加载,此时对象该字段还没有数据呢,手动查
-           List<EQP> eqps=eQPRepository.findByMaintUnt(item);
-           item.setMaints(new HashSet<EQP>(eqps));
+            //Set<Eqp> eqps=item.getMaints();   懒加载,此时对象该字段还没有数据呢,手动查
+           List<Eqp> eqps=eQPRepository.findByMtU(item);
+           item.setMaints(new HashSet<Eqp>(eqps));
            //这里虽然懒加载因为业务需要单位直接关联它维保的设备列表=支持graphQL内省，免去再开独立接口函数去做这工作的复杂模式。
         });
         return units;
@@ -321,8 +318,8 @@ public class BaseQuery implements GraphQLQueryResolver {
             return null;
         }
     }
-    //原型对应：getDevice(id:ID!): EQP! 尽量不要返回值必选的，前端会报错，改成getDevice(id:ID!): EQP可选null。
-    public EQP getDevice(Long id) {
+    //原型对应：getDevice(id:ID!): Eqp! 尽量不要返回值必选的，前端会报错，改成getDevice(id:ID!): EQP可选null。
+    public Eqp getDevice(Long id) {
         return eQPRepository.findById(id).orElse(null);
         //因为LAZY所以必须在这里明摆地把它预先查询出来，否则graphQL内省该字段就没结果=报错; open-in-view也没效果。
         //单层eqp.getTask().stream().count();  //.collect(Collectors.toSet())
@@ -332,8 +329,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         return eqpEsRepository.findById(id).orElse(null);
     }
     //前端路由乱来？不是正常的url也来这里了： java.lang.Long` from String "favicon.ico": not a valid Long value
-    public EQP getDeviceSelf(Long id) {
-        EQP eqp=eQPRepository.findById(id).orElse(null);
+    public Eqp getDeviceSelf(Long id) {
+        Eqp eqp=eQPRepository.findById(id).orElse(null);
         // Assert.isTrue(eqp != null,"未找到EQP:"+id);
         return eqp;
     }
@@ -353,7 +350,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         return  parents;
     }
 
-    public EQP findEQPbyCod(String cod) {
+    public Eqp findEQPbyCod(String cod) {
         return eQPRepository.findByCod(cod);
     }
     public Iterable<CompanyEs> findUnitbyNameAnd(String name, String name2) {
@@ -478,12 +475,12 @@ public class BaseQuery implements GraphQLQueryResolver {
         return strJson;
     }
 
-    public Iterable<EQP> getAllEQP() {
+    public Iterable<Eqp> getAllEQP() {
         String partcod="L";
         String partoid="1";
-        Specification<EQP> spec= new Specification<EQP>() {
+        Specification<Eqp> spec= new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(partcod)) {
                     Path<String> p = root.get("cod");
@@ -505,9 +502,9 @@ public class BaseQuery implements GraphQLQueryResolver {
     public long countAllEQP() {
         String partcod="L";
         String partoid="1";
-        Specification<EQP> spec= new Specification<EQP>() {
+        Specification<Eqp> spec= new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 if (!StringUtils.isEmpty(partcod)) {
                     Path<String> p = root.get("cod");
@@ -526,16 +523,16 @@ public class BaseQuery implements GraphQLQueryResolver {
         return eQPRepository.count(spec);
     }
     public long countAllEQPsWhere(WhereTree where) {
-        Specification<EQP> spec= new Specification<EQP>() {
+        Specification<Eqp> spec= new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
            /*     if (!StringUtils.isEmpty(filter.getCod())) {
                     Path<String> p = root.get("type");
                     predicateList.add(cb.like(p,"%" + filter.getCod() + "%"));
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("factoryNo");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -644,13 +641,13 @@ public class BaseQuery implements GraphQLQueryResolver {
         //是否需要重新初始化技术参数设备基本字段呢？
         return report;
     }
-    public  EQP findAllEQPsFilter222(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Eqp findAllEQPsFilter222(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         //List<Elevator> list =elevatorRepository.findAll();
         return null;
     }
     //2020-8-18升级后不能用WhereTree来做前端查询了！input类型不直接使用Object Type呢？Object字段可能存在循环引用，或字段引用不能作为查询输入的接口和联合类型。
     //BUG导致graphQL input递归无法再使用！ModelFilters这层类sql接口预备给高权限场景使用WhereTree，普通接口走参数定做模式/多写代码。
-    public Iterable<EQP> findAllEQPsFilter_delete(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Eqp> findAllEQPsFilter_delete(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
@@ -661,10 +658,10 @@ public class BaseQuery implements GraphQLQueryResolver {
         else
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
-        ModelFiltersImpl<EQP> modelFilters = new ModelFiltersImpl<EQP>(null);
-        Specification<EQP> specification = new Specification<EQP>() {
+        ModelFiltersImpl<Eqp> modelFilters = new ModelFiltersImpl<Eqp>(null);
+        Specification<Eqp> specification = new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query.distinct(true);
                 modelFilters.effectCount(2000);    //像回调函数一样。
                 return null;
@@ -676,12 +673,12 @@ public class BaseQuery implements GraphQLQueryResolver {
         /* 这下面对照是这样的： query级缓存时间内，数据库人工修改的，前端靠findAllEQPsFilter查的会滞后才显示。
             注意query-results缓存时间内select from结果集不变，但是列表中某单一个实体的字段却可变动的；人工删除实体会报错。
             @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-            Page<EQP> findAll(@Nullable Specification<EQP> spec, Pageable pageable);
+            Page<Eqp> findAll(@Nullable Specification<Eqp> spec, Pageable pageable);
         */
-        Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
+        Page<Eqp> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
-    public Iterable<EQP> findAllEQPsFilter_删除(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Eqp> findAllEQPsFilter_删除(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些
@@ -692,10 +689,10 @@ public class BaseQuery implements GraphQLQueryResolver {
         else
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
-        ModelFiltersImpl<EQP> modelFilters = new ModelFiltersImpl<EQP>(null);
-        Specification<EQP> specification = new Specification<EQP>() {
+        ModelFiltersImpl<Eqp> modelFilters = new ModelFiltersImpl<Eqp>(null);
+        Specification<Eqp> specification = new Specification<Eqp>() {
             @Override
-            public Predicate toPredicate(Root<EQP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query.distinct(true);
                 modelFilters.effectCount(2000);    //像回调函数一样。
                 return null;
@@ -708,9 +705,9 @@ public class BaseQuery implements GraphQLQueryResolver {
         /* 这下面对照是这样的： query级缓存时间内，数据库人工修改的，前端靠findAllEQPsFilter查的会滞后才显示。
             注意query-results缓存时间内select from结果集不变，但是列表中某单一个实体的字段却可变动的；人工删除实体会报错。
             @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-            Page<EQP> findAll(@Nullable Specification<EQP> spec, Pageable pageable);
+            Page<Eqp> findAll(@Nullable Specification<Eqp> spec, Pageable pageable);
         */
-        Page<EQP> list = eQPRepository.findAll(modelFilters,pageable);
+        Page<Eqp> list = eQPRepository.findAll(modelFilters,pageable);
         return list;
     }
 
@@ -725,17 +722,17 @@ public class BaseQuery implements GraphQLQueryResolver {
         else
             pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
-        QEQP qm = QEQP.eQP;
+        QEqp qm = QEqp.eqp;
         BooleanBuilder builder = new BooleanBuilder();
         if (!StringUtils.isEmpty(where.getCod()))
             builder.and(qm.cod.contains(where.getCod()));
         if (where.getOwnerId()!=null)
-            builder.and(qm.ownerUnt.id.eq(where.getOwnerId()));
-        if (!StringUtils.isEmpty(where.getFactoryNo()))
-            builder.and(qm.factoryNo.contains(where.getFactoryNo()));
+            builder.and(qm.owner.id.eq(where.getOwnerId()));
+        if (!StringUtils.isEmpty(where.getFNo()))
+            builder.and(qm.fNo.contains(where.getFNo()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Iterable<EQP> eqps = eQPRepository.findAll(builder,pageable);
+        Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
         eqps.forEach(item -> {
            // if(item instanceof Equipment)
                 elevators.add(item);

@@ -1,7 +1,7 @@
 package org.fjsei.yewu.index.sei;
 
 
-import md.specialEqp.EQP;
+import md.specialEqp.Eqp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -24,11 +24,11 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
     //也可以支持elasticsearch包带入的@Query(原生DSL语句)模式：?：任意字符 *：0个或任意多个字符
     //Dsl方式POST index/_search发送JSON格式如 "query": {"wildcard": {"shopInfoName.keyword": { "value": "*自营*" } } }
     @Query("{\"match\": {\"cod\": {\"query\": \"?0\"}}}")
-    Page<EQP> findByCod(String cod, Pageable pageable);
+    Page<Eqp> findByCod(String cod, Pageable pageable);
 
 
     //３用Querydsl动态查询方式又是另外一条路，以SpringDataJPA + QueryDSL-JPA　联合用，jpaQueryFactory，QueryDslPredicateExecutor。
-    //QuerydslPredicateExecutor<EQP>　+　Predicate；
+    //QuerydslPredicateExecutor<Eqp>　+　Predicate；
     //xxIndexRepository extends  + ,QuerydslPredicateExecutor 两个接口都实现。
     //可是Elasticsearch存储场景　当前 throw new IllegalArgumentException("QueryDsl Support has not been implemented yet.");
 
@@ -47,9 +47,9 @@ public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
     Slice<EqpEs> findByCodLike(String cod, Pageable pageable);
     Streamable<EqpEs> findByCodContaining(String cod);
 
-    Stream<EQP> readAllByCodIsNotNull();
-    @Query("select e from EQP e")
-    Stream<EQP> streamAllPaged(Pageable pageable);
+    Stream<Eqp> readAllByCodIsNotNull();
+    @Query("select e from Eqp e")
+    Stream<Eqp> streamAllPaged(Pageable pageable);
     //Stream务必要用close()关闭。
 }
 
@@ -66,10 +66,10 @@ Elasticsearch 8.x在请求里指定type将不被支持，include_type_name 参�
 @Document(indexName="xx")注解只需要做一次，关联字段派出实体beans就不需要注解@Document(indexName="xx")，都算是存入同一个index内的。
 GeoDistanceOrder用于按地理距离对搜索操作的结果进行排序，GeoPoint声明类型；
 有基本身份验证和SSL传输的安全Elasticsearch集群支持。
-try (Stream<EQP> stream = repository.readAllByCodNotNull()) {
+try (Stream<Eqp> stream = repository.readAllByCodNotNull()) {
   stream.forEach(…);
 }　Stream务必要用close()关闭或使用try-with-resources块来闭
-异步操作CompletableFuture<EQP> 和　reactive API不是同门的，完全不能混为一谈。
+异步操作CompletableFuture<Eqp> 和　reactive API不是同门的，完全不能混为一谈。
 触发？使用@DomainEvents可以返，每次调用Spring Data存储库中的save(…)方法时，就会调用这些方法。
 即使用ES引擎，也能发生深度分页问题。index.max_result_window,默认是10000条数据;超过es报错：拒绝返回结果了。
 １ scroll：适合批量导出数据，scroll_id；会占用大量的资源，会生成历史快照。２ search after：推荐用 _uid 作全局唯一值，用业务层 id 也可。

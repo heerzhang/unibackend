@@ -1,7 +1,7 @@
 package org.fjsei.yewu.service.core;
 
-import md.specialEqp.EQP;
-import md.specialEqp.EQPRepository;
+import md.specialEqp.Eqp;
+import md.specialEqp.EqpRepository;
 import org.fjsei.yewu.repository.Teacher;
 import org.fjsei.yewu.repository.TeacherDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import java.util.List;
 public class RestServiceImpl implements RestService {
 
     @Autowired
-    private EQPRepository eqpRepository;
+    private EqpRepository eqpRepository;
     @Autowired
     private TeacherDao teacherDao;
 
@@ -42,14 +42,14 @@ public class RestServiceImpl implements RestService {
     } */
 
     @Override
-    public Page<EQP> findByName_Page(String name) {
+    public Page<Eqp> findByName_Page(String name) {
         //根据id 进行降序
         Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
     /* 作废
         Sort sort = new Sort(order);
         //index 1 从0开始 不是从1开始的
         Pageable page = new PageRequest(0,10,sort);
-        Page<EQP> employeeList = eqpRepository.findAll(page);
+        Page<Eqp> employeeList = eqpRepository.findAll(page);
         System.out.println("查询总页数:"+employeeList.getTotalPages());
         System.out.println("查询总记录数:"+employeeList.getTotalElements());
         System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
@@ -60,20 +60,20 @@ public class RestServiceImpl implements RestService {
         return null;
     }
 
-    public EQP findByName_ExampleMatcher(String name) {
-        EQP eqp1=eqpRepository.findByCod(name);
+    public Eqp findByName_ExampleMatcher(String name) {
+        Eqp eqp1=eqpRepository.findByCod(name);
         emBar.detach(eqp1);
         eqp1.setId(null);
         eqp1.setType(null);
-        eqp1.setFactoryNo(null);
+        eqp1.setFNo(null);
         eqp1.setCod(null);
         eqp1.setPos(null);
         eqp1.setTask(null);
         eqp1.setIsps(null);
-        //     EQP eqp2=new EQP();
+        //     Eqp eqp2=new Eqp();
         //     eqp2.setOid(eqp1.getOid());
 
-        //     eqp2.getOwnerUnt().setName(eqp1.getOwnerUnt().getName());
+        //     eqp2.getOwner().setName(eqp1.getOwner().getName());
         //    Position pos=new Position();
         //    eqp2.setPos(pos.setAddress( (eqp1.getPos().getAddress() )));
         //创建匹配器，即如何使用查询条件
@@ -82,14 +82,14 @@ public class RestServiceImpl implements RestService {
                 .withIgnorePaths("focus");  //忽略属性：是否关注。因为是基本类型，需要忽略掉
 
         //创建实例
-        Example<EQP> ex = Example.of(eqp1, matcher);
+        Example<Eqp> ex = Example.of(eqp1, matcher);
 
         //查询      ? id+ ! X对一关联表 字段也会算比较条件
-        List<EQP> ls = eqpRepository.findAll(ex);
+        List<Eqp> ls = eqpRepository.findAll(ex);
 
         //输出结果
         System.out.println("数量："+ls.size());
-        for (EQP bo:ls)
+        for (Eqp bo:ls)
         {
             System.out.println(bo.getCod());
         }
@@ -99,7 +99,7 @@ public class RestServiceImpl implements RestService {
         Sort sort = new Sort(order);
         //index 1 从0开始 不是从1开始的
         Pageable page = new PageRequest(0,10,sort);
-        Page<EQP> employeeList = eqpRepository.findAll(page);
+        Page<Eqp> employeeList = eqpRepository.findAll(page);
         System.out.println("查询总页数:"+employeeList.getTotalPages());
         System.out.println("查询总记录数:"+employeeList.getTotalElements());
         System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
@@ -114,13 +114,13 @@ public class RestServiceImpl implements RestService {
     }
 
     @Override
-    public EQP findByName(String name) {
-        EQP eqp1=eqpRepository.findByCod(name);
+    public Eqp findByName(String name) {
+        Eqp eqp1=eqpRepository.findByCod(name);
    //     emBar.detach(eqp1);
-   //     EQP eqp2=new EQP();
+   //     Eqp eqp2=new Eqp();
    //     eqp2.setOid(eqp1.getOid());
 
-   //     eqp2.getOwnerUnt().setName(eqp1.getOwnerUnt().getName());
+   //     eqp2.getOwner().setName(eqp1.getOwner().getName());
     //    Position pos=new Position();
     //    eqp2.setPos(pos.setAddress( (eqp1.getPos().getAddress() )));
         //创建匹配器，即如何使用查询条件
@@ -129,14 +129,14 @@ public class RestServiceImpl implements RestService {
                 .withIgnorePaths("focus");  //忽略属性：是否关注。因为是基本类型，需要忽略掉
 
         //创建实例
-        Example<EQP> ex = Example.of(eqp1, matcher);
+        Example<Eqp> ex = Example.of(eqp1, matcher);
 
         //查询      ? id+ ! X对一关联表 字段也会算比较条件
-        List<EQP> ls = eqpRepository.findAll(ex);
+        List<Eqp> ls = eqpRepository.findAll(ex);
 
         //输出结果
         System.out.println("数量："+ls.size());
-        for (EQP bo:ls)
+        for (Eqp bo:ls)
         {
             System.out.println(bo.getCod());
         }
@@ -150,7 +150,7 @@ public class RestServiceImpl implements RestService {
     }
 
     @Override
-    public Page<EQP> findByName_Example(String name) {
+    public Page<Eqp> findByName_Example(String name) {
 
         Sort.Order order =  new Sort.Order(Sort.Direction.ASC,"id");
       /* 作废
@@ -158,9 +158,9 @@ public class RestServiceImpl implements RestService {
         //index 1 从0开始 不是从1开始的
         Pageable page = new PageRequest(0,10,sort);
 
-        Page<EQP> employeeList = eqpRepository.findAll(new Specification<EQP>() {
+        Page<Eqp> employeeList = eqpRepository.findAll(new Specification<Eqp>() {
 
-            public Predicate toPredicate(Root<EQP> root,
+            public Predicate toPredicate(Root<Eqp> root,
                                          CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<String> codPath = root.get("cod");
                 Path<String> oidPath = root.get("oid");

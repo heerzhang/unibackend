@@ -43,7 +43,7 @@ public class JulienneMutation implements GraphQLMutationResolver {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
     @Autowired
-    private EQPRepository eQPRepository;
+    private EqpRepository eQPRepository;
     @Autowired
     private ISPRepository iSPRepository;
     @Autowired
@@ -181,8 +181,8 @@ public class JulienneMutation implements GraphQLMutationResolver {
 
 
 /*
-加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(EQP.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
-                或eQPRepository.findAll(new Specification<EQP>() {@Override },pageable);
+加了cache缓存后，为了在事务中读取数据库最新数据：emSei.find(Eqp.class,id)或eQPRepository.findById(id)或eQPRepository.getOne(id)或findAll()；
+                或eQPRepository.findAll(new Specification<Eqp>() {@Override },pageable);
 必须加  emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
         emSei.setProperty(JPA_SHARED_CACHE_STORE_MODE, CacheStoreMode.REFRESH); 加了这2条才能从DB去取最新数据。
 而这些方法无需添加也能去数据库取最新数据：eQPRepository.findByCod(cod)或emSei.createQuery("")

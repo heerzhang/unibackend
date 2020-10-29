@@ -3,9 +3,7 @@ package md.specialEqp.type;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import md.specialEqp.EQP;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DiscriminatorOptions;
+import md.specialEqp.Eqp;
 
 import javax.persistence.*;
 
@@ -17,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public class Elevator  extends EQP {
+public class Elevator  extends Eqp {
     //3000电梯  TB_ELEV_PARA  电梯技术参数表
     private String liftHeight;
 
