@@ -43,7 +43,8 @@ dependencyManagement {
 
 dependencies {
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
-    compileOnly('org.projectlombok:lombok')
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+
     compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
     compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
     //graphql脱离web/MVC,  实际上spring-boot-starter-web对标spring-boot-starter-webflux关系二选一。

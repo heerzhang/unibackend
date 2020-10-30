@@ -25,11 +25,25 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final NumberPath<Long> BUILD_ID = createNumber("BUILD_ID", Long.class);
 
+    public final DateTimePath<java.util.Date> COMPE_ACCP_DATE = createDateTime("COMPE_ACCP_DATE", java.util.Date.class);
+
+    public final DateTimePath<java.util.Date> END_USE_DATE = createDateTime("END_USE_DATE", java.util.Date.class);
+
+    public final StringPath EQP_AREA_COD = createString("EQP_AREA_COD");
+
     public final StringPath EQP_INNER_COD = createString("EQP_INNER_COD");
+
+    public final StringPath EQP_LEVEL = createString("EQP_LEVEL");
 
     public final StringPath EQP_MOD = createString("EQP_MOD");
 
     public final StringPath EQP_NAME = createString("EQP_NAME");
+
+    public final NumberPath<Float> EQP_PRICE = createNumber("EQP_PRICE", Float.class);
+
+    public final StringPath EQP_REG_COD = createString("EQP_REG_COD");
+
+    public final ComparablePath<Character> EQP_REG_STA = createComparable("EQP_REG_STA", Character.class);
 
     public final StringPath EQP_SORT = createString("EQP_SORT");
 
@@ -37,7 +51,13 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath EQP_STATION_COD = createString("EQP_STATION_COD");
 
+    public final StringPath EQP_TYPE = createString("EQP_TYPE");
+
     public final StringPath EQP_USE_ADDR = createString("EQP_USE_ADDR");
+
+    public final StringPath EQP_USE_OCCA = createString("EQP_USE_OCCA");
+
+    public final ComparablePath<Character> EQP_USE_STA = createComparable("EQP_USE_STA", Character.class);
 
     public final StringPath EQP_USECERT_COD = createString("EQP_USECERT_COD");
 
@@ -49,7 +69,23 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath FACTORY_COD = createString("FACTORY_COD");
 
+    public final DateTimePath<java.util.Date> FIRSTUSE_DATE = createDateTime("FIRSTUSE_DATE", java.util.Date.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final ComparablePath<Character> IF_INCPING = createComparable("IF_INCPING", Character.class);
+
+    public final StringPath IF_MAJEQP = createString("IF_MAJEQP");
+
+    public final ComparablePath<Character> IN_CAG = createComparable("IN_CAG", Character.class);
+
+    public final NumberPath<Long> INST_UNT_ID = createNumber("INST_UNT_ID", Long.class);
+
+    public final ComparablePath<Character> IS_MOVEEQP = createComparable("IS_MOVEEQP", Character.class);
+
+    public final DateTimePath<java.util.Date> LAST_ISP_DATE1 = createDateTime("LAST_ISP_DATE1", java.util.Date.class);
+
+    public final DateTimePath<java.util.Date> LAST_ISP_DATE2 = createDateTime("LAST_ISP_DATE2", java.util.Date.class);
 
     public final DatePath<java.util.Date> MAKE_DATE = createDate("MAKE_DATE", java.util.Date.class);
 
@@ -61,9 +97,21 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final DatePath<java.util.Date> NEXT_ISP_DATE2 = createDate("NEXT_ISP_DATE2", java.util.Date.class);
 
+    public final ComparablePath<Character> NOTELIGIBLE_FALG1 = createComparable("NOTELIGIBLE_FALG1", Character.class);
+
+    public final ComparablePath<Character> NOTELIGIBLE_FALG2 = createComparable("NOTELIGIBLE_FALG2", Character.class);
+
     public final StringPath OIDNO = createString("OIDNO");
 
+    public final NumberPath<Long> PROP_UNT_ID = createNumber("PROP_UNT_ID", Long.class);
+
+    public final NumberPath<Long> REG_UNT_ID = createNumber("REG_UNT_ID", Long.class);
+
     public final NumberPath<Long> SECUDEPT_ID = createNumber("SECUDEPT_ID", Long.class);
+
+    public final StringPath SUB_EQP_VART = createString("SUB_EQP_VART");
+
+    public final StringPath USE_MOBILE = createString("USE_MOBILE");
 
     public final StringPath USE_UNT_ADDR = createString("USE_UNT_ADDR");
 

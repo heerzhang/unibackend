@@ -57,5 +57,6 @@ extend type Mutation {
     testEQPcreateQueryModify(cod:String!, oid: String ): String
     invalidateEQP(whichEqp:ID!, reason: String!) : Boolean!
     removeEQP(id:ID!) : Boolean!
+    syncEqpFromOld(offset:Int, limit:Int): [String]!
 }
 

@@ -1,12 +1,17 @@
 package md.specialEqp.type;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import md.specialEqp.Eqp;
 
 import javax.persistence.Entity;
 
 
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
 @Entity

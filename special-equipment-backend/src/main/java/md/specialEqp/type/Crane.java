@@ -1,14 +1,17 @@
 package md.specialEqp.type;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import md.specialEqp.Eqp;
 
 import javax.persistence.Entity;
 
 
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 public class Crane extends Eqp {
     //4000起重机械  TB_CRANE_PARA技术参数

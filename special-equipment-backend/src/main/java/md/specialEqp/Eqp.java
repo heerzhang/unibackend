@@ -1,6 +1,7 @@
 package md.specialEqp;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import md.cm.unit.Unit;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.Task;
@@ -36,10 +37,12 @@ import java.util.stream.Collectors;
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 //字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。
 
-
+@NoArgsConstructor
+@EqualsAndHashCode
+@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Data
-@NoArgsConstructor
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Medium")

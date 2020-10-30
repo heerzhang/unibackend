@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+//老旧平台的设备主表。
 
 @Getter
 @Setter
@@ -23,18 +25,28 @@ public class EqpMge {
     @Column(name = "EQP_COD")
     private String eqpcod;
     private String OIDNO;
+    private String EQP_TYPE;
     private String EQP_USECERT_COD;     //'使用证号'
-    private String EQP_STATION_COD;     //'设备代码
+    private String EQP_STATION_COD;     //'设备代码(设备国家代码)
+    private String EQP_REG_COD;
     private String EQP_NAME;            //没用~ ！
     private String EQP_VART;        //'设备名称'=品种
     private String EQP_VART_NAME;
     private String EQP_SORT;        //设备类别  EQP_SORT_NAME
     private String EQP_SORT_NAME;
+    private String SUB_EQP_VART;
     private String EQP_MOD;      //型号'
+    private char EQP_REG_STA;
+    private char EQP_USE_STA;
+    private char   IN_CAG;
+    private String EQP_LEVEL;
     private String FACTORY_COD;     //出厂编号；
     private String EQP_INNER_COD;     //单位内部编号'
     @Temporal(TemporalType.DATE)
     private Date MAKE_DATE;   //制造日期
+    private char  IF_INCPING;   //是否正在安装监检
+    private String IF_MAJEQP;   //是否重要特种设备
+    private char   IS_MOVEEQP;
     //内设管理部门=很少的。   关联TB_UNT_DEPT；单位有多个内部管理人；实际用途非常简略=没意义。
     //内设分支机构，根据地区分辨的。     关联TB_UNT_SECUDEPT；    报告显示的。
     private Long USE_UNT_ID;      //使用单位ID  ,   USE_UNT_ADDR
@@ -42,11 +54,13 @@ public class EqpMge {
     private Long SECUDEPT_ID;     //分支机构ID'　
     private Long MAKE_UNT_ID;     //制造单位ID
     private Long ALT_UNT_ID;      //改造单位ID　　= -1
-    private Long MANT_UNT_ID; //维保单位ID
-    //非强制字段： 有BUILD_ID的设备 不算 很多比例。
-    private Long BUILD_ID;    //'楼盘ID'；   标示出该设备当前归属哪一个楼盘下辖管控的，可以询问该楼盘就知晓的到。
+    private Long MANT_UNT_ID;  //维保单位ID
+
     @Temporal(TemporalType.DATE)
     private Date ALT_DATE;    //改造日期'
+    private Date  FIRSTUSE_DATE;    //设备投用日期
+    private Date  COMPE_ACCP_DATE;  //竣工验收日期
+    private Date  END_USE_DATE;
     @Temporal(TemporalType.DATE)
     private Date NEXT_ISP_DATE1;  //下次检验日期1（在线、年度）
     @Temporal(TemporalType.DATE)
@@ -57,9 +71,24 @@ public class EqpMge {
     //大部分都有的，但是可能很简单地址。配合区域码和负责任务的机关。
     private String  EQP_USE_ADDR;     // '使用地点' 可能是具体几号楼？可能是很简单的称谓,最具体地址，大地址的反而没说。
     //EQP_AREA_COD  EQP_LAT EQP_LONG ; 地理信息不算重要， 仅作标记。
-
+    private String  EQP_AREA_COD;   //设备所在区域
+    //非强制字段： 有BUILD_ID的设备 不算 很多比例。
+    private Long BUILD_ID;    //'楼盘ID'；   标示出该设备当前归属哪一个楼盘下辖管控的，可以询问该楼盘就知晓的到。
+    private String EQP_USE_OCCA;    //使用场合
     //安全人员是合并字段？ SAFE_MAN || USE_LKMEN,  ；
     //WX_SIGNATURE;
+    //不能使用float 做类型， 可能是null;
+    @Column( nullable = true)       //若不添加nullable，无法跑起来。
+    private Float  EQP_PRICE;   //产品设备价(进口安全性能监检的设备价)(单位：元)
+    private String  USE_MOBILE;     //设备联系手机
+    private char NOTELIGIBLE_FALG1;
+    private char NOTELIGIBLE_FALG2;
+    private Date  LAST_ISP_DATE1;
+    private Date  LAST_ISP_DATE2;
+
+    private Long REG_UNT_ID;  //监察注册机构ID //REG_UNT_NAME注册机构名称
+    private Long PROP_UNT_ID;   //产权单位id
+    private Long INST_UNT_ID;   //安装单位ID
 }
 
 //和旧平台的对接实体表。

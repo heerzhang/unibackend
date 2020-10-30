@@ -1,8 +1,7 @@
 package md.specialEqp.type;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import md.specialEqp.Eqp;
 
 import javax.persistence.*;
@@ -10,6 +9,9 @@ import javax.persistence.*;
 //子类不能再做@org.hibernate.annotations.Cache() 与 @Inheritance(strategy=)和@Version注解的。
 //java中的接口之间可以实现多继承，也可以实现多实现。但是java中的类只能实现单extends继承
 
+
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor

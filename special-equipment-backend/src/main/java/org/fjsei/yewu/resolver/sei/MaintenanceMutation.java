@@ -2,6 +2,7 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import lombok.Builder;
 import md.cm.base.*;
 import md.cm.geography.*;
 import md.cm.unit.Unit;
@@ -9,12 +10,12 @@ import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
+import md.specialEqp.type.Crane;
+import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.AuthorityRepository;
 import md.system.UserRepository;
-import org.fjsei.yewu.entity.fjtj.HrUserinfoRepository;
-import org.fjsei.yewu.entity.fjtj.UntMge;
-import org.fjsei.yewu.entity.fjtj.UntMgeRepository;
+import org.fjsei.yewu.entity.fjtj.*;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
 import org.fjsei.yewu.security.JwtTokenUtil;
@@ -30,10 +31,11 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.sql.Date;
 import java.util.*;
 
 //这个类名字不能重复简明！
-//后台维护
+//后台维护!
 
 @Component
 public class MaintenanceMutation implements GraphQLMutationResolver {
@@ -80,6 +82,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private final JwtTokenUtil jwtTokenUtil=new JwtTokenUtil();
     @Autowired private UntMgeRepository untMgeRepository;
+    @Autowired private EqpMgeRepository eqpMgeRepository;
 
     //仅用于后台维护使用的；
     @Transactional(rollbackFor = Exception.class)
@@ -187,7 +190,42 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         }
         return retMsgs;
     }
+    //仅先从老旧平台倒腾到eqp实体类，相关的ES部分另外再搞；
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpFromOld(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<EqpMge> untMges= eqpMgeRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (EqpMge each:untMges)
+        {
+            Eqp eqp;
+            if(each.getEQP_TYPE().equals("3000"))
+                eqp=new Elevator();
+            else if(each.getEQP_TYPE().equals("4000"))
+                eqp=new Crane();
+            else
+                eqp=new Eqp();
+            //Class T=Eqp.class;
+            Eqp eqp1=eqp.toBuilder().accpDt(Date.valueOf("2020-01-02")).build();
 
+            //Eqp sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
+            //if( !(sec instanceof Elevator) )       return eQP;
+            //Builder builder= new Eqp().builder();
+
+            if(each.getEQP_TYPE().equals("3000"))
+              ; // eqp=(Elevator)eqp1;
+            else if(each.getEQP_TYPE().equals("4000"))
+                ;//eqp=(Crane)eqp1;
+            else {
+                retMsgs.add("EQP_TYPE null offset="+offset);
+                continue;
+            }
+
+            //Class.forName( new Eqp().getClass().getName() ).newInstance();
+        }
+        return retMsgs;
+    }
 }
 
 

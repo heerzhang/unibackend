@@ -1,7 +1,10 @@
 package md.specialEqp.type;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,6 +15,8 @@ import java.util.Set;
 //7000压力管道元件=制造库才用的　=制造流水表的type。
 
 
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
 @Entity
