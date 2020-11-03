@@ -11,7 +11,7 @@ import java.util.Set;
 //设备中的单位， 即可以是公司，也可以是个人。company和person是大数据的影子实体类/只能读。Unit是本地附加的属性。
 //搜索引擎ES找到company或者person的id后，就能通过Unit的关联ID和数据库索引快速找到其它相关的字段属性，比如owns设备集合。
 
-
+//表实体的名字替换小心：底层数据库的旧的索引FK外键并没有删除掉，可能导致无法跑起来，也不报错！！
 @AllArgsConstructor
 @Data
 @Entity
@@ -27,9 +27,13 @@ public class Unit {
     private String name;    //UNT_NAME
     private Long oldId;      //UNT_ID
     private Long jcId;  //JC_UNT_ID
+    //多个应用系统对接：内部用ID挂接，数据库不同的亦即外部平台对接就需要依靠名字编码等唯一性过滤定位组合来判定。
+    //实际应该改成是Address实体表ID
     private String address; //UNT_ADDR
+    //实际应该改成是Person实体表ID
     private String linkMen; //UNT_LKMEN
     private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
+    //不需要，延伸实体已有类似的
     private String phone;
     //加载方式修改影响很大。根据业务场景挑选。懒加载了若想关联内省查询会运行错误。
     @OneToMany(mappedBy = "owner")
@@ -54,6 +58,11 @@ public class Unit {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( referencedColumnName = "ID")
     private Person person;        //直接代替实体类继承模式，改做1:1关系。
+
+
+    //细分分支机构和管理部门
+    @OneToMany(mappedBy = "unit")
+    private Set<Division>  dvs;    //分支或部门集合
 
 
     public Unit() {

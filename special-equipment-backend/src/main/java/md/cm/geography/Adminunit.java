@@ -25,10 +25,14 @@ public class Adminunit {
     private String  prefix;    //街道'乡'镇';但允许街道名称省略掉。 鼓楼区就行，不一定要加上街道称呼。
     //旧平台 ， 外部地理系统的对接的 地区码。
     //行政区划代码9位数字;350100 福州市; 350101 市辖区　350102 鼓楼区 350181 福清市　350182 长乐区市; 福建省350000;
+
+    //平潭和福州区划代码如何区分开        //编码规则已经被破坏。
+    //行政区划代码9位数字编码失去意义了。
     private String  areacode;
     //邮政编码；
     private String  zipcode;
 
+    //一个乡镇社区行政最小单元底下的　所有已经声明的地址。
     @OneToMany(mappedBy = "ad")
     private Set<Address>  adrs;
     //JoinColumn 的 name 和 referencedColumnName 指的都是数据库的字段名，不是 Entity 的属性。
@@ -51,7 +55,12 @@ public class Adminunit {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "country_id")
     private Country country;
+
+    //一个乡镇社区行政最小单元底下的，所有的 俗称的 楼盘。
+    @OneToMany(mappedBy = "ad")
+    private Set<Village>  vlgs;
 }
+
 
 /*
 行政区划代码代码从左至右的含义是：第一、二位表示省（自治区、直辖市、特别行政区）、第三、四位表示市（地区、自治州、盟及国家直辖市所属市辖区和县的汇总码）、

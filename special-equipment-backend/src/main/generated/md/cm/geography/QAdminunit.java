@@ -40,6 +40,8 @@ public class QAdminunit extends EntityPathBase<Adminunit> {
 
     public final QTown town;
 
+    public final SetPath<Village, QVillage> vlgs = this.<Village, QVillage>createSet("vlgs", Village.class, QVillage.class, PathInits.DIRECT2);
+
     public final StringPath zipcode = createString("zipcode");
 
     public QAdminunit(String variable) {

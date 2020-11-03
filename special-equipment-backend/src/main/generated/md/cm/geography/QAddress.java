@@ -34,6 +34,8 @@ public class QAddress extends EntityPathBase<Address> {
 
     public final StringPath name = createString("name");
 
+    public final QVillage vlg;
+
     public QAddress(String variable) {
         this(Address.class, forVariable(variable), INITS);
     }
@@ -53,6 +55,7 @@ public class QAddress extends EntityPathBase<Address> {
     public QAddress(Class<? extends Address> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.ad = inits.isInitialized("ad") ? new QAdminunit(forProperty("ad"), inits.get("ad")) : null;
+        this.vlg = inits.isInitialized("vlg") ? new QVillage(forProperty("vlg"), inits.get("vlg")) : null;
     }
 
 }

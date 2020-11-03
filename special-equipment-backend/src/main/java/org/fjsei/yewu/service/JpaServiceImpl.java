@@ -240,7 +240,7 @@ public class JpaServiceImpl implements JpaService {
         //teacherDao.findAll().forEach(topics::add);
         for(int e = 0; e < 500; e++)  {
             int uid5=random.nextInt(170)+1 +3000;
-            Eqp eQP = new Eqp(getRandomString(6)+"越A",String.valueOf(uid5), "起重"+getRandomString(6));
+            Eqp eQP =Eqp.builder().cod(getRandomString(6)+"越A").type(String.valueOf(uid5)).oid("起重"+getRandomString(6)).build();
          //   Set<Task> task_list= new HashSet<>();  //List<Task> task_list = new ArrayList<>();
             for(int t = 0; t < 0; t++) {
                 Task task = new Task();

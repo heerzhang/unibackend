@@ -20,12 +20,12 @@ import javax.persistence.*;
 public class Elevator  extends Eqp {
     //3000电梯  TB_ELEV_PARA  电梯技术参数表
     private String liftHeight;
-
+/*
     public  Elevator(String cod,String type,String oid){
         super(cod,type,oid);
         liftHeight="253Meters";
     }
-
+*/
 }
 
 

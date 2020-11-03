@@ -27,7 +27,7 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final DateTimePath<java.util.Date> COMPE_ACCP_DATE = createDateTime("COMPE_ACCP_DATE", java.util.Date.class);
 
-    public final DateTimePath<java.util.Date> END_USE_DATE = createDateTime("END_USE_DATE", java.util.Date.class);
+    public final DateTimePath<java.util.Date> DESIGN_USE_OVERYEAR = createDateTime("DESIGN_USE_OVERYEAR", java.util.Date.class);
 
     public final StringPath EQP_AREA_COD = createString("EQP_AREA_COD");
 
@@ -47,8 +47,6 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath EQP_SORT = createString("EQP_SORT");
 
-    public final StringPath EQP_SORT_NAME = createString("EQP_SORT_NAME");
-
     public final StringPath EQP_STATION_COD = createString("EQP_STATION_COD");
 
     public final StringPath EQP_TYPE = createString("EQP_TYPE");
@@ -62,8 +60,6 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
     public final StringPath EQP_USECERT_COD = createString("EQP_USECERT_COD");
 
     public final StringPath EQP_VART = createString("EQP_VART");
-
-    public final StringPath EQP_VART_NAME = createString("EQP_VART_NAME");
 
     public final StringPath eqpcod = createString("eqpcod");
 
@@ -83,6 +79,10 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final ComparablePath<Character> IS_MOVEEQP = createComparable("IS_MOVEEQP", Character.class);
 
+    public final StringPath LAST_ISP_CONCLU1 = createString("LAST_ISP_CONCLU1");
+
+    public final StringPath LAST_ISP_CONCLU2 = createString("LAST_ISP_CONCLU2");
+
     public final DateTimePath<java.util.Date> LAST_ISP_DATE1 = createDateTime("LAST_ISP_DATE1", java.util.Date.class);
 
     public final DateTimePath<java.util.Date> LAST_ISP_DATE2 = createDateTime("LAST_ISP_DATE2", java.util.Date.class);
@@ -97,9 +97,9 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final DatePath<java.util.Date> NEXT_ISP_DATE2 = createDate("NEXT_ISP_DATE2", java.util.Date.class);
 
-    public final ComparablePath<Character> NOTELIGIBLE_FALG1 = createComparable("NOTELIGIBLE_FALG1", Character.class);
+    public final BooleanPath NOTELIGIBLE_FALG1 = createBoolean("NOTELIGIBLE_FALG1");
 
-    public final ComparablePath<Character> NOTELIGIBLE_FALG2 = createComparable("NOTELIGIBLE_FALG2", Character.class);
+    public final BooleanPath NOTELIGIBLE_FALG2 = createBoolean("NOTELIGIBLE_FALG2");
 
     public final StringPath OIDNO = createString("OIDNO");
 
@@ -112,8 +112,6 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
     public final StringPath SUB_EQP_VART = createString("SUB_EQP_VART");
 
     public final StringPath USE_MOBILE = createString("USE_MOBILE");
-
-    public final StringPath USE_UNT_ADDR = createString("USE_UNT_ADDR");
 
     public final NumberPath<Long> USE_UNT_ID = createNumber("USE_UNT_ID", Long.class);
 

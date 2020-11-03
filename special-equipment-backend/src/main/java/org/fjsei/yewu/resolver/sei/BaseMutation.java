@@ -134,7 +134,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional(rollbackFor = Exception.class)
     public Eqp newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Eqp eQP = new Eqp(cod,type,oid);
+        Eqp eQP =Eqp.builder().cod(cod).type(type).oid(oid).build();
         eQP.setSort("三方大的");
         eQP.setVart("Ccvs第三方大师傅得f");
         Task task=new Task();
@@ -516,7 +516,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP == null,"找到eQP:"+eQP);
-        Elevator elevator =new Elevator(info.getCod(),"typ01",info.getOid());
+        Elevator elevator =Elevator.builder().cod(info.getCod()).type("typ01").oid(info.getOid()).build();
         elevator.setLiftHeight("565555");
         elevatorRepository.save(elevator);
         return elevator;
@@ -524,7 +524,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Elevator buildElevator(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Elevator elevator =new Elevator(cod,type,oid);
+        Elevator elevator =Elevator.builder().cod(cod).type(type).oid(oid).build();
         elevator.setLiftHeight("565555");
         elevatorRepository.save(elevator);
         return elevator;

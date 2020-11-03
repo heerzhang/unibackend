@@ -34,10 +34,16 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath area;
 
     //inherited
-    public final StringPath build;
+    public final NumberPath<Long> buildId;
 
     //inherited
     public final ComparablePath<Character> cag;
+
+    //inherited
+    public final StringPath ccl1;
+
+    //inherited
+    public final StringPath ccl2;
 
     //inherited
     public final StringPath cert;
@@ -95,14 +101,17 @@ public class QElevator extends EntityPathBase<Elevator> {
     // inherited
     public final md.cm.unit.QUnit mtU;
 
+    // inherited
+    public final md.cm.unit.QDivision mtud;
+
     //inherited
     public final StringPath name;
 
     //inherited
-    public final DateTimePath<java.time.Instant> nxtD1;
+    public final DateTimePath<java.util.Date> nxtD1;
 
     //inherited
-    public final DateTimePath<java.time.Instant> nxtD2;
+    public final DateTimePath<java.util.Date> nxtD2;
 
     //inherited
     public final StringPath occasion;
@@ -147,10 +156,10 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath type;
 
     //inherited
-    public final StringPath unqf1;
+    public final BooleanPath unqf1;
 
     //inherited
-    public final StringPath unqf2;
+    public final BooleanPath unqf2;
 
     //inherited
     public final DateTimePath<java.util.Date> useDt;
@@ -160,6 +169,9 @@ public class QElevator extends EntityPathBase<Elevator> {
 
     //inherited
     public final ComparablePath<Character> ust;
+
+    // inherited
+    public final md.cm.unit.QDivision usud;
 
     //inherited
     public final BooleanPath valid;
@@ -192,8 +204,10 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.accpDt = _super.accpDt;
         this.addr = _super.addr;
         this.area = _super.area;
-        this.build = _super.build;
+        this.buildId = _super.buildId;
         this.cag = _super.cag;
+        this.ccl1 = _super.ccl1;
+        this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
         this.cod = _super.cod;
         this.contact = _super.contact;
@@ -212,6 +226,7 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.model = _super.model;
         this.move = _super.move;
         this.mtU = _super.mtU;
+        this.mtud = _super.mtud;
         this.name = _super.name;
         this.nxtD1 = _super.nxtD1;
         this.nxtD2 = _super.nxtD2;
@@ -234,6 +249,7 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.useDt = _super.useDt;
         this.useU = _super.useU;
         this.ust = _super.ust;
+        this.usud = _super.usud;
         this.valid = _super.valid;
         this.vart = _super.vart;
         this.version = _super.version;

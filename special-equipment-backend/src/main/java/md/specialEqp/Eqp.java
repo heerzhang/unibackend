@@ -2,23 +2,18 @@ package md.specialEqp;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import md.cm.unit.Division;
 import md.cm.unit.Unit;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.DiscriminatorOptions;
 //import org.springframework.data.annotation.Transient;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,12 +32,14 @@ import java.util.stream.Collectors;
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 //字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。
 
+
+
 @NoArgsConstructor
-@EqualsAndHashCode
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Data
+@Getter
+@Setter
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Medium")
@@ -85,6 +82,7 @@ public class Eqp implements Equipment{
     private String fNo;   //FACTORY_COD  出厂编号
     private String name;    //EQP_NAME 设备名称
     //不能用保留字。private String inner;
+    //附加上后更加能精确定位某个地理空间的位置
     private String  plNo;    //EQP_INNER_COD 单位内部编号place No
     //不能用保留字。private String mod;
     private String  model;    //EQP_MOD 设备型号
@@ -93,22 +91,31 @@ public class Eqp implements Equipment{
     //private Date  instDate;
     private Date    useDt;  //FIRSTUSE_DATE 设备投用日期
     private Date    accpDt;  //COMPE_ACCP_DATE 竣工验收日期
-    private Date    expire;  //END_USE_DATE 使用年限到期时间//DESIGN_USE_OVERYEAR设计使用年限 到期时间
+    private Date    expire;  //DESIGN_USE_OVERYEAR设计使用年限 到期年份 //END_USE_DATE 使用年限到期时间
     private Boolean  move;   //IS_MOVEEQP 是否流动设备
+    //EQP_AREA_COD定义规律大乱；    //统计和行政含义的地址区分；
     private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
-    private String addr;    //暂时用 EQP_USE_ADDR 使用地址
+    private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     private String occasion;    //EQP_USE_OCCA 使用场合
-    private String build;    //暂用 BUILD_ID  楼盘ID
-    private float  ePrice;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
+    //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
+    private Long  buildId;    //暂用 BUILD_ID  楼盘ID
+    private float  ePrice=0;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
     private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
-    private String unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
-    private String unqf2;    //NOTELIGIBLE_FALG2 不合格标志2(机电定检，内检，全面）
+    //还没有做出结论判定的，就直接上null；
+    private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
+    //判定为合格的
+    private Boolean unqf2;    //NOTELIGIBLE_FALG2 不合格标志2(机电定检，内检，全面）
+    //判定不合格的，以及不合格情形下的报告结论给出的简短的关键字提示。
+    private String ccl1;    //LAST_ISP_CONCLU1  '最后一次检验结论1'
+    //判定为合格的或者勉强合格的，带注释提示但是合格的， 还没有做出结论判定的，就直接上null；
+    private String ccl2;    //LAST_ISP_CONCLU2  '最后一次检验结论2'
     private Date    ispD1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
     private Date    ispD2;      //LAST_ISP_DATE2
-    @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Instant nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）
-    @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Instant nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+    //Instant? 纳秒时间,不使用java.util.Date
+    //@Field(type = FieldType.Date, format = DateFormat.date_time)
+    //private Instant nxtD1;
+    private Date nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）
+    private Date nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
 
     //索引会被自动创建的。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -117,13 +124,7 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "regu_id")
     private Unit  regU;     //REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn
-    private Unit  useU;     //USE_UNT_ID 使用单位ID
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn
-    private Unit   mtU;     //MANT_UNT_ID 维保单位ID maintUnt
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit  makeU;     //MAKE_UNT_ID 制造单位ID
@@ -133,7 +134,7 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit  remU;     //ALT_UNT_ID 改造单位ID
-
+    //可以和使用单位地址不同的。
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
@@ -153,13 +154,22 @@ public class Eqp implements Equipment{
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<ISP>  isps;
+    //底下这两组实际相当于内嵌结构对象，或者说[mtU，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit   mtU;     //MANT_UNT_ID 维保单位ID maintUnt
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'
+    //若是个人就一定没分支部门；[useU，usud]复合字段的；
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit  useU;     //USE_UNT_ID 使用单位ID
+    //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Division usud;     //.SECUDEPT_ID	 '分支机构ID'  .SAFE_DEPT_ID '安全管理部门ID'
 
-
-    public Eqp(String cod, String type, String oid){
-        this.cod=cod;
-        this.type=type;
-        this.oid=oid;
-    }
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。
     //本函数执行之前，JPA数据实际已都取完成了。

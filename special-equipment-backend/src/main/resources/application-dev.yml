@@ -18,17 +18,17 @@ app:
       password: fjseiuser12345678
     #监察等其它的数据库。每一个用户数据库都独立配置。JPA一次Query无法跨越多个数据库,当然上层的逻辑代码可以支持任意数量数据库。
     #若没有开启本机H2的console，将会自动使用H2内存数据库。
-    #旧平台正式运行。 测试104.34
-    fjtj:
+    #旧平台 测试库104.34
+    fjtj7:
       url: jdbc:oracle:thin:@//192.168.104.34:1521/fjtj
       #url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
       username: fjseiinuser
       password: fjseiuser12345678
     #老旧平台主数据库。
-    fjtj6:
-      url: jdbc:h2:tcp://localhost/~/fjtj
-      username: sa
-      password:
+    fjtj:
+      url: jdbc:oracle:thin:@//192.168.168.6:1521/fjtj
+      username: fjseiinuser
+      password: fjseiuser12345678
     fjtj3:
       url: jdbc:mysql://localhost:3306/fjsei?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: herzhang

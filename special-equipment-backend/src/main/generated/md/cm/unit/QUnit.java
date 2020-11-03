@@ -26,6 +26,8 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public final md.cm.base.QCompany company;
 
+    public final SetPath<Division, QDivision> dvs = this.<Division, QDivision>createSet("dvs", Division.class, QDivision.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath indCod = createString("indCod");

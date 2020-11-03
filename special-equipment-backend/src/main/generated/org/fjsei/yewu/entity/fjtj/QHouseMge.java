@@ -23,7 +23,11 @@ public class QHouseMge extends EntityPathBase<HouseMge> {
 
     public final StringPath BUILD_NAME = createString("BUILD_NAME");
 
+    public final StringPath BUILD_STATE = createString("BUILD_STATE");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath INST_BUILD_TYPE = createString("INST_BUILD_TYPE");
 
     public QHouseMge(String variable) {
         super(HouseMge.class, forVariable(variable));

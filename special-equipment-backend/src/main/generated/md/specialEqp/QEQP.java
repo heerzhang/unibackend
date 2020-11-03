@@ -28,9 +28,13 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath area = createString("area");
 
-    public final StringPath build = createString("build");
+    public final NumberPath<Long> buildId = createNumber("buildId", Long.class);
 
     public final ComparablePath<Character> cag = createComparable("cag", Character.class);
+
+    public final StringPath ccl1 = createString("ccl1");
+
+    public final StringPath ccl2 = createString("ccl2");
 
     public final StringPath cert = createString("cert");
 
@@ -68,11 +72,13 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit mtU;
 
+    public final md.cm.unit.QDivision mtud;
+
     public final StringPath name = createString("name");
 
-    public final DateTimePath<java.time.Instant> nxtD1 = createDateTime("nxtD1", java.time.Instant.class);
+    public final DateTimePath<java.util.Date> nxtD1 = createDateTime("nxtD1", java.util.Date.class);
 
-    public final DateTimePath<java.time.Instant> nxtD2 = createDateTime("nxtD2", java.time.Instant.class);
+    public final DateTimePath<java.util.Date> nxtD2 = createDateTime("nxtD2", java.util.Date.class);
 
     public final StringPath occasion = createString("occasion");
 
@@ -102,15 +108,17 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath type = createString("type");
 
-    public final StringPath unqf1 = createString("unqf1");
+    public final BooleanPath unqf1 = createBoolean("unqf1");
 
-    public final StringPath unqf2 = createString("unqf2");
+    public final BooleanPath unqf2 = createBoolean("unqf2");
 
     public final DateTimePath<java.util.Date> useDt = createDateTime("useDt", java.util.Date.class);
 
     public final md.cm.unit.QUnit useU;
 
     public final ComparablePath<Character> ust = createComparable("ust", Character.class);
+
+    public final md.cm.unit.QDivision usud;
 
     public final BooleanPath valid = createBoolean("valid");
 
@@ -139,11 +147,13 @@ public class QEqp extends EntityPathBase<Eqp> {
         this.insU = inits.isInitialized("insU") ? new md.cm.unit.QUnit(forProperty("insU"), inits.get("insU")) : null;
         this.makeU = inits.isInitialized("makeU") ? new md.cm.unit.QUnit(forProperty("makeU"), inits.get("makeU")) : null;
         this.mtU = inits.isInitialized("mtU") ? new md.cm.unit.QUnit(forProperty("mtU"), inits.get("mtU")) : null;
+        this.mtud = inits.isInitialized("mtud") ? new md.cm.unit.QDivision(forProperty("mtud"), inits.get("mtud")) : null;
         this.owner = inits.isInitialized("owner") ? new md.cm.unit.QUnit(forProperty("owner"), inits.get("owner")) : null;
         this.pos = inits.isInitialized("pos") ? new md.cm.geography.QAddress(forProperty("pos"), inits.get("pos")) : null;
         this.regU = inits.isInitialized("regU") ? new md.cm.unit.QUnit(forProperty("regU"), inits.get("regU")) : null;
         this.remU = inits.isInitialized("remU") ? new md.cm.unit.QUnit(forProperty("remU"), inits.get("remU")) : null;
         this.useU = inits.isInitialized("useU") ? new md.cm.unit.QUnit(forProperty("useU"), inits.get("useU")) : null;
+        this.usud = inits.isInitialized("usud") ? new md.cm.unit.QDivision(forProperty("usud"), inits.get("usud")) : null;
     }
 
 }

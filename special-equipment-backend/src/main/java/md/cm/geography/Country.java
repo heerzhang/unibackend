@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Set;
 
+//国家和地区：不代表是主权政治国；是通信邮政划分，全球第一级分区/ 国际级地区级别。
+
 @Getter
 @Setter
 @NoArgsConstructor

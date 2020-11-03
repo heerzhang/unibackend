@@ -3,16 +3,16 @@ package org.fjsei.yewu.resolver.sei;
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import md.cm.base.*;
 import md.cm.geography.*;
+import md.cm.unit.QUnit;
 import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
-import md.specialEqp.type.Crane;
-import md.specialEqp.type.Elevator;
-import md.specialEqp.type.ElevatorRepository;
+import md.specialEqp.type.*;
 import md.system.AuthorityRepository;
 import md.system.UserRepository;
 import org.fjsei.yewu.entity.fjtj.*;
@@ -31,12 +31,14 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.lang.reflect.Type;
 import java.sql.Date;
 import java.util.*;
 
 //这个类名字不能重复简明！
 //后台维护!
 
+@Slf4j
 @Component
 public class MaintenanceMutation implements GraphQLMutationResolver {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -190,40 +192,117 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         }
         return retMsgs;
     }
+
     //仅先从老旧平台倒腾到eqp实体类，相关的ES部分另外再搞；
     @Transactional(rollbackFor = Exception.class)
     public Iterable<String> syncEqpFromOld(int offset, int limit) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
+        //分片任务，保证可以重复执行，确保findAll读取出来的记录有顺序。
         Iterable<EqpMge> untMges= eqpMgeRepository.findAll(pageable);
         List<String> retMsgs=new ArrayList<>();
         for (EqpMge each:untMges)
         {
+            BooleanBuilder builder= new BooleanBuilder();;
+            QEqp qm2 = QEqp.eqp;
+            if (each.getOIDNO()!=null)
+                builder.and(qm2.oid.eq(each.getOIDNO()));
+            if (each.getEqpcod()!=null)
+                builder.and(qm2.cod.eq(each.getEqpcod()));
+            if (each.getFACTORY_COD()!=null)
+                builder.and(qm2.fNo.eq(each.getFACTORY_COD()));
+            if (each.getEQP_USECERT_COD()!=null)
+                builder.and(qm2.cert.eq(each.getEQP_USECERT_COD()));
+            if (each.getREG_UNT_ID()!=null)
+                builder.and(qm2.regU.oldId.eq(each.getREG_UNT_ID()));
+            //确保设备不重复！
             Eqp eqp;
-            if(each.getEQP_TYPE().equals("3000"))
-                eqp=new Elevator();
-            else if(each.getEQP_TYPE().equals("4000"))
-                eqp=new Crane();
-            else
-                eqp=new Eqp();
-            //Class T=Eqp.class;
-            Eqp eqp1=eqp.toBuilder().accpDt(Date.valueOf("2020-01-02")).build();
-
-            //Eqp sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
-            //if( !(sec instanceof Elevator) )       return eQP;
-            //Builder builder= new Eqp().builder();
-
-            if(each.getEQP_TYPE().equals("3000"))
-              ; // eqp=(Elevator)eqp1;
-            else if(each.getEQP_TYPE().equals("4000"))
-                ;//eqp=(Crane)eqp1;
-            else {
-                retMsgs.add("EQP_TYPE null offset="+offset);
+            if(eQPRepository.exists(builder)) {
+                retMsgs.add("成功");
                 continue;
             }
+            eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subVart(each.getSUB_EQP_VART())
+                .reg(each.getEQP_REG_STA()).ust(each.getEQP_USE_STA()).cag(each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sNo(each.getEQP_STATION_COD())
+                .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fNo(each.getFACTORY_COD()).name(each.getEQP_NAME()).plNo(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
+                .cping(each.getIF_INCPING()=='1').important(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
+                    .useDt(each.getFIRSTUSE_DATE())
+                .accpDt(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
+                    .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1').area(each.getEQP_AREA_COD()).addr(each.getEQP_USE_ADDR())
+                .occasion(each.getEQP_USE_OCCA()).buildId(each.getBUILD_ID())
+                    .ePrice(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).contact(each.getUSE_MOBILE())
+                    .unqf1(each.getNOTELIGIBLE_FALG1()).unqf2(each.getNOTELIGIBLE_FALG2())
+                    .ccl1(each.getLAST_ISP_CONCLU1()).ccl2(each.getLAST_ISP_CONCLU2())
+                    .ispD1(each.getLAST_ISP_DATE1()).ispD2(each.getLAST_ISP_DATE2()).nxtD1(each.getNEXT_ISP_DATE1())
+                .nxtD2(each.getNEXT_ISP_DATE2()).build();
+            QUnit qm = QUnit.unit;
+            Unit unit;
 
-            //Class.forName( new Eqp().getClass().getName() ).newInstance();
+            if(each.getPROP_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getPROP_UNT_ID()));
+                //确保只能最多找到一个单位！
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setOwner(unit);
+            }
+            //todo:使用单位反而都有的，   产权人却是可省略？
+            if(each.getREG_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getREG_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setRegU(unit);
+            }
+            if(each.getUSE_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getUSE_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setUseU(unit);
+            }
+            if(each.getMANT_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getMANT_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setMtU(unit);
+            }
+            if(each.getMAKE_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getMAKE_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setMakeU(unit);
+            }
+            if(each.getINST_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getINST_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setInsU(unit);
+            }
+            if(each.getALT_UNT_ID()!=null) {
+                builder = new BooleanBuilder();
+                builder.and(qm.oldId.eq(each.getALT_UNT_ID()));
+                unit = unitRepository.findOne(builder).orElse(null);
+                eqp.setRemU(unit);
+            }
+            Eqp targ;
+            if(each.getEQP_TYPE().equals("3000"))
+                targ=new Elevator();
+            else if(each.getEQP_TYPE().equals("4000"))
+                targ=new Crane();
+            else if(each.getEQP_TYPE().equals("2000"))
+                targ=new Vessel();
+            else if(each.getEQP_TYPE().equals("8000"))
+                targ=new Pipeline();
+            else if(each.getEQP_TYPE().equals("1000"))
+                targ=new Boiler();
+            else if(each.getEQP_TYPE().equals("5000"))
+                targ=new FactoryVehicle();
+            else if(each.getEQP_TYPE().equals("6000"))
+                targ=new Amusement();
+            else
+                targ=new Eqp();
+            BeanUtils.copyProperties(eqp,targ);
+            eQPRepository.save(targ);
+            retMsgs.add("成功");
         }
+        log.info("syncEqpFromOld:{}", offset);
         return retMsgs;
     }
 }
