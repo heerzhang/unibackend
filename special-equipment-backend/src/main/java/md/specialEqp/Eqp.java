@@ -154,10 +154,12 @@ public class Eqp implements Equipment{
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<ISP>  isps;
+
     //底下这两组实际相当于内嵌结构对象，或者说[mtU，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit   mtU;     //MANT_UNT_ID 维保单位ID maintUnt
+    //针对维保单位的细化　分支机构部门。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'
@@ -165,6 +167,7 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit  useU;     //USE_UNT_ID 使用单位ID
+    //针对使用单位的细化　管理分支部门。
     //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn

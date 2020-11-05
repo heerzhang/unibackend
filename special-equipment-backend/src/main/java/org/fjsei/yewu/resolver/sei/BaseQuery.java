@@ -712,6 +712,34 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
 
     //普通接口为了安全只好写死代码介入过滤，不能依靠前端的输入参数WhereTree来过滤，前端可被用户随意修改的。
+    public Iterable<Equipment> findAllEQPsFilter3(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        if(limit<=0)   limit=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, limit);
+        else
+            pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+
+        QEqp qm = QEqp.eqp;
+        BooleanBuilder builder = new BooleanBuilder();
+        if (!StringUtils.isEmpty(where.getCod()))
+            builder.and(qm.cod.contains(where.getCod()));
+        if (where.getOwnerId()!=null)
+            builder.and(qm.owner.id.eq(where.getOwnerId()));
+        if (!StringUtils.isEmpty(where.getFNo()))
+            builder.and(qm.fNo.contains(where.getFNo()));
+
+        List<Equipment>  elevators = new ArrayList<Equipment>();
+        //Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
+        Iterable<Eqp> eqps = eQPRepository.findAll(pageable);
+        eqps.forEach(item -> {
+           // if(item instanceof Equipment)
+                elevators.add(item);
+        });
+        return elevators;
+    }
     public Iterable<Equipment> findAllEQPsFilter(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
@@ -734,8 +762,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         List<Equipment>  elevators = new ArrayList<Equipment>();
         Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
         eqps.forEach(item -> {
-           // if(item instanceof Equipment)
-                elevators.add(item);
+            // if(item instanceof Equipment)
+            elevators.add(item);
         });
         return elevators;
     }

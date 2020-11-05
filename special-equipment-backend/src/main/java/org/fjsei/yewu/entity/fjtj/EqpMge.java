@@ -48,14 +48,21 @@ public class EqpMge {
     private String IF_MAJEQP;   //是否重要特种设备
     private Character IS_MOVEEQP;
     //private char   IS_MOVEEQP;
+
+    private Byte  MGE_DEPT_TYPE;  //使用单位的！　　管理部门类型，0:无内设管理部门 1：内设管理部门，2：分支机构
     //内设管理部门=很少的。   关联TB_UNT_DEPT；单位有多个内部管理人；实际用途非常简略=没意义。
     //内设分支机构，根据地区分辨的。     关联TB_UNT_SECUDEPT；    报告显示的。
     private Long USE_UNT_ID;      //使用单位ID  ,   USE_UNT_ADDR
     //使用单位类型：无内设；内设管理　算统一地域之内的的行政划分； 内设机构是按照地域码的分,分支Name多个，每个分支机构联系人也能多个，地址与区域码可重复。
-    private Long SECUDEPT_ID;     //分支机构ID'　
+    private Long SECUDEPT_ID;       //使用单位底下的　分支机构ID'　
+    private Long SAFE_DEPT_ID;      //使用单位底下的　安全管理部门ID
+
+    private Long MANT_UNT_ID;        //维保单位ID
+    //检验平台本字段实际没有数据； 监察平台只有EQP_TYPE='3000'也才一小部分是有指定部门。
+    private Long  MANT_DEPT_ID;     //维保单位底下的 部门或分支ID; 监察“驻点”/解除维保
+
     private Long MAKE_UNT_ID;     //制造单位ID
     private Long ALT_UNT_ID;      //改造单位ID　　= -1
-    private Long MANT_UNT_ID;  //维保单位ID
 
     @Temporal(TemporalType.DATE)
     private Date ALT_DATE;    //改造日期'
@@ -97,11 +104,11 @@ public class EqpMge {
     private Long PROP_UNT_ID;   //产权单位id
     private Long INST_UNT_ID;   //安装单位ID
 
-    //MGE_DEPT_TYPE 1-分支机构还是2-安全管理部门;
+    //M
     //.SECUDEPT_ID 关联TB_UNT_SECUDEPT   .SAFE_DEPT_ID  关联TB_UNT_DEPT
     //部门管理类型MGE_DEPT_TYPE若=2： ||'-'|| SECUDEPT_NAME ), TB_UNT_SECUDEPT关联  MGE_DEPT_TYPE若=1很少作废了 关联TB_UNT_DEPT实际数据太少作废
 
     //ISP_TYPE '检验范畴 1:机电，2：承压，3：综合'  <==业务类型？设备类型；
 }
 
-//和旧平台的对接实体表。
+//和旧平台的对接实体表。　安全管理部门.SAFE_DEPT_ID　分支机构.SECUDEPT_ID

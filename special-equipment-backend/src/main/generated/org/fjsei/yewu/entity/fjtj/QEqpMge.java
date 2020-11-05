@@ -91,7 +91,11 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final NumberPath<Long> MAKE_UNT_ID = createNumber("MAKE_UNT_ID", Long.class);
 
+    public final NumberPath<Long> MANT_DEPT_ID = createNumber("MANT_DEPT_ID", Long.class);
+
     public final NumberPath<Long> MANT_UNT_ID = createNumber("MANT_UNT_ID", Long.class);
+
+    public final NumberPath<Byte> MGE_DEPT_TYPE = createNumber("MGE_DEPT_TYPE", Byte.class);
 
     public final DatePath<java.util.Date> NEXT_ISP_DATE1 = createDate("NEXT_ISP_DATE1", java.util.Date.class);
 
@@ -106,6 +110,8 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
     public final NumberPath<Long> PROP_UNT_ID = createNumber("PROP_UNT_ID", Long.class);
 
     public final NumberPath<Long> REG_UNT_ID = createNumber("REG_UNT_ID", Long.class);
+
+    public final NumberPath<Long> SAFE_DEPT_ID = createNumber("SAFE_DEPT_ID", Long.class);
 
     public final NumberPath<Long> SECUDEPT_ID = createNumber("SECUDEPT_ID", Long.class);
 
