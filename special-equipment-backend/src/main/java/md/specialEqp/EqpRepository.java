@@ -2,7 +2,6 @@ package md.specialEqp;
 
 
 import md.cm.unit.Unit;
-import org.fjsei.yewu.jpa.QuerydslNcExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 //QuerydslPredicateExecutor<Eqp>
 
-public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslNcExecutor<Eqp> {
+public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslPredicateExecutor<Eqp> {
 
         //函数名字改了，那么后面参数Specification<Eqp> spec就不起作用，这样Specification将没用！
         //@Query("select t from Eqp t")
