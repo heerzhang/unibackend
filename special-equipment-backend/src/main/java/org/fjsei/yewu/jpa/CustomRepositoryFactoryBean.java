@@ -2,16 +2,19 @@ package org.fjsei.yewu.jpa;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
+import org.springframework.data.jpa.repository.support.*;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.querydsl.EntityPathResolver;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.data.repository.core.support.RepositoryFragment;
 import org.springframework.data.repository.core.support.TransactionalRepositoryFactoryBeanSupport;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -20,10 +23,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
+import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
+
 //版本升級特別小心，要跟溯源來的隨源代碼修改，否則可能出問題。2.1.4升級2.2.6就報錯啦！
 //修改的源代码来源是 org.springframework.data/spring-data-jpa-2.1.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactoryBean.java
 //直接替换 org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean。
 //没法继承 JpaRepositoryFactoryBean。
+//这个例子http://codingdict.com/questions/36138　可以直接继承 JpaRepositoryFactoryBean
 //这个类是从 @EnableJpaRepositories 那里发动引导的。
 
 
@@ -141,10 +147,15 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
             extends JpaRepositoryFactory {
 
         private final EntityManager em;
+        //private final EntityManager entityManager;
+        private EntityPathResolver entityPathResolver;
+
+        //都不让使用；private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
 
         public CustomRepositoryFactory(EntityManager em) {
             super(em);
             this.em = em;
+            this.entityPathResolver = SimpleEntityPathResolver.INSTANCE;
         }
 
         //设置具体的实现类是BaseRepositoryImpl
@@ -167,6 +178,42 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
             return CustomRepositoryImpl.class;
         }
 
+        /*　从父类抄袭修改看；　特别注意版本升级　影响；
+       　抄袭来自 spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.java:234
+         * (non-Javadoc)
+         * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
+         */
+        @Override
+        protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
+
+            RepositoryComposition.RepositoryFragments fragments = RepositoryComposition.RepositoryFragments.empty();
+
+            boolean isQueryDslRepository = QUERY_DSL_PRESENT
+                    && QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
+
+            if (isQueryDslRepository) {
+
+                if (metadata.isReactiveRepository()) {
+                    throw new InvalidDataAccessApiUsageException(
+                            "Cannot combine Querydsl and reactive repository support in a single interface");
+                }
+
+                JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
+
+                //没办法 CrudMethodMetadataPostProcessor都不让使用；　crudMethodMetadataPostProcessor.getCrudMethodMetadata()无法获取！
+                CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
+                CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
+
+                //QuerydslNcPredicateExecutor.class后面跟着的实际是他的构造参数/反射机制？
+                //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
+                Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
+                        em, entityPathResolver, crudMethodMetadata);
+
+                fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));
+            }
+
+            return fragments;
+        }
 
     }
 

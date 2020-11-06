@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -35,6 +36,12 @@ public class CustomRepositoryImpl<T, ID extends Serializable>
     //CustomRepositoryImpl构造函数，需要当前处理的领域模型和entitymanager作为构造函数参数
     public CustomRepositoryImpl(Class<T> domainClass, EntityManager entityManager){
         super(domainClass, entityManager);
+    }
+
+    //把它公开出去看。
+    @Nullable
+    public CrudMethodMetadata getRepositoryMethodMetadata() {
+        return super.getRepositoryMethodMetadata();
     }
 
 

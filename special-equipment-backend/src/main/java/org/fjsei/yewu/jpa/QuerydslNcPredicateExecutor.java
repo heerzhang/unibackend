@@ -118,7 +118,8 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
         //final JPQLQuery<?> countQuery = createCountQuery(predicate);
         JPQLQuery<T> query = querydsl.applyPagination(pageable, createQuery(predicate).select(path));
 
-        return PageableExecutionUtils.getPage(query.fetch(), pageable, null);
+        //return PageableExecutionUtils.getPage(query.fetch(), pageable, null);
+        return CustomRepositoryImpl.PageableExecutionUtils.getPage(query.fetch(), pageable, null);
     }
 
 }
