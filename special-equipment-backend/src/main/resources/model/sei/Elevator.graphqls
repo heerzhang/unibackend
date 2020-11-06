@@ -15,7 +15,7 @@ interface IfElevator{
 }
 
 extend type Query {
-
+    findAllEQPsFilter3(where: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [Equipment]!
     findAllEQPsFilter(where: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
