@@ -186,10 +186,13 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
          默认实现：加上@QueryHints(value ={后，就连count(eqp)也能被缓存了，该条件下的count()保留10分钟。
          但我这里没办法做到吗？　　  直接去掉多余的count(eqp)／彻底！；
          */
-        /*
+
+
         @Override
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
+            RepositoryComposition.RepositoryFragments fragmentsold=super.getRepositoryFragments(metadata);
+            //初始化才运行这里。
             RepositoryComposition.RepositoryFragments fragments = RepositoryComposition.RepositoryFragments.empty();
 
             boolean isQueryDslRepository = QUERY_DSL_PRESENT
@@ -212,16 +215,18 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
 
                 //Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
+               // fragmentsold.
 
                 Object querydslFragment = getTargetRepositoryViaReflection(QuerydslJpaPredicateExecutor.class, entityInformation,
-                        em, entityPathResolver, crudMethodMetadata);
+                        em, entityPathResolver, null);
+                //上面最后那个参数=null 就不能用缓存hints;
 
                 fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));
             }
 
             return fragments;
         }
-        */
+
     }
 
 }
