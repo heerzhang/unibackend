@@ -51,4 +51,4 @@ Flux实际包括类似接口方法中offset/limit参数的对应内涵，上一�
 Quakus和Vert.x都是对比SpringBoot的框架。
 ElasticSearch分页3方式：1）from/size浅翻页最多10000条; 2）scroll形成快照限制用于后台任务； 3）search after不是快照+无法跳页+可深翻页id往后滚动；
 就算Flux也需分页动作，ElasticSearch能对Filter过滤器部分自动缓存，不用withPageable改成searchSourceBuilder.from()也不能避免返回总条数。
-
+验证二级缓存生效：配置文件hibernate.show_sql:true .cache.use_second_level_cache:true  .cache.use_query_cache:true看日志读了缓存没有输出。

@@ -1,6 +1,7 @@
 package md.specialEqp;
 
 
+import com.querydsl.core.types.Predicate;
 import md.cm.unit.Unit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,9 +62,12 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
 
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
         List<Eqp> findAll(@Nullable Specification<Eqp> spec, Sort sort);
-
+        //本来可以无需在这里添加任何接口方法的。　为了二级缓存的提示就需添加注解而加入底下2行代码。
+        @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
+        Page<Eqp> findAll(Predicate predicate, Pageable pageable);
 
 }
+
 
 
 //通过动态EntityGraph触发;EntityGraph与JOIN FETCH是一样？  https://blog.csdn.net/dm_vincent/article/details/53366934

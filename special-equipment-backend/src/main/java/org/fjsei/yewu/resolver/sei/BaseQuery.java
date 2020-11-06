@@ -476,8 +476,8 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
 
     public Iterable<Eqp> getAllEQP() {
-        String partcod="L";
-        String partoid="1";
+        String partcod="05T1";
+        String partoid="C8456";
         Specification<Eqp> spec= new Specification<Eqp>() {
             @Override
             public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
