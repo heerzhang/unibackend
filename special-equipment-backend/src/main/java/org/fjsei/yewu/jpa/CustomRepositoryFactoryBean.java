@@ -182,7 +182,11 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
        　抄袭来自 spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.java:234
          * (non-Javadoc)
          * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
+         默认实现方法是可以crudMethodMetadataPostProcessor.getCrudMethodMetadata()，所以能够二级缓存hints注解能够生效缓存机制。
+         默认实现：加上@QueryHints(value ={后，就连count(eqp)也能被缓存了，该条件下的count()保留10分钟。
+         但我这里没办法做到吗？　　  直接去掉多余的count(eqp)／彻底！；
          */
+        /*
         @Override
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
@@ -206,7 +210,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
                 //QuerydslNcPredicateExecutor.class后面跟着的实际是他的构造参数/反射机制？
                 //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
-                Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
+
+                //Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
+
+                Object querydslFragment = getTargetRepositoryViaReflection(QuerydslJpaPredicateExecutor.class, entityInformation,
                         em, entityPathResolver, crudMethodMetadata);
 
                 fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));
@@ -214,7 +221,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
             return fragments;
         }
-
+        */
     }
 
 }

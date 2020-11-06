@@ -62,6 +62,7 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
 
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
         List<Eqp> findAll(@Nullable Specification<Eqp> spec, Sort sort);
+        //count(eqp)缓存时间在infinispan-配置文件里<expiration max-idle="180000" lifespan="600000"
         //本来可以无需在这里添加任何接口方法的。　为了二级缓存的提示就需添加注解而加入底下2行代码。
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
         Page<Eqp> findAll(Predicate predicate, Pageable pageable);
