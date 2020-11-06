@@ -11,6 +11,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface QuerydslNcExecutor<T> extends QuerydslPredicateExecutor<T> {
-    Page<T> findAllNc(Predicate predicate, Pageable pageable);
+    //findAllNc
+
+    Page<T> findAll(Predicate predicate, Pageable pageable);
 
 }

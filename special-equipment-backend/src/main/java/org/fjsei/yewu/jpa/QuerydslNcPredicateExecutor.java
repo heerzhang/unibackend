@@ -105,12 +105,12 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
     */
 
 
-    /*
+    /*　findAllNc
      * (non-Javadoc)
      * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Pageable)
      */
     @Override
-    public Page<T> findAllNc(Predicate predicate, Pageable pageable) {
+    public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(pageable, "Pageable must not be null!");
