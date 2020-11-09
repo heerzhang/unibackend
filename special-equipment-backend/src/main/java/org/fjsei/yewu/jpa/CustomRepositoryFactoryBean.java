@@ -22,6 +22,8 @@ import org.springframework.util.Assert;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Optional;
 
 import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
 
@@ -149,8 +151,8 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         private final EntityManager em;
         //private final EntityManager entityManager;
         private EntityPathResolver entityPathResolver;
-
-        //都不让使用；private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
+        //private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
+        //无法访问 都不让使用；private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
 
         public CustomRepositoryFactory(EntityManager em) {
             super(em);
@@ -190,8 +192,8 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
         @Override
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
-
-            RepositoryComposition.RepositoryFragments fragmentsold=super.getRepositoryFragments(metadata);
+            //执行旧的看看
+            RepositoryComposition.RepositoryFragments superFragments=super.getRepositoryFragments(metadata);
             //初始化才运行这里。
             RepositoryComposition.RepositoryFragments fragments = RepositoryComposition.RepositoryFragments.empty();
 
@@ -199,6 +201,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                     && QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
 
             if (isQueryDslRepository) {
+
+                Object repositoryImplementation =getTargetRepository(metadata);
+               // DefaultRepositoryInformation some= (DefaultRepositoryInformation)repositoryImplementation;
+                //some
 
                 if (metadata.isReactiveRepository()) {
                     throw new InvalidDataAccessApiUsageException(
@@ -210,17 +216,19 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 //没办法 CrudMethodMetadataPostProcessor都不让使用；　crudMethodMetadataPostProcessor.getCrudMethodMetadata()无法获取！
                 CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
                 CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
-
                 //QuerydslNcPredicateExecutor.class后面跟着的实际是他的构造参数/反射机制？
                 //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
 
+                //另外一种解决途径：：派生QuerydslNcPredicateExecutor ，另外做定义接口方法。
                 //Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
-               // fragmentsold.
 
+                //无法访问spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/DefaultQueryHints.java
                 Object querydslFragment = getTargetRepositoryViaReflection(QuerydslJpaPredicateExecutor.class, entityInformation,
                         em, entityPathResolver, null);
                 //上面最后那个参数=null 就不能用缓存hints;
-
+                //下面这句加了以后， count() 也会有用上了cache缓存机制。
+                fragments= fragments.append( superFragments );
+                //上面把 旧的父类生成的 也一起添加进去。
                 fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));
             }
 
