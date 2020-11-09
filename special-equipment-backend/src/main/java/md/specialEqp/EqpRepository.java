@@ -3,6 +3,7 @@ package md.specialEqp;
 
 import com.querydsl.core.types.Predicate;
 import md.cm.unit.Unit;
+import org.fjsei.yewu.jpa.QuerydslNcExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,9 +21,9 @@ import java.util.Optional;
 //Repository就等于表库：这个Repository实际等价于针对各entity模型做的SQL解析执行的代理类，负责生成跟数据库类型相对应ＳＱＬ。
 //对graphQL客户接口的Query操作可使用HINT_CACHEABLE；但是Mutation以及其他的要求严格一致性实时性情况，不能使用这样的函数，要新建独立函数搞。
 
-//QuerydslPredicateExecutor<Eqp>
+//interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslPredicateExecutor<Eqp>
 
-public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslPredicateExecutor<Eqp> {
+public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificationExecutor<Eqp>, QuerydslNcExecutor<Eqp> {
 
         //函数名字改了，那么后面参数Specification<Eqp> spec就不起作用，这样Specification将没用！
         //@Query("select t from Eqp t")
@@ -65,7 +66,7 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
         //count(eqp)缓存时间在infinispan-配置文件里<expiration max-idle="180000" lifespan="600000"
         //本来可以无需在这里添加任何接口方法的。　为了二级缓存的提示就需添加注解而加入底下2行代码。
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
-        Page<Eqp> findAll(Predicate predicate, Pageable pageable);
+        Page<Eqp> findAllNc(Predicate predicate, Pageable pageable);
 
 }
 

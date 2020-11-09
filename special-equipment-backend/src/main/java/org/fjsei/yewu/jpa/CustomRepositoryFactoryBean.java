@@ -224,7 +224,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
                 //无法访问spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/DefaultQueryHints.java
 
-                Object querydslFragment = getTargetRepositoryViaReflection(QuerydslJpaPredicateExecutor.class, entityInformation,
+                Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
                         em, entityPathResolver, null);
 
                 //上面最后那个参数=null 就不能用缓存hints等注释 @标签功能;

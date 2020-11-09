@@ -41,9 +41,9 @@ import com.querydsl.jpa.impl.AbstractJPAQuery;
 
 
 //替换QuerydslJpaPredicateExecutor功能 extends QuerydslJpaPredicateExecutor<T>  QuerydslPredicateExecutor<T>
+//public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslPredicateExecutor<T>
 
-
-public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslPredicateExecutor<T> {
+public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslNcExecutor<T> {
   //  private final JpaEntityInformation<T, ?> entityInformation;
     private final EntityPath<T> path;
     private final Querydsl querydsl;
@@ -92,7 +92,7 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
      * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Pageable)
      */
     @Override
-    public Page<T> findAll(Predicate predicate, Pageable pageable) {
+    public Page<T> findAllNc(Predicate predicate, Pageable pageable) {
 
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(pageable, "Pageable must not be null!");
@@ -105,4 +105,5 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
     }
 
 }
+
 
