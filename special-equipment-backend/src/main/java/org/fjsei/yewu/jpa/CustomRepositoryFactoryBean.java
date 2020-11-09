@@ -143,7 +143,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         this.escapeCharacter = EscapeCharacter.of(escapeCharacter);
     }
 
-
+    //关键部分
     //新增加：
     private static class CustomRepositoryFactory<T, I extends Serializable>
             extends JpaRepositoryFactory {
@@ -181,7 +181,8 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         }
 
         /*　从父类抄袭修改看；　特别注意版本升级　影响；
-       　抄袭来自 spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.java:234
+       　底下抄袭来自 spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.java:234
+
          * (non-Javadoc)
          * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
          默认实现方法是可以crudMethodMetadataPostProcessor.getCrudMethodMetadata()，所以能够二级缓存hints注解能够生效缓存机制。
@@ -190,9 +191,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
          */
 
 
+        //针对QueryDsl的接口QuerydslPredicateExecutor使用findAll会count()且无cache.hints情况才引入的。
         @Override
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
-            //执行旧的看看
+            //父类是内部不对外开放的，只能首先调用执行，再来抄袭对象。
             RepositoryComposition.RepositoryFragments superFragments=super.getRepositoryFragments(metadata);
             //初始化才运行这里。
             RepositoryComposition.RepositoryFragments fragments = RepositoryComposition.RepositoryFragments.empty();
@@ -201,10 +203,8 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                     && QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
 
             if (isQueryDslRepository) {
-
-                Object repositoryImplementation =getTargetRepository(metadata);
-               // DefaultRepositoryInformation some= (DefaultRepositoryInformation)repositoryImplementation;
-                //some
+               //Object repositoryImplementation =getTargetRepository(metadata);
+               //DefaultRepositoryInformation some= (DefaultRepositoryInformation)repositoryImplementation;
 
                 if (metadata.isReactiveRepository()) {
                     throw new InvalidDataAccessApiUsageException(
@@ -214,21 +214,24 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
                 //没办法 CrudMethodMetadataPostProcessor都不让使用；　crudMethodMetadataPostProcessor.getCrudMethodMetadata()无法获取！
-                CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
-                CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
+                //CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
+                //CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
                 //QuerydslNcPredicateExecutor.class后面跟着的实际是他的构造参数/反射机制？
                 //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
 
-                //另外一种解决途径：：派生QuerydslNcPredicateExecutor ，另外做定义接口方法。
+                //另外一种解决途径：：派生QuerydslNcPredicateExecutor ，另外做定义接口方法。替换QuerydslJpaPredicateExecutor功能 ；去掉分页查询的Count(*)功能。
                 //Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
 
                 //无法访问spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/DefaultQueryHints.java
+
                 Object querydslFragment = getTargetRepositoryViaReflection(QuerydslJpaPredicateExecutor.class, entityInformation,
                         em, entityPathResolver, null);
-                //上面最后那个参数=null 就不能用缓存hints;
-                //下面这句加了以后， count() 也会有用上了cache缓存机制。
+
+                //上面最后那个参数=null 就不能用缓存hints等注释 @标签功能;
+                //下面这句引用父类生成的，加了以后， count() 也会有用上了cache缓存机制。
                 fragments= fragments.append( superFragments );
                 //上面把 旧的父类生成的 也一起添加进去。
+
                 fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));
             }
 
