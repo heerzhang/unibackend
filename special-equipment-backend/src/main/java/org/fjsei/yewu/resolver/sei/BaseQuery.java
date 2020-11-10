@@ -760,7 +760,7 @@ public class BaseQuery implements GraphQLQueryResolver {
             builder.and(qm.fNo.contains(where.getFNo()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
+        Iterable<Eqp> eqps = eQPRepository.findAllNc(builder,pageable);
         eqps.forEach(item -> {
             // if(item instanceof Equipment)
             elevators.add(item);
