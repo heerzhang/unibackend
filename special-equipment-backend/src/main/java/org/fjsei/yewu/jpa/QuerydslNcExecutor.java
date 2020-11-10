@@ -14,10 +14,10 @@ import javax.persistence.QueryHint;
 
 @NoRepositoryBean
 public interface QuerydslNcExecutor<T> extends QuerydslPredicateExecutor<T> {
-    //@Override
-    @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
+
+    //不需要做count(*)统计，比缺省的findAll()提高性能百倍。
     Page<T> findAllNc(Predicate predicate, Pageable pageable);
+    //无法直接利用findAll这个接口名称的，只能另外自定义findAllNc。
 
 }
-
 

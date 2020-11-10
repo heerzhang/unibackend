@@ -740,6 +740,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         });
         return elevators;
     }
+    //即使用上缓存，通常不会提高性能，除非大家查的数据是相同的，否则一个参数条件变化就不能命中缓存，作用较为有限。
     public Iterable<Equipment> findAllEQPsFilter(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;

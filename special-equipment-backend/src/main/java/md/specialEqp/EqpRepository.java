@@ -71,7 +71,6 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
 
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") },forCounting= true )
         Page<Eqp> findAll(Predicate predicate, Pageable pageable);
-        //    Page<Eqp> findAll(Predicate predicate, Pageable pageable);
 }
 
 

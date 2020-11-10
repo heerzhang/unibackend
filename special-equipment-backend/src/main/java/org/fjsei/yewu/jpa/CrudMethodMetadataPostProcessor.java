@@ -43,7 +43,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
-//拷贝来源：spring-data-jpa-2.3.5.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/CrudMethodMetadataPostProcessor.java:61
+//没法子， 这个原始包是对外公开的，无法直接派生继承。只好全部挪过来了。 升级版本特别注意：对方可能变动了。
+//拷贝来源：spring-data-jpa-2.3.5.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/CrudMethodMetadataPostProcessor.java
+//还未做修改。
 
 /**
  * {@link RepositoryProxyPostProcessor} that sets up interceptors to read metadata information from the invoked method.
@@ -329,3 +331,4 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 		public void releaseTarget(Object target) {}
 	}
 }
+

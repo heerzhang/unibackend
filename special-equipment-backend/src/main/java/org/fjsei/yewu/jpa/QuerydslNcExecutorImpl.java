@@ -25,7 +25,8 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.AbstractJPAQuery;
 
-//替换QuerydslJpaPredicateExecutor功能 ；去掉分页查询的Count(*)功能。
+//替换QuerydslJpaPredicateExecutor功能 ； 目的是去掉findAll分页查询的Count(*)功能；同时cache等hints指示必须保留。
+
 
 /**
  * Querydsl specific fragment for extending {@link SimpleJpaRepository} with an implementation for implementation for
@@ -41,10 +42,10 @@ import com.querydsl.jpa.impl.AbstractJPAQuery;
 
 
 //替换QuerydslJpaPredicateExecutor功能 extends QuerydslJpaPredicateExecutor<T>  QuerydslPredicateExecutor<T>
-//public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslPredicateExecutor<T>
+//public class QuerydslNcExecutorImpl<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslPredicateExecutor<T>
 
-public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslNcExecutor<T> {
-  //  private final JpaEntityInformation<T, ?> entityInformation;
+public class QuerydslNcExecutorImpl<T> extends QuerydslJpaPredicateExecutor<T>  implements QuerydslNcExecutor<T> {
+    //private final JpaEntityInformation<T, ?> entityInformation;
     private final EntityPath<T> path;
     private final Querydsl querydsl;
    // private final EntityManager entityManager;
@@ -62,19 +63,19 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
      * @param metadata maybe {@literal null}.
      */
 
-    public QuerydslNcPredicateExecutor(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager,
-                                       EntityPathResolver resolver, @Nullable CrudMethodMetadata metadata) {
+    public QuerydslNcExecutorImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager,
+                                  EntityPathResolver resolver, @Nullable CrudMethodMetadata metadata) {
         super(entityInformation, entityManager, resolver ,metadata);
 
 
         this.path = resolver.createPath(entityInformation.getJavaType());
         this.querydsl = new Querydsl(entityManager, new PathBuilder<T>(path.getType(), path.getMetadata()));
-     //   this.entityManager = entityManager;
+        // this.entityManager = entityManager;
     }
 
 
     /* 旧的
-    public QuerydslNcPredicateExecutor(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager,
+    public QuerydslNcExecutorImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager,
                                         EntityPathResolver resolver, @Nullable CrudMethodMetadata metadata) {
 
         this.entityInformation = entityInformation;
@@ -98,12 +99,13 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
         Assert.notNull(pageable, "Pageable must not be null!");
 
         //final JPQLQuery<?> countQuery = createCountQuery(predicate); ( JPQLQuery<?> )
-        JPQLQuery<?>  jpqlQuery= createQuery(predicate);
-        JPQLQuery<T> jpqlQuery2=createQuery(predicate).select(path);
-        //CustomRepositoryImpl.getMyQueryHints()
-       // jpqlQuery1.setHint("","");
-        JPQLQuery<T> query = querydsl.applyPagination(pageable, jpqlQuery2);
+        ////JPQLQuery<?>  jpqlQuery= createQuery(predicate);
 
+        JPQLQuery<T> jpqlQuery=createQuery(predicate).select(path);
+        //CustomRepositoryImpl.getMyQueryHints()
+        //jpqlQuery1.setHint("","");
+
+        JPQLQuery<T> query = querydsl.applyPagination(pageable, jpqlQuery);
 
         //return PageableExecutionUtils.getPage(query.fetch(), pageable, null);
         return CustomRepositoryImpl.PageableExecutionUtils.getPage(query.fetch(), pageable, null);
