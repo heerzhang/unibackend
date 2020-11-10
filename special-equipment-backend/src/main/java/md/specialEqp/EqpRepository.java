@@ -6,6 +6,7 @@ import md.cm.unit.Unit;
 import org.fjsei.yewu.jpa.QuerydslNcExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -68,6 +69,9 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
         @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") } )
         Page<Eqp> findAllNc(Predicate predicate, Pageable pageable);
 
+        @QueryHints(value ={ @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value ="true") },forCounting= true )
+        Page<Eqp> findAll(Predicate predicate, Pageable pageable);
+        //    Page<Eqp> findAll(Predicate predicate, Pageable pageable);
 }
 
 

@@ -97,8 +97,13 @@ public class QuerydslNcPredicateExecutor<T> extends QuerydslJpaPredicateExecutor
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(pageable, "Pageable must not be null!");
 
-        //final JPQLQuery<?> countQuery = createCountQuery(predicate);
-        JPQLQuery<T> query = querydsl.applyPagination(pageable, createQuery(predicate).select(path));
+        //final JPQLQuery<?> countQuery = createCountQuery(predicate); ( JPQLQuery<?> )
+        JPQLQuery<?>  jpqlQuery= createQuery(predicate);
+        JPQLQuery<T> jpqlQuery2=createQuery(predicate).select(path);
+        //CustomRepositoryImpl.getMyQueryHints()
+       // jpqlQuery1.setHint("","");
+        JPQLQuery<T> query = querydsl.applyPagination(pageable, jpqlQuery2);
+
 
         //return PageableExecutionUtils.getPage(query.fetch(), pageable, null);
         return CustomRepositoryImpl.PageableExecutionUtils.getPage(query.fetch(), pageable, null);

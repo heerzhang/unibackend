@@ -3,6 +3,7 @@ package org.fjsei.yewu.jpa;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.support.*;
 import org.springframework.data.mapping.context.MappingContext;
@@ -151,13 +152,17 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         private final EntityManager em;
         //private final EntityManager entityManager;
         private EntityPathResolver entityPathResolver;
-        //private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
-        //无法访问 都不让使用；private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
+
+        private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
+        //无法访问 都不让使用；private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;   org.springframework.data.jpa.repository.support.
 
         public CustomRepositoryFactory(EntityManager em) {
             super(em);
             this.em = em;
+            this.crudMethodMetadataPostProcessor = new CrudMethodMetadataPostProcessor();
             this.entityPathResolver = SimpleEntityPathResolver.INSTANCE;
+            //this.queryMethodFactory = new DefaultJpaQueryMethodFactory(extractor);
+            addRepositoryProxyPostProcessor(crudMethodMetadataPostProcessor);
         }
 
         //设置具体的实现类是BaseRepositoryImpl
@@ -170,6 +175,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
         @SuppressWarnings("unchecked")
         protected Object getTargetRepository(RepositoryMetadata metadata) {
+            //JpaRepositoryImplementation<?, ?> repository= super.getTargetRepository((RepositoryInformation)metadata);
+           // metadata.getCrudMethods().getFindAllMethod().orElse(null).
+           //看看他的metadata,  repository
+
             return new CustomRepositoryImpl<T, I>(
                     (Class<T>) metadata.getDomainType(), em);
         }
@@ -195,7 +204,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         @Override
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
             //父类是内部不对外开放的，只能首先调用执行，再来抄袭对象。
-            RepositoryComposition.RepositoryFragments superFragments=super.getRepositoryFragments(metadata);
+        //    RepositoryComposition.RepositoryFragments superFragments=super.getRepositoryFragments(metadata);
             //初始化才运行这里。
             RepositoryComposition.RepositoryFragments fragments = RepositoryComposition.RepositoryFragments.empty();
 
@@ -203,7 +212,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                     && QuerydslPredicateExecutor.class.isAssignableFrom(metadata.getRepositoryInterface());
 
             if (isQueryDslRepository) {
-               //Object repositoryImplementation =getTargetRepository(metadata);
+                RepositoryInformation information =null;//getRepositoryInformation(metadata, fragments);
+                //RepositoryInformation information = getRepositoryInformation(metadata, composition);
+               //Object repositoryImplementation =super.getTargetRepository(information);
+
                //DefaultRepositoryInformation some= (DefaultRepositoryInformation)repositoryImplementation;
 
                 if (metadata.isReactiveRepository()) {
@@ -214,8 +226,10 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
                 //没办法 CrudMethodMetadataPostProcessor都不让使用；　crudMethodMetadataPostProcessor.getCrudMethodMetadata()无法获取！
-                //CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
-                //CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
+                CustomRepositoryImpl repository =(CustomRepositoryImpl)getTargetRepository(metadata);
+                CrudMethodMetadata crudMethodMetadata=repository.getRepositoryMethodMetadata();
+                repository.getMyQueryHints();
+
                 //QuerydslNcPredicateExecutor.class后面跟着的实际是他的构造参数/反射机制？
                 //最后参数crudMethodMetadataPostProcessor.getCrudMethodMetadata()代表了DefaultQueryHints.of(entityInformation, metadata)锁@Graph+query hints;
 
@@ -223,13 +237,15 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 //Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
 
                 //无法访问spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/DefaultQueryHints.java
-
+                //QuerydslNcPredicateExecutor
+                //报错：QuerydslJpaPredicateExecutor.class No property findAllNc found for type Eqp!
                 Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcPredicateExecutor.class, entityInformation,
-                        em, entityPathResolver, null);
+                        em, entityPathResolver, crudMethodMetadataPostProcessor.getCrudMethodMetadata());
 
                 //上面最后那个参数=null 就不能用缓存hints等注释 @标签功能;
                 //下面这句引用父类生成的，加了以后， count() 也会有用上了cache缓存机制。
-                fragments= fragments.append( superFragments );
+         //去掉看 报错：QuerydslJpaPredicateExecutor.class No property findAllNc found for type Eqp!
+          //      fragments= fragments.append( superFragments );
                 //上面把 旧的父类生成的 也一起添加进去。
 
                 fragments = fragments.append(RepositoryFragment.implemented(querydslFragment));

@@ -4,7 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
+
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -13,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.function.LongSupplier;
 
 /*
@@ -92,6 +95,25 @@ public class CustomRepositoryImpl<T, ID extends Serializable>
         return PageableExecutionUtils.getPage(query.getResultList(), pageable,
                 null);
     }
+
+
+    /**
+     强制公开它
+     * Returns {@link QueryHints} with the query hints based on the current {@link CrudMethodMetadata} and potential
+     * {@link EntityGraph} information.
+     org/springframework/data/jpa/repository/support/QueryHints.java:31
+     * @return
+     没公开的 org.springframework.data.jpa.repository.support.QueryHints
+     * Iterable<Entry<String, Object>>  E:/Program Files/jdk13-1/lib/src.zip!/java.base/java/util/Map.java:407
+     */
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Iterable<Map.Entry<String, Object>>  getMyQueryHints() {
+        Iterable<Map.Entry<String, Object>>  all=(Iterable<Map.Entry<String, Object>>) (super.getQueryHints());
+        return  all;
+      //  return metadata == null ? QueryHints.NoHints.INSTANCE : DefaultQueryHints.of(entityInformation, metadata);
+    }
+
 
 
     //内部
