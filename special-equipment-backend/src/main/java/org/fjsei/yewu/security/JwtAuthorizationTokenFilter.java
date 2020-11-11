@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -76,24 +77,22 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             response.setHeader("Vary", "Origin, Access-Control-Request-Headers");
             return;
         }else {
-            String servletPath =request.getServletPath();
-            String method=request.getMethod();
-            if("GET".equals(method) && "/forbidden".equals(servletPath)) {
+            String servletPath = request.getServletPath();
+            String method = request.getMethod();
+            if ("GET".equals(method) && "/forbidden".equals(servletPath)) {
                 //response.setContentType("text/html;charset=utf-8");  getMethod()
-                if(originHeads.equals(serverURI))
-                {
+                if (originHeads.equals(serverURI)) {
                     //本机端口影射到外网后的，＋从外网访问＋，防火墙主动发起的，和浏览器毫无关系的。.心跳吗？
                     return;
-                }else {
+                } else {
                     response.sendError(404, "资源不存在");
                     return;     //禁止使用的URL
                 }
             }
 
-            if(isTestMode) {
+            if (isTestMode) {
                 if (servletPath.startsWith("/test/")
-                        || servletPath.startsWith("/favicon.ico"))
-                {
+                        || servletPath.startsWith("/favicon.ico")) {
                     chain.doFilter(request, response);
                     return;      //没必要授权的，只在开发测试阶段使用的URL
                 }
@@ -111,12 +110,11 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
                 //浏览器上人工添加Authorization token来做验证权限的场景走这个分支
                 authToken = requestHeader.substring(7);
-            }
-            else {    //没有Authorization: Bearer开头;
+            } else {    //没有Authorization: Bearer开头;
                 //graphQL的playground工具(相当集成在后端上的endpoint)无法带上Cookie必须走Bearer开头。
                 //調試這位置，只有運行request.getCookies()后，request才有cookie；这块是实时交互式的读取浏览器的数据？不是浏览器发送请求包已经就带的数据。
-                Cookie[] cookies=request.getCookies();
-                if(cookies!=null) {
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
                     Cookie tokenCook = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("token")).findFirst().orElse(null);
                     if (tokenCook != null)
                         authToken = tokenCook.getValue();
@@ -130,6 +128,20 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             //還未登錄的用戶請求Authentication .getAuthentication()這個位置還是null;就是graphql驗證和做登录處理需要允許直接通過。
             //真正控制还要到上层协议里头去控制，每一个graphQL请求都要验证Auth,可见性MyGraphQLWebAutoConfiguration。
             //没登录用户走直接REST模式能来到这，但是spring security底层会钩住它401报错。
+
+            if (false) {
+                //调试插桩代码： 只能临时开启，用来定位问题的，直接获取请求包原文数据。
+                StringBuffer data = new StringBuffer();
+                String line = null;
+                BufferedReader reader = null;
+                try {
+                    reader = request.getReader();
+                    while (null != (line = reader.readLine()))
+                        data.append(line);
+                } catch (IOException e) {
+                } finally {   }
+                //随后运行就报错graphql.GraphQLException: No valid query found in request
+            }
 
             chain.doFilter(request, response);
             //就算Url没有要求授权验证它也可能会到这里。

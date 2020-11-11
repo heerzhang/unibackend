@@ -728,8 +728,8 @@ public class BaseQuery implements GraphQLQueryResolver {
             builder.and(qm.cod.contains(where.getCod()));
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
-        if (!StringUtils.isEmpty(where.getFNo()))
-            builder.and(qm.fNo.contains(where.getFNo()));
+        if (!StringUtils.isEmpty(where.getFno()))
+            builder.and(qm.fNo.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         //Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
@@ -757,8 +757,8 @@ public class BaseQuery implements GraphQLQueryResolver {
             builder.and(qm.cod.contains(where.getCod()));
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
-        if (!StringUtils.isEmpty(where.getFNo()))
-            builder.and(qm.fNo.contains(where.getFNo()));
+        if (!StringUtils.isEmpty(where.getFno()))
+            builder.and(qm.fNo.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         Iterable<Eqp> eqps = eQPRepository.findAllNc(builder,pageable);

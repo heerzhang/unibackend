@@ -10,6 +10,8 @@ import lombok.Setter;
 //弱类型String顺带可以鉴别null还是""的区分，能强化语义场景。
 //规则：没有在input当中出现的属性字段名，那它就省略掉，就是不知道有没有变化;
 
+//特别注意！变量取名有限制的！若是fNo就无法解析出取值，必须修改为fno才可肯通行正常的；第二个字母大写特别注意，不允许？？。
+
 @Getter
 @Setter
 public class DeviceCommonInput {
@@ -18,10 +20,19 @@ public class DeviceCommonInput {
     String  address;
     String  oid;
     String   lat;
+    String   fno;   //原先预定是fNo变量名字的，无法正常！只好修改成fno来通过底层接口graphQL的解析层。
     Long    ownerId;
-    //String  ownerId;
-    String  fNo;
+
 }
 
 
+
 //基本类型Built-in GraphQL::ScalarType有5种 String Int  ID  Boolean Float {精度小数点后5位}。
+
+/*为什么死活不行？ 接收到了请求包数据正常的。为何解析不出来String fNo;这个变量的取值，都是null??。
+		"where": {
+			"fNo": "dc5kk555ds",
+			"cod": "csdfsg3yyy3od"
+		},
+*/
+
