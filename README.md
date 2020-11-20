@@ -41,7 +41,7 @@ ES join性能差，nested query；has_child and has_parent within a single index
 探究ES 明明存在，怎么搜索都搜不出来呢?　性能　查全率　查准率  https://cloud.tencent.com/developer/article/1380213
 Elasticsearch最精彩部分是Text类型字段，全文搜索Full text query{用到分词器，match查询不是严格精确字符串匹配的}。
 MySQL普通索引时间复杂度都是O(log n),用索引快千倍；聚合索引必须使用AND条件，同时要符合最左原则。
-java ID最大922亿*亿;
+java ID最大922亿*亿;   ES比数据库少了一个表的完全对等概念。
 MySQL单表最大记录数不能超过多少？当单表数据库到达某个量级的上限时，导致内存无法存储其索引，使得之后的 SQL 查询会产生磁盘 IO，从而导致性能下降;暂以500万行作为一个标准。
 QueryDSL-JPA：当遇到复杂、投影、动态查询时我们可以考虑使用QueryDSL。它与SpringDataJPA同层级别，用它的API类库可写出“Java代码的sql”
 一种使用JPAQueryFactory的原生API/BooleanBuilder;另一种基于QueryDslPredicateExecutor<T> 这种易用，前一种更灵活;   https://www.jianshu.com/p/69dcb1b85bbb
@@ -52,3 +52,7 @@ Quakus和Vert.x都是对比SpringBoot的框架。
 ElasticSearch分页3方式：1）from/size浅翻页最多10000条; 2）scroll形成快照限制用于后台任务； 3）search after不是快照+无法跳页+可深翻页id往后滚动；
 就算Flux也需分页动作，ElasticSearch能对Filter过滤器部分自动缓存，不用withPageable改成searchSourceBuilder.from()也不能避免返回总条数。
 验证二级缓存生效：配置文件hibernate.show_sql:true .cache.use_second_level_cache:true  .cache.use_query_cache:true看日志读了缓存没有输出。
+EQP测试：JPA模糊匹配cod+fNo约4.5秒=极受存储性能影响可再慢60倍；对比Elasticsearch。
+CMD命令行jps执行会显示pid，再去资源管理器。  ElasticSearch严禁使用*开头通配符Terms查询; ES反规范化设计提升性能。
+ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语句能够自动做缓存，但FieldType.Text字段分词不配对match_phrase搜索返回空。
+

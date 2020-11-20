@@ -1,0 +1,247 @@
+reindex 重建索引 /_settings /_mapping设置后就无法动态修改了。
+步骤 https://cwl-java.blog.csdn.net/article/details/102814600
+设备索引重建：  源代码里面都改成别名xxx_latest。
+PUT  http://localhost:9200  /eqp_1118
+{
+  "settings": {
+    "index": {
+      "max_ngram_diff": "3",
+      "refresh_interval": "1s",
+      "number_of_shards": "1",
+      "analysis": {
+        "analyzer": {
+          "ngram_analyzer": {
+            "tokenizer": "ngram_tokenizer"
+          }
+        },
+        "tokenizer": {
+          "ngram_tokenizer": {
+            "token_chars": ["letter", "digit"],
+            "min_gram": "3",
+            "type": "ngram",
+            "max_gram": "6"
+          }
+        }
+      },
+      "number_of_replicas": "1"
+
+    }
+  },
+  "mappings": {
+    "properties": {
+      "_class": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "accpDt": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "addr": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "area": {
+        "type": "keyword"
+      },
+      "cag": {
+        "type": "byte"
+      },
+      "ccl1": {
+        "type": "keyword"
+      },
+      "ccl2": {
+        "type": "keyword"
+      },
+      "cert": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 40
+          }
+        }
+      },
+      "cod": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 32
+          }
+        },
+        "analyzer": "ngram_analyzer"
+      },
+      "contact": {
+        "type": "keyword"
+      },
+      "cping": {
+        "type": "boolean"
+      },
+      "ePrice": {
+        "type": "float"
+      },
+      "expire": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "fNo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 150
+          }
+        },
+        "analyzer": "ngram_analyzer"
+      },
+      "id": {
+        "type": "long"
+      },
+      "important": {
+        "type": "boolean"
+      },
+      "ispD1": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "ispD2": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "level": {
+        "type": "keyword"
+      },
+      "model": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 50
+          }
+        }
+      },
+      "move": {
+        "type": "boolean"
+      },
+      "name": {
+        "type": "keyword"
+      },
+      "nxtD1": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "nxtD2": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "occasion": {
+        "type": "keyword"
+      },
+      "oid": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 32
+          }
+        }
+      },
+      "plNo": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 100
+          }
+        }
+      },
+      "rcod": {
+        "type": "keyword"
+      },
+      "reg": {
+        "type": "byte"
+      },
+      "sNo": {
+        "type": "keyword"
+      },
+      "sort": {
+        "type": "keyword"
+      },
+      "subVart": {
+        "type": "keyword"
+      },
+      "type": {
+        "type": "keyword"
+      },
+      "unqf1": {
+        "type": "boolean"
+      },
+      "unqf2": {
+        "type": "boolean"
+      },
+      "useDt": {
+        "type": "date",
+        "format": "date_time"
+      },
+      "ust": {
+        "type": "byte"
+      },
+      "valid": {
+        "type": "boolean"
+      },
+      "vart": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+异步执行看：
+POST /_reindex?wait_for_completion=false
+{
+ "source": {
+   "index": "eqps"
+  },
+  "dest": {
+   "index": "eqp_1118"
+  }
+}
+应答了
+{"task":"sDnoBeqiR5e1vkv6CVvofw:1063"}
+看进度情况  GET　/_tasks?actions=*reindex
+速度挺快，任务结束后，短时间内实际文件大小还会缩减。
+
+POST /_aliases
+{
+  "actions": [{
+    "add": {
+      "index": "eqp_latest",
+      "alias": "eqps"
+      }
+    },
+    {
+    "remove": {
+      "index": "eqps",
+      "alias": "eqp_latest"
+      }
+    }
+  ]
+}
+或初始的
+{
+  "actions": [{
+    "add": {
+    "index": "eqp_1118",
+    "alias": "eqp_latest"
+    }
+  }
+  ]
+}
+

@@ -159,3 +159,14 @@ graphql-java-tools 6.1版本开始不能用WhereTree来做前端查询？bug?，
     findAllEQPsFilter_delete(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
 ModelFilters这层类sql接口预备给高权限场景使用WhereTree(参数可能不受控制)，普通接口走参数定做模式/多写代码。
 union UnitEs= CompanyEs | PersonEs 报错，PersonEs必须在graphQL模型中被用到。
+Elasticsearch关联关系? 宽表冗余denormalization非规范化;Nested方式要慢几倍 https://blog.csdn.net/laoyang360/article/details/88784748
+ES不支持事务与回滚。循环关联导致ES死循环：EqpEs->task->Eqp->task,这样task id自循环导致newEQP()保存时刻死锁！所以要求独立设计Entity类定义class。
+没有ES对应名字的索引若直接查找报错[/eqps/_search... 503 Service Unavailable；首先工具看http://localhost:9200/eqps/_mapping
+删除ES索引，慎重！，权限验证还未加； curl -XDELETE 'http://localhost:9200/eqps 应答{"acknowledged":true}；重启系统初始化索引。
+导入ES期间将refresh_interval(数据写入后几秒可以被搜索到)设置为-1来禁用刷新；不要忘记重新启用　https://blog.csdn.net/shadow_zed/article/details/103687631
+PUT /indexName/_settings { "refresh_interval": -1 }  重新启用{ "refresh_interval": "1s" } +  content-type:application/json  
+ES索引,千万级数据reindex超时怎么解决,查询task进度,切换时异常业务情况塞进数据库提示等待处理/_tasks?actions=*reindex。 https://blog.csdn.net/sinat_25926481/article/details/103196393   https://www.sohu.com/a/292244839_463994
+ES缺省分词器特点：比如"DE63，410"是独立一个词的且中间中文逗号，号不可省略。若是DE110,206也是的:英文逗号也是如此不是分割符号？。但是DN50,DN100确属于2个分词的。 
+比如D325*8属于两个词其中*号被分词过滤去掉。
+搜索返回为空！若是分词出问题，就算字段内容都真的和原始完全一致，也可能匹配失败，属于分词无效的搜索失败！输入分词若为空集合的不可作过滤条件/反而查不到。
+重建索引 setting部分{}： https://www.cnblogs.com/quanxiaoha/p/11532487.html  ；  https://cwl-java.blog.csdn.net/article/details/102814600

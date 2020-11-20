@@ -85,6 +85,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     private final JwtTokenUtil jwtTokenUtil=new JwtTokenUtil();
     @Autowired private UntMgeRepository untMgeRepository;
     @Autowired private EqpMgeRepository eqpMgeRepository;
+    @Autowired private SomeEsRepository someEsRepository;
 
     //仅用于后台维护使用的；
     @Transactional(rollbackFor = Exception.class)
@@ -305,6 +306,50 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         log.info("syncEqpFromOld:{}", offset);
         return retMsgs;
     }
+
+    //从Eqp以及关联实体提取数据腾挪到EqpEs索引中去
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp_保留(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Eqp> eqps= eQPRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Eqp eqp:eqps)
+        {
+            EqpEs eqpEs=eqpEsRepository.findById(eqp.getId()).orElse(null);
+            if(null!=eqpEs){
+                //已经有了，修改。
+                retMsgs.add("成功");
+            }else{
+                EqpEs one=new EqpEs();
+                BeanUtils.copyProperties(eqp,one);
+                //可直接替换旧的; 若事务失败了,ES也无法回退，造成ES记录重复但是id实际不在DB中的。
+                eqpEsRepository.save(one);
+                retMsgs.add("成功");
+            }
+        }
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //测试代码
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+
+        List<String> retMsgs=new ArrayList<>();
+
+        retMsgs.add("成功");
+
+        SomeEs one=new SomeEs();
+        one.setCert("梯11闽A9339(16)");
+        one.setCod("3501T57080");
+        one.setId(331343L);
+
+        someEsRepository.save(one);
+
+        return retMsgs;
+    }
+
 }
 
 

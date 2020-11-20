@@ -22,6 +22,9 @@ public class DeviceCommonInput {
     String   lat;
     String   fno;   //原先预定是fNo变量名字的，无法正常！只好修改成fno来通过底层接口graphQL的解析层。
     Long    ownerId;
+    String  cert;
+    String  addr;
+    String  model;
 
 }
 

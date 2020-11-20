@@ -11,16 +11,18 @@ import org.springframework.data.util.Streamable;
 
 import java.util.stream.Stream;
 
+//不建议JpaRepository和MongoDBRepository及ElasticsearchRepository用共同的POJO模型类来做注解，必须各搞各的，合并在同一个Class定义文件中很不好。
+
 //一份数据写入es会产生多份数据(8份/嵌套6份)用于不同查询方式，比原数据占更多磁盘空间。很需要紧凑POJO模型，避免多余字段。
 //实体关系也要去范式或变换，专门给ES新建单独的Bean来映射存储。
 //@Document()注解的实体类的继承子类也是可以存储给ES的，子类类型字段也都会存储的。缺省所有字段都会存储；
 //@Transactional对ElasticsearchRepository没作用，JPA保存异常回滚的时候ES无法自动取消回滚该条数据。
-//不建议JpaPersonRepository和MongoDBPersonRepository及ElasticsearchRepository用共同的POJO模型类来做注解，必须各搞各的，合并在同一个Domain Class不好。
+
 
 public interface EqpEsRepository extends ElasticsearchRepository<EqpEs, Long> {
     //１最简单用普通函数名来解析的模式：
 
-    //２类似这条路子：直接操作HQL或者SQL，底下存储引擎支持的原生语言。
+    //２类似这条路子：直接操作HQL或者原生SQL或JPQL，底下存储引擎支持的原生语言。
     //也可以支持elasticsearch包带入的@Query(原生DSL语句)模式：?：任意字符 *：0个或任意多个字符
     //Dsl方式POST index/_search发送JSON格式如 "query": {"wildcard": {"shopInfoName.keyword": { "value": "*自营*" } } }
     @Query("{\"match\": {\"cod\": {\"query\": \"?0\"}}}")
@@ -87,5 +89,6 @@ MongoDB是非关系型数据库不支持join表关联别指望了，spring-data-
 　JSON.parseObject(JSON.toJSONString(eQP), EqpEs.class)　遇到某字段的属于嵌套对象类型并且该字段对象类型还变化的情况也可顺利转换。
 循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。
 elasticsearch   autocomplete   自动提词   自动补全
+磁盘空间不足报错disk usage exceeded flood-stage watermark; ES很需要空闲的磁盘。
 */
 

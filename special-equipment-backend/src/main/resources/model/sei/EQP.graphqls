@@ -25,7 +25,7 @@ type EqpEs implements Equipment{
     sort: String!
     vart: String!
     fNo: String
-    task: [TaskEs!]
+    #task: [TaskEs!]
 }
 
 extend type Query {
@@ -41,7 +41,7 @@ extend type Query {
     #升级弃用countAllEQPsWhere(where: WhereTree): Int!
     #findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
     #findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
-    findAllEQPsFilter1(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
+    getAllEqpEsFilter(where: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
 extend type Mutation {
@@ -58,5 +58,6 @@ extend type Mutation {
     invalidateEQP(whichEqp:ID!, reason: String!) : Boolean!
     removeEQP(id:ID!) : Boolean!
     syncEqpFromOld(offset:Int, limit:Int): [String]!
+    syncEqpEsFromEqp(offset:Int, limit:Int): [String]!
 }
 

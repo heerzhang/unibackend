@@ -768,11 +768,94 @@ public class BaseQuery implements GraphQLQueryResolver {
         });
         return elevators;
     }
-    public Iterable<Equipment> findAllEQPsFilter1(DeviceCommonInput where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Equipment> getAllEqpEsFilter(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        if(limit<=0)   limit=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, limit);
+        else
+            pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        Streamable<EqpEs> elevatorslst = eqpEsRepository.findByCodContaining(where.getCod());
-        elevatorslst.forEach(item -> {
-            // if(item instanceof Equipment)
+/*
+.must(
+                        matchPhraseQuery("cod",where.getCod()).slop(9)
+                         matchPhraseQuery("fNo",where.getFno())
+                )
+                matchQuery("cod",where.getCod())
+                matchPhraseQuery("cod",where.getCod()).slop(9)
+        */
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        matchPhraseQuery("cod",where.getCod()).slop(9)
+                ).must(
+                        matchPhraseQuery("fNo",where.getFno()).slop(9)
+                )
+        ).withPageable(pageable).build();
+
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(EqpEs.class);
+        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
+        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
+        SearchHits<EqpEs> searchHits = esTemplate.search(searchQuery, EqpEs.class, indexCoordinates);
+        List<SearchHit<EqpEs>> hits=searchHits.getSearchHits();
+        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
+        Iterable<EqpEs> list= (List<EqpEs>) SearchHitSupport.unwrapSearchHits(hits);
+        String sql=searchQuery.getQuery().toString();
+
+        list.forEach(item -> {
+            elevators.add(item);
+        });
+        return elevators;
+    }
+    public Iterable<Equipment> getAllEqpEsFilter_保留(DeviceCommonInput where, int offset, int limit, String orderBy, boolean asc) {
+        User user= checkAuth();
+        if(user==null)   return null;
+        if(limit<=0)   limit=20;
+        Pageable pageable;
+        if (StringUtils.isEmpty(orderBy))
+            pageable = PageOffsetFirst.of(offset, limit);
+        else
+            pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
+
+        List<Equipment>  elevators = new ArrayList<Equipment>();
+        //matchPhraseQuery("fNo",where.getFno()).slop(9)    //matchQuery("fNo",where.getFno())
+        //wildcardQuery("cert.keyword",where.getCert())
+       /*  .must(
+               matchPhraseQuery("fno",where.getFno()).slop(9)
+               matchPhraseQuery("cod",where.getCod()).slop(9)
+        )
+
+        .must(
+                        wildcardQuery("cod.keyword",where.getCod())
+                )
+                wildcardQuery("fno.keyword",where.getFno())
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        wildcardQuery("fNo",where.getFno())
+                )
+        ).build();
+        */
+
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
+                boolQuery().must(
+                        wildcardQuery("cod.keyword",where.getCod())
+                ).must(
+                        wildcardQuery("fNo.keyword",where.getFno())
+                )
+        ).withPageable(pageable).build();
+
+        IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(EqpEs.class);
+        // Stream<CompanyEs> list= esTemplate.stream(searchQuery, CompanyEs.class,indexCoordinates);
+        //queryForList(searchQuery, CompanyEs.class,indexCoordinates);
+        SearchHits<EqpEs> searchHits = esTemplate.search(searchQuery, EqpEs.class, indexCoordinates);
+        List<SearchHit<EqpEs>> hits=searchHits.getSearchHits();
+        //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
+        Iterable<EqpEs> list= (List<EqpEs>) SearchHitSupport.unwrapSearchHits(hits);
+        String sql=searchQuery.getQuery().toString();
+
+        list.forEach(item -> {
             elevators.add(item);
         });
         return elevators;

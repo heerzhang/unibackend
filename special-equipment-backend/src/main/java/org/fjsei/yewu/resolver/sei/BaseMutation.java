@@ -173,9 +173,8 @@ public class BaseMutation implements GraphQLMutationResolver {
       //直接用BeanUtils.copyProperties(eQP,eqpEs); 　 若有字段嵌套对象类型不一样的就会报错。
         String json = JSON.toJSONString(eQP);
         EqpEs eqpEs=JSON.parseObject(json, EqpEs.class);   //遇到某字段的属于嵌套对象类型并且该字段对象类型还变化的情况也可顺利转换。
-        eqpEs.getTask().forEach(item -> {
-            //   item.setDevs(null);
-        });
+    //    eqpEs.getTask().forEach(item -> {
+   //     });
         //ES不支持事务与回滚。
         //相互关联导致的ES存储死循环：EqpEs->task->Eqp->task,这样task id自循环导致。表现为newEQP函数上事务上死锁。
         eqpEsRepository.save(eqpEs);

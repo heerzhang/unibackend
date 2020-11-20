@@ -7,6 +7,7 @@ import javax.persistence.Id;
 
 //没必要在CompanyEs底下添加一个业务映射ID，也就是unit_ID字段，业务系统若是很多的话，xx_ID每个都独立。
 //平均ES存储文件大小256字节/条。
+
 @Document(indexName = "company")
 @Data
 @NoArgsConstructor
@@ -21,14 +22,19 @@ public class CompanyEs {
    // @Field(type = FieldType.Auto, ignoreAbove = 260 ,analyzer ="ik_smart")
     //ignoreAbove作用：Keyword字段若存储超过了ignoreAbove个汉字(UTF8)的，就无法用Keyword本身来查找,wildcard查询会找不到，虽然有存储。
 
+    //都能支持的1精确匹配和2模糊搜索
     @MultiField(mainField= @Field(type=FieldType.Text),
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=256)
             }
     )
     private String name;        //企业或机构名。
+
+    //仅仅支持精确匹配
     @Field(type = FieldType.Keyword)
     private String no;       //统一社会信用代码
+
     //不做注解的话String默认生成mapping是Text底下再嵌套Keyword的类型;字符串将默认被同时映射成text和keyword类型.
+    //仅仅支持模糊搜索
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String address;     //首要办公地点，楼盘地址。
 
@@ -42,6 +48,7 @@ public class CompanyEs {
 
 
 /*
+已经_mapping字段类型无法修改，需要新建索引倒腾。 https://blog.csdn.net/apple9005/article/details/90415558/。
 要提高性能，就得结合FieldType.Keyword　FieldType.Text俩个一起做，Keyword照顾查全率，Text就能用倒排索引提高性能但无法保障100%都能查出来{分词特征/假如输入奇怪的词就找不到}。
 分词器最佳实践是：索引时用ik_max_word，在搜索时用ik_smart；　https://blog.csdn.net/qq_15267341/article/details/106954445?utm_medium=distribute.pc_relevant.none-task-blog-title-5&spm=1001.2101.3001.4242
 中文用的：ik分词器自定义词库；　https://www.cnblogs.com/guanxiaohe/p/12365882.html
@@ -131,5 +138,15 @@ bool查询使用Must_not或者filter过滤器的不计算相关度_score，所�
 terms_set  针对集合数组字段{1个doc内部nested？1:N关联字段}的单一字段的去匹配多个输入短语/多字符串。
 multi_match  针对多个字段一起都来搜索某个输入字符串匹配。
 长的文本字段用FieldType.Keyword比用FieldType.Text更占用内存存储。
+拼音分词器  https://blog.csdn.net/qq_25325809/article/details/107846500
+ngram_analyzer分词，自定义   https://www.imooc.com/article/18578?block_id=tuijian_wz   http://localhost:9200/eqps/_settings
+"ngram_analyzer",分词太细了查询性能下降;若把max_gram调大那么磁盘开销大。
+通常将min_gram与max_gram设置为相同值的，值越小匹配文档越多，匹配准确性越低；值越大，匹配越精确。
+custom_tokenizer手机号和身份证号  ttps://blog.csdn.net/weixin_44993313/article/details/107243273
+新增ngram分析器 https://blog.csdn.net/qq_28827635/article/details/106409573
+别名可零停机改造；独立设置主节点/协调节点/数据节点,节点数（3，5，7 ...） https://zhuanlan.zhihu.com/p/147185800
+默认分词器"standard"; ES避坑指南 https://zhuanlan.zhihu.com/p/103999069
+
 */
+
 

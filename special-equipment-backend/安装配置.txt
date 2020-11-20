@@ -121,7 +121,7 @@ Elasticsearch分布式索引引擎。swagger-REST；findAll findBy从REST替换�
 一小部分实体做ES索引的Repository，前端API/Repository替换成ES索引的graphQL内省eqp{,unit{id,.}}会自动选JPA：？;限制搜索的使用最好都能从elasticsearch跳转。shard分片基数,replicas复制副本+1数；index实体索引；
 ELK是Elasticsearch、Logstash、Kibana日志收集分析系统@Slf4j/logback-spring.xml；spring-kafka消息引擎。
 Docker-compose/Docker Hub；Kubernetes（K8s）；VMware虚拟docker不共存；Ubuntu/CentOS/Debian；
-Elasticsearch接口改成@Query注解模式了。
+Elasticsearch接口改成@Query注解模式了。   ES不支持事务或复杂关联关系。ES非规范化宽表处理join字段存储冗余。
 循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。
 但是FST只能用于前缀查找，这也是Completion Suggester的局限所在,只能从左到右第一个字符开始的滚动提示。
 ElasticSearch使用completion实现补全功能，局限性。 https://blog.csdn.net/qushaming/article/details/90479091
@@ -130,4 +130,9 @@ ElasticSearch使用手册宝典： https://www.elastic.co/guide/en/elasticsearch
 8版本graphQL支持interface A implements B; extend interface A implements B; 标准文档https://github.com/graphql/graphql-spec
 Elasticsearch 默认堆内存是1GB;  配置https://www.elastic.co/guide/cn/elasticsearch/guide/current/heap-sizing.html
 AppolloClient拦截Int最大数字+21亿,而ID是文本的,后端ID是映射Long的-+64位最大922亿亿。
+注意版本配套　spring-boot-starter-data-elasticsearch包引用的ES和实际集群版本配套。
+chrome安装elasticsearch客户端插件 head； https://github.com/mobz/elasticsearch-head ; https://www.cnblogs.com/hts-technology/p/8477258.html
+Elasticsearch嵌套Nested:新增丶修改或删除一个嵌套文档，必须重新索引整个文档  https://blog.csdn.net/u012332735/article/details/62222953
+性能测试：64.1万条设备cod+fNo两个字段，JPA模糊匹配约4.8秒。对比，Elasticsearch默认分词keyword.wildcardQuery查询0.85秒;
+   分词用ngram3+3或3+6分词matchPhrase搜索最快都是0.48秒，但是比2个字段ngram3+3比ngram3+6的可节省19.6%磁盘空间。 测试结论是ngram3+3最好。
 
