@@ -787,12 +787,16 @@ public class BaseQuery implements GraphQLQueryResolver {
                 matchQuery("cod",where.getCod())
                 matchPhraseQuery("cod",where.getCod()).slop(9)
         */
+        BoolQueryBuilder    boolQueryBuilder=new BoolQueryBuilder();
+        if (!StringUtils.isEmpty(where.getCod()))
+            boolQueryBuilder.must(matchPhraseQuery("cod",where.getCod()).slop(9));
+        if (!StringUtils.isEmpty(where.getFno()))
+            boolQueryBuilder.must(matchPhraseQuery("fNo",where.getFno()).slop(9));
+        if (!StringUtils.isEmpty(where.getUseUid()))
+            boolQueryBuilder.must(termQuery("useU.id",where.getUseUid()));
+
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
-                boolQuery().must(
-                        matchPhraseQuery("cod",where.getCod()).slop(9)
-                ).must(
-                        matchPhraseQuery("fNo",where.getFno()).slop(9)
-                )
+                boolQueryBuilder
         ).withPageable(pageable).build();
 
         IndexCoordinates indexCoordinates=esTemplate.getIndexCoordinatesFor(EqpEs.class);
@@ -803,7 +807,6 @@ public class BaseQuery implements GraphQLQueryResolver {
         //Iterable<CompanyEs> list=esTemplate.search(searchQuery);
         Iterable<EqpEs> list= (List<EqpEs>) SearchHitSupport.unwrapSearchHits(hits);
         String sql=searchQuery.getQuery().toString();
-
         list.forEach(item -> {
             elevators.add(item);
         });

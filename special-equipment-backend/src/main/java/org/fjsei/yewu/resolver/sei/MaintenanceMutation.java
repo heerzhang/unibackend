@@ -15,6 +15,7 @@ import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.type.*;
 import md.system.AuthorityRepository;
 import md.system.UserRepository;
+import org.elasticsearch.action.support.WriteRequest;
 import org.fjsei.yewu.entity.fjtj.*;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
@@ -25,6 +26,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.document.Document;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.BulkOptions;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -86,7 +92,8 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired private UntMgeRepository untMgeRepository;
     @Autowired private EqpMgeRepository eqpMgeRepository;
     @Autowired private SomeEsRepository someEsRepository;
-
+    @Autowired
+    private ElasticsearchRestTemplate esTemplate;
     //仅用于后台维护使用的；
     @Transactional(rollbackFor = Exception.class)
     public Iterable<String> syncUnitFromOld(int offset, int limit) {
@@ -309,7 +316,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
 
     //从Eqp以及关联实体提取数据腾挪到EqpEs索引中去
     @Transactional(rollbackFor = Exception.class)
-    public Iterable<String> syncEqpEsFromEqp_保留(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp_正常维护代码保留(int offset, int limit) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> eqps= eQPRepository.findAll(pageable);
@@ -331,25 +338,74 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }
-    //测试代码
-    @Transactional(rollbackFor = Exception.class)
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
-        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-
+    //测试看得　代码　　速度=0.48秒/条
+    public Iterable<String> syncEqpEsFromEqp_非批量的慢(int offset, int limit) {
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);
         List<String> retMsgs=new ArrayList<>();
-
-        retMsgs.add("成功");
-
-        SomeEs one=new SomeEs();
-        one.setCert("梯11闽A9339(16)");
-        one.setCod("3501T57080");
-        one.setId(331343L);
-
-        someEsRepository.save(one);
-
+        for (Eqp eqpfrom:fromeqps)
+        {
+            EqpEs eqp=eqpEsRepository.findById(eqpfrom.getId()).orElse(null);
+            if(null!=eqpfrom){
+                Unit  useU=eqpfrom.getUseU();
+                if(null!=useU) {
+                    UnitEs unitEs = new UnitEs();
+                    unitEs.setId(useU.getId());
+                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
+                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
+                    eqp.setUseU(unitEs);
+                }
+                useU=eqpfrom.getOwner();
+                if(null!=useU) {
+                    UnitEs unitEs = new UnitEs();
+                    unitEs.setId(useU.getId());
+                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
+                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
+                    eqp.setOwner(unitEs);
+                }
+                eqpEsRepository.save(eqp);
+            }
+            retMsgs.add("成功");
+        }
+        log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }
-
+    //测试看得　代码 速度=0.0047秒/条，比非批量更新的可快百倍
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        List<EqpEs> neweqpes=new ArrayList<>();
+        //3个看
+        for (Eqp eqpfrom:fromeqps)
+        {
+            EqpEs eqp=eqpEsRepository.findById(eqpfrom.getId()).orElse(null);
+            if(null!=eqpfrom){
+                Map<String, Object> params = new HashMap<>();
+                Unit  useU=eqpfrom.getUseU();
+                if(null!=useU) {
+                    UnitEs unitEs = new UnitEs();
+                    unitEs.setId(useU.getId());
+                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
+                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
+                    eqp.setUseU(unitEs);
+                }
+                useU=eqpfrom.getOwner();
+                if(null!=useU) {
+                    UnitEs unitEs = new UnitEs();
+                    unitEs.setId(useU.getId());
+                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
+                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
+                    eqp.setOwner(unitEs);
+                }
+                neweqpes.add(eqp);
+            }
+            retMsgs.add("成功");
+        }
+        eqpEsRepository.saveAll(neweqpes);
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
 }
 
 

@@ -17,6 +17,7 @@ import java.util.Set;
 //维保单位管理关注到下设置 有细分的维保部门; 驻点挂接/解除维保 驻点设备
 //使用单位管理关注到下设置 有细分的分支机构|内部设立管理部门；
 
+
 @AllArgsConstructor
 @Data
 @Entity

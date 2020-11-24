@@ -168,6 +168,7 @@ public class Eqp implements Equipment{
     @JoinColumn
     private Unit  useU;     //USE_UNT_ID 使用单位ID
     //针对使用单位的细化　管理分支部门。
+    //假如设备表没有指定Division部门的，那就是Unit作为缺省部门:等价于该单位底下没有细分的部门，若要求具体Division但是该单位没有细分Division情形。
     //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn

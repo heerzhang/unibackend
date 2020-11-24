@@ -1,6 +1,7 @@
 reindex 重建索引 /_settings /_mapping设置后就无法动态修改了。
 步骤 https://cwl-java.blog.csdn.net/article/details/102814600
 设备索引重建：  源代码里面都改成别名xxx_latest。
+可以在模型文件定义好直接重新起名做初始化，不用做下面这步骤来手动配置/_settings /_mapping的。
 PUT  http://localhost:9200  /eqp_1118
 {
   "settings": {
@@ -210,13 +211,13 @@ POST /_reindex?wait_for_completion=false
    "index": "eqps"
   },
   "dest": {
-   "index": "eqp_1118"
+   "index": "eqp_1120"
   }
 }
 应答了
 {"task":"sDnoBeqiR5e1vkv6CVvofw:1063"}
 看进度情况  GET　/_tasks?actions=*reindex
-速度挺快，任务结束后，短时间内实际文件大小还会缩减。
+速度每秒约前进2331条；任务结束后，实际磁盘文件大小还会继续缩减中。
 
 POST /_aliases
 {
@@ -234,11 +235,11 @@ POST /_aliases
     }
   ]
 }
-或初始的
+或初始的  POST /_aliases
 {
   "actions": [{
     "add": {
-    "index": "eqp_1118",
+    "index": "eqp_1120",
     "alias": "eqp_latest"
     }
   }

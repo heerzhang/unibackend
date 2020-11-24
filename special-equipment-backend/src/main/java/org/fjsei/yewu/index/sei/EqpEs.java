@@ -1,6 +1,7 @@
 package org.fjsei.yewu.index.sei;
 
 import lombok.*;
+import md.cm.unit.Unit;
 import md.specialEqp.Equipment;
 import org.springframework.data.elasticsearch.annotations.*;
 
@@ -11,8 +12,8 @@ import java.util.Date;
 //独立定义ES模型实体类，支持非规范化和宽表等处理需求。
 
 //设备Eqp对应的ES索引库,  从设备角度来过滤搜索。
-//无法改代码的生产系统情形，最好用index别名alias，方便维护。
-@Document(indexName = "eqp_1120")
+//无法改代码的生产系统情形，最好用index别名xxx_latest，方便维护。
+@Document(indexName = "eqp_latest")
 @Data
 //@Builder(toBuilder = true)
 //@EqualsAndHashCode(of = {"id"})
@@ -26,6 +27,7 @@ public class EqpEs implements Equipment{
     private Boolean valid;
 
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
+    //ngram_analyzer缺省3+3配置的，若是少于3个字符就无法搜索出来。最少要求输入3个字符。
     @MultiField(mainField= @Field(type=FieldType.Text, analyzer = "ngram_analyzer", searchAnalyzer = "ngram_analyzer"),
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=32)
             }
@@ -142,7 +144,11 @@ public class EqpEs implements Equipment{
  //   @Field(type = FieldType.Nested)
  //   private Set<TaskEs> task = Sets.newHashSet();
    // private Set<ISP>  isps;
-
+    //引入这两个单位字段消耗磁盘空间大
+    @Field(type = FieldType.Object)
+    private UnitEs  useU;     //USE_UNT_ID 使用单位ID
+    @Field(type = FieldType.Object)
+    private UnitEs  owner;      //PROP_UNT_ID 产权单位
 }
 
 
@@ -157,6 +163,8 @@ Lucene段要合并：索引段粒度越小，性能低/耗内存。频繁的文�
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)类继承时;
 @lombok.Builder(toBuilder = true)
 @Getter
-
+Elasticsearch创建别名时可以指定路由"routing"　　https://www.xujun.org/note-76931.html
+ES过滤使用termQuery例子：boolQueryBuilder.must(termQuery("useU.id",where.getUseUid()));
+NativeSearchQueryBuilder().withFilter()只能用在已经统计后的过滤(最后的统计条目过滤)，其它情形不要用；正常查询应该用NativeSearchQueryBuilder().withQuery();
 */
 

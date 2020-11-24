@@ -90,5 +90,8 @@ MongoDB是非关系型数据库不支持join表关联别指望了，spring-data-
 循环关联导致的ES存储死循环+事务死锁。嵌套的JPA关联对象直接发送给Elasticsearch是全量都存储的，所以很耗空间，必须控制和减少字段。
 elasticsearch   autocomplete   自动提词   自动补全
 磁盘空间不足报错disk usage exceeded flood-stage watermark; ES很需要空闲的磁盘。
+nativeSearchQueryBuilder.withFilter(boolQueryBuilder)查询之后才被执行，会失去过滤在缓存上帮助不能用,withFilter实际等价于post_filter应该只和聚合一起使用。
+如果只做查询不做聚合，post_filter的作用和我们常用的filter是类似的，但由于post_filter是在查询之后才会执行，
+    所以post_filter不具备filter对查询带来的好处(忽略评分、缓存等)，因此，在普通的查询中不要用post_filter来替代filter; boolQuery+Term查都算filter。
 */
 
