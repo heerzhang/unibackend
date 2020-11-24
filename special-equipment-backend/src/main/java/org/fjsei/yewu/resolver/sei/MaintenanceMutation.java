@@ -339,30 +339,23 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         return retMsgs;
     }
     //测试看得　代码　　速度=0.48秒/条
-    public Iterable<String> syncEqpEsFromEqp_非批量的慢(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp_单向测试(int offset, int limit) {
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);
         List<String> retMsgs=new ArrayList<>();
         for (Eqp eqpfrom:fromeqps)
         {
-            EqpEs eqp=eqpEsRepository.findById(eqpfrom.getId()).orElse(null);
+            EqpEs eqp=eqpEsRepository.findById(330660L).orElse(null);
             if(null!=eqpfrom){
                 Unit  useU=eqpfrom.getUseU();
                 if(null!=useU) {
                     UnitEs unitEs = new UnitEs();
-                    unitEs.setId(useU.getId());
-                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
-                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
+                    unitEs.setId(129202L);
+                    unitEs.setName("刘必腾");
+                    unitEs.setAddress("福建省连江县透堡镇龙头村龙峰街10号(流动作业设备)");
                     eqp.setUseU(unitEs);
                 }
-                useU=eqpfrom.getOwner();
-                if(null!=useU) {
-                    UnitEs unitEs = new UnitEs();
-                    unitEs.setId(useU.getId());
-                    unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
-                    unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
-                    eqp.setOwner(unitEs);
-                }
+
                 eqpEsRepository.save(eqp);
             }
             retMsgs.add("成功");
@@ -370,7 +363,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }
-    //测试看得　代码 速度=0.0047秒/条，比非批量更新的可快百倍
+    //_正常用的保留 速度=0.0047秒/条，比非批量更新的可快百倍
     public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);

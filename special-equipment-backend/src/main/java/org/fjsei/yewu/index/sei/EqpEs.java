@@ -147,9 +147,13 @@ public class EqpEs implements Equipment{
     //引入这两个单位字段消耗磁盘空间大
     @Field(type = FieldType.Object)
     private UnitEs  useU;     //USE_UNT_ID 使用单位ID
+    //UnitEs并不会当成Java实体对象那样存储，相同UnitEs.id的可以有从ES读取出不同的内容。好像json{}存储那样。
     @Field(type = FieldType.Object)
     private UnitEs  owner;      //PROP_UNT_ID 产权单位
+
+    //@Field(type = FieldType.Nested) 集合数组对象的；性能较差；
 }
+
 
 
 
