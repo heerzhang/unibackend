@@ -30,7 +30,7 @@ public class QAddress extends EntityPathBase<Address> {
 
     public final NumberPath<Double> lat = createNumber("lat", Double.class);
 
-    public final NumberPath<Double> lng = createNumber("lng", Double.class);
+    public final NumberPath<Double> lon = createNumber("lon", Double.class);
 
     public final StringPath name = createString("name");
 

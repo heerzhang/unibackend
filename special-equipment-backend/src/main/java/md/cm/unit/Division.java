@@ -12,7 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.util.Set;
 
-//分支机构branch office｛安全管理部门或分支机构｝；　　实际是关注到了某个企业的内部组织架构；
+//单位底下细分出来的分支机构branch office｛安全管理部门或分支机构｝；　　实际是关注到了某个企业的内部组织架构；
 //因为监察要求把证书，或资格，或其它管理约束规定，最小划分单元进一步细化，细化到了企业部门级别。
 //维保单位管理关注到下设置 有细分的维保部门; 驻点挂接/解除维保 驻点设备
 //使用单位管理关注到下设置 有细分的分支机构|内部设立管理部门；

@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.Set;
 //联合主键类比ID字段，并不是 联合唯一约束，两个概念用法不同。 主键只能有一个，但是唯一约束搞可以多个的。而ID关系到JPA接口方法引用。
 //地址的数据维护可以拆分成2-3个部分，独立分权管理。
+//自贸区的地域概念，自贸区只能额外增加标识关联属性？特别对待区域标志符号，多对多的关联附表：特殊区域概念名词实体表。
+
 
 @Getter
 @Setter
@@ -23,6 +25,7 @@ public class Address {
 
     //【后半部分】非行政的，用户地址命名空间 部分。
     private String  name;     //'[前缀不需要]单位详细地址，门牌号'； 前面行政地理描述部分要省略掉。
+    //配合Geo/lon/lat: 立体的位置坐标，位于大厦的第几层位置。
 
     //【前缀，行政地理描述部分】     用于提高搜索判定速度。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -33,7 +36,10 @@ public class Address {
     // private String  area;   //地区码 "zipCode": "",          area;   //地区码
     //UnitAddress 广域 1 : N Position 门牌栋号　+。
     private double lat;  //纬度 ;精确到小数点后6位可达约1米精度。
-    private double lng;  //经度  前面的是纬度,后面的是经度
+    private double lon;  //经度  前面的是纬度,后面的是经度
+    //Point ( x=lat  ,y=lon ); "lat": 48.86111099738628, "lon": 2.3269999679178
+    //private Point  pt;  直接序列化占用mysql磁盘很大，pt=79个字节。
+
     //地理定位。  .EQP_LONG is '地理经度'     .EQP_LAT is '地理纬度'
 
     //楼盘，并非是强制都要求的地址管理部分，可以空缺。
@@ -52,7 +58,7 @@ public class Address {
     //测试
     @PreAuthorize("hasRole('ADMIN')")
     public boolean setLngAndLat(String lat, String lng){
-        this.lng=Double.parseDouble(lng);
+        this.lon =Double.parseDouble(lng);
         this.lat=Double.parseDouble(lat);
         return true;
     }

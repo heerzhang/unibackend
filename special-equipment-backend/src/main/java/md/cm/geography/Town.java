@@ -29,6 +29,8 @@ public class Town {
     //双向的1 ：1关系，关系是TSdnEnp类来维护；
     @OneToOne(mappedBy = "town")
     private Adminunit  ads;       //最小的区划单位，只能有一个了。
+
+
     //上级行政关系的关联：
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "county_id")

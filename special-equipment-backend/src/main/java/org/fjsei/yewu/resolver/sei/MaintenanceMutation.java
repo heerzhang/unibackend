@@ -28,9 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.document.Document;
+import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.BulkOptions;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -68,8 +70,6 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private UnitRepository unitRepository;
     @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
     private AuthorityRepository authorityRepository;
     @Autowired
     private TownRepository townRepository;
@@ -83,6 +83,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private PersonRepository personRepository;
     @Autowired   private PersonEsRepository personEsRepository;
+    @Autowired   private AddressRepository addressRepository;
 
     @PersistenceContext(unitName = "entityManagerFactorySei")
     private EntityManager emSei;                //EntityManager相当于hibernate.Session：
@@ -339,32 +340,24 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         return retMsgs;
     }
     //测试看得　代码　　速度=0.48秒/条
-    public Iterable<String> syncEqpEsFromEqp_单向测试(int offset, int limit) {
-        Pageable pageable= PageOffsetFirst.of(offset, limit);
-        Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
         List<String> retMsgs=new ArrayList<>();
-        for (Eqp eqpfrom:fromeqps)
-        {
-            EqpEs eqp=eqpEsRepository.findById(330660L).orElse(null);
-            if(null!=eqpfrom){
-                Unit  useU=eqpfrom.getUseU();
-                if(null!=useU) {
-                    UnitEs unitEs = new UnitEs();
-                    unitEs.setId(129202L);
-                    unitEs.setName("刘必腾");
-                    unitEs.setAddress("福建省连江县透堡镇龙头村龙峰街10号(流动作业设备)");
-                    eqp.setUseU(unitEs);
-                }
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Address address=addressRepository.findById(971803L).orElse(null);
+        Point point=new Point(1,2);
 
-                eqpEsRepository.save(eqp);
-            }
-            retMsgs.add("成功");
+        EqpEs eqp=eqpEsRepository.findById(330660L).orElse(null);
+        if(null!=eqp){
+            GeoPoint geoPoint=eqp.getPt();
+            if(geoPoint.equals(GeoPoint.fromPoint(point)) )
+                log.info("syncEqpEsFromEqp:{}", -offset);
+            //eqpEsRepository.save(eqp);
         }
         log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }
     //_正常用的保留 速度=0.0047秒/条，比非批量更新的可快百倍
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp_正常用的保留(int offset, int limit) {
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> fromeqps= eQPRepository.findAll(pageable);
         List<String> retMsgs=new ArrayList<>();

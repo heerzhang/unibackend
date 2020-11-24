@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Set;
 
-//楼盘 community ，小区名字；楼盘=地址的泛房型表达式; 广义模糊地址；
+//楼盘的实体概念。 community ，小区名字；楼盘=地址的泛房型表达式; 广义模糊地址；
 
 @Getter
 @Setter

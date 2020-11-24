@@ -9,6 +9,9 @@ import java.util.Set;
 
 //聚合表;
 //最小的行政单位;  数据库搜索查询基础对象。
+//自贸区？，一个地址既是普通行政区属，又是自贸区属: 自贸区可以包括多个最小的行政单元单元；福州片区、厦门片区和平潭片区还要区分；附带关联属性表的？if(IN[,])else;
+//没法：自贸区比起最小的行政单元还要更加的细分的地域概念，和楼盘很像，但是会跨越多行政区划的。自贸区只能额外增加标识关联属性？特别对待区域标志符号。
+
 
 @Getter
 @Setter
@@ -43,6 +46,8 @@ public class Adminunit {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( referencedColumnName = "ID")
     private Town town;         //最小的1:1关系。
+
+
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "county_id")
     private County  county;
