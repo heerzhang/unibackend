@@ -79,6 +79,8 @@ public class EqpMge {
     //报告书用到的：
     //大部分都有的，但是可能很简单地址。配合区域码和负责任务的机关。
     private String  EQP_USE_ADDR;     // '使用地点' 可能是具体几号楼？可能是很简单的称谓,最具体地址，大地址的反而没说。
+    private Double EQP_LAT;  //纬度 ;精确到小数点后6位可达约1米精度。
+    private Double EQP_LONG;  //经度  前面的是纬度,后面的是经度
     //EQP_AREA_COD  EQP_LAT EQP_LONG ; 地理信息不算重要， 仅作标记。
     private String  EQP_AREA_COD;   //设备所在区域
     //非强制字段： 有BUILD_ID的设备 不算 很多比例。

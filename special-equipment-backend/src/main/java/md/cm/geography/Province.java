@@ -40,6 +40,7 @@ public class Province {
     //上海市 上海。
     //搜索的时候，支持 按照 城市那一级， 按省份级别，都算有效的搜索匹配区域。
     private boolean collapse;
+    private Long  oldId;    //对接旧的系统ID
 }
 
 //中国规范名称

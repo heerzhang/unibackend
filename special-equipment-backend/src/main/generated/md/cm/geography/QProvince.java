@@ -34,6 +34,8 @@ public class QProvince extends EntityPathBase<Province> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
+
     public QProvince(String variable) {
         this(Province.class, forVariable(variable), INITS);
     }

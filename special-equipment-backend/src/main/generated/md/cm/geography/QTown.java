@@ -30,6 +30,8 @@ public class QTown extends EntityPathBase<Town> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
+
     public QTown(String variable) {
         this(Town.class, forVariable(variable), INITS);
     }

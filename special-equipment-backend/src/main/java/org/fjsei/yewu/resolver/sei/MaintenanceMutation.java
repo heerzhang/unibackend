@@ -36,6 +36,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -72,10 +73,6 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private AuthorityRepository authorityRepository;
     @Autowired
-    private TownRepository townRepository;
-    @Autowired
-    private AdminunitRepository adminunitRepository;
-    @Autowired
     private HrUserinfoRepository hrUserinfoRepository;
     @Autowired
     private CompanyRepository companyRepository;
@@ -93,6 +90,13 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired private UntMgeRepository untMgeRepository;
     @Autowired private EqpMgeRepository eqpMgeRepository;
     @Autowired private SomeEsRepository someEsRepository;
+    @Autowired private DictAreaRepository dictAreaRepository;
+    @Autowired private ProvinceRepository provinceRepository;
+    @Autowired private CountryRepository countryRepository;
+    @Autowired private CityRepository cityRepository;
+    @Autowired private CountyRepository countyRepository;
+    @Autowired private TownRepository  townRepository;
+    @Autowired private AdminunitRepository adminunitRepository;
     @Autowired
     private ElasticsearchRestTemplate esTemplate;
     //仅用于后台维护使用的；
@@ -339,23 +343,6 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }
-    //测试看得　代码　　速度=0.48秒/条
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
-        List<String> retMsgs=new ArrayList<>();
-        Pageable pageable= PageOffsetFirst.of(offset, limit);
-        Address address=addressRepository.findById(971803L).orElse(null);
-        Point point=new Point(1,2);
-
-        EqpEs eqp=eqpEsRepository.findById(330660L).orElse(null);
-        if(null!=eqp){
-            GeoPoint geoPoint=eqp.getPt();
-            if(geoPoint.equals(GeoPoint.fromPoint(point)) )
-                log.info("syncEqpEsFromEqp:{}", -offset);
-            //eqpEsRepository.save(eqp);
-        }
-        log.info("syncEqpEsFromEqp:{}", offset);
-        return retMsgs;
-    }
     //_正常用的保留 速度=0.0047秒/条，比非批量更新的可快百倍
     public Iterable<String> syncEqpEsFromEqp_正常用的保留(int offset, int limit) {
         Pageable pageable= PageOffsetFirst.of(offset, limit);
@@ -389,6 +376,131 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
             retMsgs.add("成功");
         }
         eqpEsRepository.saveAll(neweqpes);
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　建地级市表
+    public Iterable<String> syncEqpEsFromEqp_建地级市表(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Province>  pall= provinceRepository.findAll();
+        for (Province province:pall) {
+            QDictArea qm = QDictArea.dictArea;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.FAU_TYPE_PARENT_CODE.eq(province.getOldId()));
+            Iterable<DictArea> list = dictAreaRepository.findAll(builder);
+            list.forEach(item -> {
+                City mone = new City();
+                mone.setProvince(province);
+                mone.setName(item.getFAU_TYPE_NAME());
+                mone.setOldId(item.getId());
+                cityRepository.save(mone);
+                log.info("dijiShi:{}{} id={}", province.getName(),item.getFAU_TYPE_NAME(), mone.getId());
+            });
+        }
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护 建省份表
+    public Iterable<String> syncEqpEsFromEqp_建省份表(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        //List<DictArea> dictAreas=dictAreaRepository.findAll();
+        Country country=countryRepository.findById(2L).orElse(null);
+        QDictArea qm = QDictArea.dictArea;
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(qm.FAU_TYPE_PARENT_CODE.eq(1L));
+        Iterable<DictArea> list = dictAreaRepository.findAll(builder);
+        list.forEach(item -> {
+            Province province=new Province();
+            province.setCountry(country);
+            province.setName(item.getFAU_TYPE_NAME());
+            province.setOldId(item.getId());
+            provinceRepository.save(province);
+            log.info("shenfen:{} id={}", item.getFAU_TYPE_NAME(), province.getId());
+        });
+
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　建区县表
+    public Iterable<String> syncEqpEsFromEqp_建区县表(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<City>  pall= cityRepository.findAll();
+        for (City parent:pall) {
+            QDictArea qm = QDictArea.dictArea;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.FAU_TYPE_PARENT_CODE.eq(parent.getOldId()));
+            Iterable<DictArea> list = dictAreaRepository.findAll(builder);
+            list.forEach(item -> {
+                County mone = new County();
+                mone.setCity(parent);
+                mone.setName(item.getFAU_TYPE_NAME());
+                mone.setOldId(item.getId());
+                try {
+                    //如果没有实际被修改就不会真的做SQL命令。
+                    countyRepository.save(mone);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                log.info("区县:{}>{} id={}", parent.getName(),item.getFAU_TYPE_NAME(), mone.getId());
+            });
+        }
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　街道乡镇表
+    public Iterable<String> syncEqpEsFromEqp_街道乡镇表(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<County>  pall= countyRepository.findAll();
+        for (County parent:pall) {
+            QDictArea qm = QDictArea.dictArea;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.FAU_TYPE_PARENT_CODE.eq(parent.getOldId()));
+            Iterable<DictArea> list = dictAreaRepository.findAll(builder);
+            list.forEach(item -> {
+                Town mone = new Town();
+                mone.setCounty(parent);
+                mone.setName(item.getFAU_TYPE_NAME());
+                mone.setOldId(item.getId());
+                try {
+                    //如果没有实际被修改就不会真的做SQL命令。
+                    townRepository.save(mone);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                log.info("街镇:{}>{} id={}", parent.getName(),item.getFAU_TYPE_NAME(), mone.getId());
+            });
+        }
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　最小行政单位
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        List<Adminunit> batch=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Town>  pall= townRepository.findAll(pageable);
+        for (Town parent:pall) {
+            Adminunit adminunit=adminunitRepository.findByTownIs(parent);
+            if(null==adminunit) {
+                adminunit = new Adminunit();
+                adminunit.setTown(parent);
+            }
+            DictArea dictArea= dictAreaRepository.findById(parent.getOldId()).orElse(null);
+            adminunit.setAreacode(dictArea.getFAU_TYPE_CODE());
+            adminunit.setPrefix(dictArea.getFAU_TYPE_NAME());
+            adminunit.setCounty(parent.getCounty());
+            adminunit.setCity(parent.getCounty().getCity());
+            adminunit.setProvince(parent.getCounty().getCity().getProvince());
+            adminunit.setCountry(parent.getCounty().getCity().getProvince().getCountry());
+            batch.add(adminunit);
+            log.info("行政:{} cod={}", parent.getName(), dictArea.getFAU_TYPE_CODE());
+            retMsgs.add("成功");
+        }
+        adminunitRepository.saveAll(batch);
         log.info("syncEqpEsFromEqp:{}", offset);
         return retMsgs;
     }

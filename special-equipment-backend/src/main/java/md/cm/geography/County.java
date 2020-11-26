@@ -42,6 +42,7 @@ public class County {
     //底下只有一个镇的，没有划分镇的县级别。
     //搜索的时候，支持 按照 镇 一级，  按县级别，都算有效的搜索匹配区域。
     private boolean collapse;
+    private Long  oldId;    //对接旧的系统ID
 }
 
 //福建--平潭--乡镇街道；平潭是跳级升格为地级市，县区级别空缺。

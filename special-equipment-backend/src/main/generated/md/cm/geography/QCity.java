@@ -32,6 +32,8 @@ public class QCity extends EntityPathBase<City> {
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
+
     public final QProvince province;
 
     public QCity(String variable) {

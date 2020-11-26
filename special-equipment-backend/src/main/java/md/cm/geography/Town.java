@@ -35,6 +35,7 @@ public class Town {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "county_id")
     private County  county;
+    private Long  oldId;    //对接旧的系统ID
     //没有 ： 下级行政关系的关联：
 }
 

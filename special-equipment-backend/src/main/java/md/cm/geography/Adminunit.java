@@ -32,7 +32,7 @@ public class Adminunit {
     //平潭和福州区划代码如何区分开        //编码规则已经被破坏。
     //行政区划代码9位数字编码失去意义了。
     private String  areacode;
-    //邮政编码；
+    //老去的 邮政编码；
     private String  zipcode;
 
     //一个乡镇社区行政最小单元底下的　所有已经声明的地址。

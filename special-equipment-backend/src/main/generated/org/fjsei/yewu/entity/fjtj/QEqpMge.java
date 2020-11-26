@@ -33,7 +33,11 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath EQP_INNER_COD = createString("EQP_INNER_COD");
 
+    public final NumberPath<Double> EQP_LAT = createNumber("EQP_LAT", Double.class);
+
     public final StringPath EQP_LEVEL = createString("EQP_LEVEL");
+
+    public final NumberPath<Double> EQP_LONG = createNumber("EQP_LONG", Double.class);
 
     public final StringPath EQP_MOD = createString("EQP_MOD");
 

@@ -35,6 +35,7 @@ public class Address {
     //地址需要再次丰富掉， 省 市 区 镇 小区。
     // private String  area;   //地区码 "zipCode": "",          area;   //地区码
     //UnitAddress 广域 1 : N Position 门牌栋号　+。
+    //经纬度坐标小数位与精度的对应关系 https://www.jianshu.com/p/cff30c491a0b
     private double lat;  //纬度 ;精确到小数点后6位可达约1米精度。
     private double lon;  //经度  前面的是纬度,后面的是经度
     //Point ( x=lat  ,y=lon ); "lat": 48.86111099738628, "lon": 2.3269999679178
@@ -55,9 +56,9 @@ public class Address {
     @OneToMany(mappedBy = "pos")
     private Set<Eqp> eqps;      //双向的关联，需要在外部实体表内也要声明，虽然数据库实体表没有字段，但内存操作需要它。
 
-    //测试
+    //测试　
     @PreAuthorize("hasRole('ADMIN')")
-    public boolean setLngAndLat(String lat, String lng){
+    public boolean setLatAndLon(String lat, String lng){
         this.lon =Double.parseDouble(lng);
         this.lat=Double.parseDouble(lat);
         return true;

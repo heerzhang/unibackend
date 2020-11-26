@@ -205,7 +205,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         return adminunit;
     }
     @Transactional
-    public Address newPosition(String name, Long aduId, String lat, String lng) {
+    public Address newPosition(String name, Long aduId, String lat, String lon) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Adminunit adminunit=adminunitRepository.findById(aduId).orElse(null);
         //Adminunit adminunit=adminunitRepository.findByTownIs(town);
@@ -213,7 +213,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Address position = new Address();
         position.setName(name);
         position.setAd(adminunit);
-        position.setLngAndLat(lat, lng);
+        position.setLatAndLon(lat, lon);
         addressRepository.save(position);
         return position;
     }

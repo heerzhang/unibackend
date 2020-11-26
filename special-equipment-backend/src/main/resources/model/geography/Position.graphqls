@@ -1,8 +1,8 @@
 type Address{
     id:ID!
     name: String!
-    lng: String
     lat: String
+    lon: String
     eqps: [EQP]
     ad:  Adminunit
 }
@@ -21,7 +21,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    newPosition(name: String!, aduId: ID!, lat: String, lng: String) : Address!
+    newPosition(name: String!, aduId: ID!, lat: String, lon: String) : Address!
     initAdminunit(townId: ID!, prefix: String!, areacode: String!, zipcode: String) : Adminunit
 
 }
