@@ -19,6 +19,8 @@ public class QHouseMge extends EntityPathBase<HouseMge> {
 
     public static final QHouseMge houseMge = new QHouseMge("houseMge");
 
+    public final StringPath AREA_COD = createString("AREA_COD");
+
     public final StringPath BUILD_ADDR = createString("BUILD_ADDR");
 
     public final StringPath BUILD_NAME = createString("BUILD_NAME");

@@ -33,6 +33,8 @@ public class Village {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "aid")
     private Adminunit  ad;       //行政区划
+    private Long  oldId;    //对接旧系统TB_HOUSE_MGE
+    private String oldBadr;     //对接旧系统的楼盘的地址
 }
 
 //旧的　TB_HOUSE_MGE   "BUILD_ID"

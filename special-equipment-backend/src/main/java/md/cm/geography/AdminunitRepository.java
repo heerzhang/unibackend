@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface AdminunitRepository extends JpaRepository<Adminunit, Long>, JpaSpecificationExecutor<Adminunit> {
     Adminunit findByTownIs(Town town);
+    Adminunit findTopByAreacode(String  areacode);
+
 }

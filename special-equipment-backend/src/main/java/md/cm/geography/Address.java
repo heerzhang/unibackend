@@ -23,21 +23,22 @@ public class Address {
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
 
-    //【后半部分】非行政的，用户地址命名空间 部分。
+    //【后半部分】非行政的，用户地址命名空间 部分。  楼盘不属于地址组成部分/楼盘属于名义地址。
     private String  name;     //'[前缀不需要]单位详细地址，门牌号'； 前面行政地理描述部分要省略掉。
     //配合Geo/lon/lat: 立体的位置坐标，位于大厦的第几层位置。
 
     //【前缀，行政地理描述部分】     用于提高搜索判定速度。
+    //正常这个字段不能为空的！
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "aid")
+    @JoinColumn(name = "aid", nullable=false)
     private Adminunit  ad;       //行政区划
 
     //地址需要再次丰富掉， 省 市 区 镇 小区。
     // private String  area;   //地区码 "zipCode": "",          area;   //地区码
     //UnitAddress 广域 1 : N Position 门牌栋号　+。
     //经纬度坐标小数位与精度的对应关系 https://www.jianshu.com/p/cff30c491a0b
-    private double lat;  //纬度 ;精确到小数点后6位可达约1米精度。
-    private double lon;  //经度  前面的是纬度,后面的是经度
+    private Double lat;  //纬度 ;精确到小数点后6位可达约1米精度。
+    private Double lon;  //经度  前面的是纬度,后面的是经度
     //Point ( x=lat  ,y=lon ); "lat": 48.86111099738628, "lon": 2.3269999679178
     //private Point  pt;  直接序列化占用mysql磁盘很大，pt=79个字节。
 
@@ -69,3 +70,4 @@ public class Address {
 //能减少重复性录入的随意性，地址字符串实体化。 已经输入生成的就直接能选择关联旧的地址登记字符串。同时隐含地就选定了地区编码xxx_AREA_COD。
 //旧平台设备表登记的EQP_USE_ADDR; '使用地点'==》 强化变成Address关联表。 原来是直接任意字符串字段。现在是签了ID的独立一个地址表，可重复性关联。
 //这里name+Adminunit是唯一索引约束：重复报错violation，要尽量约束name的同义词减少重复数据量,注册地址需要核准制度。
+//设备空地址还不少啊：select  * from TB_EQP_MGE A  where  EQP_USE_ADDR is null and IN_CAG=1 and EQP_USE_STA=2 and EQP_REG_STA=1 and OIDNO is not null and EQP_AREA_COD is not null

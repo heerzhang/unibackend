@@ -30,6 +30,10 @@ public class QVillage extends EntityPathBase<Village> {
 
     public final StringPath name = createString("name");
 
+    public final StringPath oldBadr = createString("oldBadr");
+
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
+
     public final StringPath type = createString("type");
 
     public QVillage(String variable) {

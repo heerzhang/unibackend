@@ -19,6 +19,8 @@ import org.elasticsearch.action.support.WriteRequest;
 import org.fjsei.yewu.entity.fjtj.*;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
+import org.fjsei.yewu.repository.BatchErrorLog;
+import org.fjsei.yewu.repository.BatchErrorLogRepository;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
 import org.slf4j.Logger;
@@ -97,6 +99,9 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired private CountyRepository countyRepository;
     @Autowired private TownRepository  townRepository;
     @Autowired private AdminunitRepository adminunitRepository;
+    @Autowired private HouseMgeRepository houseMgeRepository;
+    @Autowired private VillageRepository villageRepository;
+    @Autowired private BatchErrorLogRepository batchErrorLogRepository;
     @Autowired
     private ElasticsearchRestTemplate esTemplate;
     //仅用于后台维护使用的；
@@ -478,7 +483,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         return retMsgs;
     }
     //维护　最小行政单位
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp_最小行政单位(int offset, int limit) {
         List<String> retMsgs=new ArrayList<>();
         List<Adminunit> batch=new ArrayList<>();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
@@ -502,6 +507,187 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         }
         adminunitRepository.saveAll(batch);
         log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　楼盘小区
+    public Iterable<String> syncEqpEsFromEqp_楼盘小区(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        List<Village> batch=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<HouseMge>  pall= houseMgeRepository.findAll(pageable);
+        for (HouseMge parent:pall) {
+            //城Ⅲ期 对 城III期竟然冲突，数据库报同名的。
+            if("删除".equals(parent.getBUILD_STATE())||"永安市五洲第一城III期".equals(parent.getBUILD_NAME())) {
+                retMsgs.add("成功");
+                continue;
+            }
+            boolean ok=true;
+            String mesg="成功";
+            QVillage qm = QVillage.village;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.oldId.eq(parent.getId()));
+            Village village=villageRepository.findOne(builder).orElse(null);
+            if(null==village)   village=new Village();
+            village.setName(parent.getBUILD_NAME());
+            village.setType(parent.getINST_BUILD_TYPE());
+            village.setOldId(parent.getId());
+            village.setOldBadr(parent.getBUILD_ADDR());
+            Adminunit adminunit=adminunitRepository.findTopByAreacode(parent.getAREA_COD());
+            if(null!=adminunit) {
+                BooleanBuilder builder2 = new BooleanBuilder();
+                builder2.and(qm.ad.eq(adminunit));
+                builder2.and(qm.name.eq(parent.getBUILD_NAME()));
+                builder2.and(qm.oldId.ne(parent.getId()));
+                Village village2=villageRepository.findOne(builder2).orElse(null);
+                if(null!=village2){
+                    ok=false;
+                    mesg="admin下重复name";
+                }else
+                    village.setAd(adminunit);
+            }
+            else {
+                ok = false;
+                mesg="无此admin";
+            }
+            if(!ok){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setOldId(parent.getId());
+                batchErrorLog.setError(mesg);
+                batchErrorLog.setName(parent.getBUILD_NAME());
+                batchErrorLog.setAddin(parent.getAREA_COD());
+                batchErrorLogRepository.save(batchErrorLog);
+            }else{
+                batch.add(village);
+                log.info("楼盘:{} Prefix={}", parent.getBUILD_NAME(), adminunit.getPrefix());
+            }
+            retMsgs.add("成功");
+        }
+        villageRepository.saveAll(batch);
+        log.info("syncEqpEsFromEqp:{}", offset);
+        return retMsgs;
+    }
+    //维护　楼盘差错表 有1340条
+    public Iterable<String> syncEqpEsFromEqp楼盘差错表(int offset, int limit) {
+        List<String> retMsgs=new ArrayList<>();
+        List<Village> batch=new ArrayList<>();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<BatchErrorLog>  pool= batchErrorLogRepository.findAll();
+        for (BatchErrorLog it:pool) {
+            QEqpMge qm = QEqpMge.eqpMge;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.BUILD_ID.eq(it.getOldId()));
+            builder.and(qm.EQP_USE_STA.eq('2'));
+            Long cond=eqpMgeRepository.count(builder);
+            //Long res=Long.valueOf(cond);
+            it.setSum(cond);
+            batchErrorLogRepository.save(it);
+        }
+        return retMsgs;
+    }
+     //地址表构造
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Eqp> pool= eQPRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Eqp one:pool)
+        {
+            EqpMge it=eqpMgeRepository.findByEqpcodEquals(one.getCod());
+            if(null==it)    continue;
+            Village village=null;
+            Long biud=it.getBUILD_ID();
+            if(null!=biud){
+                if(33107==biud) biud=6868L;
+                if(14950==biud) biud=33644L;
+                if(36229==biud || 37531==biud) biud=32931L;
+                QVillage qm = QVillage.village;
+                BooleanBuilder builder2 = new BooleanBuilder();
+                builder2.and(qm.oldId.eq(biud));
+                village=villageRepository.findOne(builder2).orElse(null);
+            }
+            Adminunit adminunit=adminunitRepository.findTopByAreacode(it.getEQP_AREA_COD());
+            if(null==adminunit || null!=village&&village.getAd()!=adminunit){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==adminunit? "区域无效":"楼盘区域不一致");
+                batchErrorLog.setName(it.getEqpcod());
+                batchErrorLog.setNow(it.getEQP_AREA_COD());
+                batchErrorLog.setForm(it.getEQP_USE_ADDR());
+                if(null!=adminunit && null!=village && village.getAd()!=adminunit) {
+                    batchErrorLog.setOld(village.getAd().getAreacode());
+                    batchErrorLog.setCmp(village.getAd().getPrefix());
+                    batchErrorLog.setAddin(adminunit.getPrefix());
+                }
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                retMsgs.add("成功");
+                continue;
+            }
+            if(null==it.getEQP_USE_ADDR()) {
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError("空地址");
+                batchErrorLog.setName(it.getEqpcod());
+                batchErrorLog.setNow(it.getEQP_AREA_COD());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                retMsgs.add("成功");
+                continue;
+            }
+            QAddress qm = QAddress.address;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.ad.eq(adminunit));
+            BooleanBuilder builder2 = new BooleanBuilder();
+            builder2.or(qm.name.eq(it.getEQP_USE_ADDR()));
+            builder2.or(qm.name.like(it.getEQP_USE_ADDR()+" -[____]"));     //后面[四个数字]
+            builder.and(builder2);
+            int countch=0;
+            boolean usech=false;
+            //若同一批次的地址相同呢
+            Iterable<Address> tonms=addressRepository.findAll(builder);
+            Iterator<Address> iterator =tonms.iterator();
+            boolean nullll=false;       //地理坐标是空的
+            if(null==it.getEQP_LONG() || null==it.getEQP_LAT())  nullll=true;
+            while (iterator.hasNext()) {
+                Address zhe = iterator.next();
+                if(nullll && (null==zhe.getLon() || null==zhe.getLat()) )
+                    usech=true;
+                else if(!nullll && null!=zhe.getLon() && null!=zhe.getLat() && (zhe.getLon()-it.getEQP_LONG()<0.000001  && zhe.getLat()-it.getEQP_LAT()<0.000001)){
+                    usech=true;
+                }
+                if(usech) {
+                    one.setPos(zhe);
+                    retMsgs.add("成功");
+                    break;
+                }
+                countch++;
+            }
+            if(usech)   continue;
+            Address address=new Address();
+            String adrName;
+            if(0==countch)  adrName=it.getEQP_USE_ADDR();
+            else adrName=String.format("%s -[%04d]", it.getEQP_USE_ADDR(),countch);
+            address.setName(adrName);
+            address.setAd(adminunit);
+            address.setVlg(village);
+            address.setLon(it.getEQP_LONG());
+            address.setLat(it.getEQP_LAT());
+            //地址必须首先保存，否则后面eQPRepository报错。
+            try {
+                addressRepository.save(address);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            one.setPos(address);
+            retMsgs.add("成功");
+        }
+        eQPRepository.saveAll(pool);
+        log.info("sync地址表:{}", offset);
         return retMsgs;
     }
 }
