@@ -227,8 +227,8 @@ sei:
       map[http://localhost:3765]:
       map[https://192.168.171.3:3765]:
       map[http://192.168.171.3:3765]:
-      map[https://192.168.1.105:3765]:
-      map[http://192.168.1.105:3765]:
+      map[https://192.168.0.104:3765]:
+      map[http://192.168.0.104:3765]:
       map[http://localhost:3764]:
       map[http://192.168.1.105:3764]:
       map[http://localhost:3000]:
