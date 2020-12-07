@@ -94,11 +94,11 @@ public class Eqp implements Equipment{
     private Date    expire;  //DESIGN_USE_OVERYEAR设计使用年限 到期年份 //END_USE_DATE 使用年限到期时间
     private Boolean  move;   //IS_MOVEEQP 是否流动设备
     //EQP_AREA_COD定义规律大乱；    //统计和行政含义的地址区分；
-    private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
-    private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
+    //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
+    //  private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     private String occasion;    //EQP_USE_OCCA 使用场合
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
-    private Long  buildId;    //暂用 BUILD_ID  楼盘ID
+    //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
     private float  ePrice=0;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
     private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
     //还没有做出结论判定的，就直接上null；
