@@ -35,7 +35,7 @@ extend type Query {
     findUserLike(username: String): [User]!
     findUserLikeInterface(complex: ComplexInput): [User]!
     userBasic(id: ID!): UserBase
-    #升级弃用findAllUserFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [User]!
+    findAllUserFilter(filter: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [User]!
 }
 
 extend type Mutation {

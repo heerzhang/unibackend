@@ -1,15 +1,16 @@
 package org.fjsei.yewu.resolver.sei.inspect;
 
+import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import md.specialEqp.inspect.*;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISP;
-import md.specialEqp.inspect.ISPRepository;
-import md.specialEqp.inspect.Task;
-import md.specialEqp.inspect.TaskRepository;
+import org.fjsei.yewu.entity.fjtj.EqpMge;
+import org.fjsei.yewu.entity.fjtj.QEqpMge;
+import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.WhereTree;
 import org.fjsei.yewu.jpa.ModelFiltersImpl;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
@@ -29,6 +30,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -380,7 +382,21 @@ public class IspMgrQuery implements GraphQLQueryResolver {
         return allPage2;
     }
 
-    public Iterable<Task> findAllTaskFilter(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Task> findAllTaskFilter(DeviceCommonInput filter, int offset, int limit, String orderBy, boolean asc) {
+        //  pageable = PageOffsetFirst.of(offset, first, Sort.by(asc? Sort.Direction.ASC: Sort.Direction.DESC,orderBy));
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QTask qm2 = QTask.task;
+        BooleanBuilder builder = new BooleanBuilder();
+        //if (!StringUtils.isEmpty(filter.getOid()))
+        if(null!=filter.getId()) {
+            builder.and(qm2.id.eq(filter.getId()));
+        }
+        Iterable<Task> pool= taskRepository.findAll(builder,pageable);
+       // List<Task>  eqps= allPage.getContent();
+        return pool;
+    }
+
+    public Iterable<Task> findAllTaskFilter删除(WhereTree where, int offset, int first, String orderBy, boolean asc) {
        // User  user= checkAuth();
       //  if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些

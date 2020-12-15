@@ -59,6 +59,7 @@ public class ISP {
     private Date    nextIspDate;
     private String  conclusion;
     //缺省, fetch= FetchType.EAGER
+    //有可能Report的实际数据库表还没有创建啊;
     @OneToMany(mappedBy ="isp")
     private Set<Report>  reps;
     //private Set<BaseReport>  reps;

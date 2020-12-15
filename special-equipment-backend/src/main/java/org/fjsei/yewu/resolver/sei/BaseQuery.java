@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import md.specialEqp.type.ElevatorRepository;
-import md.system.Authority;
-import md.system.AuthorityRepository;
-import md.system.User;
-import md.system.UserRepository;
+import md.system.*;
 import md.cm.unit.Unit;
 import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
@@ -545,7 +542,17 @@ public class BaseQuery implements GraphQLQueryResolver {
         return eQPRepository.count(spec);
     }
 
-    public Iterable<User> findAllUserFilter(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<User> findAllUserFilter(DeviceCommonInput filter, int offset, int limit, String orderBy, boolean asc) {
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QUser qm = QUser.user;
+        BooleanBuilder builder = new BooleanBuilder();
+        if(null!=filter.getId()) {
+            builder.and(qm.id.eq(filter.getId()));
+        }
+        Iterable<User> pool= userRepository.findAll(builder,pageable);
+        return pool;
+    }
+    public Iterable<User> findAllUserFilter删除(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         User user= checkAuth();
         if(user==null)   return null;
         //这里可以增加后端对　查询的权限控制，控制关注许可后的　某用户可以查询那些

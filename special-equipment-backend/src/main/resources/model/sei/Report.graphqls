@@ -36,7 +36,7 @@ extend type Query {
 extend type Mutation {
     #末尾加权限@authr(qx:["USER","ADMIN"])，没权就用不了接口函数。
     newReport(isp: ID!,modeltype: String!, modelversion:String) :Report!
-    buildReport(isp: ID!,no: String!,path: String!) : Report!
+    #buildReport(isp: ID!,no: String!,path: String!) : Report!
     modifyOriginalRecordData(id: ID!,operationType:Int!,data: String,deduction: String) : Report
     modifyOriginalRecordFiles(id: ID!, fileIDs: [ID]!) : Report
     deleteReport(repId: ID!, reason: String): Boolean!

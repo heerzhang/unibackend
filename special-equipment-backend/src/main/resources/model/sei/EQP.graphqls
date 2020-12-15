@@ -13,8 +13,11 @@ type EQP implements Equipment{
     type: String!
     sort: String!
     vart: String!
-
     fNo: String
+    isps: [ISP]
+    pos: Address
+    task: [Task]
+    useU: Unit
 }
 
 type EqpEs implements Equipment{

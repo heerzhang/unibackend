@@ -26,6 +26,7 @@ public class DeviceCommonInput {
     String  addr;
     String  model;
     Long    useUid;     //使用单位ID
+    Long  id;       //共通ID
 }
 
 

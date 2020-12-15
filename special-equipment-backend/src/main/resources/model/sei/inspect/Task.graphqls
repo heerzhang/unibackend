@@ -19,7 +19,7 @@ type TaskEs{
 extend type Query {
     findAllTasks: [Task]!
     countTask(dep: String, status: String):Int
-    #升级弃用findAllTaskFilter(where: WhereTree, offset:Int, first:Int, orderBy:String, asc:Boolean): [Task]!
+    findAllTaskFilter(filter: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [Task]!
 }
 
 extend type Mutation {
