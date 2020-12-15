@@ -20,6 +20,7 @@ import java.util.Set;
  @Id采用GenerationType.SEQUENCE,共用sequenceName要确保旧数据失效清除周期一致，ID若要循环到最大极限值回到1起点后了若还有小数字ID就麻烦了。
  mySQL修改Id自增起点：  select next_val as id_val from SEQUENCE_COMMON  for update；   update SEQUENCE_COMMON set next_val= ?  where next_val=?
  Hibernate提供@GenericGenerator(strategy = "uuid")不能用，Long与String不兼容；只好麻烦点，旧数据维护要看id设置找底层数据库支持修改next_val:initialValue。
+ @Lob字段小心：可能造成见建表失败，mysql和Oracle还表现不一致。
 */
 
 @NoArgsConstructor
@@ -51,18 +52,20 @@ public class Report  implements SimpleReport {
     private String  detail;
     private String  modeltype;
     private String  modelversion;
-    //原始记录内容-JSON；在前端录入和修改的部分。
-    //字段长度，数据库要修改定义成 clob
- //   @Lob
-//    @Basic(fetch= FetchType.LAZY)
- //   @Column( columnDefinition="CLOB ")
+    //CLOB字段 会导致Hibernate无法自动创建该表？ 手动修改 建初始化表。
+    //原始记录内容-JSON；在前端录入和修改的部分。Oracle是这样@Column( columnDefinition="CLOB")
+    //字段长度，mysql8.0　数据库要修改定义成 clob
+    @Lob
+    @Basic(fetch= FetchType.LAZY)
+    @Column( columnDefinition="TEXT (64000)")
     private String  data;
     //该部分数据-JSON，在编制后提交审核时就能固定化了。可直接复制合并到data，存snapshot仅是接口对接便利的过渡工具。
     //纯粹是后端提供给检验报告的，编制报告的那一时间的相关设备状态数据。接口对接复制完成后就可清空了。
-  //  @Lob
- //   @Basic(fetch= FetchType.LAZY)
-  //  @Column( columnDefinition="CLOB ")
+    @Lob
+    @Basic(fetch= FetchType.LAZY)
+    @Column( columnDefinition="TEXT (64000)")
     private String  snapshot;
+    //TEXT,MEDIUMTEXT,LONGTEXT三种不同类型，BLOB和TEXT大量删除操作性能有影响。建议定期使用OPTIMEIZE TABLE功能对表碎片整理。
 
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;
