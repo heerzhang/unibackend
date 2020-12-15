@@ -21,6 +21,8 @@ public class QUntDept extends EntityPathBase<UntDept> {
 
     public final StringPath DEPT_ADDR = createString("DEPT_ADDR");
 
+    public final StringPath DEPT_AREA_COD = createString("DEPT_AREA_COD");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath LKMEN = createString("LKMEN");
@@ -30,6 +32,8 @@ public class QUntDept extends EntityPathBase<UntDept> {
     public final StringPath NAME = createString("NAME");
 
     public final StringPath PHONE = createString("PHONE");
+
+    public final NumberPath<Long> UNT_ID = createNumber("UNT_ID", Long.class);
 
     public QUntDept(String variable) {
         super(UntDept.class, forVariable(variable));

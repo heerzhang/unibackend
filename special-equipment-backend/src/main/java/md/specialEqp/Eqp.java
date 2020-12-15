@@ -162,7 +162,7 @@ public class Eqp implements Equipment{
     //针对维保单位的细化　分支机构部门。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'
+    private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'；检验平台没有设置该数据。
     //若是个人就一定没分支部门；[useU，usud]复合字段的；
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
@@ -172,7 +172,7 @@ public class Eqp implements Equipment{
     //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Division usud;     //.SECUDEPT_ID	 '分支机构ID'  .SAFE_DEPT_ID '安全管理部门ID'
+    private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
 
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。

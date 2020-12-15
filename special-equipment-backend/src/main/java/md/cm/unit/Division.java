@@ -3,6 +3,7 @@ package md.cm.unit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import md.cm.base.Company;
 import md.cm.base.Person;
 import md.cm.geography.Address;
@@ -20,8 +21,8 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 @Entity
-@Builder
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region ="Slow")
 public class Division {
     @Id
@@ -31,6 +32,7 @@ public class Division {
     //该字段淘汰：避免多头维护数据，直接引用关联属性类company或person中的name字段,与Unit是1对1关系。
     //不建议保留name字段。name搜索都绕道company或person,实在必要可以unit.company OR unit.person is。
     private String name;    //名字　   单位名||'-'||分支机构名
+    //Eqp表当中的设备联系人 使用单位联系人 可能替换该字段。　原来每一个设备都有自己的联系人，新版联系人从设备表移挂到单位机构表下。
     private String linkMen;     //TB_EQP_MGE.USE_LKMEN  '操作人员/联系人'
     private String phone;       //TB_EQP_MGE.USE_PHONE  '联系人电话'
 
@@ -42,7 +44,8 @@ public class Division {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
-
+    //过渡用　地区代码
+    private String  area;   //UntSecudept UntDept . 　_AREA_COD
     //MGE_DEPT_TYPE=1-分支机构.SECUDEPT_ID 关联TB_UNT_SECUDEPT; if=2-安全管理部门.SAFE_DEPT_ID  关联TB_UNT_DEPT
 
     //使用单位用到了
@@ -58,7 +61,16 @@ public class Division {
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit  unit;
+    //目前，假设UntSecudept 和UntDept 两个表的ID不重复！
+    private Long oldId;  //对接旧系统 内设管理部门 .SAFE_DEPT_ID  关联TB_UNT_DEPT ,内设分支机构 .SECUDEPT_ID 关联TB_UNT_SECUDEPT
 }
 
 
 //MGE_DEPT_TYPE=1安全管理部门TB_UNT_DEPT，MGE_DEPT_TYPE=2分支机构TB_UNT_SECUDEPT
+/*
+TB_EQP_MGE.USE_UNT_ID is '使用单位ID'   检验数据库: 使用单位用  管理部门类型，0:无内设
+if MGE_DEPT_TYPE=2-    内设分支机构 .SECUDEPT_ID 关联TB_UNT_SECUDEPT;
+if=1-内设管理部门 .SAFE_DEPT_ID  关联TB_UNT_DEPT
+维保单位用     comment on column TB_EQP_MGE.MANT_UNT_ID is '维保单位ID'
+comment on column TB_EQP_MGE.MANT_DEPT_ID is '维保部门ID' ! ! 检验都是空着的
+*/

@@ -22,15 +22,20 @@ public class UntDept {
 
     private String NAME;
     //名义地址
-    private String DEPT_ADDR;    //可能为空的。   实际没有用
+    private String DEPT_ADDR;    //基本上是为空的。   DEPT_ADDR  实际没有用
+    private String  DEPT_AREA_COD;      // NUMBER(8),
+
     private String LKMEN;
+
     private String PHONE;
-    private String MOBILE;
+    private String MOBILE;      //优先使用
+
    /*   LKMEN          VARCHAR2(40),
       PHONE          VARCHAR2(60),
       MOBILE         VARCHAR2(40),
       DEPT_AREA_COD  NUMBER(8), 　 没啥用处？
     */
+    private Long  UNT_ID;
 }
 
 

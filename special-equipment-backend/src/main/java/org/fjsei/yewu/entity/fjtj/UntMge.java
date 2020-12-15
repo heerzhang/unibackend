@@ -28,6 +28,7 @@ public class UntMge {
     private String POST_COD;      //单位邮编
     private String INDUSTRY_PROP_COD;       //行业性质
     private Long  JC_UNT_ID;
-    //UNT_AREA_COD,
-    //UNT_LAT,　UNT_LONG, 大多都没有数据的。
+    private String  UNT_AREA_COD;
+    //UNT_LAT,　UNT_LONG, 大多都没有数据的   == 干脆放弃引用; ?地址吞并问题？ 地址同名错用的。
 }
+

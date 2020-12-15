@@ -31,6 +31,10 @@ public class QUntSecudept extends EntityPathBase<UntSecudept> {
 
     public final StringPath SECUDEPT_ADDR = createString("SECUDEPT_ADDR");
 
+    public final StringPath SECUDEPT_AREA_COD = createString("SECUDEPT_AREA_COD");
+
+    public final NumberPath<Long> UNT_ID = createNumber("UNT_ID", Long.class);
+
     public QUntSecudept(String variable) {
         super(UntSecudept.class, forVariable(variable));
     }

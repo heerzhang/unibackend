@@ -24,6 +24,8 @@ public class QDivision extends EntityPathBase<Division> {
 
     public final StringPath address = createString("address");
 
+    public final StringPath area = createString("area");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath linkMen = createString("linkMen");
@@ -31,6 +33,8 @@ public class QDivision extends EntityPathBase<Division> {
     public final SetPath<md.specialEqp.Eqp, md.specialEqp.QEqp> maints = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createSet("maints", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Long> oldId = createNumber("oldId", Long.class);
 
     public final StringPath phone = createString("phone");
 

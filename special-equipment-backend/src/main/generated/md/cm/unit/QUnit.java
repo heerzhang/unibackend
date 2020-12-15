@@ -24,6 +24,8 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public final StringPath address = createString("address");
 
+    public final StringPath area = createString("area");
+
     public final md.cm.base.QCompany company;
 
     public final SetPath<Division, QDivision> dvs = this.<Division, QDivision>createSet("dvs", Division.class, QDivision.class, PathInits.DIRECT2);
@@ -37,6 +39,8 @@ public class QUnit extends EntityPathBase<Unit> {
     public final StringPath linkMen = createString("linkMen");
 
     public final SetPath<md.specialEqp.Eqp, md.specialEqp.QEqp> maints = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createSet("maints", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
+
+    public final NumberPath<Byte> mtp = createNumber("mtp", Byte.class);
 
     public final StringPath name = createString("name");
 
@@ -66,8 +70,8 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public QUnit(Class<? extends Unit> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.company = inits.isInitialized("company") ? new md.cm.base.QCompany(forProperty("company")) : null;
-        this.person = inits.isInitialized("person") ? new md.cm.base.QPerson(forProperty("person")) : null;
+        this.company = inits.isInitialized("company") ? new md.cm.base.QCompany(forProperty("company"), inits.get("company")) : null;
+        this.person = inits.isInitialized("person") ? new md.cm.base.QPerson(forProperty("person"), inits.get("person")) : null;
     }
 
 }

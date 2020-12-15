@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QPerson extends EntityPathBase<Person> {
 
     private static final long serialVersionUID = 416401125L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPerson person = new QPerson("person");
 
@@ -33,16 +36,27 @@ public class QPerson extends EntityPathBase<Person> {
 
     public final StringPath phone = createString("phone");
 
+    public final md.cm.geography.QAddress pos;
+
     public QPerson(String variable) {
-        super(Person.class, forVariable(variable));
+        this(Person.class, forVariable(variable), INITS);
     }
 
     public QPerson(Path<? extends Person> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QPerson(PathMetadata metadata) {
-        super(Person.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QPerson(PathMetadata metadata, PathInits inits) {
+        this(Person.class, metadata, inits);
+    }
+
+    public QPerson(Class<? extends Person> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.pos = inits.isInitialized("pos") ? new md.cm.geography.QAddress(forProperty("pos"), inits.get("pos")) : null;
     }
 
 }

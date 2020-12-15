@@ -1,6 +1,7 @@
 package md.cm.base;
 
 import lombok.*;
+import md.cm.geography.Address;
 import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -25,7 +26,12 @@ public class Person {
 
     private String name;    //UNT_NAME
     private String no;  //身份证号码 UNT_ORG_COD
-    private String address;     //住址，身份证地址
+    //注册地址，证件上记载的地址。
+    private String address;     //住址，身份证地址  也可以保留
+    //当前实际上的地址，最新办公/流动人口地址。
+    @ManyToOne(fetch= FetchType.LAZY)
+    private Address pos;    //多对1，；地理定位 方式。
+
     private String phone;       //个人手机号
     private String gender;        //性别 男 女 中
     private String occupation;        //职业

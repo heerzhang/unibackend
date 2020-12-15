@@ -1,6 +1,7 @@
 package md.cm.base;
 
 import lombok.*;
+import md.cm.geography.Address;
 import org.fjsei.yewu.entity.fjtj.UntMge;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -23,8 +24,16 @@ public class Company {
 
     private String name;    //UNT_NAME
     private String no;   //统一社会信用代码 UNT_ORG_COD
-    private String address;     //首要办公地点　UNT_ADDR
+
+    //注册地址，证件上记载的地址。
+    private String address;     //首要办公地点　UNT_ADDR    也可以保留
+    //当前实际上的地址，最新办公/流动人口地址。
+    @ManyToOne(fetch= FetchType.LAZY)
+    private Address pos;    //多对1，；地理定位 方式。
+
+    //负责人，　实际上可以定义成Person对象的。　定义成String只是人名字或描述符代号；
     private String linkMen;     //对外 负责人　UNT_LKMEN
+
 
     private String phone;
 

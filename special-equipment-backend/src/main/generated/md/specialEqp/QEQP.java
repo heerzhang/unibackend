@@ -24,12 +24,6 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final DateTimePath<java.util.Date> accpDt = createDateTime("accpDt", java.util.Date.class);
 
-    public final StringPath addr = createString("addr");
-
-    public final StringPath area = createString("area");
-
-    public final NumberPath<Long> buildId = createNumber("buildId", Long.class);
-
     public final ComparablePath<Character> cag = createComparable("cag", Character.class);
 
     public final StringPath ccl1 = createString("ccl1");

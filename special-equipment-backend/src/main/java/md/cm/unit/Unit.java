@@ -8,6 +8,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Set;
+//单位是应用系统的泛指概念:　把个人也纳入管理单元。
 //设备中的单位， 即可以是公司，也可以是个人。company和person是大数据的影子实体类/只能读。Unit是本地附加的属性。
 //搜索引擎ES找到company或者person的id后，就能通过Unit的关联ID和数据库索引快速找到其它相关的字段属性，比如owns设备集合。
 
@@ -32,7 +33,7 @@ public class Unit {
     private String address; //UNT_ADDR
     //实际应该改成是Person实体表ID
     private String linkMen; //UNT_LKMEN
-    private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
+
     //不需要，延伸实体已有类似的
     private String phone;
     //加载方式修改影响很大。根据业务场景挑选。懒加载了若想关联内省查询会运行错误。
@@ -55,15 +56,22 @@ public class Unit {
     @JoinColumn( referencedColumnName = "ID")
     private Company company;        //直接代替实体类继承模式，改做1:1关系。
     //company person两个只能二选一，company字段非空的那么company就算优先。
+    //单位可以是Person，但是Person不一定算入单位，单位是应用系统的概念。
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( referencedColumnName = "ID")
     private Person person;        //直接代替实体类继承模式，改做1:1关系。
 
 
+    //个人，行业
+    private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
+    //mtp=1 =2 没有本质区别，若=1 无需设置地址, =2 应当为分支机构设置地址但是若下挂部门也可以不设地址，mtp=0没有分支部门或机构。
+    //管理部门类型 0:无内设， mtp=1 内设管理部门, mtp=2 内设分支机构
+    private Byte  mtp=0;        //数据质量差! !， 个人也做内设分支机构？
     //细分分支机构和管理部门
     @OneToMany(mappedBy = "unit")
     private Set<Division>  dvs;    //分支或部门集合
-
+    //过渡用　地区代码
+    private String  area;   //UntMge. UNT_AREA_COD   不一定 是最小的乡镇级别管理区域代码。
 
     public Unit() {
     }

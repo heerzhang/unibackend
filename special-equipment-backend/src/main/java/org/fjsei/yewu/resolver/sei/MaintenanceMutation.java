@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import md.cm.base.*;
 import md.cm.geography.*;
-import md.cm.unit.QUnit;
-import md.cm.unit.Unit;
-import md.cm.unit.UnitRepository;
+import md.cm.unit.*;
 import md.specialEqp.*;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
@@ -102,6 +100,9 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired private HouseMgeRepository houseMgeRepository;
     @Autowired private VillageRepository villageRepository;
     @Autowired private BatchErrorLogRepository batchErrorLogRepository;
+    @Autowired private UntDeptRepository untDeptRepository;
+    @Autowired private UntSecudeptRepository untSecudeptRepository;
+    @Autowired private DivisionRepository divisionRepository;
     @Autowired
     private ElasticsearchRestTemplate esTemplate;
     //仅用于后台维护使用的；
@@ -245,8 +246,8 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                 .cping(each.getIF_INCPING()=='1').important(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
                     .useDt(each.getFIRSTUSE_DATE())
                 .accpDt(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
-                    .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1').area(each.getEQP_AREA_COD()).addr(each.getEQP_USE_ADDR())
-                .occasion(each.getEQP_USE_OCCA()).buildId(each.getBUILD_ID())
+                    .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1')
+                .occasion(each.getEQP_USE_OCCA())
                     .ePrice(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).contact(each.getUSE_MOBILE())
                     .unqf1(each.getNOTELIGIBLE_FALG1()).unqf2(each.getNOTELIGIBLE_FALG2())
                     .ccl1(each.getLAST_ISP_CONCLU1()).ccl2(each.getLAST_ISP_CONCLU2())
@@ -584,9 +585,9 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         }
         return retMsgs;
     }
-     //地址表构造
+     //设备地址表构造
     @Transactional(rollbackFor = Exception.class)
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp设备地址表构造(int offset, int limit) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> pool= eQPRepository.findAll(pageable);
@@ -688,6 +689,347 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
         }
         eQPRepository.saveAll(pool);
         log.info("sync地址表:{}", offset);
+        return retMsgs;
+    }
+    //第一步找回unit 的管理部门类型，地区码。，构造Adrress需要。
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp找回unit管理部门类型地区码(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Unit> pool= unitRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Unit one:pool)
+        {
+            retMsgs.add("成功");
+            QEqpMge qm = QEqpMge.eqpMge;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.USE_UNT_ID.eq(one.getOldId()));
+            Iterable<EqpMge>  cmp=eqpMgeRepository.findAll(builder);
+            for (EqpMge each:cmp) {
+                //TODO:同一个单位不同设备的管理部门类型却设置多种类型，应该优先用2,1的
+                one.setMtp(each.getMGE_DEPT_TYPE());
+                break;
+            }
+            UntMge it= untMgeRepository.findById(one.getOldId()).orElse(null);
+            if(null==it)    continue;
+            one.setArea(it.getUNT_AREA_COD());
+        }
+        unitRepository.saveAll(pool);
+        log.info("sync单位地址:{}", offset);
+        return retMsgs;
+    }
+    //单位地址表构造，使用单位，维保单位的地址，分支机构部门的地址。
+    //第二步unit找出旧系统的2个分支表构建使用单位Division部门。安全管理部门
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp构建使用单位Division安全管理部门(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QUnit qm2 = QUnit.unit;
+        BooleanBuilder builder2 = new BooleanBuilder();
+        builder2.and(qm2.mtp.eq(Byte.valueOf("1")));
+        Iterable<Unit> pool= unitRepository.findAll(builder2,pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Unit one:pool)
+        {
+            retMsgs.add("成功");
+            QUntDept qm = QUntDept.untDept;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.UNT_ID.eq(one.getOldId()));
+            Iterable<UntDept>  cmp=untDeptRepository.findAll(builder);
+            List<Division> batch=new ArrayList<>();
+            for (UntDept each:cmp) {
+                Division devision=divisionRepository.findTopByOldId(each.getId());
+                if(null==devision)  devision=new Division();
+                devision.setArea(each.getDEPT_AREA_COD());
+                devision.setAddress(each.getDEPT_ADDR());
+                devision.setOldId(each.getId());
+                devision.setName(each.getNAME());
+                devision.setLinkMen(each.getLKMEN());
+                if(null==each.getMOBILE() || each.getMOBILE().length()<8)    devision.setPhone(each.getPHONE());
+                else    devision.setPhone(each.getMOBILE());
+                devision.setUnit(one);
+                batch.add(devision);
+            }
+            divisionRepository.saveAll(batch);
+        }
+        log.info("sync单位地址:{}", offset);
+        return retMsgs;
+    }
+    //第二步unit找出旧系统的2个分支表构建使用单位Division部门。内设分支机构
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp构建使用单位Division分支机构(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QUnit qm2 = QUnit.unit;
+        BooleanBuilder builder2 = new BooleanBuilder();
+        builder2.and(qm2.mtp.eq(Byte.valueOf("2")));
+        Iterable<Unit> pool= unitRepository.findAll(builder2,pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Unit one:pool)
+        {
+            retMsgs.add("成功");
+            QUntSecudept qm = QUntSecudept.untSecudept;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.UNT_ID.eq(one.getOldId()));
+            Iterable<UntSecudept>  cmp=untSecudeptRepository.findAll(builder);
+            List<Division> batch=new ArrayList<>();
+            for (UntSecudept each:cmp) {
+                //假设UntSecudept 和UntDept ID不重复
+                Division devision=divisionRepository.findTopByOldId(each.getId());
+                if(null==devision)  devision=new Division();
+                devision.setArea(each.getSECUDEPT_AREA_COD());
+                devision.setAddress(each.getSECUDEPT_ADDR());
+                devision.setOldId(each.getId());
+                devision.setName(each.getNAME());
+                devision.setLinkMen(each.getLKMEN());
+                if(null==each.getMOBILE() || each.getMOBILE().length()<8)    devision.setPhone(each.getPHONE());
+                else    devision.setPhone(each.getMOBILE());
+                devision.setUnit(one);
+                batch.add(devision);
+            }
+            divisionRepository.saveAll(batch);
+        }
+        log.info("sync单位地址:{}", offset);
+        return retMsgs;
+    }
+    //第三步为Person补充Address表
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp为Person补充Address表(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Person> pool= personRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Person one:pool)
+        {
+            retMsgs.add("成功");
+            Unit unit=unitRepository.findUnitByPerson_Id(one.getId());
+            if(null==unit)  continue;
+            Adminunit adminunit=adminunitRepository.findTopByAreacode(unit.getArea());
+            if(null==adminunit || null==one.getAddress() || one.getAddress().equals("/") ){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==adminunit? "区域无效":"空地址");
+                batchErrorLog.setName("Person");
+                batchErrorLog.setOldId(one.getId());
+                batchErrorLog.setNow(unit.getArea());
+                batchErrorLog.setAddin(one.getAddress());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            QAddress qm = QAddress.address;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.ad.eq(adminunit));
+            builder.and(qm.name.eq(one.getAddress()));
+            //若同一批次的地址相同呢
+            Address tonms=addressRepository.findOne(builder).orElse(null);
+            if(null!=tonms) {
+                one.setPos(tonms);
+                continue;
+            }
+            Address address=new Address();
+            address.setName(one.getAddress());
+            address.setAd(adminunit);
+            //地址必须首先保存，否则后面eQPRepository报错。
+            try {
+                addressRepository.save(address);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            one.setPos(address);
+        }
+        personRepository.saveAll(pool);
+        log.info("sync补充Address:{}", offset);
+        return retMsgs;
+    }
+    //第三步为Company补充Address表
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp为Company补充Address表(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Company> pool= companyRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Company one:pool)
+        {
+            retMsgs.add("成功");
+            Unit unit=unitRepository.findUnitByCompany_Id(one.getId());
+            if(null==unit)  continue;
+            Adminunit adminunit=adminunitRepository.findTopByAreacode(unit.getArea());
+            if(null==adminunit || null==one.getAddress() || one.getAddress().equals("/") ){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==adminunit? "区域无效":"空地址");
+                batchErrorLog.setName("Company");
+                batchErrorLog.setOldId(one.getId());
+                batchErrorLog.setNow(unit.getArea());
+                batchErrorLog.setAddin(one.getAddress());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            QAddress qm = QAddress.address;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.ad.eq(adminunit));
+            builder.and(qm.name.eq(one.getAddress()));
+            //若同一批次的地址相同呢
+            Address tonms=addressRepository.findOne(builder).orElse(null);
+            if(null!=tonms) {
+                one.setPos(tonms);
+                continue;
+            }
+            Address address=new Address();
+            address.setName(one.getAddress());
+            address.setAd(adminunit);
+            //地址必须首先保存，否则后面eQPRepository报错。
+            try {
+                addressRepository.save(address);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            one.setPos(address);
+        }
+        companyRepository.saveAll(pool);
+        log.info("sync补充Address:{}", offset);
+        return retMsgs;
+    }
+    //第三步为Division补充Address表
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp为Division补充Address表(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        Iterable<Division> pool= divisionRepository.findAll(pageable);
+        List<String> retMsgs=new ArrayList<>();
+        for (Division one:pool)
+        {
+            retMsgs.add("成功");
+            Adminunit adminunit=adminunitRepository.findTopByAreacode(one.getArea());
+            if(null==adminunit || null==one.getAddress() || one.getAddress().equals("/") ){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==adminunit? "区域无效":"空地址");
+                batchErrorLog.setName("Division");
+                batchErrorLog.setOldId(one.getId());
+                batchErrorLog.setNow(one.getArea());
+                batchErrorLog.setAddin(one.getAddress());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            QAddress qm = QAddress.address;
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.and(qm.ad.eq(adminunit));
+            builder.and(qm.name.eq(one.getAddress()));
+            //若同一批次的地址相同呢
+            Address tonms=addressRepository.findOne(builder).orElse(null);
+            if(null!=tonms) {
+                one.setPos(tonms);
+                continue;
+            }
+            Address address=new Address();
+            address.setName(one.getAddress());
+            address.setAd(adminunit);
+            //地址必须首先保存，否则后面eQPRepository报错。
+            try {
+                addressRepository.save(address);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            one.setPos(address);
+        }
+        divisionRepository.saveAll(pool);
+        log.info("sync补充Address:{}", offset);
+        return retMsgs;
+    }
+    //第四步为eqp填上Division使用单位管理部门
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp为eqp单位管理部门(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QEqpMge qm2 = QEqpMge.eqpMge;
+        BooleanBuilder builder2 = new BooleanBuilder();
+        builder2.and(qm2.SAFE_DEPT_ID.isNotNull());
+        Iterable<EqpMge> pool= eqpMgeRepository.findAll(builder2,pageable);
+        List<String> retMsgs=new ArrayList<>();
+        List<Eqp> batch=new ArrayList<>();
+        for (EqpMge one:pool)
+        {
+            retMsgs.add("成功");
+            Eqp it=eQPRepository.findByCod(one.getEqpcod());
+            if(null==it)    continue;
+            Division frm=divisionRepository.findTopByOldId(one.getSAFE_DEPT_ID());
+            if(null==frm ||  !frm.getUnit().getOldId().equals( one.getUSE_UNT_ID() ) ){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==frm? "管理部门无效":"使用单位id不同");
+                batchErrorLog.setName(one.getEqpcod());
+                batchErrorLog.setOldId(one.getUSE_UNT_ID());
+                if(frm!=null)
+                    batchErrorLog.setSum(frm.getUnit().getOldId());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            it.setUsud(frm);
+            batch.add(it);
+            //若直接保存，超时？？。
+        }
+        eQPRepository.saveAll(batch);
+        log.info("sync补充Division:{}", offset);
+        return retMsgs;
+    }
+    //同一个单位不同设备的管理部门类型却设置多种，有些设备有分支机构的，有些设备无内设的。第一步骤差错=>分支机构无效
+    //第四步为eqp填上Division使用单位分支机构
+    @Transactional(rollbackFor = Exception.class)
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Pageable pageable= PageOffsetFirst.of(offset, limit);
+        QEqpMge qm2 = QEqpMge.eqpMge;
+        BooleanBuilder builder2 = new BooleanBuilder();
+        builder2.and(qm2.SECUDEPT_ID.isNotNull());
+        builder2.and(qm2.MGE_DEPT_TYPE.eq(Byte.valueOf("2")));
+        Iterable<EqpMge> pool= eqpMgeRepository.findAll(builder2,pageable);
+        List<String> retMsgs=new ArrayList<>();
+        List<Eqp> batch=new ArrayList<>();
+        for (EqpMge one:pool)
+        {
+            retMsgs.add("成功");
+            Eqp it=null;
+            try {
+                it=eQPRepository.findByCod(one.getEqpcod());
+            } catch (Exception e) {
+                //奇怪能到这里！
+                e.printStackTrace();
+            }
+            if(null==it)    continue;
+            Division frm=divisionRepository.findTopByOldId(one.getSECUDEPT_ID());
+            if(null==frm ||  !frm.getUnit().getOldId().equals( one.getUSE_UNT_ID() ) ){
+                BatchErrorLog batchErrorLog=new BatchErrorLog();
+                batchErrorLog.setError(null==frm? "分支机构无效":"使用单位id不同");
+                batchErrorLog.setName(one.getEqpcod());
+                batchErrorLog.setOldId(one.getUSE_UNT_ID());
+                if(frm!=null)
+                    batchErrorLog.setSum(frm.getUnit().getOldId());
+                try {
+                    batchErrorLogRepository.save(batchErrorLog);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
+            it.setUsud(frm);
+            batch.add(it);
+            //若直接保存，超时？？。
+        }
+        eQPRepository.saveAll(batch);
+        log.info("sync补充Division:{}", offset);
         return retMsgs;
     }
 }

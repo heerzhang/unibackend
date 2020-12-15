@@ -29,6 +29,8 @@ public class QUntMge extends EntityPathBase<UntMge> {
 
     public final StringPath UNT_ADDR = createString("UNT_ADDR");
 
+    public final StringPath UNT_AREA_COD = createString("UNT_AREA_COD");
+
     public final StringPath UNT_LKMEN = createString("UNT_LKMEN");
 
     public final StringPath UNT_MOBILE = createString("UNT_MOBILE");

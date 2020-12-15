@@ -28,15 +28,6 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final DateTimePath<java.util.Date> accpDt;
 
     //inherited
-    public final StringPath addr;
-
-    //inherited
-    public final StringPath area;
-
-    //inherited
-    public final NumberPath<Long> buildId;
-
-    //inherited
     public final ComparablePath<Character> cag;
 
     //inherited
@@ -202,9 +193,6 @@ public class QElevator extends EntityPathBase<Elevator> {
         super(type, metadata, inits);
         this._super = new md.specialEqp.QEqp(type, metadata, inits);
         this.accpDt = _super.accpDt;
-        this.addr = _super.addr;
-        this.area = _super.area;
-        this.buildId = _super.buildId;
         this.cag = _super.cag;
         this.ccl1 = _super.ccl1;
         this.ccl2 = _super.ccl2;
