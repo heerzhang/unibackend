@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 //EntityGraph不可随便加;就为了多出一个isps关联对象left outer join ？,对多出join约束性少引起笛卡儿积级别记录个数爆炸，本来只有290条变成12588条了。
 //EntityGraph存在理由:提示JPA去屏蔽LAZY，用JOIN FETCH一次关联表全查，减少SQL语句(规避了1+N 问题)，从而提高速度；但也失去懒加载优点。https://blog.csdn.net/dm_vincent/article/details/53366934
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
-//字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。
+//字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。 字段类型要用java包装类
 
 
 
@@ -52,7 +52,7 @@ public class Eqp implements Equipment{
     //JPA中，使用@Version来做乐观锁的事务控制。对比的,悲观锁限制并发所以很少被用的。
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
-    private int  version;   //之前Timestamp类型ES过不了
+    private int  version;   //之前Timestamp类型ES过不了; 旧表H2还用timestamp
     //该条设备记录已被设置成了删除态不再有效，就等待以后维护程序去清理这些被历史淘汰的数据了。
     @NotNull
     private Boolean valid=true;
@@ -71,10 +71,11 @@ public class Eqp implements Equipment{
     private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     private String subVart;     //SUB_EQP_VART 子设备品种？用于做报告选择模板/收费计算参数。
-    private char   reg;   //EQP_REG_STA 注册
+    //不能用private char   在H2无法建，Character占2字节
+    private Byte   reg;   //EQP_REG_STA 注册
     //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
-    private char   ust;   //EQP_USE_STA 状态码
-    private char   cag;   //IN_CAG 目录属性 1:目录内，2：目录外
+    private Byte   ust;   //EQP_USE_STA 状态码
+    private Byte   cag;   //IN_CAG 目录属性 1:目录内，2：目录外
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sNo;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
@@ -99,7 +100,7 @@ public class Eqp implements Equipment{
     private String occasion;    //EQP_USE_OCCA 使用场合
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
     //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
-    private float  ePrice=0;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
+    private Float  ePrice;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
     private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
     //还没有做出结论判定的，就直接上null；
     private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）

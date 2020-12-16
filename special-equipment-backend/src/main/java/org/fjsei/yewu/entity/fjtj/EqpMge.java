@@ -36,15 +36,15 @@ public class EqpMge {
   //  private String EQP_SORT_NAME;
     private String SUB_EQP_VART;
     private String EQP_MOD;      //型号'
-    private char EQP_REG_STA;
-    private char EQP_USE_STA;
-    private char   IN_CAG;
+    private Byte EQP_REG_STA;
+    private Byte EQP_USE_STA;
+    private Byte   IN_CAG;
     private String EQP_LEVEL;
     private String FACTORY_COD;     //出厂编号；
     private String EQP_INNER_COD;     //单位内部编号'
     @Temporal(TemporalType.DATE)
     private Date MAKE_DATE;   //制造日期
-    private char  IF_INCPING;   //是否正在安装监检
+    private Byte  IF_INCPING;   //是否正在安装监检
     private String IF_MAJEQP;   //是否重要特种设备
     private Character IS_MOVEEQP;
     //private char   IS_MOVEEQP;

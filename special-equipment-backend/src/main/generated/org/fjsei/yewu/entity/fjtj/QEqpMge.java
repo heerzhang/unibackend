@@ -47,7 +47,7 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath EQP_REG_COD = createString("EQP_REG_COD");
 
-    public final ComparablePath<Character> EQP_REG_STA = createComparable("EQP_REG_STA", Character.class);
+    public final NumberPath<Byte> EQP_REG_STA = createNumber("EQP_REG_STA", Byte.class);
 
     public final StringPath EQP_SORT = createString("EQP_SORT");
 
@@ -59,7 +59,7 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final StringPath EQP_USE_OCCA = createString("EQP_USE_OCCA");
 
-    public final ComparablePath<Character> EQP_USE_STA = createComparable("EQP_USE_STA", Character.class);
+    public final NumberPath<Byte> EQP_USE_STA = createNumber("EQP_USE_STA", Byte.class);
 
     public final StringPath EQP_USECERT_COD = createString("EQP_USECERT_COD");
 
@@ -73,11 +73,11 @@ public class QEqpMge extends EntityPathBase<EqpMge> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ComparablePath<Character> IF_INCPING = createComparable("IF_INCPING", Character.class);
+    public final NumberPath<Byte> IF_INCPING = createNumber("IF_INCPING", Byte.class);
 
     public final StringPath IF_MAJEQP = createString("IF_MAJEQP");
 
-    public final ComparablePath<Character> IN_CAG = createComparable("IN_CAG", Character.class);
+    public final NumberPath<Byte> IN_CAG = createNumber("IN_CAG", Byte.class);
 
     public final NumberPath<Long> INST_UNT_ID = createNumber("INST_UNT_ID", Long.class);
 

@@ -577,7 +577,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
             QEqpMge qm = QEqpMge.eqpMge;
             BooleanBuilder builder = new BooleanBuilder();
             builder.and(qm.BUILD_ID.eq(it.getOldId()));
-            builder.and(qm.EQP_USE_STA.eq('2'));
+            builder.and(qm.EQP_USE_STA.eq(Byte.valueOf("2")));
             Long cond=eqpMgeRepository.count(builder);
             //Long res=Long.valueOf(cond);
             it.setSum(cond);

@@ -24,7 +24,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final DateTimePath<java.util.Date> accpDt = createDateTime("accpDt", java.util.Date.class);
 
-    public final ComparablePath<Character> cag = createComparable("cag", Character.class);
+    public final NumberPath<Byte> cag = createNumber("cag", Byte.class);
 
     public final StringPath ccl1 = createString("ccl1");
 
@@ -86,7 +86,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath rcod = createString("rcod");
 
-    public final ComparablePath<Character> reg = createComparable("reg", Character.class);
+    public final NumberPath<Byte> reg = createNumber("reg", Byte.class);
 
     public final md.cm.unit.QUnit regU;
 
@@ -110,7 +110,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit useU;
 
-    public final ComparablePath<Character> ust = createComparable("ust", Character.class);
+    public final NumberPath<Byte> ust = createNumber("ust", Byte.class);
 
     public final md.cm.unit.QDivision usud;
 

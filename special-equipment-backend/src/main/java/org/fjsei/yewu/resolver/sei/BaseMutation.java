@@ -63,10 +63,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_RETRIEVE_MODE;
@@ -135,12 +132,14 @@ public class BaseMutation implements GraphQLMutationResolver {
     public Eqp newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP =Eqp.builder().cod(cod).type(type).oid(oid).build();
+        //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
         eQP.setSort("三方大的");
         eQP.setVart("Ccvs第三方大师傅得f");
         Task task=new Task();
         task.setDep("12111kk234fv");
-
-        eQP.getTask().add(task);
+        Set<Task> tasks=new HashSet<>();
+        tasks.add(task);
+        eQP.setTask(tasks);     //getTask().add(task);
         List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
         //多对多保存复杂一点，必须都给set上。

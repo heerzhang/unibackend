@@ -28,7 +28,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final DateTimePath<java.util.Date> accpDt;
 
     //inherited
-    public final ComparablePath<Character> cag;
+    public final NumberPath<Byte> cag;
 
     //inherited
     public final StringPath ccl1;
@@ -123,7 +123,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath rcod;
 
     //inherited
-    public final ComparablePath<Character> reg;
+    public final NumberPath<Byte> reg;
 
     // inherited
     public final md.cm.unit.QUnit regU;
@@ -159,7 +159,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final md.cm.unit.QUnit useU;
 
     //inherited
-    public final ComparablePath<Character> ust;
+    public final NumberPath<Byte> ust;
 
     // inherited
     public final md.cm.unit.QDivision usud;

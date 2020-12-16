@@ -55,4 +55,5 @@ ElasticSearch分页3方式：1）from/size浅翻页最多10000条; 2）scroll形
 EQP测试：JPA模糊匹配cod+fNo约4.5秒=极受存储性能影响可再慢60倍；对比Elasticsearch。
 CMD命令行jps执行会显示pid，再去资源管理器。  ElasticSearch严禁使用*开头通配符Terms查询; ES反规范化设计提升性能。
 ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语句能够自动做缓存，但FieldType.Text字段分词不配对match_phrase搜索返回空。
+在win10的命令行前台窗口运行elasticsearch，很可能挂起掉，必须回车继续运行。
 
