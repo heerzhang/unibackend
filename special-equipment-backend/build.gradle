@@ -58,14 +58,15 @@ dependencies {
 
     compile group: 'com.graphql-java-kickstart', name: 'graphql-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     //graphiql工具,竞争对手altair和{playground离不开tomcat-embed-core包}。改成Chrome开发工具apollo-client-devtools
-    //implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER"
-    
+    //implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER" 底下altair弃用
+    compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
+
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     //加这个包注意，http://localhost:9000/；必须做登录接口部分对接处理，否则都是报错或者X-Frame-Options: DENY　status 401的。
     implementation "org.springframework.boot:spring-boot-starter-security"
 
-    compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
+
     compile "org.springframework.boot:spring-boot-starter-websocket"
 
     //分布式数据库    　关系数据库部分
