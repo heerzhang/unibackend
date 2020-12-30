@@ -3,7 +3,6 @@
 .idea/
 special-equipment-backend/out/
 tmlog.lck
-tmlog187.log
 special-equipment-backend/src/main/resources/application.yml
 special-equipment-backend/build/
-tmlog758.log
+tmlog*.log
