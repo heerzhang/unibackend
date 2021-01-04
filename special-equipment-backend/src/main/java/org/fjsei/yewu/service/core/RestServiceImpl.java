@@ -45,18 +45,7 @@ public class RestServiceImpl implements RestService {
     public Page<Eqp> findByName_Page(String name) {
         //根据id 进行降序
         Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
-    /* 作废
-        Sort sort = new Sort(order);
-        //index 1 从0开始 不是从1开始的
-        Pageable page = new PageRequest(0,10,sort);
-        Page<Eqp> employeeList = eqpRepository.findAll(page);
-        System.out.println("查询总页数:"+employeeList.getTotalPages());
-        System.out.println("查询总记录数:"+employeeList.getTotalElements());
-        System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
-        System.out.println("查询当前页面的集合:"+employeeList.getContent());
-        System.out.println("查询当前页面的记录数:"+employeeList.getNumberOfElements());
-        return employeeList;
-        */
+
         return null;
     }
 
@@ -94,22 +83,7 @@ public class RestServiceImpl implements RestService {
             System.out.println(bo.getCod());
         }
 
-    /* 作废
-        Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
-        Sort sort = new Sort(order);
-        //index 1 从0开始 不是从1开始的
-        Pageable page = new PageRequest(0,10,sort);
-        Page<Eqp> employeeList = eqpRepository.findAll(page);
-        System.out.println("查询总页数:"+employeeList.getTotalPages());
-        System.out.println("查询总记录数:"+employeeList.getTotalElements());
-        System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
-        System.out.println("查询当前页面的集合:"+employeeList.getContent());
-        System.out.println("查询当前页面的记录数:"+employeeList.getNumberOfElements());
 
-        EntityManagerFactory entityManagerFactory= ((HibernateEntityManagerFactory)emBar.getEntityManagerFactory());
-        SessionFactory sessionFactory =((HibernateEntityManagerFactory) entityManagerFactory).getSessionFactory();
-        Statistics statistics=sessionFactory.getStatistics();
-    */
         return null;//employeeList;
     }
 
@@ -140,12 +114,7 @@ public class RestServiceImpl implements RestService {
         {
             System.out.println(bo.getCod());
         }
-        /*作废！
-        EntityManagerFactory entityManagerFactory= ((HibernateEntityManagerFactory)emBar.getEntityManagerFactory());
-        SessionFactory sessionFactory =((HibernateEntityManagerFactory) entityManagerFactory).getSessionFactory();
-        Statistics statistics=sessionFactory.getStatistics();
-        Cache cache=sessionFactory.getCache();
-        */
+
         return null;//employeeList;
     }
 
@@ -153,33 +122,7 @@ public class RestServiceImpl implements RestService {
     public Page<Eqp> findByName_Example(String name) {
 
         Sort.Order order =  new Sort.Order(Sort.Direction.ASC,"id");
-      /* 作废
-        Sort sort = new Sort(order);
-        //index 1 从0开始 不是从1开始的
-        Pageable page = new PageRequest(0,10,sort);
 
-        Page<Eqp> employeeList = eqpRepository.findAll(new Specification<Eqp>() {
-
-            public Predicate toPredicate(Root<Eqp> root,
-                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<String> codPath = root.get("cod");
-                Path<String> oidPath = root.get("oid");
-
-              //连接查询条件, 不定参数，可以连接0..N个查询条件
-
-                query.where(cb.like(codPath, "%电梯%"), cb.like(oidPath, "%12%")); //这里可以设置任意条查询条件
-
-                return null;
-            }
-
-        }, page);
-
-        System.out.println("查询总页数:"+employeeList.getTotalPages());
-        System.out.println("查询总记录数:"+employeeList.getTotalElements());
-        System.out.println("查询当前第几页:"+employeeList.getNumber()+1);
-        System.out.println("查询当前页面的集合:"+employeeList.getContent());
-        System.out.println("查询当前页面的记录数:"+employeeList.getNumberOfElements());
-        */
         return null;//eqpRepository.findByCod(name);
     }
 
@@ -212,50 +155,3 @@ public class RestServiceImpl implements RestService {
 }
 
 
-
-/*
-    //private Specification<Qfjbxxdz> getWhereClause(final JSONArray condetion,final JSONArray search) {
-        return new Specification<Qfjbxxdz>() {
-            @Override
-            public Predicate toPredicate(Root<Qfjbxxdz> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicate = new ArrayList<>();
-                Iterator<JSONObject> iterator = condetion.iterator();
-                Predicate preP = null;
-                while (iterator.hasNext()) {
-                    JSONObject jsonObject = iterator.next();
-                    //注意：这里用的root.join 因为我们要用qfjbxx对象里的字段作为条件就必须这样做join方法有很多重载，使用的时候可以多根据自己业务决断
-                    Predicate p1 = cb.equal(root.join("qfjbxx").get("id").as(String.class), jsonObject.get("fzId").toString());
-                    Predicate p2 = cb.equal(root.get("fzcc").as(String.class), jsonObject.get("ccId").toString());
-                    if (preP != null) {
-                        preP = cb.or(preP, cb.and(p1, p2));
-                    } else {
-                        preP = cb.and(p1, p2);
-                    }
-                }
-                JSONObject jsonSearch = (JSONObject) search.get(0);
-                Predicate p3 = null;
-                if (null != jsonSearch.get("xm") && jsonSearch.get("xm").toString().length() > 0) {
-                    p3 = cb.like(root.join("criminalInfo").get("xm").as(String.class), "%" + jsonSearch.get("xm").toString() + "%");
-                }
-                Predicate p4 = null;
-                if (null != jsonSearch.get("fzmc") && jsonSearch.get("fzmc").toString().length() > 0) {
-                    p4 = cb.like(root.join("qfjbxx").get("fzmc").as(String.class), "%" + jsonSearch.get("fzmc").toString() + "%");
-                }
-                Predicate preA;
-                if (null != p3 && null != p4) {
-                    Predicate preS = cb.and(p3, p4);
-                    preA = cb.and(preP, preS);
-                } else if (null == p3 && null != p4) {
-                    preA = cb.and(preP, p4);
-                } else if (null != p3 && null == p4) {
-                    preA = cb.and(preP, p3);
-                } else {
-                    preA = preP;
-                }
-                predicate.add(preA);
-                Predicate[] pre = new Predicate[predicate.size()];
-                query.where(predicate.toArray(pre));
-                return query.getRestriction();
-            }
-        }
-        */
