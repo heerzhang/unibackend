@@ -18,8 +18,6 @@ public class JcAuthor {
         @Column(unique = true, nullable = false)
         private String nickname;
 
-        @OneToMany
-        @JoinColumn(name = "author_id")
-        private Set<JcBook> books;
+
 }
 

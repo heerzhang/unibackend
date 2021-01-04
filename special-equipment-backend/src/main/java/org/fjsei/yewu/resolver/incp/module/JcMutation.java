@@ -18,9 +18,6 @@ import javax.persistence.PersistenceContext;
 public class JcMutation implements GraphQLMutationResolver {
 
         @Autowired
-        private JcBookRepository bookRepository;
-
-        @Autowired
         private JcAuthorRepository authorRepository;
 
     @PersistenceContext(unitName = "entityManagerFactoryIncp")
@@ -39,23 +36,5 @@ public class JcMutation implements GraphQLMutationResolver {
         return author;
     }
 
-    @Transactional
-    public JcBook newJcBook(String title, String isbn, Long authorId) {
-        if(!emIncp.isJoinedToTransaction())      System.out.println("没达到 emIncp.isJoinedToTransaction()");
-        else System.out.println("到 emIncp.isJoinedToTransaction()");
-        if(!emIncp.isJoinedToTransaction())      emIncp.joinTransaction();
-        Assert.isTrue(emIncp.isJoinedToTransaction(),"没emIncpisJoinedToTransaction");
 
-
-            JcBook book = new JcBook();
-            book.setTitle(title);
-            book.setIsbn(isbn);
-
-            JcAuthor author = authorRepository.findById(authorId).orElse(null);
-            Assert.isTrue(author != null,"未找到author:"+author);
-
-            book.setAuthor(author);
-            bookRepository.save(book);
-            return book;
-        }
 }

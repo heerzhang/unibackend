@@ -13,31 +13,15 @@ import org.springframework.util.Assert;
 public class JcQuery implements GraphQLQueryResolver {
 
 
-        @Autowired
-        private JcBookRepository jcbookRepository;
 
         @Autowired
         private JcAuthorRepository jcauthorRepository;
 
-//       @Autowired
-//       private BookService bookService;
 
-        public Iterable<JcBook> findAllJcBooks() {
-            return jcbookRepository.findAll();
-        }
 
         public Iterable<JcAuthor> findAllJcAuthors() {
             return jcauthorRepository.findAll();
         }
 
-        public Long countJcBook(Long authorId) {
-            if (authorId == null) return jcbookRepository.count();
-            JcAuthor author = jcauthorRepository.findById(authorId).orElse(null);
-           // if (author == null) throw new NotFoundException("未找到",new Exception("null"));
-            Assert.isTrue(author != null,"未找到author:"+author);
-
-            int myInt=jcbookRepository.findByAuthor(author).size();
-            return Long.parseLong(new String().valueOf(myInt));
-        }
 
 }
