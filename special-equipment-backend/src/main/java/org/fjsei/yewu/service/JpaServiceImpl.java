@@ -3,8 +3,6 @@ package org.fjsei.yewu.service;
 import md.system.User;
 import md.system.UserRepository;
 import md.specialEqp.*;
-import org.fjsei.yewu.entity.sdn.Student;
-import org.fjsei.yewu.entity.sdn.StudentDao;
 import md.specialEqp.inspect.ISP;
 import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.Task;
@@ -36,8 +34,7 @@ import java.util.stream.Collectors;
 @Transactional(value="transactionManager",readOnly=true)
 public class JpaServiceImpl implements JpaService {
 
-    @Autowired
-    private StudentDao studentDao;
+  //  @Autowired    private StudentDao studentDao;
     @Autowired
     private TeacherDao teacherDao;
 
@@ -56,10 +53,10 @@ public class JpaServiceImpl implements JpaService {
     @Autowired
     private AddressRepository addressRepository;
 
-    @Override
+  /*  @Override
     public Student findByName(String name) {
         return studentDao.findByName(name);
-    }
+    }*/
 
     @Override
     public List<Teacher> getAllTeacher() {

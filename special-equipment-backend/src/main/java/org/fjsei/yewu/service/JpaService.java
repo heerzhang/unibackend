@@ -1,7 +1,6 @@
 package org.fjsei.yewu.service;
 
 
-import org.fjsei.yewu.entity.sdn.Student;
 import org.fjsei.yewu.repository.Teacher;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 //@Transactional
 public interface JpaService {
 
-    Student findByName(String name);
+   // Student findByName(String name);
     Teacher getTeacher(String name);
     List<Teacher> getAllTeacher();
 

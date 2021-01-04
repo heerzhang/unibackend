@@ -1,6 +1,5 @@
 package org.fjsei.yewu.controller;
 
-import org.fjsei.yewu.entity.sdn.Student;
 import org.fjsei.yewu.repository.Teacher;
 import org.fjsei.yewu.service.JpaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,11 @@ public class JpaTestController {
     @Autowired
     private JpaService jpaService;
 
-    @RequestMapping("findByName/{name}")
+  /* @RequestMapping("findByName/{name}")
     public Student findByName(@PathVariable String name) {
         return jpaService.findByName(name);
     }
-
+    */
     ///@RequestMapping("/teachers")
     @GetMapping
     public List<Teacher> getAllTeacher() {
