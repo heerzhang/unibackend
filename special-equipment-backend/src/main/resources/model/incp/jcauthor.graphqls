@@ -1,7 +1,7 @@
 type JcAuthor{
     id:ID!
     nickname: String!
-    books: [JcBook]
+#在整个应用内模型名字必须不同，不是一个数据库的也不行  books: [JcBook]
 }
 
 

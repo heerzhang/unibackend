@@ -136,3 +136,5 @@ Elasticsearch嵌套Nested:新增丶修改或删除一个嵌套文档，必须重
 性能测试：64.1万条设备cod+fNo两个字段，JPA模糊匹配约4.8秒。对比，Elasticsearch默认分词keyword.wildcardQuery查询0.85秒;
    分词用ngram3+3或3+6分词matchPhrase搜索最快都是0.48秒，但是比2个字段ngram3+3比ngram3+6的可节省19.6%磁盘空间。 测试结论是ngram3+3最好。
 
+Hibernate要求连接到同一个数据库的所有服务器共享单个二级缓存或者不用缓存；Hibernate无法用一条语句同时对多个数据源/DB多库进行关联操作，JPA自动生成SQL无法跨库。
+

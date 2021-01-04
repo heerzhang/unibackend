@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import md.specialEqp.inspect.ISP;
-import md.julienne.Following;
 import org.fjsei.yewu.filter.UserBase;
 import org.fjsei.yewu.security.JwtUser;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -102,11 +101,7 @@ public class User implements UserBase {
     //头像
     private String  photoURL;
 
-    @OneToMany(mappedBy = "fromUser")
-    private Set<Following>  iFollowing;
 
-    @OneToMany(mappedBy = "toUser")
-    private Set<Following>  beFollowed;
     //旧平台的
     private String  旧账户;
     //外部认证；
