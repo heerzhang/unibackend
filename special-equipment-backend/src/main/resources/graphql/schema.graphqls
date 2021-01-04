@@ -9,7 +9,7 @@ type Query {
     limitedValue(value: Float! @range(min: 0.00, max: 1.00)): Float
     zhuanyi: String
     auth: String!
-    countAuthors: Int! @authr(qx:["ANONYMOUS"])
+ #  countAuthors: Int! @authr(qx:["ANONYMOUS"])
 }
 
 type Mutation {

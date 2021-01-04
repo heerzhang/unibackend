@@ -1,5 +1,8 @@
 package org.fjsei.yewu;
 
+import md.specialEqp.EqpRepository;
+import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.graphql.MyGraphQLToolsProperties;
 import org.fjsei.yewu.repository.Author;
 import org.fjsei.yewu.property.FileStorageProperties;
@@ -54,10 +57,12 @@ public class StartApplication {
       */
   @Bean
   @Transactional
-  public CommandLineRunner demo(AuthorRepository authorRepository, BookRepository bookRepository) {
+  public CommandLineRunner demo(EqpRepository eqpRepository, TaskRepository  taskRepository, ISPRepository ispRepository)
+  {
     if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
     return (args) -> {
-      Author author = new Author();
+      //Author author = new Author();
+      System.out.println("例行任务()运行");
     };
   }
 

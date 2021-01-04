@@ -25,6 +25,6 @@ public interface RestService {
     public void addTeacher(Teacher topic);
 
     Page<Eqp> findByName_Page(String name);
-    Page<Eqp> findByName_Example(String name);
+
 }
 

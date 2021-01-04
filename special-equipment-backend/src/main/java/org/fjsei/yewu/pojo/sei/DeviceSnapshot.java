@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//前端的检验报告内容JSON对应内部详细字段。
 //仅供服务端使用，非DB表实体的。但是从数据库字段转换，然后转输出变JSON发给前端，需要类比JPA数据库5种基本类型。
 //提供前端，但是字段若是null的如何合并 能够理解？
 

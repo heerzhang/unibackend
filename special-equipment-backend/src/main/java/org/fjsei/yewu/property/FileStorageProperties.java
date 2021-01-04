@@ -1,7 +1,7 @@
 package org.fjsei.yewu.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
+//application.yml
 //配置文件中 的 自定义参数的输入。
 
 @ConfigurationProperties(prefix = "file")

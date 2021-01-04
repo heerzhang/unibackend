@@ -4,12 +4,5 @@ type Author {
     lastName: String!
 }
 
-extend type Query {
-    findAllAuthors: [Author]!
-    countAuthors: Int!
-}
 
-extend type Mutation {
-    newAuthor(firstName: String!, lastName: String!) : Author!
-}
 

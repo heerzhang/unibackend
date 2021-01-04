@@ -36,6 +36,7 @@ extend type Query {
     findUserLikeInterface(complex: ComplexInput): [User]!
     userBasic(id: ID!): UserBase
     findAllUserFilter(filter: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [User]!
+    #权限要求 countAuthors: Int! @authr(qx:["ANONYMOUS"])
 }
 
 extend type Mutation {
