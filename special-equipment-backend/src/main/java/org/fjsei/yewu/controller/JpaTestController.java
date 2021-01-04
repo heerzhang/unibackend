@@ -20,16 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/teacher")
 public class JpaTestController {
-
     @Autowired
     private JpaService jpaService;
 
-  /* @RequestMapping("findByName/{name}")
-    public Student findByName(@PathVariable String name) {
-        return jpaService.findByName(name);
-    }
-    */
-    ///@RequestMapping("/teachers")
     @GetMapping
     public List<Teacher> getAllTeacher() {
         return jpaService.getAllTeacher();

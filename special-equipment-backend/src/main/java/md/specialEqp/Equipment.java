@@ -9,20 +9,3 @@ package md.specialEqp;
 public interface Equipment {
 }
 
-
-
-/*
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-@Getter
-@Setter
-@NoArgsConstructor
-public  class Equipment {
-    protected Long id;
-    private String cod;
-    private String type;
-    private String sort;
-    private String vart;
-}
-*/

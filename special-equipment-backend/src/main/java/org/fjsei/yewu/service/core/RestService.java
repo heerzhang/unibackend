@@ -21,10 +21,7 @@ public interface RestService {
     Eqp findByName(String name);
     Teacher getTeacher(String name);
     List<Teacher> getAllTeacher();
-
     public void addTeacher(Teacher topic);
-
     Page<Eqp> findByName_Page(String name);
-
 }
 

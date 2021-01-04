@@ -13,7 +13,6 @@ import javax.persistence.*;
 public class Author {
     // @GeneratedValue(strategy= GenerationType.AUTO)
     //Oracle不能用。
-
     @Id
     @Column(name="book_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
@@ -25,11 +24,4 @@ public class Author {
 
     @Column(name="author_last_name", nullable = false)
     private String lastName;
-
-/*
-    public Author(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-*/
 }

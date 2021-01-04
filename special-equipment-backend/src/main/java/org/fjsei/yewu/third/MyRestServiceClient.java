@@ -1,7 +1,6 @@
 package org.fjsei.yewu.third;
 
-import org.fjsei.yewu.repository.Author;
-import org.fjsei.yewu.repository.Book;
+import md.specialEqp.Eqp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,7 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-//连接到第三方平台的REST 客户端接口；
+//仅当演示;
+//连接到第三方平台的REST 客户端接口；在后端发起的三方调用等待收集结果。
 //将被org.springframework.web.reactive.client.WebClient所淘汰。
 
 @Service
@@ -27,36 +27,36 @@ public class MyRestServiceClient {
     public MyRestServiceClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
-
-    public List<Book> getBooks() {
-        ResponseEntity<Book[]> responseEntity = restTemplate.getForEntity(
+    //仅当演示
+    public List<Eqp> getBooks() {
+        ResponseEntity<Eqp[]> responseEntity = restTemplate.getForEntity(
                 "http://localhost:3000/Books",
-                Book[].class
+                Eqp[].class
         );
         return Arrays.asList(responseEntity.getBody());
     }
-
-    public List<Book> getAuthorBooks(String authorId) {
-        ResponseEntity<Book[]> responseEntity = restTemplate.getForEntity(
+    //仅当演示
+    public List<Eqp> getAuthorBooks(String authorId) {
+        ResponseEntity<Eqp[]> responseEntity = restTemplate.getForEntity(
                 "http://localhost:3000/Books",
-                Book[].class
+                Eqp[].class
         );
-        List<Book> Books = Arrays.asList(responseEntity.getBody());
+        List<Eqp> Books = Arrays.asList(responseEntity.getBody());
 
-        return Books.stream().filter(Book -> Book.getAuthor().getId().equals(authorId)).collect(Collectors.toList());
+        return Books.stream().filter(Book -> Book.getPos().getId().equals(authorId)).collect(Collectors.toList());
     }
 
-    public List<Author> getAuthors() {
-        ResponseEntity<Author[]> responseEntity = restTemplate.getForEntity(
+    public List<Eqp> getAuthors() {
+        ResponseEntity<Eqp[]> responseEntity = restTemplate.getForEntity(
                 "http://localhost:3000/Authors",
-                Author[].class
+                Eqp[].class
         );
         return Arrays.asList(responseEntity.getBody());
     }
-
-    public Author getAuthor(String AuthorId) {
-        ResponseEntity<Author> responseEntity = restTemplate
-                .getForEntity("http://localhost:3000/Authors/{AuthorId}", Author.class, AuthorId);
+    //仅当演示
+    public Eqp getAuthor(String AuthorId) {
+        ResponseEntity<Eqp> responseEntity = restTemplate
+                .getForEntity("http://localhost:3000/Authors/{AuthorId}", Eqp.class, AuthorId);
         return responseEntity.getBody();
     }
 }

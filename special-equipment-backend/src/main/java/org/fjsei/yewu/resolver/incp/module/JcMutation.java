@@ -16,10 +16,8 @@ import javax.persistence.PersistenceContext;
 
 @Component
 public class JcMutation implements GraphQLMutationResolver {
-
-        @Autowired
-        private JcAuthorRepository authorRepository;
-
+    @Autowired
+    private JcAuthorRepository authorRepository;
     @PersistenceContext(unitName = "entityManagerFactoryIncp")
     private EntityManager emIncp;
 
@@ -35,6 +33,5 @@ public class JcMutation implements GraphQLMutationResolver {
         authorRepository.save(author);
         return author;
     }
-
 
 }

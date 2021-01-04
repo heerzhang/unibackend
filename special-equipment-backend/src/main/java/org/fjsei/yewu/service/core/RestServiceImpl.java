@@ -32,7 +32,6 @@ public class RestServiceImpl implements RestService {
     public Page<Eqp> findByName_Page(String name) {
         //根据id 进行降序
         Sort.Order order =  new Sort.Order(Sort.Direction.DESC,"id");
-
         return null;
     }
 
@@ -43,20 +42,16 @@ public class RestServiceImpl implements RestService {
         ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.startsWith()) //姓名采用“开始匹配”的方式查询
                 .withIgnorePaths("focus");  //忽略属性：是否关注。因为是基本类型，需要忽略掉
-
         //创建实例
         Example<Eqp> ex = Example.of(eqp1, matcher);
-
         //查询      ? id+ ! X对一关联表 字段也会算比较条件
         List<Eqp> ls = eqpRepository.findAll(ex);
-
         //输出结果
         System.out.println("数量："+ls.size());
         for (Eqp bo:ls)
         {
             System.out.println(bo.getCod());
         }
-
         return null;//employeeList;
     }
 
@@ -83,9 +78,6 @@ public class RestServiceImpl implements RestService {
         Assert.isTrue(emBar.isJoinedToTransaction(),"没isJoinedToTransaction");
 
         Teacher teacher = teacherDao.save(topic);
-         ///  teacherDao.flush();
-        ///   emBar.merge(teacher);
-        ///   emBar.flush();
     }
 }
 

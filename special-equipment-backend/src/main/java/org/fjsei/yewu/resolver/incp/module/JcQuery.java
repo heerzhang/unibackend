@@ -11,17 +11,11 @@ import org.springframework.util.Assert;
 
 @Component
 public class JcQuery implements GraphQLQueryResolver {
-
-
-
         @Autowired
         private JcAuthorRepository jcauthorRepository;
-
-
 
         public Iterable<JcAuthor> findAllJcAuthors() {
             return jcauthorRepository.findAll();
         }
-
 
 }

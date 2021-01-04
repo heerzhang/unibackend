@@ -5,9 +5,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 
 public interface FileRepository extends JpaRepository<File, Long>, JpaSpecificationExecutor<File> {
-
-
     //File findByAddress(String address);
-
 }
-
