@@ -33,30 +33,12 @@ import java.util.stream.Collectors;
 //@Qualifier("entityManagerFactoryBar")
 @Transactional(value="transactionManager",readOnly=true)
 public class JpaServiceImpl implements JpaService {
-
-  //  @Autowired    private StudentDao studentDao;
     @Autowired
     private TeacherDao teacherDao;
 
     @PersistenceContext(unitName = "entityManagerFactorySei")
     private EntityManager emSei;
 
-    @Autowired
-    private EqpRepository eQPRepository;
-    @Autowired
-    private ISPRepository iSPRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-  /*  @Override
-    public Student findByName(String name) {
-        return studentDao.findByName(name);
-    }*/
 
     @Override
     public List<Teacher> getAllTeacher() {
@@ -69,34 +51,6 @@ public class JpaServiceImpl implements JpaService {
    // @Transactional(value= "transactionManager",readOnly = true, transactionManager = "transactionManager")
     public Teacher getTeacher(String name) {
         Teacher teacher=new Teacher("hua","22","bvvnn2");
-        if("addUsers".equals(name)) {
-            addUsers();
-            return teacher;
-        }
-        else if("batchAddETIU".equals(name)) {
-            //batchAddETIU();
-            return teacher;
-        }
-
-
-        return getTeacher_Cache(name);
-    }
-
-    public Teacher getTeacher_Cache(String name) {
-        EntityManagerFactory entityManagerFactory=emSei.getEntityManagerFactory();
-        Cache cache=entityManagerFactory.getCache();
-        Teacher teacher=new Teacher("hua","22","bvvnn2");
-        //EntityGraph graph =emSei.getEntityGraph("Eqp.task");      .setParameter( "id", 0L)
-        System.out.println("1 createQuery");
-        List<Eqp> eqps = emSei.createQuery("FROM EQP a where a.id = :name", Eqp.class)
-                .setParameter( "name", 1L)
-                .setHint(QueryHints.HINT_CACHEABLE, true)
-                .getResultList();
-        //.setHint( "javax.persistence.cache.storeMode", CacheStoreMode.REFRESH )  强制刷新;
-        //.setHint( QueryHints.HINT_CACHE_REGION, "query.cache.person" )  细化控制
-
-        String outprint="";
-        System.out.println("Eqp a : eqps() kaishi");
         return teacher;
     }
 
@@ -114,21 +68,6 @@ public class JpaServiceImpl implements JpaService {
         ///   emSei.flush();
 
 
-    }
-    @Transactional
-    public void addUsers() {
-        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        List<User> topics = new ArrayList<>();
-        //teacherDao.findAll().forEach(topics::add);
-        for(int j = 0; j < 1000; j++)  {
-            User user = new User(getRandomString(10), "15");
-            user.setPassword("g2346fvf");
-            user.setMobile("546522242223343");
-            topics.add(user);
-        }
-        userRepository.saveAll(topics);
-        userRepository.flush();
-        //    emSei.flush();
     }
 
     public static String getRandomString(int length){
