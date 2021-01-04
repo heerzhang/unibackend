@@ -170,3 +170,6 @@ ES缺省分词器特点：比如"DE63，410"是独立一个词的且中间中文
 比如D325*8属于两个词其中*号被分词过滤去掉。
 搜索返回为空！若是分词出问题，就算字段内容都真的和原始完全一致，也可能匹配失败，属于分词无效的搜索失败！输入分词若为空集合的不可作过滤条件/反而查不到。
 重建索引 setting部分{}： https://www.cnblogs.com/quanxiaoha/p/11532487.html  ；  https://cwl-java.blog.csdn.net/article/details/102814600
+
+图数据库API方式像JDBC的API接口做法。比如JanusGraphModel**Repository   .save()  .FindAll();就不能用JPA做了，存储层用Cassandra+Spark。
+
