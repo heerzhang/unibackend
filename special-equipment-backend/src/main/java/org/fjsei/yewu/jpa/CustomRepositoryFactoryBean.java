@@ -1,10 +1,12 @@
 package org.fjsei.yewu.jpa;
+//有点麻烦，本文件实际上引用抄袭2个代码段。
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.support.*;
+import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -33,6 +35,8 @@ import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
 //这个类是从 @EnableJpaRepositories 那里发动引导的。
 
 
+//引用抄袭代码段 - 1。
+
 /**
  * Special adapter for Springs {@link org.springframework.beans.factory.FactoryBean} interface to allow easy setup of
  * repository factories via Spring configuration.
@@ -46,6 +50,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
     private @Nullable EntityManager entityManager;
     private EntityPathResolver entityPathResolver;
     private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
+    private JpaQueryMethodFactory queryMethodFactory;
 
     /**
      * Creates a new {@link org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean} for the given repository interface.
@@ -90,6 +95,20 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         this.entityPathResolver = resolver.getIfAvailable(() -> SimpleEntityPathResolver.INSTANCE);
     }
 
+    /**
+     * Configures the {@link JpaQueryMethodFactory} to be used. Will expect a canonical bean to be present but will
+     * fallback to {@link org.springframework.data.jpa.repository.query.DefaultJpaQueryMethodFactory} in case none is
+     * available.
+     *
+     * @param factory may be {@literal null}.
+     */
+    @Autowired
+    public void setQueryMethodFactory(@Nullable JpaQueryMethodFactory factory) {
+
+        if (factory != null) {
+            this.queryMethodFactory = factory;
+        }
+    }
     /*
      * (non-Javadoc)
      * @see org.springframework.data.repository.core.support.TransactionalRepositoryFactoryBeanSupport#doCreateRepositoryFactory()
@@ -102,23 +121,34 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         return createRepositoryFactory(entityManager);
     }
 
-    /**
-        被替换的
+    /** 关键部分！   这个才是被替换的删除的;
+      版本升级，有多处增加 ？queryMethodFactory
      */
-   /*
-    protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
+    /**
+     * Returns a {@link RepositoryFactorySupport}.
+     */
+  /*  protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
 
         JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
         jpaRepositoryFactory.setEntityPathResolver(entityPathResolver);
+        jpaRepositoryFactory.setEscapeCharacter(escapeCharacter);
+
+        if (queryMethodFactory != null) {
+            jpaRepositoryFactory.setQueryMethodFactory(queryMethodFactory);
+        }
 
         return jpaRepositoryFactory;
-    } */
+    }
+    */
 
-
-   //修改的：：
+   //修改的 代码：核心部分：
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
         CustomRepositoryFactory customRepositoryFactory=new CustomRepositoryFactory(entityManager);
+        //最早版，就屏蔽这行了：jpaRepositoryFactory.setEntityPathResolver(entityPathResolver);　//customRepositoryFactory 对 jpaRepositoryFactory
         customRepositoryFactory.setEscapeCharacter(escapeCharacter);
+        if (queryMethodFactory != null) {
+            customRepositoryFactory.setQueryMethodFactory(queryMethodFactory);
+        }
         return customRepositoryFactory;
     }
 
@@ -141,8 +171,12 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         this.escapeCharacter = EscapeCharacter.of(escapeCharacter);
     }
 
+
+    //引用抄袭代码段 - 1 ［文件结束！］。      上面和底下的分别属于拷贝2个不同文件的来源。
+
+
     //关键部分
-    //新增加：
+    //新增加　附加的　静态类CustomRepositoryFactory：内部还抄袭代码段-2;
     private static class CustomRepositoryFactory<T, I extends Serializable>
             extends JpaRepositoryFactory {
 
@@ -187,16 +221,19 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
             return CustomRepositoryImpl.class;
         }
 
-        /*　从父类抄袭修改看；　特别注意版本升级　影响；
+        /*　从父类抄袭修改看；　特别注意版本升级　影响；   抄袭代码段 - 2 ；
        　底下抄袭来自 spring-data-jpa-2.3.4.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.java:234
-
          * (non-Javadoc)
          * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
+        抄袭代码段 - 2：
+        紧跟着底下的这个函数getRepositoryFragments实现代码，　仅仅一个函数，一行有修改。
+
          默认实现方法是可以crudMethodMetadataPostProcessor.getCrudMethodMetadata()，所以能够二级缓存hints注解能够生效缓存机制。
          默认实现：加上@QueryHints(value ={后，就连count(eqp)也能被缓存了，该条件下的count()保留10分钟。
          但我这里没办法做到吗？　　  直接去掉多余的count(eqp)／彻底！；
          */
 
+        //引用抄袭代码段 - 2 [开始]。
 
         //针对QueryDsl的接口QuerydslPredicateExecutor使用findAll会count()且无cache.hints情况才引入的。
         @Override
@@ -237,6 +274,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
                 //报错：QuerydslJpaPredicateExecutor.class No property findAllNc found for type Eqp!
 
                 //只能自己只能定做QuerydslNcExecutorImpl，用来代替缺省的QuerydslJpaPredicateExecutor，直接用缺省无法引进我自定义接口findAllNc();
+                //[　注意！]　这么多，实际上只改了这一行的。其它代码都和原来一致。
                 Object querydslFragment = getTargetRepositoryViaReflection(QuerydslNcExecutorImpl.class, entityInformation,
                         em, entityPathResolver, crudMethodMetadataPostProcessor.getCrudMethodMetadata());
 
@@ -251,6 +289,8 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
             return fragments;
         }
+
+        //引用抄袭代码段 - 2 ［文件结束！］。
 
     }
 
