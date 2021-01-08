@@ -707,7 +707,7 @@ public class ModelFiltersImpl<T> implements ModelFilters<T>, Serializable {
         Subquery<?> subquery=null;      //T是主语句的模型类，子语句就不同了，？表示某个类型。
         QueryDomain  queryDomain=new QueryDomain();
         querys.add(queryDomain);
-        //若是有关联的subquery; 　某个字段做关联的。   ISP.字段.#1
+        //若是有关联的subquery; 　某个字段做关联的。   Isp.字段.#1
         //关联子查询没有用from()的，使用correlate()，需要从关联字段的基础上再去向着目标from模型类join;
         //关联子查询query.subquery()的模型类型是关联字段的模型类，注意它不是目标的from模型类；　关联必须从底下连接处找起的，相对定位；子语句属性名如何分别？
         //关联子查询不需要人工指出模型类{JPA自动晓得}, 关联的也可转化成非关联的不用correlate()模式做。
@@ -726,7 +726,7 @@ public class ModelFiltersImpl<T> implements ModelFilters<T>, Serializable {
         //关联子查询query.subquery()的模型类型是关联字段的模型类，注意它不是目标的from模型类；
         //      Join<?, ?>  subEntity = subRoot.join("checks"); //底下端那个字段
         //       Bindable<?> bindable= subEntity.getModel();     //这个是SET类型name="checks",这里declaringType=User;
-        //ISP==>""ispMen"其中一个人" user2_.id="USER."checks 他做的所有检验"""ISP"""   "
+        //Isp==>""ispMen"其中一个人" user2_.id="USER."checks 他做的所有检验"""Isp"""   "
         Expression<?> expressionSelect=null;
         if(sub.getE()!=null)
             expressionSelect=processExpressItem(sub.getE());

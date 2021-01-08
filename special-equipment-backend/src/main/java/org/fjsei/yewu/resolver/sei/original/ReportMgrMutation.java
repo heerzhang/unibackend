@@ -1,13 +1,13 @@
 package org.fjsei.yewu.resolver.sei.original;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.specialEqp.inspect.IspRepository;
 import md.system.AuthorityRepository;
 import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.computer.File;
 import md.computer.FileRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISPRepository;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
 import md.cm.geography.AddressRepository;
@@ -33,7 +33,7 @@ public class ReportMgrMutation implements GraphQLMutationResolver {
     @Autowired
     private EqpRepository eQPRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class ReportMgrMutation implements GraphQLMutationResolver {
 public OriginalRecord newOriginalRecord(String modeltype, String modelversion, Long ispId, String data) {
     if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
 
-    ISP isp = iSPRepository.findById(ispId).orElse(null);
+    Isp isp = iSPRepository.findById(ispId).orElse(null);
     if(isp == null)     throw new BookNotFoundException("没有该ISP", ispId);
 
     OriginalRecord originalRecord = new OriginalRecord(modeltype,modelversion,isp,data);

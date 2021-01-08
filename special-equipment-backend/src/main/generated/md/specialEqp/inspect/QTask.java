@@ -30,7 +30,7 @@ public class QTask extends EntityPathBase<Task> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final SetPath<ISP, QISP> isps = this.<ISP, QISP>createSet("isps", ISP.class, QISP.class, PathInits.DIRECT2);
+    public final SetPath<Isp, QIsp> isps = this.<Isp, QIsp>createSet("isps", Isp.class, QIsp.class, PathInits.DIRECT2);
 
     public final StringPath status = createString("status");
 

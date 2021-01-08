@@ -29,7 +29,7 @@ public class WhereLeaf {
     //必填字段sx，不能为空，必须能够匹配java的entity实体； .#Set表示最后属性是集合操作，其它.#特殊操作最后属性是基础数据类型。
     //X.id可以指定id来代表某个实体，ID比较 equal=; !=;  。
     //Parent.child.X;  字段分隔符.符号, 不限定级联层级;
-    //保留字段: 如 ISP.ispMen.#SetSize：代表集合属性的记录个数,可以支持特殊操作=人数/报告数/设备数。 _SetSize不能做成一般的模型实体的字段来用。
+    //保留字段: 如 Isp.ispMen.#SetSize：代表集合属性的记录个数,可以支持特殊操作=人数/报告数/设备数。 _SetSize不能做成一般的模型实体的字段来用。
     //保留字段 #StrLen: 字符串长度判定。　　
     //最后一个附加字段可指出集合聚合操作，且必须#字符开头的。.#SetMax,.#SetMin, 代表其中的最大最小，.#SetSum, .#SetAvg。  ?还要数值型; 要做Set子查询。　count()。
     //String类型字段无法支持这些操作Max,Min,Sum,。    集合日期字符串聚合意义 cb.greatest，cb.least；
@@ -50,7 +50,7 @@ public class WhereLeaf {
     //isNull 或是 集合空,
     //枚举形式In;[NOT] IN， 针对普通非关联下级属性字段/基本类型；    X.zd in ('a','c');
     //集合字段不存在这样的对象ID; NOT(set.has()); 不存在这样的？简单逻辑无法搞定 !! 只能搞subQuery呢?。注意：not即相反逻辑:存在这样的=就可以使用简单逻辑做。
-    //关联到最新一条检验？，求取最新那一条？ IN/NOT(Select top3 ID/names from 带Join 原集合 order by ISP.Time desc)
+    //关联到最新一条检验？，求取最新那一条？ IN/NOT(Select top3 ID/names from 带Join 原集合 order by Isp.Time desc)
     //isNotMember和isEmpty类似用法,后面一个参数是集合型的字段。
     //直接bool的操作： noNull,null,true,false; setEmpty=null, setNotEmpty=noNull;
     //可直接指示表达式操作具体数值类型，Long,Double数值表达式就2种类型。

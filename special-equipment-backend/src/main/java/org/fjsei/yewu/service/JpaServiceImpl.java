@@ -1,17 +1,7 @@
 package org.fjsei.yewu.service;
 
-import md.system.User;
-import md.system.UserRepository;
-import md.specialEqp.*;
-import md.specialEqp.inspect.ISP;
-import md.specialEqp.inspect.ISPRepository;
-import md.specialEqp.inspect.Task;
-import md.specialEqp.inspect.TaskRepository;
-import md.cm.geography.Address;
-import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.repository.Teacher;
 import org.fjsei.yewu.repository.TeacherDao;
-import org.hibernate.jpa.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +9,6 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /*

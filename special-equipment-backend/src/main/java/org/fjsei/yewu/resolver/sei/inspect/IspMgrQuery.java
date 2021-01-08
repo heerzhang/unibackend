@@ -8,8 +8,6 @@ import md.system.User;
 import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
-import org.fjsei.yewu.entity.fjtj.EqpMge;
-import org.fjsei.yewu.entity.fjtj.QEqpMge;
 import org.fjsei.yewu.input.DeviceCommonInput;
 import org.fjsei.yewu.input.WhereTree;
 import org.fjsei.yewu.jpa.ModelFiltersImpl;
@@ -30,7 +28,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,7 +52,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
     @Autowired
     private EqpRepository eQPRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -73,7 +70,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
     private EntityManager emSei;
 
 
-    public Iterable<ISP> findAllISPs() {
+    public Iterable<Isp> findAllISPs() {
         return iSPRepository.findAll();
     }
 
@@ -106,7 +103,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
         return Long.parseLong(new String().valueOf(result));
     }
 
-    public ISP getISP(Long id) {
+    public Isp getISP(Long id) {
         return iSPRepository.findById(id).orElse(null);
     }
 
@@ -116,8 +113,8 @@ public class IspMgrQuery implements GraphQLQueryResolver {
     //Long id=最最简单的filter；      AND OR；必然在页面已经考虑和选择完毕的。
     //关联附属对象的字段来做过滤， 针对宿主对象模型， 关联能几多个？ 几层嵌套层次限制=2层最多了；。。。
     //分页针对宿主模型做的，内省的关联嵌套的，不分页但可以限制条数和深度，内省的更难控制输出记录数？内省的也排序啊。
-    public Iterable<ISP> isp(Long id, int offset, int first, String orderBy) {
-        List<ISP>   isplist=iSPRepository.getByDev_IdOrderById(id);
+    public Iterable<Isp> isp(Long id, int offset, int first, String orderBy) {
+        List<Isp>   isplist=iSPRepository.getByDev_IdOrderById(id);
         if(offset>=isplist.size())  return null;
         if(offset<0)   offset=0;
         if(first<=0 || first>1000)  first=20;
@@ -129,7 +126,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
     //设计过滤复杂条件;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Iterable<ISP> findAllISPfilter_2samples(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Isp> findAllISPfilter_2samples(WhereTree where, int offset, int first, String orderBy, boolean asc) {
        //多个orderBy[orderBy  ? ?]
         Pageable pageable;
         if(StringUtils.isEmpty(orderBy))
@@ -138,12 +135,12 @@ public class IspMgrQuery implements GraphQLQueryResolver {
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc? Sort.Direction.ASC: Sort.Direction.DESC,orderBy));
 
         //用final修饰引用类型变量p时，不能对p进行重新赋值，可以改变p里面属性的值；
-        ModelFiltersImpl<ISP> modelFilters=new ModelFiltersImpl<ISP>(null);
+        ModelFiltersImpl<Isp> modelFilters=new ModelFiltersImpl<Isp>(null);
 
-        Specification<ISP> specification=  new Specification<ISP>() {
+        Specification<Isp> specification=  new Specification<Isp>() {
                 //这里反而放在 .effectWhereTree(where) 之后才执行的。
                 @Override
-                public Predicate toPredicate(Root<ISP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                public Predicate toPredicate(Root<Isp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                     query.distinct(true);
                     Predicate predicate = cb.conjunction();
                     List<Expression<Boolean>> expressions = predicate.getExpressions();
@@ -158,7 +155,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
 
      /*               joins0.getAttribute().getName();
 
-                    if(joins0.getAttribute().getDeclaringType().getJavaType() == ISP.class)
+                    if(joins0.getAttribute().getDeclaringType().getJavaType() == Isp.class)
                         nma1="得住";
         */
                     expressions.add(cb.or( cb.isNull(root.get("task") ) ,
@@ -172,13 +169,13 @@ public class IspMgrQuery implements GraphQLQueryResolver {
 
         modelFilters.initialize(specification,emSei);
         modelFilters.effectWhereTree(where);
-  /*      List<ISP> allPage2=iSPRepository.findAll(modelFilters);
+  /*      List<Isp> allPage2=iSPRepository.findAll(modelFilters);
         if(allPage2.size()>=0)
             return allPage2;
     */
-        Page<ISP> allPage=iSPRepository.findAll(new Specification<ISP>() {
+        Page<Isp> allPage=iSPRepository.findAll(new Specification<Isp>() {
             @Override
-            public Predicate toPredicate(Root<ISP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Isp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 String  classname1="User";
                 query.distinct(true);
                 Predicate predicate = cb.conjunction();
@@ -223,8 +220,8 @@ public class IspMgrQuery implements GraphQLQueryResolver {
 
                // javax.persistence.metamodel.Metamodel  metamodel22= emSei.getMetamodel();
                 Metamodel metamodel=(Metamodel)emSei.getMetamodel();
-               // String  longName=metamodel.getImportedClassName("ISP");
-                EntityType<?> entityType= metamodel.entity(metamodel.getImportedClassName("ISP"));
+               // String  longName=metamodel.getImportedClassName("Isp");
+                EntityType<?> entityType= metamodel.entity(metamodel.getImportedClassName("Isp"));
                 Class  subClass=null;
                 subClass =entityType.getJavaType();
 
@@ -237,7 +234,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
                 //关联子查询query.subquery()的模型类型是关联字段的模型类，注意它不是目标的from模型类；
           //      Join<?, ?>  subEntity = subRoot.join("checks"); //底下端那个字段
          //       Bindable<?> bindable= subEntity.getModel();     //这个是SET类型name="checks",这里declaringType=User;
-                //ISP==>""ispMen"其中一个人" user2_.id="USER."checks 他做的所有检验"""ISP"""   "
+                //Isp==>""ispMen"其中一个人" user2_.id="USER."checks 他做的所有检验"""Isp"""   "
 
                 subquery.select(subEntity.get("id"));
                 Predicate p = cb.conjunction();
@@ -346,11 +343,11 @@ public class IspMgrQuery implements GraphQLQueryResolver {
             }
         }, pageable);
 
-        List<ISP>  eqps= allPage.getContent();
+        List<Isp>  eqps= allPage.getContent();
         return eqps;
     }
 
-    public Iterable<ISP> findAllISPfilter(WhereTree where, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Isp> findAllISPfilter(WhereTree where, int offset, int first, String orderBy, boolean asc) {
         //多个orderBy[orderBy  ? ?]
         Pageable pageable;
         if (StringUtils.isEmpty(orderBy))
@@ -359,12 +356,12 @@ public class IspMgrQuery implements GraphQLQueryResolver {
             pageable = PageOffsetFirst.of(offset, first, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
         //用final修饰引用类型变量p时，不能对p进行重新赋值，可以改变p里面属性的值；
-        ModelFiltersImpl<ISP> modelFilters = new ModelFiltersImpl<ISP>(null);
+        ModelFiltersImpl<Isp> modelFilters = new ModelFiltersImpl<Isp>(null);
 
-        Specification<ISP> specification = new Specification<ISP>() {
+        Specification<Isp> specification = new Specification<Isp>() {
             //这里反而放在 .effectWhereTree(where) 之后才执行的。
             @Override
-            public Predicate toPredicate(Root<ISP> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Isp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query.distinct(true);
                 //Predicate predicate = cb.conjunction();
                 //List<Expression<Boolean>> expressions = predicate.getExpressions();
@@ -378,7 +375,7 @@ public class IspMgrQuery implements GraphQLQueryResolver {
 
         modelFilters.initialize(specification,emSei);
         modelFilters.effectWhereTree(where);
-        List<ISP> allPage2 = iSPRepository.findAll(modelFilters);
+        List<Isp> allPage2 = iSPRepository.findAll(modelFilters);
         return allPage2;
     }
 
@@ -424,8 +421,8 @@ public class IspMgrQuery implements GraphQLQueryResolver {
     }
     //Todo： 排除多条ISP对应一个[Task+Dev]组合的可能性。
     //最多1条正常状态的ISP， 唯一性保证： device/157/task/184 ;未派工的null
-    public ISP getISPofDevTask(Long dev, Long task) {
-        List<ISP> allPage =iSPRepository.getByDev_IdAndTask_IdOrderByNextIspDate(dev,task);
+    public Isp getISPofDevTask(Long dev, Long task) {
+        List<Isp> allPage =iSPRepository.getByDev_IdAndTask_IdOrderByNextIspDate(dev,task);
         if(allPage.size()==0)     return null;
         else return allPage.get(0);
     }

@@ -54,7 +54,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final DateTimePath<java.util.Date> ispD2 = createDateTime("ispD2", java.util.Date.class);
 
-    public final SetPath<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP> isps = this.<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP>createSet("isps", md.specialEqp.inspect.ISP.class, md.specialEqp.inspect.QISP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
     public final StringPath level = createString("level");
 

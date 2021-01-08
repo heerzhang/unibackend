@@ -4,8 +4,8 @@ type User implements UserBase {
     "字段像函数,一般用作内嵌对象约束参数：top,first,ID?"
     dep(dep: String): String
     mobile: String
-    checks: [ISP]
-    isp: [ISP]
+    checks: [Isp]
+    isp: [Isp]
     #权限表非超级用户只能看自己的了
     authorities: [Authority]
     "模型字段实际同函数一样的处理,属性竟然也可以有输入参数"

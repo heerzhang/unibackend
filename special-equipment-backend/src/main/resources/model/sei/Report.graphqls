@@ -6,7 +6,7 @@ type Report implements SimpleReport{
     path: String
     sign: String
     detail: String
-    isp(id: ID ): ISP
+    isp(id: ID ): Isp
     numTest: Float
     modeltype: String!
     modelversion: String!
@@ -21,7 +21,7 @@ interface SimpleReport {
     #后面加权限认证@authr(qx : ["USER","ADMIN"])没这权限之一无法访问。
     no: String!
     upLoadDate: String
-    isp(id: ID ): ISP
+    isp(id: ID ): Isp
     path: String
 }
 

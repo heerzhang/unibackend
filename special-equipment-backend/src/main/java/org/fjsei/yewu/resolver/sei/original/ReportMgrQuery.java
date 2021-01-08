@@ -5,7 +5,7 @@ import md.system.AuthorityRepository;
 import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.TaskRepository;
 import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
@@ -24,7 +24,7 @@ public class ReportMgrQuery implements GraphQLQueryResolver {
     @Autowired
     private EqpRepository eQPRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -50,6 +50,6 @@ public class ReportMgrQuery implements GraphQLQueryResolver {
 
 /*
 graphql需要参数的接口函数/Type输出isp(带参数)的/等，注意！参数不能直接用POJO的java类来传递参数对象，需要基本数据类型或其嵌套结构；否则报错：
-输出可以用java对象，输入却免谈． graphql.kickstart.tools.SchemaError: Expected type 'ISP' to be a GraphQLInputType, but it wasn't!
+输出可以用java对象，输入却免谈． graphql.kickstart.tools.SchemaError: Expected type 'Isp' to be a GraphQLInputType, but it wasn't!
  Was a type only permitted for object types incorrectly used as an input type, or vice-versa? at graphql.kickstart.tools.SchemaParser.d。
 */

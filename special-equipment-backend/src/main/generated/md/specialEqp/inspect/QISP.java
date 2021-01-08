@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QISP is a Querydsl query type for ISP
+ * QIsp is a Querydsl query type for Isp
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QISP extends EntityPathBase<ISP> {
+public class QIsp extends EntityPathBase<Isp> {
 
-    private static final long serialVersionUID = -1884182496L;
+    private static final long serialVersionUID = -1884181472L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QISP iSP = new QISP("iSP");
+    public static final QIsp isp = new QIsp("isp");
 
     public final md.system.QUser checkMen;
 
@@ -38,23 +38,23 @@ public class QISP extends EntityPathBase<ISP> {
 
     public final QTask task;
 
-    public QISP(String variable) {
-        this(ISP.class, forVariable(variable), INITS);
+    public QIsp(String variable) {
+        this(Isp.class, forVariable(variable), INITS);
     }
 
-    public QISP(Path<? extends ISP> path) {
+    public QIsp(Path<? extends Isp> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QISP(PathMetadata metadata) {
+    public QIsp(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QISP(PathMetadata metadata, PathInits inits) {
-        this(ISP.class, metadata, inits);
+    public QIsp(PathMetadata metadata, PathInits inits) {
+        this(Isp.class, metadata, inits);
     }
 
-    public QISP(Class<? extends ISP> type, PathMetadata metadata, PathInits inits) {
+    public QIsp(Class<? extends Isp> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.checkMen = inits.isInitialized("checkMen") ? new md.system.QUser(forProperty("checkMen")) : null;
         this.dev = inits.isInitialized("dev") ? new md.specialEqp.QEqp(forProperty("dev"), inits.get("dev")) : null;

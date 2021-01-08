@@ -1,7 +1,7 @@
 package org.fjsei.yewu;
 
 import md.specialEqp.EqpRepository;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.graphql.MyGraphQLToolsProperties;
 import org.fjsei.yewu.property.FileStorageProperties;
@@ -54,7 +54,7 @@ public class StartApplication {
       */
   @Bean
   @Transactional
-  public CommandLineRunner demo(EqpRepository eqpRepository, TaskRepository  taskRepository, ISPRepository ispRepository)
+  public CommandLineRunner demo(EqpRepository eqpRepository, TaskRepository  taskRepository, IspRepository ispRepository)
   {
     if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
     return (args) -> {

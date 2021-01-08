@@ -1,11 +1,11 @@
 type Task{
     id: ID!
-    devs: [EQP]!
+    devs: [Eqp]!
     dep: String
     date: String
     status: String
     #能直接这么屏蔽fee: String
-    isps: [ISP]
+    isps: [Isp]
 }
 
 type TaskEs{

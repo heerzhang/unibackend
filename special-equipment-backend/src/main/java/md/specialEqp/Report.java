@@ -4,13 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import md.computer.File;
-import md.specialEqp.inspect.ISP;
+import md.specialEqp.inspect.Isp;
 import org.fjsei.yewu.filter.SimpleReport;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -43,7 +39,7 @@ public class Report  implements SimpleReport {
     //单次ISP如果多个报告，每个报告单独打印，单独编制特定编号的报告，单独链接；主报告1+N。
     @ManyToOne
     @JoinColumn
-    private ISP isp;   //1个检验可以有很多份子报告，报告类型可以不同的。
+    private Isp isp;   //1个检验可以有很多份子报告，报告类型可以不同的。
 
     private double  numTest;    //测试表达式
 
@@ -70,7 +66,7 @@ public class Report  implements SimpleReport {
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;
 
-    public  Report(String type,String no,ISP isp){
+    public  Report(String type, String no, Isp isp){
         this.type=type;
         this.no=no;
         this.isp=isp;
@@ -78,7 +74,7 @@ public class Report  implements SimpleReport {
         data="{}";
     }
     //重载是依靠参数类型以及个数和顺序来确定的。
-    public  Report(String path,ISP isp,String no){
+    public  Report(String path, Isp isp, String no){
         this.path=path;
         this.no=no;
         this.isp=isp;
@@ -105,7 +101,7 @@ public class Report  implements SimpleReport {
           this.upLoadDate = upLoadDate;
     }*/
     //内省执行这个函数之前，在graphql/tools/MethodFieldResolver.kt:70里面就已能看到了本条记录的所有相关数据了{含同级的字段}。
-    public ISP  isp(Long id){
+    public Isp isp(Long id){
         return this.isp;
     }
 }

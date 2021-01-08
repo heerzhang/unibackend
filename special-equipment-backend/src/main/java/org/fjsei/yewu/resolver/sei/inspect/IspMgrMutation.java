@@ -1,13 +1,13 @@
 package org.fjsei.yewu.resolver.sei.inspect;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import md.specialEqp.inspect.Isp;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISP;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
@@ -45,7 +45,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     @Autowired
     private EqpRepository eQPRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -68,9 +68,9 @@ public class IspMgrMutation implements GraphQLMutationResolver {
 
 
     @Transactional
-    public ISP newISP(Long devId) {
+    public Isp newISP(Long devId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = new ISP();
+        Isp isp = new Isp();
         Eqp eQP = eQPRepository.findById(devId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
         isp.setDev(eQP);
@@ -78,7 +78,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         return isp;
     }
     @Transactional
-    public ISP buildISP(Long devId, Long taskId, String username) {
+    public Isp buildISP(Long devId, Long taskId, String username) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         User user = userRepository.findByUsername(username);
         if(user == null)     throw new BookNotFoundException("没有该账户"+username, (long)0);
@@ -86,7 +86,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         if(task == null)     throw new BookNotFoundException("没有该任务单", taskId);
         Eqp eQP = eQPRepository.findById(devId).orElse(null);
         if(eQP == null)     throw new BookNotFoundException("没有该设备", devId);
-        ISP isp = new ISP();
+        Isp isp = new Isp();
         isp.setDev(eQP);
         isp.setTask(task);
         Set<User> ispMen= new HashSet<User>();
@@ -116,9 +116,9 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public ISP setISPispMen(Long id, List<Long> ispMens) {
+    public Isp setISPispMen(Long id, List<Long> ispMens) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(id).orElse(null);
+        Isp isp = iSPRepository.findById(id).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+isp);
         Set<User> ispMen= new HashSet<User>();
         ispMens.stream().forEach(item -> {
@@ -131,9 +131,9 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public ISP setISPtask(Long id, Long taskId) {
+    public Isp setISPtask(Long id, Long taskId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(id).orElse(null);
+        Isp isp = iSPRepository.findById(id).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+isp);
         Task task = taskRepository.findById(taskId).orElse(null);
         Assert.isTrue(task != null,"未找到task:"+task);
@@ -143,9 +143,9 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public ISP setISPreport(Long id, List<Long> reps) {
+    public Isp setISPreport(Long id, List<Long> reps) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(id).orElse(null);
+        Isp isp = iSPRepository.findById(id).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+isp);
         reps.stream().forEach(item -> {
             Report report= reportRepository.findById(item).orElse(null);
@@ -176,7 +176,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
     public boolean abandonISP(Long ispId,String reason)
     {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(ispId).orElse(null);
+        Isp isp = iSPRepository.findById(ispId).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+ispId);
         //ispMen 解除关系
         Set<User>  mens= isp.getIspMen();

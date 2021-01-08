@@ -3,6 +3,7 @@ package org.fjsei.yewu.resolver.sei;
 import com.alibaba.fastjson.JSON;
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.*;
 import md.cm.unit.Unit;
@@ -15,8 +16,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fjsei.yewu.entity.fjtj.*;
-import md.specialEqp.inspect.ISP;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.Isp;
 import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.Equipment;
 import org.fjsei.yewu.filter.SimpleReport;
@@ -42,7 +42,6 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.util.Streamable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,7 +86,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -178,7 +177,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                 if (!StringUtils.isEmpty(filter.getCod())) {
                  //   Path<Task> p = root.get("task");
                     Path<String> p = root.get("cod");
-                    //非集合型的关联对象可以直接指定下一级的字段SingularAttribute。　该属性，Set，List，Map；//最新的一条TASK/ISP,规化成非集合。
+                    //非集合型的关联对象可以直接指定下一级的字段SingularAttribute。　该属性，Set，List，Map；//最新的一条TASK/Isp,规化成非集合。
                     //PluralAttribute 复数形式Set[];
           //          p = root.get("pos");
                //     Path<String> p2 = p.get("devs");
@@ -282,7 +281,7 @@ public class BaseQuery implements GraphQLQueryResolver {
 
     public Long countReport(Long ispId) {
         if (ispId == null) return reportRepository.count();
-        ISP isp = iSPRepository.findById(ispId).orElse(null);
+        Isp isp = iSPRepository.findById(ispId).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+isp);
         int myInt=reportRepository.findByIsp(isp).size();
         return Long.parseLong(new String().valueOf(myInt));
@@ -333,7 +332,7 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
 
     public Iterable<SimpleReport> getReportOfISP(Long id) {
-        ISP isp=iSPRepository.findById(id).orElse(null);
+        Isp isp=iSPRepository.findById(id).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+id);
         return isp.getReps();
     }

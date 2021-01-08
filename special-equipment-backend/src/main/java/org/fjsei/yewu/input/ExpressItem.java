@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.sql.Date;
 import java.util.List;
 
-//JPA运算操作 表达式：　代表属性字段或者取值以及比较的配对的字段属性，　比如 ISP.cod='hao', 等号的左右都可称作JPA表达式。
+//JPA运算操作 表达式：　代表属性字段或者取值以及比较的配对的字段属性，　比如 Isp.cod='hao', 等号的左右都可称作JPA表达式。
 //其他的表达式：数学表达式，函数表达式(输出属性的类型)，除了布尔表达式(它在上一层次的结构里面)
 //和JPA的 Expression<?> 对应；
 //对可相互替换的域，可考虑默认优先级排序，。

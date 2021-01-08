@@ -3,12 +3,10 @@ package md.system;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import md.specialEqp.inspect.ISP;
+import md.specialEqp.inspect.Isp;
 import org.fjsei.yewu.filter.UserBase;
 import org.fjsei.yewu.security.JwtUser;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,13 +88,13 @@ public class User implements UserBase {
     private String mobile;
 
     @OneToMany(mappedBy = "checkMen")
-    private Set<ISP> checks;
+    private Set<Isp> checks;
     //暂时应对：hibernate.LazyInitializationException: failed to lazily initialize XXXXX could not initialize proxy - no Session错误
     //把fetch= FetchType.LAZY,改成fetch= FetchType.LAZY,牺牲性能；GraphQL经常会关联的多层嵌套查询，前端决定的查询关系，不预先提取数据，运行报错。
     //不要fetch= FetchType.EAGER,User对象每次请求都要读取的，isp数据多。
     //为何要维护这个关联表？不见得必须的,多层关联还是直接联系，关联数据的逻辑也得维护。
     @ManyToMany(mappedBy="ispMen")
-    private Set<ISP> isp= new HashSet<>();
+    private Set<Isp> isp= new HashSet<>();
 
     //头像
     private String  photoURL;

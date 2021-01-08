@@ -26,7 +26,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath authType = createString("authType");
 
-    public final SetPath<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP> checks = this.<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP>createSet("checks", md.specialEqp.inspect.ISP.class, md.specialEqp.inspect.QISP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> checks = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("checks", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
     public final StringPath dep = createString("dep");
 
@@ -38,7 +38,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final SetPath<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP> isp = this.<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP>createSet("isp", md.specialEqp.inspect.ISP.class, md.specialEqp.inspect.QISP.class, PathInits.DIRECT2);
+    public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isp = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isp", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
     public final StringPath lastname = createString("lastname");
 

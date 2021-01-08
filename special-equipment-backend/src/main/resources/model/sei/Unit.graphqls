@@ -4,8 +4,8 @@ type Unit{
     address: String
     linkMen: String
     phone: String
-    owns: [EQP]
-    maints: [EQP]
+    owns: [Eqp]
+    maints: [Eqp]
     company: Company
     person: Person
 }

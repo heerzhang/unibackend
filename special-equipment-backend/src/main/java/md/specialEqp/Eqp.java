@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import md.cm.unit.Division;
 import md.cm.unit.Unit;
-import md.specialEqp.inspect.ISP;
+import md.specialEqp.inspect.Isp;
 import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -147,14 +147,14 @@ public class Eqp implements Equipment{
     private Set<Task> task= new HashSet<>();
 
     //单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
-    //Eqp.TASK.ISP  Eqp.ISP {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
+    //Eqp.TASK.Isp  Eqp.Isp {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
     //ISP挂接关系到EQP底下还是挂接关系到TASK底下的？不可以两者同时都挂接关联关系，那样就是多余和混淆概念或两种分歧路径，数据多了而且还产生不一致了。
     //检验单独生成，TASK和EQP多对多的；单个ISP检验为了某个EQP和某个TASK而生成的。
     //先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
     //缺省FetchType.EAGER  LAZY
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
-    private Set<ISP>  isps;
+    private Set<Isp>  isps;
 
     //底下这两组实际相当于内嵌结构对象，或者说[mtU，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -181,7 +181,7 @@ public class Eqp implements Equipment{
     //安全考虑，过滤isps字段合理输出,代替原来缺省的getXXX
     //@org.springframework.data.annotation.Transient  俩个注解都一样
     @Transient
-    public Set<ISP>  meDoIsp(){         //若是getMeDoIsp()名字，REST会使用它序列化输出,getXXX都是。
+    public Set<Isp>  meDoIsp(){         //若是getMeDoIsp()名字，REST会使用它序列化输出,getXXX都是。
         Long curruser=(long)5;  //临时test: JwtUser.getUserId();
         //限制只能看自己的ISP; 没登录的人就为空。
         //? REST 序列化会读取到MeDoIsp？

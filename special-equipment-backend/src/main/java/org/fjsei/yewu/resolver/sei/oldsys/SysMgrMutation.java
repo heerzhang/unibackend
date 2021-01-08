@@ -6,7 +6,7 @@ import md.system.UserRepository;
 import md.cm.unit.UnitRepository;
 import md.computer.FileRepository;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.TaskRepository;
 import md.cm.geography.AddressRepository;
 import org.fjsei.yewu.security.JwtTokenUtil;
@@ -29,7 +29,7 @@ public class SysMgrMutation implements GraphQLMutationResolver {
     @Autowired
     private EqpRepository eQPRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired

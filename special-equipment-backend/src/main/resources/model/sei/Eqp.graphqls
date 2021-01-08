@@ -6,7 +6,7 @@ interface Equipment{
     vart: String!
     oid: String
 }
-type EQP implements Equipment{
+type Eqp implements Equipment{
     id:ID!
     cod: String!
     oid: String
@@ -14,7 +14,7 @@ type EQP implements Equipment{
     sort: String!
     vart: String!
     fNo: String
-    isps: [ISP]
+    isps: [Isp]
     pos: Address
     task: [Task]
     useU: Unit
@@ -32,31 +32,31 @@ type EqpEs implements Equipment{
 }
 
 extend type Query {
-    getDevice(id:ID!): EQP
+    getDevice(id:ID!): Eqp
     getEqpEs(id:ID!): EqpEs
-    getDeviceSelf(id:ID!): EQP
-    findEQPbyCod(cod: String!): EQP
-    findEQPLike(filter: DeviceCommonInput): [EQP]!
-    findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [EQP]!
-    getAllEQP: [EQP]!
+    getDeviceSelf(id:ID!): Eqp
+    findEQPbyCod(cod: String!): Eqp
+    findEQPLike(filter: DeviceCommonInput): [Eqp]!
+    findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Eqp]!
+    getAllEQP: [Eqp]!
     countAllEQP: Int!
     countAllEQPsFilter(filter: DeviceCommonInput!): Int!
     #升级弃用countAllEQPsWhere(where: WhereTree): Int!
-    #findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [EQP]!
+    #findAllEQPsFilter(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Eqp]!
     #findAllEQPsFilter2(where: DeviceCommonInput, offset:Int, first:Int, orderBy:String, asc:Boolean): [Equipment]!
     getAllEqpEsFilter(where: DeviceCommonInput, offset:Int, limit:Int, orderBy:String, asc:Boolean): [Equipment]!
 }
 
 extend type Mutation {
-    newEQP(cod: String!, type: String!, oid: String) : EQP!
+    newEQP(cod: String!, type: String!, oid: String) : Eqp!
     "因为type普通对象直接用于输入参数的话,语义比较模糊,所以graphQL要求另外单独建"
-    setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : EQP!
+    setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Eqp!
     #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。
-    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : EQP
-    testEQPModify(id:ID!, oid: String ): EQP
+    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : Eqp
+    testEQPModify(id:ID!, oid: String ): Eqp
     testEQPFindModify(cod:String!, oid: String ): String
     testEQPStreamModify(cod:String!, oid: String ): String
-    testEQPCriteriaModify(cod:String!, oid: String, type: String): EQP
+    testEQPCriteriaModify(cod:String!, oid: String, type: String): Eqp
     testEQPcreateQueryModify(cod:String!, oid: String ): String
     invalidateEQP(whichEqp:ID!, reason: String!) : Boolean!
     removeEQP(id:ID!) : Boolean!

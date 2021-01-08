@@ -29,7 +29,7 @@ public class Authority {
     //FetchType.LAZY，产生查询异常失败；有意外好处，切断graphQL的关联查询嵌套，避免信息安全问题。
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private List<User> users= new LinkedList<>();
-    //private Set<ISP> isp= new HashSet<>();
+    //private Set<Isp> isp= new HashSet<>();
 
     public Long getId() {
         return id;

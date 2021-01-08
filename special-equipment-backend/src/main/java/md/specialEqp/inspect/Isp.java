@@ -23,7 +23,7 @@ import java.util.Set;
 @Entity
 @Table( uniqueConstraints = {@UniqueConstraint(columnNames={"dev_id", "task_id"})} )
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast")
-public class ISP {
+public class Isp {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")

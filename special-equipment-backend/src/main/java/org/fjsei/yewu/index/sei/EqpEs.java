@@ -144,7 +144,7 @@ public class EqpEs implements Equipment{
     //这个注释加不加都一样的。
  //   @Field(type = FieldType.Nested)
  //   private Set<TaskEs> task = Sets.newHashSet();
-   // private Set<ISP>  isps;
+   // private Set<Isp>  isps;
     //引入这两个单位字段消耗磁盘空间大
     @Field(type = FieldType.Object)
     private UnitEs  useU;     //USE_UNT_ID 使用单位ID

@@ -75,7 +75,7 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     public final DateTimePath<java.util.Date> ispD2;
 
     //inherited
-    public final SetPath<md.specialEqp.inspect.ISP, md.specialEqp.inspect.QISP> isps;
+    public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
     //inherited
     public final StringPath level;

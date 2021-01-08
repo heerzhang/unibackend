@@ -58,7 +58,7 @@ public class SubSelect {
 
 //Subquery<T>只能输出一个字段，或是一个已经定义好的类<T>实体对象也可以的，就是不能动态组合多个字段来输出。内外逻辑比较时刻类型要一致。
 //JPA无法支持限制Subquery输出的记录个数。
-//属性：任意不是集合的或集合-》挑选一条null?->属性1 IN/NOT(Select top3 ID/names from 无关联新语句 order by ISP.Time desc)
+//属性：任意不是集合的或集合-》挑选一条null?->属性1 IN/NOT(Select top3 ID/names from 无关联新语句 order by Isp.Time desc)
 //特例！ispMen.#SetSize像函数的子语句简化版本 {自动转化成count(id)子语句关联上级isp0_.id=ispmen5_.ISP_ID，无需要明确指出SubSelect}
 //集合isEmpty也会底层自动转化成not (exists (select子语句并且关联上级，不需要手动写代码；
 //set noteixests集合里头不存在这样的，必须用SubQuery做，;      set有关联聚合，

@@ -58,4 +58,6 @@ ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语�
 在win10的命令行前台窗口运行elasticsearch，很可能挂起掉，必须回车继续运行。
 
 前端用中文做代码名字类完全可行，后端中文变量名卡在graphQL的语法解析工具上，在*.graphqls模型中定义中文名是不允许的，URL/JDBC/JPA都可允许中文名。
-
+graphql-java包依赖　ANTLR 自定义语言解析器框架/语法树AST；而graphql-java-tools包依赖Kotlin语言。
+RESTful需用DTO对象K/V JSON转换[麻烦]。REST API不能支持Object实体直接序列化，graphQL可以直接内省Object实体类型的成员变量。https://www.cnblogs.com/zhangguicheng/articles/13204007.html
+前端 —— 中端 —— 后端 的三层结构模式？　https://zhuanlan.zhihu.com/p/157314533?from_voters_page=true

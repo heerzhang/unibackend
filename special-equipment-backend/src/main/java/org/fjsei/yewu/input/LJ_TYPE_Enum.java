@@ -20,10 +20,10 @@ public enum LJ_TYPE_Enum {
 针对性支持：某Set<?>属性字段它的集合当中不存在这样子的对象。 自反not exists隐含嵌套子语句。
 样本；
 目标ISP：
-select isp0_ from ISP isp0_ where ...
+select isp0_ from Isp isp0_ where ...
 AND {
 not  (exists ( select *
-    from ISP isp2_
+    from Isp isp2_
         where
             isp0_.id=isp2_.id
             and { ... }

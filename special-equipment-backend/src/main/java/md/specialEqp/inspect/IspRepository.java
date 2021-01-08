@@ -16,15 +16,15 @@ import java.util.List;
 //定制数据库各个模型=表的SQL操作。
 
 
-public interface ISPRepository extends JpaRepository<ISP, Long>, JpaSpecificationExecutor<ISP> {
+public interface IspRepository extends JpaRepository<Isp, Long>, JpaSpecificationExecutor<Isp> {
 
 
-    List<ISP> findByIspMen(User ispmen);
-    List<ISP> getByDev_IdOrderById(Long dev);
+    List<Isp> findByIspMen(User ispmen);
+    List<Isp> getByDev_IdOrderById(Long dev);
 
     @QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "true") } )
-    List<ISP> findAll(@Nullable Specification<ISP> spec);
+    List<Isp> findAll(@Nullable Specification<Isp> spec);
 
-    List<ISP> getByDev_IdAndTask_IdOrderByNextIspDate(Long dev, Long task);
+    List<Isp> getByDev_IdAndTask_IdOrderByNextIspDate(Long dev, Long task);
 }
 

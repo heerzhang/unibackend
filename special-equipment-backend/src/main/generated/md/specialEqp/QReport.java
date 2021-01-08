@@ -30,7 +30,7 @@ public class QReport extends EntityPathBase<Report> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final md.specialEqp.inspect.QISP isp;
+    public final md.specialEqp.inspect.QIsp isp;
 
     public final StringPath modeltype = createString("modeltype");
 
@@ -68,7 +68,7 @@ public class QReport extends EntityPathBase<Report> {
 
     public QReport(Class<? extends Report> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.isp = inits.isInitialized("isp") ? new md.specialEqp.inspect.QISP(forProperty("isp"), inits.get("isp")) : null;
+        this.isp = inits.isInitialized("isp") ? new md.specialEqp.inspect.QIsp(forProperty("isp"), inits.get("isp")) : null;
     }
 
 }

@@ -6,6 +6,7 @@ import md.cm.base.Company;
 import md.cm.base.CompanyRepository;
 import md.cm.base.Person;
 import md.cm.base.PersonRepository;
+import md.specialEqp.inspect.Isp;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.system.AuthorityRepository;
@@ -16,8 +17,7 @@ import md.cm.unit.UnitRepository;
 import md.specialEqp.*;
 import org.fjsei.yewu.entity.fjtj.HrUserinfo;
 import org.fjsei.yewu.entity.fjtj.HrUserinfoRepository;
-import md.specialEqp.inspect.ISP;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.Task;
 import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
@@ -88,7 +88,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -220,7 +220,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Report newReport(Long ispId, String modeltype, String modelversion) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(ispId).orElse(null);
+        Isp isp = iSPRepository.findById(ispId).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+ispId);
         //Todo: 报告编码
         String repNo="JD2020FTC00004";
@@ -237,7 +237,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional
     public Report buildReport(Long ispId, String no, String path) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        ISP isp = iSPRepository.findById(ispId).orElse(null);
+        Isp isp = iSPRepository.findById(ispId).orElse(null);
         Assert.isTrue(isp != null,"未找到isp:"+isp);
         Report report = new Report(path,isp,no);
         reportRepository.save(report);

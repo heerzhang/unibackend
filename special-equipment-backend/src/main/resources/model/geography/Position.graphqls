@@ -3,7 +3,7 @@ type Address{
     name: String!
     lat: String
     lon: String
-    eqps: [EQP]
+    eqps: [Eqp]
     ad:  Adminunit
 }
 

@@ -2,18 +2,16 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.querydsl.core.BooleanBuilder;
 import graphql.kickstart.tools.GraphQLMutationResolver;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import md.cm.base.*;
 import md.cm.geography.*;
 import md.cm.unit.*;
 import md.specialEqp.*;
-import md.specialEqp.inspect.ISPRepository;
+import md.specialEqp.inspect.IspRepository;
 import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.type.*;
 import md.system.AuthorityRepository;
 import md.system.UserRepository;
-import org.elasticsearch.action.support.WriteRequest;
 import org.fjsei.yewu.entity.fjtj.*;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.jpa.PageOffsetFirst;
@@ -27,21 +25,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.document.Document;
-import org.springframework.data.elasticsearch.core.geo.GeoPoint;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.BulkOptions;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.lang.reflect.Type;
-import java.sql.Date;
 import java.util.*;
 
 //这个类名字不能重复简明！
@@ -61,7 +50,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     @Autowired
     private ElevatorRepository elevatorRepository;
     @Autowired
-    private ISPRepository iSPRepository;
+    private IspRepository iSPRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired

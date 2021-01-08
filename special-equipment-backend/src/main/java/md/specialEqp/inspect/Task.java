@@ -32,7 +32,7 @@ public class Task {
     //默认fetch= FetchType.LAZY; 而mappedBy代表对方维护关系  EAGER
     @OneToMany(mappedBy = "task" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
-    private Set<ISP>  isps;
+    private Set<Isp>  isps;
 
     private String dep;  //类型弱化? ,应该是部门表的ID!
 
