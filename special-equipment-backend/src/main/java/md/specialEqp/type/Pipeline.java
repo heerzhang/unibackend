@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 public class Pipeline extends Eqp {
     //8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
-    private String volume;
+
     //管道底下的具体的许多个单元组成集合： TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA
     //单元也可以合并。
     @OneToMany(mappedBy="pipe" ,fetch = FetchType.LAZY)
@@ -33,6 +33,9 @@ public class Pipeline extends Eqp {
         volume="820升";
     }
 */
-}
+    //全部的，所有管道单元的都是
+    private String  matr;  //PIPELINE_MEDIUM管道材质，@[{id:'钢制',text:'钢制'},{id:'PE管',text:'PE管'}]
+    //合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";// 管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},{id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},{id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},{id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
 
+}
 

@@ -28,11 +28,11 @@ public class Isp {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
-    //先有EQP,后来规划TASK了(1个task多eqp)，最后才为某task和某一个EQP去生成ISP{inspect}的;
+    //先有EQP,后来规划TASK了(1个task对1个eqp)，最后才为某task和某一个EQP去生成ISP{inspect}的;
     //一个检验ISP记录只有一个设备，一个设备EQP可有多个ISP检验。
-    //若是ISP该从TASK挂接关系而来的，那么这里就不应该有EQP字段的，设备在TASK 哪去找。Task是部门细分责任的。
-    //检验单独生成，TASK和EQP多对多的； ISP比Task更进一步，更靠近事务处理中心。EQP是和外部对接的。
-    //单个ISP检验为了某个EQP和某个TASK而生成的。主要目的推动后续的报告，管理流程，以及结算等。
+    //检验单独生成，TASK和EQP多对1的； ISP比Task更进一步，更靠近事务处理中心。
+    //单个ISP检验为了某个EQP和某个TASK而生成的。主要目的推动后续的报告，管理流程，等。
+    //todo:若是ISP该从TASK挂接关系而来的，本来这里就不应该有EQP字段的，设备在TASK 哪去找，多余的字段?。Task是部门细分责任的。
     //我是多端我来维护关联关系，我的表有直接外键的存储。
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_id")
@@ -60,6 +60,8 @@ public class Isp {
     private String  conclusion;
     //缺省, fetch= FetchType.EAGER
     //有可能Report的实际数据库表还没有创建啊;
+    //比旧平台多出个Report实体，旧系统是直接用Isp表。多个分项报告REP_TYPE;
+    //todo: 1个主/组合封面/报告，+0个或多个分项报告,带了顺序链接，打印物理页数？。
     @OneToMany(mappedBy ="isp")
     private Set<Report>  reps;
     //private Set<BaseReport>  reps;

@@ -17,13 +17,17 @@ import javax.persistence.Entity;
 @Entity
 public class Vessel extends Eqp {
     //2000压力容器	 TB_VESSEL_PARA
-    private String volume;
+
 /*
     public Vessel(String cod, String type, String oid){
         super(cod,type,oid);
         volume="820升";
     }
 */
+
+    private Float vol;  //CONTAINERVOLUME压力容器容积（立方米），
+    private Float pres;  //DESPRE设计压力（MPa）
+    private Short upper; //CAPABLIMITNUM氧舱2400 容限（人）；
 }
 
 

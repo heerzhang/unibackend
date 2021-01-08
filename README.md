@@ -61,3 +61,4 @@ ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语�
 graphql-java包依赖　ANTLR 自定义语言解析器框架/语法树AST；而graphql-java-tools包依赖Kotlin语言。
 RESTful需用DTO对象K/V JSON转换[麻烦]。REST API不能支持Object实体直接序列化，graphQL可以直接内省Object实体类型的成员变量。https://www.cnblogs.com/zhangguicheng/articles/13204007.html
 前端 —— 中端 —— 后端 的三层结构模式？　https://zhuanlan.zhihu.com/p/157314533?from_voters_page=true
+Float精度为6~7位，能保证6位为绝对精确，7位一般也是正确的，这里的6~7位是有效小数点后几位, Double加倍。

@@ -138,3 +138,83 @@ Elasticsearch嵌套Nested:新增丶修改或删除一个嵌套文档，必须重
 
 Hibernate要求连接到同一个数据库的所有服务器共享单个二级缓存或者不用缓存；Hibernate无法用一条语句同时对多个数据源/DB多库进行关联操作，JPA自动生成SQL无法跨库。
 
+
+
+
+管理=TB_DICT_FEEFIELD参数,1个发票多个任务;1任务Task对1个设备EQP;无任务手工报告;1个TASK映射1个ISP{可以多分项SubISPid}
+制造库+未注册临时库;TB_DICT_FEESTANDARD 892条EFF_STA=1;TB_DICT_FEEFIELD有62条/ 交互时能改的参数
+附加收费表TB_DICT_EXTRAFEE_MODIFIED=81条加收、减收条款;
+INDUSTRY_PROP_COD单位细分种类； IF_SPEC_EQP特种电梯；
+	 /EQP_TYPE+SORT+VART SUB_EQP_VART,OPE_TYPE, 关键技术参数也有用到；合计125条条款。
+	 RATCONS<=6.0&&IF_BOIL_WALL==是&&SUB_EQP_VART==1003
+测算明细;
+SAFE_VALVE_NUM安全阀数量;收费关联TASK;协议关联TASK;
+3个字段配置{TB_DICT_MGEFIELD/tb_dict_mgetable}。 TB_ISP_MGE.IF_OPE=两千次标记
+IF_OLDBUILD/IS_MOVEEQP/两千次IF_OPE必须敲定;
+任务分配,任务分派=责任人派工;
+Unit行业性质INDUSTRY_PROP_COD?使用单位。
+关键技术参数变更；
+?没有任务没收费发票只用来流转审批做报告(出具增补的商品合格证)；
+超出整改反馈期后复检任务自动终结，；
+SDN申报-〉法定协议受理-〉法定业务受理-〉业务受理终结;
+已经'终结''注销'的ISP报告就无法回退。
+目录外的{针对设备}不一定不能是法定的{针对业务操作}性质。
+定期检验，比如锅炉的每年一次的外部检验，每两年一次的内部检验，2个类型定检一起做?大包含小的。
+流动作业设备才会出现JC省外注册。
+BUSI_TYPE法定1/委托业务性质BUSI_TYPE=2委托的；
+测厚点数=〉收费；派工时刻已经确认收费标准了；
+工程（装置）名称 +管道名称（登记单元）1:N 管道编号{使用单位自定}；
+焊口数量PE管428个钢管5个； IN_CAG/目录变更,.ISP_TYPE{检验范畴1机电2承压3}
+.EQP_USE_PLACE场所性质 .EQP_USE_OCCA起重才用.EXTEND_USE_YEAR延长使用年限
+.MAKE_DATE制造日期.SAFE_LEV安全评定等级{JC才用}2000设类	；
+检验范畴.ISP_TYPE：机电承压类->科室分配/发票会计。
+EQP_LEVEL设备等级; 下次检验日期2(机电定检，内检，全面）;1->年度（外部、在线）检验 粗的检；
+下次检验日{预设定大小保养时间},检验等级规模。检测记录，检测规定时间。
+if等级1/3/的，耐压试验6年{2.5年}一次。https://wenku.baidu.com/view/369ebf72760bf78a6529647d27284b73f3423615.html
+TB_TASK_MGE.IF_WORKEQP_TEST'5000厂车是否工作装置测试'
+EQP_PRICE；TB_TASK_MGE.IF_AQ_TEST'4000是否安全监控管理系统试验验证'
+TB_BOIL_PARA.IF_BOIL_WALL'是否有炉墙锅炉；
+TB_TASK_MGE.INST_PRICE单台工程施工费（万元）
+TB_BOIL_PARA.RATCON'1000额定功率(MW)/蒸发量；
+IF_VERTICAL锅炉结构形式；BURNINGTYPE燃料种类@
+PIPELINE_LEVEL，PIPELINE_MEDIUM管道材质，LAY_MODE管道敷设方式NOMINAL_DIA公称直径（mm）LENGTH；
+CONTAINERVOLUME压力容器容积（立方米），DESPRE设计压力（MPa）
+CAPABLIMITNUM氧舱2400容限（人）；
+ELEFLOORNUMBER电梯层数，ELEHEIGHT3000提升高度，SLIDWAY_USE_LENG3300人行道使用区段长度,RUNVELOCITY运行速度,IF_OLDBUILD_INST旧楼加装;
+IF_UNNORMAL是否非标电梯，
+/.IF_SPEC_EQP是否特殊设备；/IMPORT_TYPE进口类型,
+CHAENGLOAMAIN{不算4D00,4800}主钩）起重机械载荷；
+BERNUM停车设备泊位数4D00，ELEHEIGHTMAIN主钩）起升高度；IF_TWO_CAB双司机室，IF_TWO_LCAR有否双小车，IF_GRAB_B否抓斗，
+IF_SUCTORIAL有否起重吸盘，IF_CONTAIN_H否集装箱吊具，SPAN跨度（m；TB_CRANE_PARA.IF_UNNORMAL非标;IF_XZS否行走式,CHAADVMOM起重力矩（吨米;IF_ZJCC否整机出厂整机上岸的;
+4800TB_LIFT_PARA.UP_HIGH提升高度（m,IF_TWO_HOIS是否双笼;
+TB_TASK_MGE.IF_HOLD_TEST'4000是否载荷试验'？有些属性是放在task有些isp表？
+游乐AMUS_TYPE游乐设施等级类型，IF_SHIFT是否移动大型游乐；
+SUB_EQP_VART!=1002=〉大项套子项目TB_DICT_FEESTANDARD.FEE_TAG'1主收费 0子收费'；
+.FEE_COD .FEE_STANDARD{叙述文} .BL_EXPR .RS_EXPR 树形三级层次:承压.x.y.z；
+.FEE_MOD{1主只能添加1项,2=附加收费可以添加多个};/.ISP_TYPE'1:机电156条，2：承压{677条}，3：综合检验/不区分?58条，4考试{空的}';
+预定义收费模板/机构地区定？可加可删的，实际业务有做到的，可添加可重复项目，生成明细项目。
+30~60如何收/自定数额。缺省就设置的，可以自选的条款。
+TB_DICT_EXTRAFEE_MODIFIED.EXTRAFEE_TYPE'0过程价1最终价2过程完毕后附加价3自定义条'
+/.FEE_MOD作废 '收费类型(8：基础收费加收?srcPrice）（9：1基础+2附加+8基础加收?tmpCalPrice）10自定义条'
+INDUSTRY_PROP_COD==O82||INDUSTRY_PROP_COD==O821||
+nu_ll==1表达True?明面上多收可能/油头; .ISP_TYPE2=8000检验费低于500元的按500元收取;
+如果两台同时进行检验的，按收费总额的90%收(单任务同种设备数);
+在化学介质、易燃介质等毒性危害和爆炸危险环境下进行检验作业或接触生产性粉尘作业危害程度在II级（含II级）及II级以上环境下进行检验作业的加收30%；
+减免有相反问题：裁量权/用户知情没=不走途。
+加急检验（三个工作日取检验报告）加收20%; 条款？
+廉租住房、公共租赁住房、经济适用住房和棚户区改造安置住房等保障性安居工程项目免收行政事业性收费和政府性基金=扯呼;
+tmpCalPrice=附加检验收费+基础检验加收费+srcPrice{=基础检验收费{主项收费+}};
+基础检验收费 srcPrice   FEE_MOD1主只能添加1项,
+附加检验收费 tmp2Price {FEE_MOD2=附加收费可以添加多个}
+基础检验加收费 tmp8Price .FEE_MOD == 8
+其他收费 tmp9Price .FEE_MOD == 9
+TB_TASK_PRICEDET=预设后的。
+带分项责任人派工多个流程ISP/subIsp;部门分配给单OFFICE_ID;科室分配{单个=组长？PROJ_USER_ID},=> 派工;
+责任人PROJ_USER_ID,任务负责人,有资格检验员;人员TB_TASK_TO_ISPPROJ.JY_USER_ID；
+负责人[可多个]E_PROJ_USER_ID +检验员+协检员
+ISP对等概念TB_TASK_TO_ISPPROJ几种人员，分项独立TB_ISP_SUBPROJ表;
+TB_TASK_TO_ISPPROJ.E_PROJ_USER_ID'任务负责人(包含检验员)'.JY_USER_ID检验员'.XJ_USER_ID协检员'.MAIN_FLAG1：主报告0：分项报告）'
+分项.E_PROJ_USER_ID可=null;三类人员?都能多个的，可无包含关系。
+TB_ISP_SUBPROJ分项对等简化ISP表,否已经送组合:合并送审/.CHL_SUB_SEQ分项报告下序号;
+TB_ISP_MGE.WORK_DAY'工作日数（不合格去掉等待日期）.REP_INTIME报告及时率'
+TB_ISP_MGE.NOTELIGIBLE_FALG不合格标志'

@@ -12,7 +12,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-/*实体类不可搞 interface： ？可能死循环, 返回结果集只能使用接口/不能做实体转换。
+/*
+主报告，分项报告 REP_TYPE, 证书或组合第一页的提纲形式{点击进入很多子报告}。非结构化json转成文档。
+实体类不可搞 interface： ？可能死循环, 返回结果集只能使用接口/不能做实体转换。
  @Id采用GenerationType.SEQUENCE,共用sequenceName要确保旧数据失效清除周期一致，ID若要循环到最大极限值回到1起点后了若还有小数字ID就麻烦了。
  mySQL修改Id自增起点：  select next_val as id_val from SEQUENCE_COMMON  for update；   update SEQUENCE_COMMON set next_val= ?  where next_val=?
  Hibernate提供@GenericGenerator(strategy = "uuid")不能用，Long与String不兼容；只好麻烦点，旧数据维护要看id设置找底层数据库支持修改next_val:initialValue。
@@ -29,7 +31,8 @@ public class Report  implements SimpleReport {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
-
+    //OPE_TYPE配合BUSI_TYPE法定1/=2委托业务的；来敲定的报告类型REP_TYPE
+    //而检验范畴ISP_TYPE可以省略掉：机电 承压类->只是给科室分配/发票会计用，挑选列表大的分类大归类的/统计上分家。
     private String type;
     private String  no;
 
