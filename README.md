@@ -57,3 +57,5 @@ CMD命令行jps执行会显示pid，再去资源管理器。  ElasticSearch严�
 ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语句能够自动做缓存，但FieldType.Text字段分词不配对match_phrase搜索返回空。
 在win10的命令行前台窗口运行elasticsearch，很可能挂起掉，必须回车继续运行。
 
+前端用中文做代码名字类完全可行，后端中文变量名卡在graphQL的语法解析工具上，在*.graphqls模型中定义中文名是不允许的，URL/JDBC/JPA都可允许中文名。
+

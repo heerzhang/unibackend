@@ -12,8 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ 	只是修改package包名字
  */
 package org.fjsei.yewu.jpa;
+
+
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
+
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -27,6 +40,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
+import org.springframework.data.jpa.repository.support.MutableQueryHints;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.support.RepositoryProxyPostProcessor;
 import org.springframework.lang.Nullable;
@@ -35,17 +49,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
-import javax.persistence.LockModeType;
-import javax.persistence.QueryHint;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.function.Predicate;
 
 //没法子， 这个原始包不对外开放，无法直接派生继承。只好全部挪过来了。 升级版本特别注意：对方可能变动了。
 //拷贝来源：spring-data-jpa-2.3.5.RELEASE-sources.jar!/org/springframework/data/jpa/repository/support/CrudMethodMetadataPostProcessor.java
-//还未做修改。
+//实际上这个文件范围代码都还未做修改。
+// 注意！！ 拷贝黏贴本代码段的时候，不要选择自动import修改，要手动的，static class 才不会乱引用。
+
+
 
 /**
  * {@link RepositoryProxyPostProcessor} that sets up interceptors to read metadata information from the invoked method.
@@ -192,8 +202,8 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 	private static class DefaultCrudMethodMetadata implements CrudMethodMetadata {
 
 		private final @Nullable LockModeType lockModeType;
-		private final Map<String, Object> queryHints;
-		private final Map<String, Object> getQueryHintsForCount;
+		private final org.springframework.data.jpa.repository.support.QueryHints queryHints;
+		private final org.springframework.data.jpa.repository.support.QueryHints queryHintsForCount;
 		private final Optional<EntityGraph> entityGraph;
 		private final Method method;
 
@@ -208,7 +218,7 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 
 			this.lockModeType = findLockModeType(method);
 			this.queryHints = findQueryHints(method, it -> true);
-			this.getQueryHintsForCount = findQueryHints(method, QueryHints::forCounting);
+			this.queryHintsForCount = findQueryHints(method, QueryHints::forCounting);
 			this.entityGraph = findEntityGraph(method);
 			this.method = method;
 		}
@@ -224,25 +234,27 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 			return annotation == null ? null : (LockModeType) AnnotationUtils.getValue(annotation);
 		}
 
-		private static Map<String, Object> findQueryHints(Method method, Predicate<QueryHints> annotationFilter) {
+		private static org.springframework.data.jpa.repository.support.QueryHints findQueryHints(Method method,
+																								 Predicate<QueryHints> annotationFilter) {
 
-			Map<String, Object> queryHints = new HashMap<>();
+			MutableQueryHints queryHints = new MutableQueryHints();
+
 			QueryHints queryHintsAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, QueryHints.class);
 
 			if (queryHintsAnnotation != null && annotationFilter.test(queryHintsAnnotation)) {
 
 				for (QueryHint hint : queryHintsAnnotation.value()) {
-					queryHints.put(hint.name(), hint.value());
+					queryHints.add(hint.name(), hint.value());
 				}
 			}
 
 			QueryHint queryHintAnnotation = AnnotationUtils.findAnnotation(method, QueryHint.class);
 
 			if (queryHintAnnotation != null) {
-				queryHints.put(queryHintAnnotation.name(), queryHintAnnotation.value());
+				queryHints.add(queryHintAnnotation.name(), queryHintAnnotation.value());
 			}
 
-			return Collections.unmodifiableMap(queryHints);
+			return queryHints;
 		}
 
 		/*
@@ -260,7 +272,7 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 		 * @see org.springframework.data.jpa.repository.support.CrudMethodMetadata#getQueryHints()
 		 */
 		@Override
-		public Map<String, Object> getQueryHints() {
+		public org.springframework.data.jpa.repository.support.QueryHints getQueryHints() {
 			return queryHints;
 		}
 
@@ -269,8 +281,8 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 		 * @see org.springframework.data.jpa.repository.support.CrudMethodMetadata#getQueryHintsForCount()
 		 */
 		@Override
-		public Map<String, Object> getQueryHintsForCount() {
-			return getQueryHintsForCount;
+		public org.springframework.data.jpa.repository.support.QueryHints getQueryHintsForCount() {
+			return queryHintsForCount;
 		}
 
 		/*

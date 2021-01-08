@@ -149,7 +149,7 @@ public class CustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         private final EntityManager em;
         //private final EntityManager entityManager;
         private EntityPathResolver entityPathResolver;
-
+        //注意 CrudMethodMetadataPostProcessor 是自己修改的，版本升级特别注意，和原始来源差别。
         private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
         //无法访问 都不让使用；private final org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
 
