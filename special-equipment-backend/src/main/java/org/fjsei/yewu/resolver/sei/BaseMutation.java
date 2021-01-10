@@ -515,7 +515,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP == null,"找到eQP:"+eQP);
         Elevator elevator =Elevator.builder().cod(info.getCod()).type("typ01").oid(info.getOid()).build();
-        elevator.setLiftHeight("565555");
+        //elevator.setLiftHeight("565555");
         elevatorRepository.save(elevator);
         return elevator;
     }
@@ -523,7 +523,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     public Elevator buildElevator(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Elevator elevator =Elevator.builder().cod(cod).type(type).oid(oid).build();
-        elevator.setLiftHeight("565555");
+        //elevator.setLiftHeight("565555");
         elevatorRepository.save(elevator);
         return elevator;
     }
@@ -584,8 +584,8 @@ public class BaseMutation implements GraphQLMutationResolver {
         for (Eqp eQP:eqpObjs)
         {
             prevOid = eQP.getOid();
-            if(eQP instanceof Elevator)
-                ((Elevator) eQP).setLiftHeight("ss231");
+     //       if(eQP instanceof Elevator)
+     //           ((Elevator) eQP).setLiftHeight("ss231");
             eQPRepository.save(eQP);
         }
         if(eqpObjs.size()>1)    prevOid="超过1个的eqp?";
@@ -603,11 +603,11 @@ public class BaseMutation implements GraphQLMutationResolver {
             @Override
             public Predicate toPredicate(Root<Eqp> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
-                if (!StringUtils.isEmpty(cod)) {
+                if (StringUtils.hasLength(cod)) {
                     Path<String> p = root.get("cod");
                     predicateList.add(cb.like(p,"%" + cod + "%"));
                 }
-                if (!StringUtils.isEmpty(type)) {
+                if (StringUtils.hasLength(type)) {
                     Path<String> p = root.get("type");
                     predicateList.add(cb.equal(p,type));
                 }

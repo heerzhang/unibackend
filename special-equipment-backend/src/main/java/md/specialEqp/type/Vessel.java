@@ -30,4 +30,5 @@ public class Vessel extends Eqp {
     private Short upper; //CAPABLIMITNUM氧舱2400 容限（人）；
 }
 
-//不可改技术参数：
+//不可改技术参数：容积(换热面积)"CONTAINERVOLUME"罐车总重量"TANKCARTOWEI"容器高"CONTAINERHEIGHT"载重量"LOADWEIG"充装介质"TINAMPLMEDI"容器内径"CONINNDIA"
+// 夹套介质"COVERMEDIUM"罐车牌号"CARSIGN"罐车结构型式"CARSTRFORM"满载总重量"FULLYLOADWEI"保温(绝热形式)"TEMPPREMODE"安装形式"INSFORM"

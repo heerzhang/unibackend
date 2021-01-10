@@ -55,7 +55,9 @@ public class Crane extends Eqp {
     private Float  pcw;  //停车适停汽车质量(kg)"TC_CARWEIGHT"
     //变幅形式"ALTERRANGEMODE"
     private String  luf;
-    //工作级别"WORKGRADE"
+    /**工作级别"WORKGRADE"
+     * 起重机工作级别共8种，分别是A1-A8。其中A1工作级别最低，A8工作级别最高;二种决定，其一是起重机的使用频繁程度，称为起重机利用等级；其二是起重机承受载荷的大小，称为起重机的载荷状态。
+     */
     private String   jobl;
 }
 

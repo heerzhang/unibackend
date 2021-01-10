@@ -48,6 +48,8 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
     //inherited
     public final BooleanPath cping;
 
+    public final StringPath emod = createString("emod");
+
     //inherited
     public final NumberPath<Float> ePrice;
 
@@ -77,6 +79,8 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
 
     //inherited
     public final StringPath level;
+
+    public final NumberPath<Float> load = createNumber("load", Float.class);
 
     // inherited
     public final md.cm.unit.QUnit makeU;
@@ -114,8 +118,12 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
     //inherited
     public final StringPath pa;
 
+    public final StringPath plat = createString("plat");
+
     //inherited
     public final StringPath plNo;
+
+    public final StringPath pmd = createString("pmd");
 
     // inherited
     public final md.cm.geography.QAddress pos;
@@ -176,8 +184,6 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
 
     //inherited
     public final NumberPath<Integer> version;
-
-    public final StringPath volume = createString("volume");
 
     public QFactoryVehicle(String variable) {
         this(FactoryVehicle.class, forVariable(variable), INITS);

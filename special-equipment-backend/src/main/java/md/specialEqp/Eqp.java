@@ -32,7 +32,9 @@ import java.util.stream.Collectors;
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 //字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。 字段类型要用java包装类
 
+/**特种设备检验有8大类设备；。
 
+*/
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -59,26 +61,14 @@ public class Eqp implements Equipment{
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //@Column(length =128, unique = true)
 
-    /**
-     * Central repository marker interface. Captures the domain type to manage as well as the domain type's id type. General
-     * purpose is to hold type information as well as being able to discover interfaces that extend this one during
-     * classpath scanning for easy Spring bean creation.
-     * <p>
-     * Domain repositories extending this interface can selectively expose CRUD methods by simply declaring methods of the
-     * same signature as those declared in {@link CrudRepository}.
-     *
-     * @see CrudRepository
-     * @param <T> the domain type the repository manages
-     * @param <ID> the type of the id of the entity the repository manages
-     * @author Oliver Gierke
-     */
+    /**OIDNO每一个省份监察机构自己产生的易识别码。 {@link Collectors}.*/
     @Field
     @Column(length =40)
-    private String oid;     //OIDNO每一个省份监察机构自己产生的易识别码。
+    private String oid;
+    /**EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。*/
     @Field
     @Size(min = 4, max = 32)
-    //@Column( unique = true)
-    private String cod;         //EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。
+    private String cod;
 
     //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
     private String type;    //设备种类 EQP_TYPE{首1个字符} ,
@@ -194,7 +184,9 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
-    //扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
+    /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
+     * 可加: 设备联系人，设备联系人电话；前端可以方便操作。
+     */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (16000)")

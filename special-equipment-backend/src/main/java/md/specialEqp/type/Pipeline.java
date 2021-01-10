@@ -39,4 +39,5 @@ public class Pipeline extends Eqp {
 
 }
 
-//不可改技术参数：
+
+//不可改技术参数： 设计压力"DESIGN_PRESS" 设计温度"DESIGN_TEMP" 管道介质"WORK_MEDIUM"

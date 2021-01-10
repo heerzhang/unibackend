@@ -30,6 +30,8 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final NumberPath<Byte> cag;
 
+    public final NumberPath<Float> cap = createNumber("cap", Float.class);
+
     //inherited
     public final StringPath ccl1;
 
@@ -47,14 +49,22 @@ public class QCrane extends EntityPathBase<Crane> {
 
     public final BooleanPath cotr = createBoolean("cotr");
 
+    public final StringPath cpi = createString("cpi");
+
     //inherited
     public final BooleanPath cping;
+
+    public final StringPath cpm = createString("cpm");
+
+    public final NumberPath<Float> cvl = createNumber("cvl", Float.class);
 
     //inherited
     public final NumberPath<Float> ePrice;
 
     //inherited
     public final DateTimePath<java.util.Date> expire;
+
+    public final NumberPath<Short> flo = createNumber("flo", Short.class);
 
     //inherited
     public final StringPath fNo;
@@ -81,10 +91,14 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    public final StringPath jobl = createString("jobl");
+
     //inherited
     public final StringPath level;
 
     public final NumberPath<Float> load = createNumber("load", Float.class);
+
+    public final StringPath luf = createString("luf");
 
     // inherited
     public final md.cm.unit.QUnit makeU;
@@ -106,7 +120,9 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final StringPath name;
 
-    public final BooleanPath norm = createBoolean("norm");
+    public final BooleanPath nnor = createBoolean("nnor");
+
+    public final NumberPath<Short> ns = createNumber("ns", Short.class);
 
     //inherited
     public final DateTimePath<java.util.Date> nxtD1;
@@ -126,6 +142,10 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final StringPath pa;
 
+    public final StringPath pcs = createString("pcs");
+
+    public final NumberPath<Float> pcw = createNumber("pcw", Float.class);
+
     //inherited
     public final StringPath plNo;
 
@@ -133,6 +153,8 @@ public class QCrane extends EntityPathBase<Crane> {
 
     // inherited
     public final md.cm.geography.QAddress pos;
+
+    public final NumberPath<Float> rang = createNumber("rang", Float.class);
 
     //inherited
     public final StringPath rcod;
@@ -164,6 +186,10 @@ public class QCrane extends EntityPathBase<Crane> {
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
+
+    public final StringPath tm = createString("tm");
+
+    public final StringPath tno = createString("tno");
 
     public final BooleanPath two = createBoolean("two");
 
@@ -198,6 +224,8 @@ public class QCrane extends EntityPathBase<Crane> {
 
     //inherited
     public final NumberPath<Integer> version;
+
+    public final NumberPath<Float> vl = createNumber("vl", Float.class);
 
     public final BooleanPath walk = createBoolean("walk");
 

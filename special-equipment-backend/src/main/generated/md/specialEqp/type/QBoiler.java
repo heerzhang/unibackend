@@ -27,6 +27,8 @@ public class QBoiler extends EntityPathBase<Boiler> {
     //inherited
     public final DateTimePath<java.util.Date> accpDt;
 
+    public final StringPath bmod = createString("bmod");
+
     public final StringPath btp = createString("btp");
 
     //inherited
@@ -126,6 +128,8 @@ public class QBoiler extends EntityPathBase<Boiler> {
 
     public final NumberPath<Float> power = createNumber("power", Float.class);
 
+    public final NumberPath<Float> pres = createNumber("pres", Float.class);
+
     //inherited
     public final StringPath rcod;
 
@@ -182,8 +186,6 @@ public class QBoiler extends EntityPathBase<Boiler> {
 
     //inherited
     public final NumberPath<Integer> version;
-
-    public final StringPath volume = createString("volume");
 
     public final BooleanPath wall = createBoolean("wall");
 
