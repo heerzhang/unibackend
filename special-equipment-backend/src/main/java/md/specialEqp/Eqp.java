@@ -58,6 +58,20 @@ public class Eqp implements Equipment{
     private Boolean valid=true;
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //@Column(length =128, unique = true)
+
+    /**
+     * Central repository marker interface. Captures the domain type to manage as well as the domain type's id type. General
+     * purpose is to hold type information as well as being able to discover interfaces that extend this one during
+     * classpath scanning for easy Spring bean creation.
+     * <p>
+     * Domain repositories extending this interface can selectively expose CRUD methods by simply declaring methods of the
+     * same signature as those declared in {@link CrudRepository}.
+     *
+     * @see CrudRepository
+     * @param <T> the domain type the repository manages
+     * @param <ID> the type of the id of the entity the repository manages
+     * @author Oliver Gierke
+     */
     @Field
     @Column(length =40)
     private String oid;     //OIDNO每一个省份监察机构自己产生的易识别码。
@@ -79,7 +93,7 @@ public class Eqp implements Equipment{
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sNo;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
-    //[合并字段]PIPELINE_LEVEL，管道独立的?
+    //[合并字段]PIPELINE_LEVEL，管道独立的? 游乐AMUS_TYPE游乐设施等级类型
     private String level;    //EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
     private String fNo;   //FACTORY_COD  出厂编号
     private String name;    //EQP_NAME 设备名称

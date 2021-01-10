@@ -38,3 +38,4 @@ public class PipingUnit {
     private Float len;  //LENGTH；
 }
 
+//不可改技术参数：

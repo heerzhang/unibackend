@@ -40,4 +40,6 @@ public class Elevator  extends Eqp {
 }
 
 
+//不可改技术参数：
+
 //@NoArgsConstructor缺少导致 No default constructor for entity:  : md.specialEqp.type.电梯

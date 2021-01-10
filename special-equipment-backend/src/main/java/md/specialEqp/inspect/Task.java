@@ -12,6 +12,12 @@ import java.util.Set;
 
 //旧平台1个TASK映射1个ISP{可以多分项SubISPid}；Isp流转后出报告内容。
 //这里放置每次作业时刻定夺动态的参数。
+//如果两台同时进行检验的，按收费总额的90%收(单一次派工出去的/单任务?同种设备数) 开发票INVC 一对多 Task; 如何确认证明呢/处理进度若不一样/那个环节谁可以。
+//TODO: Isp Task 关系哦 1:N? 1:1?  多分项报告 WF_TODO;
+//部门分配给单OFFICE_ID;科室分配{单个=组长？PROJ_USER_ID},=> 派工;责任人PROJ_USER_ID,任务负责人==.E_PROJ_USER_ID'任务负责人==责任工程师==负责人;编制人属于检验人之一。
+//派工人ASG_USER_ID:可以是?编制人或责任人;ISP_USER编制/检验人JY_MEN，审核PROJ_USER_ID CHEK_USER_ID：等级较高=科室主任；批准APPR_USER_ID：业务上算最高级别=中层干部。
+//部门分配科室分配派工人竟然全是编制人自己？奇葩。 编制人{写报告的人}属于检验人员之中主要人员。
+
 
 @Getter
 @Setter
@@ -46,13 +52,21 @@ public class Task {
     private Date date;
     private String status;
     private String  fee;
-    //[两个归并字段]只是前端显示区别；.IF_AQ_TEST '4000是否安全监控管理系统试验验证'
+    //[两个归并字段]只是前端显示区别；TB_TASK_MGE.IF_HOLD_TEST'4000是否载荷试验'？
     private Boolean test;   //.IF_WORKEQP_TEST '5000厂车是否工作装置测试'
+    private Boolean verif;  //.IF_AQ_TEST '4000是否安全监控管理系统试验验证'
 
     private Float cost;  //TB_TASK_MGE.INST_PRICE单台工程施工费（单位:万元）
+    //todo:在化学介质、易燃介质等毒性危害和爆炸危险环境下进行检验作业或接触生产性粉尘作业危害程度在II级（含II级）及II级以上环境下进行检验作业的加收30%；
+    //设置加急，发起人？验证时间截至期限。
+    //加急检验（三个工作日取检验报告）加收20%; 条款？        =? 影响Isp流转催促/审核等环节了。
 
+    //廉租住房、公共租赁住房、经济适用住房和棚户区改造安置住房等保障性安居工程项目免收行政事业性收费和政府性基金=扯呼; 临时起的帽子，属性? 例外申请途径/批准配置。
 
+    //是否使用年限到期了
+    //类型： 常规任务
 }
+
 
 
 /*

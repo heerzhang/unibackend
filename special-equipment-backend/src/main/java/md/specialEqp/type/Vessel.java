@@ -30,4 +30,4 @@ public class Vessel extends Eqp {
     private Short upper; //CAPABLIMITNUM氧舱2400 容限（人）；
 }
 
-
+//不可改技术参数：

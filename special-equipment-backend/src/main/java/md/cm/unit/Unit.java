@@ -63,6 +63,7 @@ public class Unit {
 
 
     //个人，行业
+    //减免收费的依据条件/使用单位的性质:INDUSTRY_PROP_COD==O82||INDUSTRY_PROP_COD==O821||,,树状编码
     private String  indCod;  //行业性质INDUSTRY_PROP_COD    认定为个人Z01||length(a.UNT_NAME)<<3;
     //mtp=1 =2 没有本质区别，若=1 无需设置地址, =2 应当为分支机构设置地址但是若下挂部门也可以不设地址，mtp=0没有分支部门或机构。
     //管理部门类型 0:无内设， mtp=1 内设管理部门, mtp=2 内设分支机构

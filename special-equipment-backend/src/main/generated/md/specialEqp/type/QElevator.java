@@ -57,6 +57,8 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final StringPath fNo;
 
+    public final NumberPath<Float> hlif = createNumber("hlif", Float.class);
+
     //inherited
     public final NumberPath<Long> id;
 
@@ -78,7 +80,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final StringPath level;
 
-    public final StringPath liftHeight = createString("liftHeight");
+    public final NumberPath<Float> lwalk = createNumber("lwalk", Float.class);
 
     // inherited
     public final md.cm.unit.QUnit makeU;
@@ -98,6 +100,10 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final StringPath name;
 
+    public final NumberPath<Short> nflo = createNumber("nflo", Short.class);
+
+    public final BooleanPath norm = createBoolean("norm");
+
     //inherited
     public final DateTimePath<java.util.Date> nxtD1;
 
@@ -110,8 +116,13 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final StringPath oid;
 
+    public final BooleanPath oldB = createBoolean("oldB");
+
     // inherited
     public final md.cm.unit.QUnit owner;
+
+    //inherited
+    public final StringPath pa;
 
     //inherited
     public final StringPath plNo;
@@ -132,10 +143,17 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final md.cm.unit.QUnit remU;
 
     //inherited
+    public final StringPath safe;
+
+    //inherited
     public final StringPath sNo;
 
     //inherited
     public final StringPath sort;
+
+    public final NumberPath<Float> spd = createNumber("spd", Float.class);
+
+    public final BooleanPath spec = createBoolean("spec");
 
     //inherited
     public final StringPath subVart;
@@ -221,12 +239,14 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.occasion = _super.occasion;
         this.oid = _super.oid;
         this.owner = _super.owner;
+        this.pa = _super.pa;
         this.plNo = _super.plNo;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
         this.regU = _super.regU;
         this.remU = _super.remU;
+        this.safe = _super.safe;
         this.sNo = _super.sNo;
         this.sort = _super.sort;
         this.subVart = _super.subVart;

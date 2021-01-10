@@ -39,3 +39,4 @@ public class Pipeline extends Eqp {
 
 }
 
+//不可改技术参数：

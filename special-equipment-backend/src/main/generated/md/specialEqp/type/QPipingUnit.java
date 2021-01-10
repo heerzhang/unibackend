@@ -22,7 +22,15 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public static final QPipingUnit pipingUnit = new QPipingUnit("pipingUnit");
 
+    public final NumberPath<Float> dia = createNumber("dia", Float.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath lay = createString("lay");
+
+    public final NumberPath<Float> len = createNumber("len", Float.class);
+
+    public final StringPath matr = createString("matr");
 
     public final QPipeline pipe;
 

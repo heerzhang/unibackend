@@ -20,6 +20,8 @@ public class QTask extends EntityPathBase<Task> {
 
     public static final QTask task = new QTask("task");
 
+    public final NumberPath<Float> cost = createNumber("cost", Float.class);
+
     public final DateTimePath<java.util.Date> date = createDateTime("date", java.util.Date.class);
 
     public final StringPath dep = createString("dep");
@@ -33,6 +35,10 @@ public class QTask extends EntityPathBase<Task> {
     public final SetPath<Isp, QIsp> isps = this.<Isp, QIsp>createSet("isps", Isp.class, QIsp.class, PathInits.DIRECT2);
 
     public final StringPath status = createString("status");
+
+    public final BooleanPath test = createBoolean("test");
+
+    public final BooleanPath verif = createBoolean("verif");
 
     public QTask(String variable) {
         super(Task.class, forVariable(variable));

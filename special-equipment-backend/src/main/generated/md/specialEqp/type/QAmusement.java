@@ -81,6 +81,8 @@ public class QAmusement extends EntityPathBase<Amusement> {
     // inherited
     public final md.cm.unit.QUnit makeU;
 
+    public final BooleanPath mbig = createBoolean("mbig");
+
     //inherited
     public final StringPath model;
 
@@ -112,6 +114,9 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final md.cm.unit.QUnit owner;
 
     //inherited
+    public final StringPath pa;
+
+    //inherited
     public final StringPath plNo;
 
     // inherited
@@ -128,6 +133,9 @@ public class QAmusement extends EntityPathBase<Amusement> {
 
     // inherited
     public final md.cm.unit.QUnit remU;
+
+    //inherited
+    public final StringPath safe;
 
     //inherited
     public final StringPath sNo;
@@ -170,8 +178,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
 
     //inherited
     public final NumberPath<Integer> version;
-
-    public final StringPath volume = createString("volume");
 
     public QAmusement(String variable) {
         this(Amusement.class, forVariable(variable), INITS);
@@ -221,12 +227,14 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.occasion = _super.occasion;
         this.oid = _super.oid;
         this.owner = _super.owner;
+        this.pa = _super.pa;
         this.plNo = _super.plNo;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
         this.regU = _super.regU;
         this.remU = _super.remU;
+        this.safe = _super.safe;
         this.sNo = _super.sNo;
         this.sort = _super.sort;
         this.subVart = _super.subVart;

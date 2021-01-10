@@ -80,6 +80,8 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit owner;
 
+    public final StringPath pa = createString("pa");
+
     public final StringPath plNo = createString("plNo");
 
     public final md.cm.geography.QAddress pos;
@@ -91,6 +93,8 @@ public class QEqp extends EntityPathBase<Eqp> {
     public final md.cm.unit.QUnit regU;
 
     public final md.cm.unit.QUnit remU;
+
+    public final StringPath safe = createString("safe");
 
     public final StringPath sNo = createString("sNo");
 

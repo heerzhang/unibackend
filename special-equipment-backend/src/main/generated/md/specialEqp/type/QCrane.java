@@ -45,6 +45,8 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final StringPath contact;
 
+    public final BooleanPath cotr = createBoolean("cotr");
+
     //inherited
     public final BooleanPath cping;
 
@@ -56,6 +58,10 @@ public class QCrane extends EntityPathBase<Crane> {
 
     //inherited
     public final StringPath fNo;
+
+    public final BooleanPath grab = createBoolean("grab");
+
+    public final NumberPath<Float> hlf = createNumber("hlf", Float.class);
 
     //inherited
     public final NumberPath<Long> id;
@@ -78,11 +84,15 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final StringPath level;
 
+    public final NumberPath<Float> load = createNumber("load", Float.class);
+
     // inherited
     public final md.cm.unit.QUnit makeU;
 
     //inherited
     public final StringPath model;
+
+    public final NumberPath<Float> mom = createNumber("mom", Float.class);
 
     //inherited
     public final BooleanPath move;
@@ -95,6 +105,8 @@ public class QCrane extends EntityPathBase<Crane> {
 
     //inherited
     public final StringPath name;
+
+    public final BooleanPath norm = createBoolean("norm");
 
     //inherited
     public final DateTimePath<java.util.Date> nxtD1;
@@ -112,7 +124,12 @@ public class QCrane extends EntityPathBase<Crane> {
     public final md.cm.unit.QUnit owner;
 
     //inherited
+    public final StringPath pa;
+
+    //inherited
     public final StringPath plNo;
+
+    public final NumberPath<Short> pnum = createNumber("pnum", Short.class);
 
     // inherited
     public final md.cm.geography.QAddress pos;
@@ -130,16 +147,27 @@ public class QCrane extends EntityPathBase<Crane> {
     public final md.cm.unit.QUnit remU;
 
     //inherited
+    public final StringPath safe;
+
+    //inherited
     public final StringPath sNo;
 
     //inherited
     public final StringPath sort;
 
+    public final NumberPath<Float> span = createNumber("span", Float.class);
+
     //inherited
     public final StringPath subVart;
 
+    public final BooleanPath suck = createBoolean("suck");
+
     //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
+
+    public final BooleanPath two = createBoolean("two");
+
+    public final BooleanPath twoc = createBoolean("twoc");
 
     //inherited
     public final StringPath type;
@@ -171,7 +199,9 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final NumberPath<Integer> version;
 
-    public final StringPath volume = createString("volume");
+    public final BooleanPath walk = createBoolean("walk");
+
+    public final BooleanPath whole = createBoolean("whole");
 
     public QCrane(String variable) {
         this(Crane.class, forVariable(variable), INITS);
@@ -221,12 +251,14 @@ public class QCrane extends EntityPathBase<Crane> {
         this.occasion = _super.occasion;
         this.oid = _super.oid;
         this.owner = _super.owner;
+        this.pa = _super.pa;
         this.plNo = _super.plNo;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
         this.regU = _super.regU;
         this.remU = _super.remU;
+        this.safe = _super.safe;
         this.sNo = _super.sNo;
         this.sort = _super.sort;
         this.subVart = _super.subVart;

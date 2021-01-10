@@ -197,7 +197,7 @@ SUB_EQP_VART!=1002=〉大项套子项目TB_DICT_FEESTANDARD.FEE_TAG'1主收费 0
 TB_DICT_EXTRAFEE_MODIFIED.EXTRAFEE_TYPE'0过程价1最终价2过程完毕后附加价3自定义条'
 /.FEE_MOD作废 '收费类型(8：基础收费加收?srcPrice）（9：1基础+2附加+8基础加收?tmpCalPrice）10自定义条'
 INDUSTRY_PROP_COD==O82||INDUSTRY_PROP_COD==O821||
-nu_ll==1表达True?明面上多收可能/油头; .ISP_TYPE2=8000检验费低于500元的按500元收取;
+nu_ll==1表达True?明面上多收可能/油头; .ISP_TYPE2承压 ,管道8000检验费低于500元的按500元收取;
 如果两台同时进行检验的，按收费总额的90%收(单任务同种设备数);
 在化学介质、易燃介质等毒性危害和爆炸危险环境下进行检验作业或接触生产性粉尘作业危害程度在II级（含II级）及II级以上环境下进行检验作业的加收30%；
 减免有相反问题：裁量权/用户知情没=不走途。

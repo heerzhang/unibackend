@@ -27,6 +27,8 @@ public class QBoiler extends EntityPathBase<Boiler> {
     //inherited
     public final DateTimePath<java.util.Date> accpDt;
 
+    public final StringPath btp = createString("btp");
+
     //inherited
     public final NumberPath<Byte> cag;
 
@@ -56,6 +58,8 @@ public class QBoiler extends EntityPathBase<Boiler> {
 
     //inherited
     public final StringPath fNo;
+
+    public final StringPath form = createString("form");
 
     //inherited
     public final NumberPath<Long> id;
@@ -112,10 +116,15 @@ public class QBoiler extends EntityPathBase<Boiler> {
     public final md.cm.unit.QUnit owner;
 
     //inherited
+    public final StringPath pa;
+
+    //inherited
     public final StringPath plNo;
 
     // inherited
     public final md.cm.geography.QAddress pos;
+
+    public final NumberPath<Float> power = createNumber("power", Float.class);
 
     //inherited
     public final StringPath rcod;
@@ -128,6 +137,9 @@ public class QBoiler extends EntityPathBase<Boiler> {
 
     // inherited
     public final md.cm.unit.QUnit remU;
+
+    //inherited
+    public final StringPath safe;
 
     //inherited
     public final StringPath sNo;
@@ -172,6 +184,8 @@ public class QBoiler extends EntityPathBase<Boiler> {
     public final NumberPath<Integer> version;
 
     public final StringPath volume = createString("volume");
+
+    public final BooleanPath wall = createBoolean("wall");
 
     public QBoiler(String variable) {
         this(Boiler.class, forVariable(variable), INITS);
@@ -221,12 +235,14 @@ public class QBoiler extends EntityPathBase<Boiler> {
         this.occasion = _super.occasion;
         this.oid = _super.oid;
         this.owner = _super.owner;
+        this.pa = _super.pa;
         this.plNo = _super.plNo;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
         this.regU = _super.regU;
         this.remU = _super.remU;
+        this.safe = _super.safe;
         this.sNo = _super.sNo;
         this.sort = _super.sort;
         this.subVart = _super.subVart;

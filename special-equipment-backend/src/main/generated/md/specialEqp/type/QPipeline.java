@@ -83,6 +83,8 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     // inherited
     public final md.cm.unit.QUnit makeU;
 
+    public final StringPath matr = createString("matr");
+
     //inherited
     public final StringPath model;
 
@@ -114,6 +116,9 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     public final md.cm.unit.QUnit owner;
 
     //inherited
+    public final StringPath pa;
+
+    //inherited
     public final StringPath plNo;
 
     // inherited
@@ -130,6 +135,9 @@ public class QPipeline extends EntityPathBase<Pipeline> {
 
     // inherited
     public final md.cm.unit.QUnit remU;
+
+    //inherited
+    public final StringPath safe;
 
     //inherited
     public final StringPath sNo;
@@ -172,8 +180,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
 
     //inherited
     public final NumberPath<Integer> version;
-
-    public final StringPath volume = createString("volume");
 
     public QPipeline(String variable) {
         this(Pipeline.class, forVariable(variable), INITS);
@@ -223,12 +229,14 @@ public class QPipeline extends EntityPathBase<Pipeline> {
         this.occasion = _super.occasion;
         this.oid = _super.oid;
         this.owner = _super.owner;
+        this.pa = _super.pa;
         this.plNo = _super.plNo;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
         this.regU = _super.regU;
         this.remU = _super.remU;
+        this.safe = _super.safe;
         this.sNo = _super.sNo;
         this.sort = _super.sort;
         this.subVart = _super.subVart;
