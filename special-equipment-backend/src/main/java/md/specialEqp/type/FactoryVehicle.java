@@ -14,16 +14,15 @@ import javax.persistence.Entity;
 @Entity
 public class FactoryVehicle extends Eqp {
     //5000场（厂）内专用机动车辆   TB_VEHIC_PARA
-    private String  plat;      //厂车牌照"CATLICENNUM"
-/*
-    public FactoryVehicle(String cod, String type, String oid){
-        super(cod,type,oid);
-        volume="820升";
-    }
-    */
-    private Float  load;    //额定载荷"RATEDLOADWEIG"
-    private String  emod;   //发动机型号"ENGINEMODEL"
-    private String  pmd;   //动力方式"DYNAMICMODE"
+    /**厂车牌照"CATLICENNUM"*/
+    private String  plat;
+    /**额定载荷"RATEDLOADWEIG"*/
+    private Float load;
+    /**发动机型号"ENGINEMODEL"*/
+    private String  mtm;
+
+    /**动力方式"DYNAMICMODE"*/
+    private String  pow;
 }
 
 
