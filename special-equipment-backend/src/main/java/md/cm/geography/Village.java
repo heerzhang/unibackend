@@ -22,7 +22,7 @@ public class Village {
 
     //简单公用叫法的。
     private String  name;  //楼盘名     BUILD_NAME  TB_HOUSE_MGE
-    //监察平台=〉维保单位覆盖楼盘统计　楼盘名称：from eqp  Where mtU.=UNT_NAME  Group by pos.vlg.BUILDNAME;
+    //监察平台=〉维保单位覆盖楼盘统计　楼盘名称：from eqp  Where mtu.=UNT_NAME  Group by pos.vlg.BUILDNAME;
 
     private String type;    //.INST_BUILD_TYPE楼盘性质。,商品房、复建房、拆迁安置房、廉租房、回迁房、经济适用房、限价房,棚户区。
 

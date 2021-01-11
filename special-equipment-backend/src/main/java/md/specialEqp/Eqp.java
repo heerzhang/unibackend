@@ -74,29 +74,31 @@ public class Eqp implements Equipment{
     private String type;    //设备种类 EQP_TYPE{首1个字符} ,
     private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
-    private String subVart;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
+    private String subv;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
     //不能用private char   在H2无法建，Character占2字节
     private Byte   reg;   //EQP_REG_STA 注册
     //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
     private Byte   ust;   //EQP_USE_STA 状态码
     private Byte   cag;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
     private String cert;    //EQP_USECERT_COD 使用证号
-    private String sNo;    //EQP_STATION_COD 设备代码(设备国家代码)
+    private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
-    //[合并字段]PIPELINE_LEVEL，管道独立的? 游乐AMUS_TYPE游乐设施等级类型
-    private String level;    //EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
-    private String fNo;   //FACTORY_COD  出厂编号
+    /**EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
+     * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
+    */
+    private String level;
+    private String fno;   //FACTORY_COD  出厂编号
     private String name;    //EQP_NAME 设备名称
     //不能用保留字。private String inner;
     //附加上后更加能精确定位某个地理空间的位置
-    private String  plNo;    //EQP_INNER_COD 单位内部编号place No
+    private String plno;    //EQP_INNER_COD 单位内部编号place No
     //不能用保留字。private String mod;
     private String  model;    //EQP_MOD 设备型号
     private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
-    private Boolean  important;   //IF_MAJEQP 是否重要特种设备
+    private Boolean  vital;   //IF_MAJEQP 是否重要特种设备
     //private Date  instDate;
-    private Date    useDt;  //FIRSTUSE_DATE 设备投用日期
-    private Date    accpDt;  //COMPE_ACCP_DATE 竣工验收日期
+    private Date used;  //FIRSTUSE_DATE 设备投用日期
+    private Date accd;  //COMPE_ACCP_DATE 竣工验收日期
     //.EXTEND_USE_YEAR延长使用年限; .MAKE_DATE制造日期
     private Date    expire;  //DESIGN_USE_OVERYEAR设计使用年限 到期年份 //END_USE_DATE 使用年限到期时间
     private Boolean  move;   //IS_MOVEEQP 是否流动设备  流动作业设备才会出现省外JC注册　使用证/编码都是外省旧的,oidno才是新的。
@@ -104,10 +106,10 @@ public class Eqp implements Equipment{
     //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
     //  private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     //.EQP_USE_PLACE场所性质　？不一样概念，或Address pos底下附加属性。
-    private String occasion;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
+    private String  occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
     //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
-    private Float  ePrice;   //算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
+    private Float money;   //算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
     private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
     //还没有做出结论判定的，就直接上null；
     private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
@@ -117,14 +119,14 @@ public class Eqp implements Equipment{
     private String ccl1;    //LAST_ISP_CONCLU1  '最后一次检验结论1'
     //判定为合格的或者勉强合格的，带注释提示但是合格的， 还没有做出结论判定的，就直接上null；
     private String ccl2;    //LAST_ISP_CONCLU2  '最后一次检验结论2'
-    private Date    ispD1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
-    private Date    ispD2;      //LAST_ISP_DATE2
+    private Date ispd1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
+    private Date ispd2;      //LAST_ISP_DATE2
     //有可能扩展?：检测记录，check 检测规定时间。
     //Instant? 纳秒时间,不使用java.util.Date
     //@Field(type = FieldType.Date, format = DateFormat.date_time)
-    //private Instant nxtD1;   规则：if等级1/3/的，耐压试验6年{2.5年}一次；
-    private Date nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
-    private Date nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+    //private Instant nxtd1;   规则：if等级1/3/的，耐压试验6年{2.5年}一次；
+    private Date nxtd1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
+    private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
 
     //索引会被自动创建的。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -132,17 +134,17 @@ public class Eqp implements Equipment{
     private Unit  owner;      //PROP_UNT_ID 产权单位
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "regu_id")
-    private Unit  regU;     //REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
+    private Unit regu;     //REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit  makeU;     //MAKE_UNT_ID 制造单位ID
+    private Unit makeu;     //MAKE_UNT_ID 制造单位ID
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit  insU;     //INST_UNT_ID 安装单位ID
+    private Unit insu;     //INST_UNT_ID 安装单位ID
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit  remU;     //ALT_UNT_ID 改造单位ID
+    private Unit remu;     //ALT_UNT_ID 改造单位ID
     //可以和使用单位地址不同的。
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
     @ManyToOne(fetch= FetchType.LAZY)
@@ -166,18 +168,18 @@ public class Eqp implements Equipment{
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Isp>  isps;
 
-    //底下这两组实际相当于内嵌结构对象，或者说[mtU，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
+    //底下这两组实际相当于内嵌结构对象，或者说[mtu，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit   mtU;     //MANT_UNT_ID 维保单位ID maintUnt
+    private Unit mtu;     //MANT_UNT_ID 维保单位ID maintUnt
     //针对维保单位的细化　分支机构部门。
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'；检验平台没有设置该数据。
-    //若是个人就一定没分支部门；[useU，usud]复合字段的；
+    //若是个人就一定没分支部门；[useu，usud]复合字段的；
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit  useU;     //USE_UNT_ID 使用单位ID
+    private Unit useu;     //USE_UNT_ID 使用单位ID
     //针对使用单位的细化　管理分支部门。
     //假如设备表没有指定Division部门的，那就是Unit作为缺省部门:等价于该单位底下没有细分的部门，若要求具体Division但是该单位没有细分Division情形。
     //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
@@ -259,6 +261,6 @@ join爆炸记录数范例 @NamedEntityGraph( name="Eqp.task",attributeNodes={　
 
 //注解定制索引，没啥实际意义。
 //@Table(indexes={ @Index(name="type_idx",columnList="type"),
-//         　 @Index(name="factoryNo_idx",columnList="fNo")  } )
+//         　 @Index(name="factoryNo_idx",columnList="fno")  } )
 
 //二级缓存可移植性@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast") 这里region是按照配置来区分的区分标识，竟然不省略。

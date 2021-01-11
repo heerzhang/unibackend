@@ -25,7 +25,7 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final md.specialEqp.QEqp _super;
 
     //inherited
-    public final DateTimePath<java.util.Date> accpDt;
+    public final DateTimePath<java.util.Date> accd;
 
     //inherited
     public final NumberPath<Byte> cag;
@@ -48,47 +48,62 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final BooleanPath cping;
 
-    //inherited
-    public final NumberPath<Float> ePrice;
+    public final StringPath dim = createString("dim");
 
     //inherited
     public final DateTimePath<java.util.Date> expire;
 
     //inherited
-    public final StringPath fNo;
+    public final StringPath fno;
+
+    public final StringPath form = createString("form");
+
+    public final NumberPath<Float> full = createNumber("full", Float.class);
+
+    public final NumberPath<Float> high = createNumber("high", Float.class);
 
     //inherited
     public final NumberPath<Long> id;
 
-    //inherited
-    public final BooleanPath important;
-
     // inherited
-    public final md.cm.unit.QUnit insU;
+    public final md.cm.unit.QUnit insu;
+
+    public final StringPath insul = createString("insul");
 
     //inherited
-    public final DateTimePath<java.util.Date> ispD1;
+    public final DateTimePath<java.util.Date> ispd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispD2;
+    public final DateTimePath<java.util.Date> ispd2;
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    public final StringPath jakm = createString("jakm");
+
     //inherited
     public final StringPath level;
 
+    public final NumberPath<Float> load = createNumber("load", Float.class);
+
     // inherited
-    public final md.cm.unit.QUnit makeU;
+    public final md.cm.unit.QUnit makeu;
+
+    public final StringPath mdi = createString("mdi");
 
     //inherited
     public final StringPath model;
 
     //inherited
+    public final NumberPath<Float> money;
+
+    public final StringPath mont = createString("mont");
+
+    //inherited
     public final BooleanPath move;
 
     // inherited
-    public final md.cm.unit.QUnit mtU;
+    public final md.cm.unit.QUnit mtu;
 
     // inherited
     public final md.cm.unit.QDivision mtud;
@@ -97,13 +112,13 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath name;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtD1;
+    public final DateTimePath<java.util.Date> nxtd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtD2;
+    public final DateTimePath<java.util.Date> nxtd2;
 
     //inherited
-    public final StringPath occasion;
+    public final StringPath occa;
 
     //inherited
     public final StringPath oid;
@@ -114,13 +129,17 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final StringPath pa;
 
+    public final StringPath plat = createString("plat");
+
     //inherited
-    public final StringPath plNo;
+    public final StringPath plno;
+
+    public final NumberPath<Short> pnum = createNumber("pnum", Short.class);
 
     // inherited
     public final md.cm.geography.QAddress pos;
 
-    public final NumberPath<Float> pres = createNumber("pres", Float.class);
+    public final StringPath prs = createString("prs");
 
     //inherited
     public final StringPath rcod;
@@ -129,22 +148,22 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final NumberPath<Byte> reg;
 
     // inherited
-    public final md.cm.unit.QUnit regU;
+    public final md.cm.unit.QUnit regu;
 
     // inherited
-    public final md.cm.unit.QUnit remU;
+    public final md.cm.unit.QUnit remu;
 
     //inherited
     public final StringPath safe;
 
     //inherited
-    public final StringPath sNo;
+    public final StringPath sno;
 
     //inherited
     public final StringPath sort;
 
     //inherited
-    public final StringPath subVart;
+    public final StringPath subv;
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
@@ -158,13 +177,11 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final BooleanPath unqf2;
 
-    public final NumberPath<Short> upper = createNumber("upper", Short.class);
-
     //inherited
-    public final DateTimePath<java.util.Date> useDt;
+    public final DateTimePath<java.util.Date> used;
 
     // inherited
-    public final md.cm.unit.QUnit useU;
+    public final md.cm.unit.QUnit useu;
 
     //inherited
     public final NumberPath<Byte> ust;
@@ -181,7 +198,12 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final NumberPath<Integer> version;
 
-    public final NumberPath<Float> vol = createNumber("vol", Float.class);
+    //inherited
+    public final BooleanPath vital;
+
+    public final StringPath vol = createString("vol");
+
+    public final NumberPath<Float> weig = createNumber("weig", Float.class);
 
     public QVessel(String variable) {
         this(Vessel.class, forVariable(variable), INITS);
@@ -202,7 +224,7 @@ public class QVessel extends EntityPathBase<Vessel> {
     public QVessel(Class<? extends Vessel> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new md.specialEqp.QEqp(type, metadata, inits);
-        this.accpDt = _super.accpDt;
+        this.accd = _super.accd;
         this.cag = _super.cag;
         this.ccl1 = _super.ccl1;
         this.ccl2 = _super.ccl2;
@@ -210,49 +232,49 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.cod = _super.cod;
         this.contact = _super.contact;
         this.cping = _super.cping;
-        this.ePrice = _super.ePrice;
         this.expire = _super.expire;
-        this.fNo = _super.fNo;
+        this.fno = _super.fno;
         this.id = _super.id;
-        this.important = _super.important;
-        this.insU = _super.insU;
-        this.ispD1 = _super.ispD1;
-        this.ispD2 = _super.ispD2;
+        this.insu = _super.insu;
+        this.ispd1 = _super.ispd1;
+        this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
         this.level = _super.level;
-        this.makeU = _super.makeU;
+        this.makeu = _super.makeu;
         this.model = _super.model;
+        this.money = _super.money;
         this.move = _super.move;
-        this.mtU = _super.mtU;
+        this.mtu = _super.mtu;
         this.mtud = _super.mtud;
         this.name = _super.name;
-        this.nxtD1 = _super.nxtD1;
-        this.nxtD2 = _super.nxtD2;
-        this.occasion = _super.occasion;
+        this.nxtd1 = _super.nxtd1;
+        this.nxtd2 = _super.nxtd2;
+        this.occa = _super.occa;
         this.oid = _super.oid;
         this.owner = _super.owner;
         this.pa = _super.pa;
-        this.plNo = _super.plNo;
+        this.plno = _super.plno;
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
-        this.regU = _super.regU;
-        this.remU = _super.remU;
+        this.regu = _super.regu;
+        this.remu = _super.remu;
         this.safe = _super.safe;
-        this.sNo = _super.sNo;
+        this.sno = _super.sno;
         this.sort = _super.sort;
-        this.subVart = _super.subVart;
+        this.subv = _super.subv;
         this.task = _super.task;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;
         this.unqf2 = _super.unqf2;
-        this.useDt = _super.useDt;
-        this.useU = _super.useU;
+        this.used = _super.used;
+        this.useu = _super.useu;
         this.ust = _super.ust;
         this.usud = _super.usud;
         this.valid = _super.valid;
         this.vart = _super.vart;
         this.version = _super.version;
+        this.vital = _super.vital;
     }
 
 }

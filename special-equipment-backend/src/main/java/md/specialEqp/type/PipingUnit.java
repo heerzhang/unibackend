@@ -34,23 +34,32 @@ public class PipingUnit {
     private String  start;
     /**管道止点END_PLACE; 看单线图和工程图*/
     private String  stop;
-    //todo: 级别enum ?
-    //.V_PIPELINE_LEVEL  '计费用-管道级别（[G][A-D][1-3]）'
-    //合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";// 管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},{id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},{id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},{id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
+
+    //todo: 级别enum ?  .V_PIPELINE_LEVEL  '计费用-管道级别（[G][A-D][1-3]）'
+
+    /**PIPELINE_LEVEL，管道的各个所属单元都可有自己单独设置的级别。
+     * 合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},
+     * {id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},
+     * {id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},
+     * {id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
+     */
+    private String level;
 
     /**PIPELINE_MEDIUM管道材质，@[{id:'钢制',text:'钢制'},{id:'PE管',text:'PE管'}]
      * 实际上　是标号 PE100;   20（GB/T8163-2008）
+     * 计费依据：PIPELINE_MEDIUM==钢制&&PIPELINE_LEVEL=!GA
      */
     private String  matr;
 
-    /**TB_PIPELINE_UNIT_PARA.LAY_MODE   is '敷设方式'         ??JSON非结构化    不规范
+    /**搬迁中字段，TB_PIPELINE_UNIT_PARA.LAY_MODE   is '敷设方式'         ??JSON非结构化    不规范
     *TB_PIPELINE_UNIT_PARA.V_LAY_MODE  is '计费用-敷设方式（架空、埋地、其他）' ？？标准化Enum?比较少
      * LAY_MODE管道敷设方式[{id:'埋地',text:'埋地'},{id:'架空',text:'架空'},{id:'其它',text:'其它'}]
     */
     private String  lay;
 
-    /**NOMINAL_DIA公称直径（mm）不规范　φ168，有很多数据。
+    /**搬迁中字段，NOMINAL_DIA公称直径（mm）；   不规范　φ168，有很多数据。
      * .V_PIPELINE_DIA  '计费用-管道直径（公称直径mm）规范，数据较少;
+     * 计费依据：NOMINAL_DIA>=50.0&&NOMINAL_DIA<=150.0  + length;
      */
     private Float dia;
 
@@ -62,9 +71,9 @@ public class PipingUnit {
 
     //关联 备份字段：
     /**下次年检日期YEAR_NEXT_ISP_DATE；*/
-    private Date nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
+    private Date nxtd1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
     /**定检下检日期NEXT_ISP_DATE；*/
-    private Date nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+    private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
     //省略掉：监检报告下检日期INCP_NEXT_ISP_DATE；
 
     //todo:关联 Isp字段：
@@ -83,3 +92,10 @@ public class PipingUnit {
 
 //NOMINAL_DIA>=50.0&&NOMINAL_DIA<=150.0  + length;
 //单项管道检验总长度;  LAY_MODE=!埋地||LAY_MODE=!架空     //PIPELINE_MEDIUM==钢制&&PIPELINE_LEVEL=!GA
+/*
+管道的分类、级别及界别划分http://xinzhi.wenda.so.com/a/1511970916201369
+GA类(长输管道)又分为：GA1类、GA2类；
+GB类(公用管道)又分为：GB1类、GB2类；
+GC类(工业管道)又分为：GC1类、GC2类、GC3类；工业管道=是指企业、事业单位所属的;
+GD类(动力管道) 又分为：GD1类、GD2类。 动力管道=火力发电厂用于输送蒸汽、汽水两相介质的管道
+*/

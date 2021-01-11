@@ -218,30 +218,30 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
             if (each.getEqpcod()!=null)
                 builder.and(qm2.cod.eq(each.getEqpcod()));
             if (each.getFACTORY_COD()!=null)
-                builder.and(qm2.fNo.eq(each.getFACTORY_COD()));
+                builder.and(qm2.fno.eq(each.getFACTORY_COD()));
             if (each.getEQP_USECERT_COD()!=null)
                 builder.and(qm2.cert.eq(each.getEQP_USECERT_COD()));
             if (each.getREG_UNT_ID()!=null)
-                builder.and(qm2.regU.oldId.eq(each.getREG_UNT_ID()));
+                builder.and(qm2.regu.oldId.eq(each.getREG_UNT_ID()));
             //确保设备不重复！
             Eqp eqp;
             if(eQPRepository.exists(builder)) {
                 retMsgs.add("成功");
                 continue;
             }
-            eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subVart(each.getSUB_EQP_VART())
-                .reg(each.getEQP_REG_STA()).ust(each.getEQP_USE_STA()).cag(each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sNo(each.getEQP_STATION_COD())
-                .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fNo(each.getFACTORY_COD()).name(each.getEQP_NAME()).plNo(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
-                .cping(each.getIF_INCPING()=='1').important(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
-                    .useDt(each.getFIRSTUSE_DATE())
-                .accpDt(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
+            eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subv(each.getSUB_EQP_VART())
+                .reg(each.getEQP_REG_STA()).ust(each.getEQP_USE_STA()).cag(each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
+                .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fno(each.getFACTORY_COD()).name(each.getEQP_NAME()).plno(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
+                .cping(each.getIF_INCPING()=='1').vital(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
+                    .used(each.getFIRSTUSE_DATE())
+                .accd(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
                     .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1')
-                .occasion(each.getEQP_USE_OCCA())
-                    .ePrice(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).contact(each.getUSE_MOBILE())
+                .occa(each.getEQP_USE_OCCA())
+                    .money(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).contact(each.getUSE_MOBILE())
                     .unqf1(each.getNOTELIGIBLE_FALG1()).unqf2(each.getNOTELIGIBLE_FALG2())
                     .ccl1(each.getLAST_ISP_CONCLU1()).ccl2(each.getLAST_ISP_CONCLU2())
-                    .ispD1(each.getLAST_ISP_DATE1()).ispD2(each.getLAST_ISP_DATE2()).nxtD1(each.getNEXT_ISP_DATE1())
-                .nxtD2(each.getNEXT_ISP_DATE2()).build();
+                    .ispd1(each.getLAST_ISP_DATE1()).ispd2(each.getLAST_ISP_DATE2()).nxtd1(each.getNEXT_ISP_DATE1())
+                .nxtd2(each.getNEXT_ISP_DATE2()).build();
             QUnit qm = QUnit.unit;
             Unit unit;
 
@@ -257,37 +257,37 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getREG_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setRegU(unit);
+                eqp.setRegu(unit);
             }
             if(each.getUSE_UNT_ID()!=null) {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getUSE_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setUseU(unit);
+                eqp.setUseu(unit);
             }
             if(each.getMANT_UNT_ID()!=null) {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getMANT_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setMtU(unit);
+                eqp.setMtu(unit);
             }
             if(each.getMAKE_UNT_ID()!=null) {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getMAKE_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setMakeU(unit);
+                eqp.setMakeu(unit);
             }
             if(each.getINST_UNT_ID()!=null) {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getINST_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setInsU(unit);
+                eqp.setInsu(unit);
             }
             if(each.getALT_UNT_ID()!=null) {
                 builder = new BooleanBuilder();
                 builder.and(qm.oldId.eq(each.getALT_UNT_ID()));
                 unit = unitRepository.findOne(builder).orElse(null);
-                eqp.setRemU(unit);
+                eqp.setRemu(unit);
             }
             Eqp targ;
             if(each.getEQP_TYPE().equals("3000"))
@@ -350,7 +350,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
             EqpEs eqp=eqpEsRepository.findById(eqpfrom.getId()).orElse(null);
             if(null!=eqpfrom){
                 Map<String, Object> params = new HashMap<>();
-                Unit  useU=eqpfrom.getUseU();
+                Unit  useU=eqpfrom.getUseu();
                 if(null!=useU) {
                     UnitEs unitEs = new UnitEs();
                     unitEs.setId(useU.getId());

@@ -22,7 +22,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public static final QEqp eqp = new QEqp("eqp");
 
-    public final DateTimePath<java.util.Date> accpDt = createDateTime("accpDt", java.util.Date.class);
+    public final DateTimePath<java.util.Date> accd = createDateTime("accd", java.util.Date.class);
 
     public final NumberPath<Byte> cag = createNumber("cag", Byte.class);
 
@@ -38,43 +38,41 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final BooleanPath cping = createBoolean("cping");
 
-    public final NumberPath<Float> ePrice = createNumber("ePrice", Float.class);
-
     public final DateTimePath<java.util.Date> expire = createDateTime("expire", java.util.Date.class);
 
-    public final StringPath fNo = createString("fNo");
+    public final StringPath fno = createString("fno");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath important = createBoolean("important");
+    public final md.cm.unit.QUnit insu;
 
-    public final md.cm.unit.QUnit insU;
+    public final DateTimePath<java.util.Date> ispd1 = createDateTime("ispd1", java.util.Date.class);
 
-    public final DateTimePath<java.util.Date> ispD1 = createDateTime("ispD1", java.util.Date.class);
-
-    public final DateTimePath<java.util.Date> ispD2 = createDateTime("ispD2", java.util.Date.class);
+    public final DateTimePath<java.util.Date> ispd2 = createDateTime("ispd2", java.util.Date.class);
 
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
     public final StringPath level = createString("level");
 
-    public final md.cm.unit.QUnit makeU;
+    public final md.cm.unit.QUnit makeu;
 
     public final StringPath model = createString("model");
 
+    public final NumberPath<Float> money = createNumber("money", Float.class);
+
     public final BooleanPath move = createBoolean("move");
 
-    public final md.cm.unit.QUnit mtU;
+    public final md.cm.unit.QUnit mtu;
 
     public final md.cm.unit.QDivision mtud;
 
     public final StringPath name = createString("name");
 
-    public final DateTimePath<java.util.Date> nxtD1 = createDateTime("nxtD1", java.util.Date.class);
+    public final DateTimePath<java.util.Date> nxtd1 = createDateTime("nxtd1", java.util.Date.class);
 
-    public final DateTimePath<java.util.Date> nxtD2 = createDateTime("nxtD2", java.util.Date.class);
+    public final DateTimePath<java.util.Date> nxtd2 = createDateTime("nxtd2", java.util.Date.class);
 
-    public final StringPath occasion = createString("occasion");
+    public final StringPath occa = createString("occa");
 
     public final StringPath oid = createString("oid");
 
@@ -82,7 +80,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath pa = createString("pa");
 
-    public final StringPath plNo = createString("plNo");
+    public final StringPath plno = createString("plno");
 
     public final md.cm.geography.QAddress pos;
 
@@ -90,17 +88,17 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final NumberPath<Byte> reg = createNumber("reg", Byte.class);
 
-    public final md.cm.unit.QUnit regU;
+    public final md.cm.unit.QUnit regu;
 
-    public final md.cm.unit.QUnit remU;
+    public final md.cm.unit.QUnit remu;
 
     public final StringPath safe = createString("safe");
 
-    public final StringPath sNo = createString("sNo");
+    public final StringPath sno = createString("sno");
 
     public final StringPath sort = createString("sort");
 
-    public final StringPath subVart = createString("subVart");
+    public final StringPath subv = createString("subv");
 
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task = this.<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask>createSet("task", md.specialEqp.inspect.Task.class, md.specialEqp.inspect.QTask.class, PathInits.DIRECT2);
 
@@ -110,9 +108,9 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final BooleanPath unqf2 = createBoolean("unqf2");
 
-    public final DateTimePath<java.util.Date> useDt = createDateTime("useDt", java.util.Date.class);
+    public final DateTimePath<java.util.Date> used = createDateTime("used", java.util.Date.class);
 
-    public final md.cm.unit.QUnit useU;
+    public final md.cm.unit.QUnit useu;
 
     public final NumberPath<Byte> ust = createNumber("ust", Byte.class);
 
@@ -123,6 +121,8 @@ public class QEqp extends EntityPathBase<Eqp> {
     public final StringPath vart = createString("vart");
 
     public final NumberPath<Integer> version = createNumber("version", Integer.class);
+
+    public final BooleanPath vital = createBoolean("vital");
 
     public QEqp(String variable) {
         this(Eqp.class, forVariable(variable), INITS);
@@ -142,15 +142,15 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public QEqp(Class<? extends Eqp> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.insU = inits.isInitialized("insU") ? new md.cm.unit.QUnit(forProperty("insU"), inits.get("insU")) : null;
-        this.makeU = inits.isInitialized("makeU") ? new md.cm.unit.QUnit(forProperty("makeU"), inits.get("makeU")) : null;
-        this.mtU = inits.isInitialized("mtU") ? new md.cm.unit.QUnit(forProperty("mtU"), inits.get("mtU")) : null;
+        this.insu = inits.isInitialized("insu") ? new md.cm.unit.QUnit(forProperty("insu"), inits.get("insu")) : null;
+        this.makeu = inits.isInitialized("makeu") ? new md.cm.unit.QUnit(forProperty("makeu"), inits.get("makeu")) : null;
+        this.mtu = inits.isInitialized("mtu") ? new md.cm.unit.QUnit(forProperty("mtu"), inits.get("mtu")) : null;
         this.mtud = inits.isInitialized("mtud") ? new md.cm.unit.QDivision(forProperty("mtud"), inits.get("mtud")) : null;
         this.owner = inits.isInitialized("owner") ? new md.cm.unit.QUnit(forProperty("owner"), inits.get("owner")) : null;
         this.pos = inits.isInitialized("pos") ? new md.cm.geography.QAddress(forProperty("pos"), inits.get("pos")) : null;
-        this.regU = inits.isInitialized("regU") ? new md.cm.unit.QUnit(forProperty("regU"), inits.get("regU")) : null;
-        this.remU = inits.isInitialized("remU") ? new md.cm.unit.QUnit(forProperty("remU"), inits.get("remU")) : null;
-        this.useU = inits.isInitialized("useU") ? new md.cm.unit.QUnit(forProperty("useU"), inits.get("useU")) : null;
+        this.regu = inits.isInitialized("regu") ? new md.cm.unit.QUnit(forProperty("regu"), inits.get("regu")) : null;
+        this.remu = inits.isInitialized("remu") ? new md.cm.unit.QUnit(forProperty("remu"), inits.get("remu")) : null;
+        this.useu = inits.isInitialized("useu") ? new md.cm.unit.QUnit(forProperty("useu"), inits.get("useu")) : null;
         this.usud = inits.isInitialized("usud") ? new md.cm.unit.QDivision(forProperty("usud"), inits.get("usud")) : null;
     }
 
