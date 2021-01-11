@@ -20,23 +20,52 @@ import javax.persistence.*;
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Elevator  extends Eqp {
     //3000电梯  TB_ELEV_PARA  电梯技术参数表
+    /**IF_SPEC_EQP特种电梯；.IF_SPEC_EQP是否特殊设备*/
+    private Boolean spec;
+    /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？*/
+    private Boolean nnor;
+    /**合并字段IF_OLDBUILD  旧楼房加装, ? IF_OLDBUILD_INST旧楼加装;*/
+    private Boolean oldb;
+    /**ELEFLOORNUMBER电梯层数，*/
+    private Short  flo;
+    /**ELEHEIGHT3000提升高度*/
+    private Float  hlf;
+    /**SLIDWAY_USE_LENG3300人行道使用区段长度 人行道使用区段长度（自动人行道）(m)"SLIDWAY_USE_LENG"*/
+    private Float  lesc;
+    /**名义宽度(自动扶梯/自动人行道)(mm)"NOMI_WIDTH"*/
+    private Float  wesc;
+    /**RUNVELOCITY运行速度 ，米/秒 运行速度(m/s)"RUNVELOCITY"
+     */
+    private Float  vl;
 
-/*
-    public  Elevator(String cod,String type,String oid){
-        super(cod,type,oid);
-        liftHeight="253Meters";
-    }
-*/
-    private Boolean spec;   //IF_SPEC_EQP特种电梯；.IF_SPEC_EQP是否特殊设备
-    private Boolean norm;   //IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？
-    //合并字段
-    private Boolean oldB;    //IF_OLDBUILD  旧楼房加装, ? IF_OLDBUILD_INST旧楼加装;
-    private Short nflo;  //ELEFLOORNUMBER电梯层数，
-    private Float hlif;  //ELEHEIGHT3000提升高度，
-    private Float lwalk;    //SLIDWAY_USE_LENG3300人行道使用区段长度
-    private Float spd;  //RUNVELOCITY运行速度 ，米/秒
     //IMPORT_TYPE进口类型,
 
+    /**控制屏型号"CONSCRTYPE"*/
+    private String  cpm;
+    /**控制屏出厂编号"CONTSCRCODE"*/
+    private String  cpi;
+    /**曳引机型号"TRACANGTYPE"*/
+    private String  tm;
+    /**曳引机出厂编号"TRACANGLEAFACNUMBER"*/
+    private String  tno;
+    /**电动机(驱动主机)型号"ELEC_TYPE"*/
+    private String  mtm;
+    /**电动机(驱动主机)编号"ELEC_COD"*/
+    private String  mtno;
+    /**缓冲器形式"BUFFER_MODE"*/
+    private String  buff;
+    /**额定载荷(kg)"RATEDLOAD"  */
+    private Float load;
+    /**是否加装附加装置"IF_ADDDEVICE" 字符串*/
+    private String  add;
+    /**轿厢意外移动保护装置型号"CAR_PROTECT_TYPE"*/
+    private String  prot;
+    /**开门方式"DOOR_OPEN_TYPE"*/
+    private String  doop;
+    /**限速器型号"RESTSPEEDTYPE"*/
+    private String  limm;
+    /**控制方式"CONTROL_TYPE"*/
+    private String  opm;
 }
 
 

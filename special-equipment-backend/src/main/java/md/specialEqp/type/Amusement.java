@@ -18,18 +18,29 @@ import javax.persistence.Entity;
 @Entity
 public class Amusement extends Eqp {
     //6000大型游乐设施 TB_AMUS_PARA
-
-/*
-    public Amusement(String cod, String type, String oid){
-        super(cod,type,oid);
-        volume="820升";
-    }
-*/
+    //游乐设施级别AMUS_TYPE 实际等同 EQP_LEVEL: "B级"，字段要合并；
     //父类String level; 字段一个概念的？？ABC==>123仅仅代码描述差异？前端给的名称不同罢了。
     //private String  matr;   //游乐AMUS_TYPE游乐设施等级类型，游乐设施类型(检验)@[{id:'A',text:'A'},{id:'B',text:'B'},{id:'C',text:'C'}]
-    private Boolean mbig;    // IF_SHIFT是否移动大型游乐；
-    //游乐设施级别AMUS_TYPE 实际等同 EQP_LEVEL: "B级"，字段要合并；
 
+    /**IF_SHIFT是否移动大型游乐*/
+    private Boolean  mbig;
+
+    /**长度"LENGTH"*/
+    private Float  leng;
+    /**游乐设施高度"HEIGHT" 设备外形高*/
+    private Float  high;
+    /**运行高度"MOV_HIGH"*/
+    private Float  hlf;
+    /**额定乘客人数(人)"RATEDPASSENGERNUM"*/
+    private Short  pnum;
+    /**额定速度"RATEDVELOCITY"    */
+    private Float  vl;
+    /**回转直径"TURNINGDIAMETER"*/
+    private Float  sdia;
+    /**倾夹角或坡度"GRADE"*/
+    private Float  grad;
+    /**摆角"SWINGANGLE"*/
+    private Float  angl;
 }
 
 
