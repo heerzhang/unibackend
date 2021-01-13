@@ -34,13 +34,17 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public final StringPath level = createString("level");
 
-    public final StringPath matr = createString("matr");
+    public final StringPath mtcat = createString("mtcat");
 
     public final DateTimePath<java.util.Date> nxtd1 = createDateTime("nxtd1", java.util.Date.class);
 
     public final DateTimePath<java.util.Date> nxtd2 = createDateTime("nxtd2", java.util.Date.class);
 
+    public final StringPath pa = createString("pa");
+
     public final QPipeline pipe;
+
+    public final NumberPath<Byte> reg = createNumber("reg", Byte.class);
 
     public final StringPath rno = createString("rno");
 

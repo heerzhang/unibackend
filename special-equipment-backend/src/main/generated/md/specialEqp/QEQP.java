@@ -52,6 +52,8 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
+    public final md.cm.unit.QUnit issu;
+
     public final StringPath level = createString("level");
 
     public final md.cm.unit.QUnit makeu;
@@ -143,6 +145,7 @@ public class QEqp extends EntityPathBase<Eqp> {
     public QEqp(Class<? extends Eqp> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.insu = inits.isInitialized("insu") ? new md.cm.unit.QUnit(forProperty("insu"), inits.get("insu")) : null;
+        this.issu = inits.isInitialized("issu") ? new md.cm.unit.QUnit(forProperty("issu"), inits.get("issu")) : null;
         this.makeu = inits.isInitialized("makeu") ? new md.cm.unit.QUnit(forProperty("makeu"), inits.get("makeu")) : null;
         this.mtu = inits.isInitialized("mtu") ? new md.cm.unit.QUnit(forProperty("mtu"), inits.get("mtu")) : null;
         this.mtud = inits.isInitialized("mtud") ? new md.cm.unit.QDivision(forProperty("mtud"), inits.get("mtud")) : null;

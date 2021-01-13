@@ -77,6 +77,9 @@ public class QAmusement extends EntityPathBase<Amusement> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    // inherited
+    public final md.cm.unit.QUnit issu;
+
     public final NumberPath<Float> leng = createNumber("leng", Float.class);
 
     //inherited
@@ -229,6 +232,7 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
+        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;

@@ -83,6 +83,9 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    // inherited
+    public final md.cm.unit.QUnit issu;
+
     public final NumberPath<Float> lesc = createNumber("lesc", Float.class);
 
     //inherited
@@ -253,6 +256,7 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
+        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;

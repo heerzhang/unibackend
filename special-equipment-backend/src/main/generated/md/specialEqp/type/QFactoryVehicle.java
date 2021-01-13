@@ -69,6 +69,9 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    // inherited
+    public final md.cm.unit.QUnit issu;
+
     //inherited
     public final StringPath level;
 
@@ -219,6 +222,7 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
+        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;

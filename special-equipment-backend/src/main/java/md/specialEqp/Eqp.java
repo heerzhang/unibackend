@@ -71,20 +71,29 @@ public class Eqp implements Equipment{
     private String cod;
 
     //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
-    private String type;    //设备种类 EQP_TYPE{首1个字符} ,
-    private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
-    private String vart;    //设备品种代码 EQP_VART{首3个字符}
-    private String subv;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
+    /**设备种类 EQP_TYPE{首1个字符} ,*/
+    private String type;
+    /**设备类别代码 EQP_SORT{首2个字符} ,*/
+    private String sort;
+    /**设备品种代码 EQP_VART{首3个字符}*/
+    private String vart;
+    /**非标准扩展：SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。*/
+    private String subv;
     //不能用private char   在H2无法建，Character占2字节
-    private Byte   reg;   //EQP_REG_STA 注册
+    /**注册状态EQP_REG_STA=[{id:'0',text:'待注册'},{id:'1',text:'在册'},{id:'3',text:'注销登记'}];*/
+    private Byte   reg;
     //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
-    private Byte   ust;   //EQP_USE_STA 状态码
+    /**使用状态EQP_USE_STA=[{id:'1',text:'未投入使用'},{id:'2',text:'在用'},{id:'3',text:'停用'},{id:'9',text:'在用未注册'}
+     * {id:'4',text:'报废'},{id:'5',text:'拆除'},{id:'6',text:'迁出'},{id:'7' 8,text:'垃圾数据'}
+     */
+    private Byte   ust;
     private Byte   cag;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
     /**EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
      * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
+     * 设计上的级别
     */
     private String level;
     private String fno;   //FACTORY_COD  出厂编号
@@ -95,7 +104,10 @@ public class Eqp implements Equipment{
     //不能用保留字。private String mod;
     private String  model;    //EQP_MOD 设备型号
     private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
-    private Boolean  vital;   //IF_MAJEQP 是否重要特种设备
+    /**IF_MAJEQP 是否重要特种设备
+     * 监察初始化设置的关照级别。
+     */
+    private Boolean  vital;
     //private Date  instDate;
     private Date used;  //FIRSTUSE_DATE 设备投用日期
     private Date accd;  //COMPE_ACCP_DATE 竣工验收日期
@@ -129,12 +141,23 @@ public class Eqp implements Equipment{
     private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
 
     //索引会被自动创建的。
+    /**PROP_UNT_ID 产权单位,若空=使用单位*/
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit  owner;      //PROP_UNT_ID 产权单位
+    private Unit  owner;
+    /**REG_UNT_ID 监察注册机构ID  REG_UNT_NAME注册机构名称
+     * 注册可以省级/市/县级别的监察机构。同一个管道底下各个管道单元同一个监察注册机构
+     */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "regu_id")
-    private Unit regu;     //REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
+    private Unit regu;
+    //流动设备管理，注册监察机构和当前实际再做监察管理的机构不一样呢？历史资料／原始发证机构。
+    /**发证的监察注册机构ID 流动设备原始发证机构
+     * 若null,原始发证机构就=注册机构；
+     */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "issu_id")
+    private Unit issu;
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
@@ -147,9 +170,10 @@ public class Eqp implements Equipment{
     private Unit remu;     //ALT_UNT_ID 改造单位ID
     //可以和使用单位地址不同的。
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
+    /**地理定位。长输管道覆盖范围大的情形特指核心地点*/
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
-    private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
+    private Address pos;    //多对1，多端来存储定义实体ID字段。
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     //一个任务只能搞1个设备的/为出报告准备的{流转Isp报告,报告对应技术参数只能是一个设备，煤气罐系列化的设备号01..09排除05}。
@@ -169,20 +193,25 @@ public class Eqp implements Equipment{
     private Set<Isp>  isps;
 
     //底下这两组实际相当于内嵌结构对象，或者说[mtu，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
+    /**MANT_UNT_ID 维保单位ID maintUnt,电梯才有的*/
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit mtu;     //MANT_UNT_ID 维保单位ID maintUnt
-    //针对维保单位的细化　分支机构部门。
+    private Unit mtu;
+    /**针对维保单位的细化　分支机构部门。
+     * MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'；检验平台没有设置该数据。
+     */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'；检验平台没有设置该数据。
+    private Division mtud;
     //若是个人就一定没分支部门；[useu，usud]复合字段的；
+    /**USE_UNT_ID 使用单位ID;　正常业务上单位都是它*/
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit useu;     //USE_UNT_ID 使用单位ID
-    //针对使用单位的细化　管理分支部门。
-    //假如设备表没有指定Division部门的，那就是Unit作为缺省部门:等价于该单位底下没有细分的部门，若要求具体Division但是该单位没有细分Division情形。
-    //MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
+    private Unit useu;
+    /**针对使用单位的细化　管理分支部门。
+    *假如设备表没有指定Division部门的，那就是Unit作为缺省部门:等价于该单位底下没有细分的部门，若要求具体Division但是该单位没有细分Division情形。
+    *MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
+    */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
@@ -191,9 +220,14 @@ public class Eqp implements Equipment{
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
-    @Column( columnDefinition="TEXT (16000)")
+    @Column( columnDefinition="TEXT (12000)")
     private String  pa;
-    private String safe; //.SAFE_LEV安全评定等级{JC才用}2000容器类
+    /**.SAFE_LEV安全评定等级{监察才用到，检验没用}
+     * 目前只有2000容器类才有，其他类型备用的；
+     * 动态的级别，用于监察重点关注用。 null=没事安全
+     * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
+     */
+    private String safe;
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。
     //本函数执行之前，JPA数据实际已都取完成了。
