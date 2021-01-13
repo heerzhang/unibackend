@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-//@Table( uniqueConstraints = {@UniqueConstraint(columnNames={"code","pipe_id"})} )
+//@Table( uniqueConstraints = {@UniqueConstraint(columnNames={"pipe_id","code"})} )
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Medium")
 public class PipingUnit {
     @Id
@@ -25,7 +25,7 @@ public class PipingUnit {
     protected Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pipe_id")
+    @JoinColumn
     private Pipeline pipe;
 
     /**EQP_CODE管道编号:每个单元编码不同，管道单元的代码：报告书和单线图里面的key。*/
