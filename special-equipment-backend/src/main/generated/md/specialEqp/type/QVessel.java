@@ -55,7 +55,7 @@ public class QVessel extends EntityPathBase<Vessel> {
 
     public final StringPath form = createString("form");
 
-    public final NumberPath<Float> full = createNumber("full", Float.class);
+    public final NumberPath<Float> fulw = createNumber("fulw", Float.class);
 
     public final NumberPath<Float> high = createNumber("high", Float.class);
 

@@ -37,9 +37,9 @@ public class Vessel extends Eqp {
     /**载重量"LOADWEIG*/
     private Float load;
     /**满载总重量"FULLYLOADWEI"
-     * 没几个有数据的;
+     * 没几个有数据的; H2数据库不能用full这个名只能改。
      */
-    private Float full;
+    private Float fulw;
     /**容器内径"CONINNDIA"  复合字段 宽×高：680×1180; 上：800/下：3000; DN800mm
      * Φ400/Φ850/Φ1000;  球形505; 2200(内筒)/2800(夹套)
      */
