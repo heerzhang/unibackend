@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 
 /**8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
- * 管道总体的相关参数，不是具体单元的，是合计数据或者都统一的参数,组成单元全部一样的。
+ * 管道总体的相关参数，不是具体单元的，是合计数据或者都统一的参数。
 */
 
 @NoArgsConstructor
@@ -36,16 +36,16 @@ public class Pipeline extends Eqp {
     private String  matr;
     //合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";// 管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},{id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},{id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},{id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
 
-    /**组成单元全部 管道介质"WORK_MEDIUM" 见特性表
+    /**管道介质"WORK_MEDIUM" 见特性表
      * 乙炔/粗BYD/BYD+水
      */
     private String  mdi;
-    /**组成单元全部 设计压力"DESIGN_PRESS" 见特性表 详见管道特性表,
+    /**设计压力"DESIGN_PRESS" 见特性表 详见管道特性表,
      * 高压部分/低压部分：2.0/1.5    高压侧：2.0；低压侧1.5
      * {"高":, "低":, "某部分管":, }
      */
     private String  prs;
-    /**组成单元全部 设计温度"DESIGN_TEMP"  常温; 见管道单线图
+    /**设计温度"DESIGN_TEMP"  常温; 见管道单线图
      * 蒸汽：190、空气：60 ; 80(PL8005～S8068段）/60(S8068～S8069段);  -25/-50(PG0410)
      */
     private String  temp;

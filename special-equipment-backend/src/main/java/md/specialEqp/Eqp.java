@@ -76,13 +76,9 @@ public class Eqp implements Equipment{
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     private String subv;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
     //不能用private char   在H2无法建，Character占2字节
-    /**注册状态EQP_REG_STA=[{id:'0',text:'待注册'},{id:'1',text:'在册'},{id:'3',text:'注销登记'}];*/
-    private Byte   reg;
+    private Byte   reg;   //EQP_REG_STA 注册
     //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
-    /**使用状态EQP_USE_STA=[{id:'1',text:'未投入使用'},{id:'2',text:'在用'},{id:'3',text:'停用'},{id:'9',text:'在用未注册'}
-     * {id:'4',text:'报废'},{id:'5',text:'拆除'},{id:'6',text:'迁出'},{id:'7' 8,text:'垃圾数据'}
-     */
-    private Byte   ust;
+    private Byte   ust;   //EQP_USE_STA 状态码
     private Byte   cag;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
@@ -145,12 +141,14 @@ public class Eqp implements Equipment{
     private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
 
     //索引会被自动创建的。
-    /**PROP_UNT_ID 产权单位,若空=使用单位*/
+    /**PROP_UNT_ID 产权单位, 不是监管重点 可省略
+     * 若null,默认=使用单位。
+     */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit  owner;
-    /**REG_UNT_ID 监察注册机构ID  REG_UNT_NAME注册机构名称
-     * 注册可以省级/市/县级别的监察机构。同一个管道底下各个管道单元同一个监察注册机构
+    /**发证的监察注册机构ID 流动设备原始发证机构
+     * 若null,原始发证机构就=责任监察机构；省外注册的。
      */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "regu_id")
@@ -178,7 +176,7 @@ public class Eqp implements Equipment{
     /**地理定位。长输管道覆盖范围大的情形特指核心地点*/
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
-    private Address pos;    //多对1，多端来存储定义实体ID字段。
+    private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     //一个任务只能搞1个设备的/为出报告准备的{流转Isp报告,报告对应技术参数只能是一个设备，煤气罐系列化的设备号01..09排除05}。
