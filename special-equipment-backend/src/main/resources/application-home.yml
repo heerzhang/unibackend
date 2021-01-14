@@ -131,13 +131,6 @@ spring:
   #transaction-manager-id: txManager
   jpa:
     properties:
-      redis:
-        expiryInSeconds:
-          hibernate:
-            Fast: 131
-            query: 141
-          default: 163
-
       javax:
         persistence:
           sharedCache.mode: ENABLE_SELECTIVE
@@ -157,34 +150,34 @@ spring:
         hbm2ddl:
           auto: update
         cache:
-          #二级缓存关闭启用的2个总开关,关不了集合字段
-          use_second_level_cache: false
-          use_query_cache: false
+          #二级缓存关闭启用的下面2个总开关,关不了集合字段 false true
+          use_second_level_cache: true
+          use_query_cache: true
+          use_minimal_puts: true
           region:
-            #缓存provider:非商业收费版本只能用较差点的驱动。分开Hibernate版本RedissonRegionFactory
-            factory_class: org.redisson.hibernate.RedissonRegionFactory
-          redisson:
-            #若Redis歇菜，不报错给前端，变为等待
-            fallback: true
-            config: redisson.yaml
-            #如果用JNDI减少Redisson实例数
-            jndi_name: redisson_instance
-            query:
-              expiration.time_to_live: 300000
-            timestamps:
-              expiration.time_to_live: 300000
-            naturalid:
-              expiration.time_to_live: 300000
-            entity:
-              expiration.time_to_live: 300000
-            collection:
-              expiration.time_to_live: 300000
+            #缓存provider:
+            factory_class: infinispan
+          infinispan:
+            #关键配置不填就用缺省文件org/infinispan/hibernate/cache/commons/builder/infinispan-configs.xml
+            cfg: infinispan-dev.xml
+            #jgroups_cfg: default-jgroups.xml
+            #cachemanager: java:CacheManager
             Slow:
-              expiration.time_to_live: 1800000
+              expiration.max_idle: 800000
+              expiration.lifespan: 1800000
+              eviction.wake_up_interval: 35000
+              memory.size: 2000000000
             Medium:
-              expiration.time_to_live: 600000
+              expiration.max_idle: 40000
+              expiration.lifespan: 80000
+              eviction.wake_up_interval: 13000
+              memory.size: 2000000000
             Fast:
-              expiration.time_to_live: 150000
+              expiration.max_idle: 90000
+              expiration.lifespan: 150000
+              eviction.wake_up_interval: 5000
+              memory.size: 2000000000
+
     generate-ddl: true
     open-in-view: true
   main:
