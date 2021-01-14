@@ -77,7 +77,7 @@ public class EqpEs implements Equipment{
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=150)
             }
     )
-    private String fNo;   //出厂编号
+    private String fno;   //出厂编号
     //  private Unit  owner;
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
 

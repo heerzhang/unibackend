@@ -240,7 +240,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         List<Unit>  units=unitRepository.findAll();
         units.stream().forEach(item -> {
             //Set<Eqp> eqps=item.getMaints();   懒加载,此时对象该字段还没有数据呢,手动查
-           List<Eqp> eqps=eQPRepository.findByMtU(item);
+           List<Eqp> eqps=eQPRepository.findByMtu(item);
            item.setMaints(new HashSet<Eqp>(eqps));
            //这里虽然懒加载因为业务需要单位直接关联它维保的设备列表=支持graphQL内省，免去再开独立接口函数去做这工作的复杂模式。
         });
@@ -735,7 +735,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
         if (!StringUtils.isEmpty(where.getFno()))
-            builder.and(qm.fNo.contains(where.getFno()));
+            builder.and(qm.fno.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         //Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
@@ -764,7 +764,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
         if (!StringUtils.isEmpty(where.getFno()))
-            builder.and(qm.fNo.contains(where.getFno()));
+            builder.and(qm.fno.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         Iterable<Eqp> eqps = eQPRepository.findAllNc(builder,pageable);

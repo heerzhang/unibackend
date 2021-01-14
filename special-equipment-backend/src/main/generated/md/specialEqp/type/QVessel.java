@@ -43,9 +43,6 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath cod;
 
     //inherited
-    public final StringPath contact;
-
-    //inherited
     public final BooleanPath cping;
 
     public final StringPath dim = createString("dim");
@@ -78,9 +75,6 @@ public class QVessel extends EntityPathBase<Vessel> {
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
-
-    // inherited
-    public final md.cm.unit.QUnit issu;
 
     public final StringPath jakm = createString("jakm");
 
@@ -169,6 +163,12 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath subv;
 
     //inherited
+    public final StringPath svp;
+
+    // inherited
+    public final md.cm.unit.QUnit svu;
+
+    //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
     //inherited
@@ -233,7 +233,6 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
         this.cod = _super.cod;
-        this.contact = _super.contact;
         this.cping = _super.cping;
         this.expire = _super.expire;
         this.fno = _super.fno;
@@ -242,7 +241,6 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
-        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;
@@ -267,6 +265,8 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.sno = _super.sno;
         this.sort = _super.sort;
         this.subv = _super.subv;
+        this.svp = _super.svp;
+        this.svu = _super.svu;
         this.task = _super.task;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;

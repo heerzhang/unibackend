@@ -12,7 +12,7 @@ import java.util.Date;
 /**一条管道底下有很多的管道单元来组成的。TB_PIPELINE_UNIT_PARA
  * 每个单元管道特性表 TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA
  * 单元没有独立的地理定位字段，归属业务管辖区域码也没做独立设置；单元可能超长一百公里。
-*/
+ */
 @Getter
 @Setter
 @Entity
@@ -60,7 +60,7 @@ public class PipingUnit {
     /**TB_PIPELINE_UNIT_PARA.LAY_MODE   is '敷设方式'         ??JSON非结构化    不规范
     *TB_PIPELINE_UNIT_PARA.V_LAY_MODE  is '计费用-敷设方式（架空、埋地、其他）' ？？标准化Enum?比较少
      * LAY_MODE管道敷设方式[{id:'埋地',text:'埋地'},{id:'架空',text:'架空'},{id:'其它',text:'其它'}]
-    */
+     */
     private String  lay;
 
     /**NOMINAL_DIA公称直径（mm）不规范　φ168，有很多数据。
@@ -103,7 +103,7 @@ public class PipingUnit {
     private String  pa;
 
     //todo:关联 Isp字段：关联Isp 以过滤排序形式返回给前端展示层的
-  //  private Isp isp;   //定检检验报告
+    //  private Isp isp;   //定检检验报告
     //private Isp year;  //年检报告
     //监检报告
 }

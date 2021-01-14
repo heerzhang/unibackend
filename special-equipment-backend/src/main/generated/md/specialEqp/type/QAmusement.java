@@ -45,9 +45,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final StringPath cod;
 
     //inherited
-    public final StringPath contact;
-
-    //inherited
     public final BooleanPath cping;
 
     //inherited
@@ -76,9 +73,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
-
-    // inherited
-    public final md.cm.unit.QUnit issu;
 
     public final NumberPath<Float> leng = createNumber("leng", Float.class);
 
@@ -161,6 +155,12 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final StringPath subv;
 
     //inherited
+    public final StringPath svp;
+
+    // inherited
+    public final md.cm.unit.QUnit svu;
+
+    //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
     //inherited
@@ -223,7 +223,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
         this.cod = _super.cod;
-        this.contact = _super.contact;
         this.cping = _super.cping;
         this.expire = _super.expire;
         this.fno = _super.fno;
@@ -232,7 +231,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
-        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;
@@ -257,6 +255,8 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.sno = _super.sno;
         this.sort = _super.sort;
         this.subv = _super.subv;
+        this.svp = _super.svp;
+        this.svu = _super.svu;
         this.task = _super.task;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;

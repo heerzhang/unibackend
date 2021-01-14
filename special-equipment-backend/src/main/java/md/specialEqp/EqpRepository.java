@@ -54,7 +54,7 @@ public interface EqpRepository extends JpaRepository<Eqp, Long>, JpaSpecificatio
                 Dict findDictByName(String name);
         */
 
-        List<Eqp> findByMtU(Unit maintUnit);
+        List<Eqp> findByMtu(Unit maintUnit);
 
         //@QueryHints(value = { @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_CACHEABLE, value = "false") } )
         Optional<Eqp> findById(Long id);

@@ -6,12 +6,12 @@ type Elevator implements Equipment & IfElevator{
      sort: String!
      vart: String!
 
-     hlif: String
+     hlf: String
 
 }
 
 interface IfElevator{
-    hlif: String
+    hlf: String
 }
 
 extend type Query {

@@ -45,9 +45,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     public final StringPath cod;
 
     //inherited
-    public final StringPath contact;
-
-    //inherited
     public final BooleanPath cping;
 
     //inherited
@@ -70,9 +67,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
-
-    // inherited
-    public final md.cm.unit.QUnit issu;
 
     //inherited
     public final StringPath level;
@@ -153,6 +147,12 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     public final StringPath subv;
 
     //inherited
+    public final StringPath svp;
+
+    // inherited
+    public final md.cm.unit.QUnit svu;
+
+    //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
     public final StringPath temp = createString("temp");
@@ -215,7 +215,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
         this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
         this.cod = _super.cod;
-        this.contact = _super.contact;
         this.cping = _super.cping;
         this.expire = _super.expire;
         this.fno = _super.fno;
@@ -224,7 +223,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
-        this.issu = _super.issu;
         this.level = _super.level;
         this.makeu = _super.makeu;
         this.model = _super.model;
@@ -249,6 +247,8 @@ public class QPipeline extends EntityPathBase<Pipeline> {
         this.sno = _super.sno;
         this.sort = _super.sort;
         this.subv = _super.subv;
+        this.svp = _super.svp;
+        this.svu = _super.svu;
         this.task = _super.task;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;

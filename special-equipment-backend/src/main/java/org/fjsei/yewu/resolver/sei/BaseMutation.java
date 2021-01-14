@@ -479,7 +479,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
         eQP.setPos(position);
         eQP.setOwner(ownerUnit);
-        eQP.setMtU(maintUnit);
+        eQP.setMtu(maintUnit);
         eQPRepository.save(eQP);
         return eQP;
     }

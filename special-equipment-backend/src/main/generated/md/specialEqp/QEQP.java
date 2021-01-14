@@ -34,8 +34,6 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath cod = createString("cod");
 
-    public final StringPath contact = createString("contact");
-
     public final BooleanPath cping = createBoolean("cping");
 
     public final DateTimePath<java.util.Date> expire = createDateTime("expire", java.util.Date.class);
@@ -51,8 +49,6 @@ public class QEqp extends EntityPathBase<Eqp> {
     public final DateTimePath<java.util.Date> ispd2 = createDateTime("ispd2", java.util.Date.class);
 
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
-
-    public final md.cm.unit.QUnit issu;
 
     public final StringPath level = createString("level");
 
@@ -102,6 +98,10 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath subv = createString("subv");
 
+    public final StringPath svp = createString("svp");
+
+    public final md.cm.unit.QUnit svu;
+
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task = this.<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask>createSet("task", md.specialEqp.inspect.Task.class, md.specialEqp.inspect.QTask.class, PathInits.DIRECT2);
 
     public final StringPath type = createString("type");
@@ -145,7 +145,6 @@ public class QEqp extends EntityPathBase<Eqp> {
     public QEqp(Class<? extends Eqp> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.insu = inits.isInitialized("insu") ? new md.cm.unit.QUnit(forProperty("insu"), inits.get("insu")) : null;
-        this.issu = inits.isInitialized("issu") ? new md.cm.unit.QUnit(forProperty("issu"), inits.get("issu")) : null;
         this.makeu = inits.isInitialized("makeu") ? new md.cm.unit.QUnit(forProperty("makeu"), inits.get("makeu")) : null;
         this.mtu = inits.isInitialized("mtu") ? new md.cm.unit.QUnit(forProperty("mtu"), inits.get("mtu")) : null;
         this.mtud = inits.isInitialized("mtud") ? new md.cm.unit.QDivision(forProperty("mtud"), inits.get("mtud")) : null;
@@ -153,6 +152,7 @@ public class QEqp extends EntityPathBase<Eqp> {
         this.pos = inits.isInitialized("pos") ? new md.cm.geography.QAddress(forProperty("pos"), inits.get("pos")) : null;
         this.regu = inits.isInitialized("regu") ? new md.cm.unit.QUnit(forProperty("regu"), inits.get("regu")) : null;
         this.remu = inits.isInitialized("remu") ? new md.cm.unit.QUnit(forProperty("remu"), inits.get("remu")) : null;
+        this.svu = inits.isInitialized("svu") ? new md.cm.unit.QUnit(forProperty("svu"), inits.get("svu")) : null;
         this.useu = inits.isInitialized("useu") ? new md.cm.unit.QUnit(forProperty("useu"), inits.get("useu")) : null;
         this.usud = inits.isInitialized("usud") ? new md.cm.unit.QDivision(forProperty("usud"), inits.get("usud")) : null;
     }
