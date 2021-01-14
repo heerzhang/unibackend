@@ -33,9 +33,9 @@ public class DeviceCommonInput {
 
 //基本类型Built-in GraphQL::ScalarType有5种 String Int  ID  Boolean Float {精度小数点后5位}。
 
-/*为什么死活不行？ 接收到了请求包数据正常的。为何解析不出来String fno;这个变量的取值，都是null??。
+/*为什么死活不行？ 接收到了请求包数据正常的。为何解析不出来String fNo;这个变量的取值，都是null??。
 		"where": {
-			"fno": "dc5kk555ds",
+			"fNo": "dc5kk555ds",
 			"cod": "csdfsg3yyy3od"
 		},
 */

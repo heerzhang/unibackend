@@ -82,7 +82,7 @@ public class EqpEs implements Equipment{
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
 
  //   private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
- //   private Unit mtu;
+ //   private Unit mtU;
     @Field(type = FieldType.Keyword)
     private String name;    //EQP_NAME 设备名称
     //不能用保留字。private String inner;
@@ -172,7 +172,7 @@ Lucene段要合并：索引段粒度越小，性能低/耗内存。频繁的文�
 @lombok.Builder(toBuilder = true)
 @Getter
 Elasticsearch创建别名时可以指定路由"routing"　　https://www.xujun.org/note-76931.html
-ES过滤使用termQuery例子：boolQueryBuilder.must(termQuery("useu.id",where.getUseUid()));
+ES过滤使用termQuery例子：boolQueryBuilder.must(termQuery("useU.id",where.getUseUid()));
 NativeSearchQueryBuilder().withFilter()只能用在已经统计后的过滤(最后的统计条目过滤)，其它情形不要用；正常查询应该用NativeSearchQueryBuilder().withQuery();
 ES:将Geo精度设置到3米,内存占用可以减少62%    https://blog.csdn.net/u012332735/article/details/54971638
 */

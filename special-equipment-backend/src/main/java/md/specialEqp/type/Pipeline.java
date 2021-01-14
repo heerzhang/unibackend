@@ -30,11 +30,11 @@ public class Pipeline extends Eqp {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Slow")
     private Set<PipingUnit> cells;
 
-
-    /**组成单元全部 PIPELINE_MEDIUM管道材质，全部的，所有管道单元的都是@[{id:'钢制',text:'钢制'},{id:'PE管',text:'PE管'}]
+    /**全部的，所有管道单元的都是PIPELINE_MEDIUM管道材质，@[{id:'钢制',text:'钢制'},{id:'PE管',text:'PE管'}]
      * 实际是标号， PE管； 20 ；钢制；碳钢；无缝钢管（牌号不清）; 详见管道特性表
     */
     private String  matr;
+    //合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";// 管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},{id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},{id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},{id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
 
     /**组成单元全部 管道介质"WORK_MEDIUM" 见特性表
      * 乙炔/粗BYD/BYD+水

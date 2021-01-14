@@ -42,7 +42,7 @@ public class Unit {
     //默认采用LAZY方式加载实体,懒加载时加了@Transactional的查询才能不报错，但是graphQL内省阶段是与入口函数分离的=还是报错。
     //一对多或多对多时，默认懒加载，graphQL遇到这个字段，若想要顺着关联查询下去，程序报错，等于有一种信息安全控制机制。
     //懒加载的坏处，该字段代码不能直接使用，必须绕道，从反向关系依据id倒着查。
-    @OneToMany(mappedBy = "mtu")
+    @OneToMany(mappedBy = "mtU")
     private Set<Eqp> maints;    //维保设备集合
 
     //这里company,person两个，若采用接口/微服务/Rest方式，实际上本地无需DB库表实体类，只需要外部大数据库no以及类型标识。

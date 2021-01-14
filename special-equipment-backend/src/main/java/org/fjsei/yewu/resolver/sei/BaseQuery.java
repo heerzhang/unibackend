@@ -185,7 +185,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                    // p = root.get("isps");
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("fno");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -209,7 +209,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                     predicateList.add(cb.like(p,"%" + filter.getCod() + "%"));
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("fno");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -528,7 +528,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                     predicateList.add(cb.like(p,"%" + filter.getCod() + "%"));
                 }
                 if (!StringUtils.isEmpty(filter.getOid())) {
-                    Path<String> p = root.get("fno");
+                    Path<String> p = root.get("fNo");
                     predicateList.add(cb.like(p,"%" + filter.getOid() + "%"));
                 }
                 Predicate[] predicates = new Predicate[predicateList.size()];
@@ -735,7 +735,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
         if (!StringUtils.isEmpty(where.getFno()))
-            builder.and(qm.fno.contains(where.getFno()));
+            builder.and(qm.fNo.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         //Iterable<Eqp> eqps = eQPRepository.findAll(builder,pageable);
@@ -764,7 +764,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         if (where.getOwnerId()!=null)
             builder.and(qm.owner.id.eq(where.getOwnerId()));
         if (!StringUtils.isEmpty(where.getFno()))
-            builder.and(qm.fno.contains(where.getFno()));
+            builder.and(qm.fNo.contains(where.getFno()));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
         Iterable<Eqp> eqps = eQPRepository.findAllNc(builder,pageable);
@@ -788,7 +788,7 @@ public class BaseQuery implements GraphQLQueryResolver {
 /*
 .must(
                         matchPhraseQuery("cod",where.getCod()).slop(9)
-                         matchPhraseQuery("fno",where.getFno())
+                         matchPhraseQuery("fNo",where.getFno())
                 )
                 matchQuery("cod",where.getCod())
                 matchPhraseQuery("cod",where.getCod()).slop(9)
@@ -797,9 +797,9 @@ public class BaseQuery implements GraphQLQueryResolver {
         if (!StringUtils.isEmpty(where.getCod()))
             boolQueryBuilder.must(matchPhraseQuery("cod",where.getCod()).slop(9));
         if (!StringUtils.isEmpty(where.getFno()))
-            boolQueryBuilder.must(matchPhraseQuery("fno",where.getFno()).slop(9));
+            boolQueryBuilder.must(matchPhraseQuery("fNo",where.getFno()).slop(9));
         if (!StringUtils.isEmpty(where.getUseUid()))
-            boolQueryBuilder.must(termQuery("useu.id",where.getUseUid()));
+            boolQueryBuilder.must(termQuery("useU.id",where.getUseUid()));
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQueryBuilder
@@ -829,7 +829,7 @@ public class BaseQuery implements GraphQLQueryResolver {
             pageable = PageOffsetFirst.of(offset, limit, Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy));
 
         List<Equipment>  elevators = new ArrayList<Equipment>();
-        //matchPhraseQuery("fno",where.getFno()).slop(9)    //matchQuery("fno",where.getFno())
+        //matchPhraseQuery("fNo",where.getFno()).slop(9)    //matchQuery("fNo",where.getFno())
         //wildcardQuery("cert.keyword",where.getCert())
        /*  .must(
                matchPhraseQuery("fno",where.getFno()).slop(9)
@@ -842,7 +842,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                 wildcardQuery("fno.keyword",where.getFno())
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(
                 boolQuery().must(
-                        wildcardQuery("fno",where.getFno())
+                        wildcardQuery("fNo",where.getFno())
                 )
         ).build();
         */
@@ -851,7 +851,7 @@ public class BaseQuery implements GraphQLQueryResolver {
                 boolQuery().must(
                         wildcardQuery("cod.keyword",where.getCod())
                 ).must(
-                        wildcardQuery("fno.keyword",where.getFno())
+                        wildcardQuery("fNo.keyword",where.getFno())
                 )
         ).withPageable(pageable).build();
 
