@@ -155,10 +155,9 @@ public class Eqp implements Equipment{
     /**发证的监察注册机构ID 流动设备原始发证机构
      * 若null,原始发证机构就=注册机构；
      */
-  /*  @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "issu_id")
     private Unit issu;
-*/
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
