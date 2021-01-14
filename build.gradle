@@ -18,13 +18,11 @@ subprojects {
 }
 
 //实际不用它，直接在IDEA配置指定本地目录了。
-/*
 wrapper {
-//没毛病版本 default gradle wrapper实际启用是GRADLE_USER_HOME\wrapper\dists\gradle-5.6.4-all\ankdp27end7byghfw1q2sw75f\gradle-5.6.4\init.d
-gradleVersion = '5.6.4'
-distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
+    //没毛病版本 default gradle wrapper实际启用是GRADLE_USER_HOME\wrapper\dists\gradle-5.6.4-all\ankdp27end7byghfw1q2sw75f\gradle-5.6.4\init.d
+    gradleVersion = '5.6.4'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
 }
-*/
 
 group 'industry-services-com'
 //group 'jianyan.org.cn'
