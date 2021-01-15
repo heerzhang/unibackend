@@ -20,8 +20,9 @@ public class Crane extends Eqp {
     private Boolean nnor;
     /**额定载重"RATED_LOAD"; CHAENGLOAMAIN{不算4D00,4800}主钩）起重机械载荷； :吨
      * 起重机械载荷(t)（收费用，原始记录里面不能用这个字段，要用MAXRATEDCARRYMASS额定起重量
+     * mysql无法用load字段名
      */
-    private Float load;
+    private Float rtl;
     /**额定起重量"MAXRATEDCARRYMASS"*/
     private Float cap;
     /**额定速度"RATED_V"　升降机RUNVELOCITY上行/下行额定速度区分开

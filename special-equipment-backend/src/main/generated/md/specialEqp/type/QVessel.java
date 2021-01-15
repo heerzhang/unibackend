@@ -81,8 +81,6 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final StringPath level;
 
-    public final NumberPath<Float> load = createNumber("load", Float.class);
-
     // inherited
     public final md.cm.unit.QUnit makeu;
 
@@ -149,6 +147,8 @@ public class QVessel extends EntityPathBase<Vessel> {
 
     // inherited
     public final md.cm.unit.QUnit remu;
+
+    public final NumberPath<Float> rtl = createNumber("rtl", Float.class);
 
     //inherited
     public final StringPath safe;

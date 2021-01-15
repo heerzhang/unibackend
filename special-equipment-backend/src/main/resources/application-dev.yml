@@ -161,8 +161,8 @@ spring:
           auto: update
         cache:
           #二级缓存关闭启用的下面2个总开关,关不了集合字段 false true
-          use_second_level_cache: true
-          use_query_cache: true
+          use_second_level_cache: false
+          use_query_cache: false
           use_minimal_puts: true
           region:
             #缓存provider:

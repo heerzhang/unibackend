@@ -35,7 +35,7 @@ public class Vessel extends Eqp {
     /**罐车总重量"TANKCARTOWEI"*/
     private Float  weig;
     /**载重量"LOADWEIG*/
-    private Float load;
+    private Float rtl;
     /**满载总重量"FULLYLOADWEI"
      * 没几个有数据的; H2数据库不能用full这个名只能改。
      */

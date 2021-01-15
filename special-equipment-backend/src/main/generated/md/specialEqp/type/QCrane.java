@@ -91,8 +91,6 @@ public class QCrane extends EntityPathBase<Crane> {
 
     public final NumberPath<Float> lmv = createNumber("lmv", Float.class);
 
-    public final NumberPath<Float> load = createNumber("load", Float.class);
-
     public final StringPath luf = createString("luf");
 
     public final NumberPath<Float> luff = createNumber("luff", Float.class);
@@ -175,6 +173,8 @@ public class QCrane extends EntityPathBase<Crane> {
 
     // inherited
     public final md.cm.unit.QUnit remu;
+
+    public final NumberPath<Float> rtl = createNumber("rtl", Float.class);
 
     public final NumberPath<Float> rtv = createNumber("rtv", Float.class);
 

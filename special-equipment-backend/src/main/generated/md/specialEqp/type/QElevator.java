@@ -24,10 +24,10 @@ public class QElevator extends EntityPathBase<Elevator> {
 
     public final md.specialEqp.QEqp _super;
 
+    public final StringPath aap = createString("aap");
+
     //inherited
     public final DateTimePath<java.util.Date> accd;
-
-    public final StringPath add = createString("add");
 
     public final StringPath buff = createString("buff");
 
@@ -86,8 +86,6 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath level;
 
     public final StringPath limm = createString("limm");
-
-    public final NumberPath<Float> load = createNumber("load", Float.class);
 
     // inherited
     public final md.cm.unit.QUnit makeu;
@@ -157,6 +155,8 @@ public class QElevator extends EntityPathBase<Elevator> {
 
     // inherited
     public final md.cm.unit.QUnit remu;
+
+    public final NumberPath<Float> rtl = createNumber("rtl", Float.class);
 
     //inherited
     public final StringPath safe;

@@ -56,9 +56,9 @@ public class Elevator  extends Eqp {
     private String  buff;
 
     /**额定载荷(kg)"RATEDLOAD"  */
-    private Float load;
+    private Float rtl;
     /**是否加装附加装置"IF_ADDDEVICE" 字符串*/
-    private String  add;
+    private String aap;
     /**轿厢意外移动保护装置型号"CAR_PROTECT_TYPE"*/
     private String  prot;
     /**开门方式"DOOR_OPEN_TYPE"*/

@@ -69,8 +69,6 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
     //inherited
     public final StringPath level;
 
-    public final NumberPath<Float> load = createNumber("load", Float.class);
-
     // inherited
     public final md.cm.unit.QUnit makeu;
 
@@ -133,6 +131,8 @@ public class QFactoryVehicle extends EntityPathBase<FactoryVehicle> {
 
     // inherited
     public final md.cm.unit.QUnit remu;
+
+    public final NumberPath<Float> rtl = createNumber("rtl", Float.class);
 
     //inherited
     public final StringPath safe;

@@ -17,7 +17,7 @@ public class FactoryVehicle extends Eqp {
     /**厂车牌照"CATLICENNUM"*/
     private String  plat;
     /**额定载荷"RATEDLOADWEIG"*/
-    private Float load;
+    private Float rtl;
     /**发动机型号"ENGINEMODEL"*/
     private String  mtm;
 
