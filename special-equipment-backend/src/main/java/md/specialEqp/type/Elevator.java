@@ -20,11 +20,15 @@ import javax.persistence.*;
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Elevator  extends Eqp {
     //3000电梯  TB_ELEV_PARA  电梯技术参数表
-    /**IF_SPEC_EQP特种电梯；.IF_SPEC_EQP是否特殊设备*/
+    /**IF_SPEC_EQP特种电梯；.IF_SPEC_EQP是否特殊设备
+     * 特种电梯，加收30%; 总共才10台啊，而且旧平台还是放在Eqp表
+     */
     private Boolean spec;
-    /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？*/
+    /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？
+     * 总共才7台啊， 是 否 / null
+     */
     private Boolean nnor;
-    /**合并字段IF_OLDBUILD  旧楼房加装, ? IF_OLDBUILD_INST旧楼加装;*/
+    /**合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;*/
     private Boolean oldb;
     /**ELEFLOORNUMBER电梯层数，*/
     private Short  flo;

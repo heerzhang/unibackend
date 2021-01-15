@@ -53,6 +53,7 @@ extend type Mutation {
     setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Eqp!
     #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。
     buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : Eqp
+    buildEQP2(id:ID!, owner: ID!, info: DeviceCommonInput) : Eqp
     testEQPModify(id:ID!, oid: String ): Eqp
     testEQPFindModify(cod:String!, oid: String ): String
     testEQPStreamModify(cod:String!, oid: String ): String

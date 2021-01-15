@@ -485,6 +485,8 @@ public class BaseMutation implements GraphQLMutationResolver {
     }
 
     //设置基本设备信息; 参数和模型定义的同名接口的输入类型按顺序一致，否则Two different classes used for type
+    /**输入字段放入 DeviceCommonInput 各个设备种类 扁平化。
+     */
     @Transactional
     public Eqp buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
@@ -506,6 +508,15 @@ public class BaseMutation implements GraphQLMutationResolver {
         //修改数据的特别权限控制嵌入这里：
         eQP.setCod(info.getCod());
         eQP.setOid(info.getOid());
+        eQPRepository.save(eQP);
+        return eQP;
+    }
+    @Transactional
+    public Eqp buildEQP2(Long id, Long ownerId, DeviceCommonInput info) {
+        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        Eqp eQP = eQPRepository.findById(id).orElse(null);
+        Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
+
         eQPRepository.save(eQP);
         return eQP;
     }
