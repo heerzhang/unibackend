@@ -43,7 +43,7 @@ public class MainGraphQLServlet extends GraphQLHttpServlet {
         return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();
     } catch (Exception ex) {
       //System.out.println("装载*.graphqls失败"+ex.toString());
-        logger.error("装载*.graphqls失败", ex);
+        logger.error("装载*.graphql失败", ex);
       return null;
     }
   }

@@ -39,7 +39,7 @@ public class ThirdGraphQLServlet extends GraphQLHttpServlet {
       Consumer<GraphQLSchema.Builder> builderConsumer = builder -> builder.codeRegistry(codeRegistry);
       return GraphQLConfiguration.with(schema.transform(builderConsumer)).build();
     } catch (Exception ex) {
-      System.out.println("装载*.graphqls配置失败");
+      System.out.println("装载*.graphql配置失败");
       return null;
     }
   }

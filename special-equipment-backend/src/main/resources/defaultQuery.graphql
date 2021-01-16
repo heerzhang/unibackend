@@ -1,3 +1,4 @@
+#本文仅仅是例子，没有实际用处
 query ED_TEST
 {
     hello2(value:"sadf23ggg xSSD")

@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "unibackend.tools")
 public class MyGraphQLToolsProperties {
 
-    private String schemaLocationPattern = "**/*.graphqls";
+    private String schemaLocationPattern = "**/*.graphql";
     /** @deprecated Set graphql.tools.schema-parser-options.introspection-enabled instead */
     @Deprecated
     private boolean introspectionEnabled = true;
    //匹配application.yml的定义名称如下：unibackend . tools：
-   // schema-location-pattern: "graphql/**/*.graphqls"
+   // schema-location-pattern: "graphql/**/*.graphql"
    // introspection-enabled: true
 
     private boolean useDefaultObjectmapper = true;

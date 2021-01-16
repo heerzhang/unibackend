@@ -68,7 +68,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(value = "unibackend.tools.starter-enabled", havingValue = "true", matchIfMissing = true)
     public SchemaStringProvider schemaStringProvider() {
-        return new ClasspathResourceSchemaStringProvider("graphql/**/*.graphqls");
+        return new ClasspathResourceSchemaStringProvider("graphql/**/*.graphql");
     }
 
     //这个原始来源自/tools/boot/GraphQLJavaToolsAutoConfiguration.java
@@ -155,7 +155,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     @Bean
     //@ConditionalOnMissingBean
     public SchemaStringProvider mainSchemaStringProvider() {
-        return new ClasspathResourceSchemaStringProvider("model/**/*.graphqls");
+        return new ClasspathResourceSchemaStringProvider("model/**/*.graphql");
     }
 
     //针对unibackend.tools.**-enabled都=false情形，加入@Primary，降级处理，graphql主线程变身public的接口。
@@ -176,7 +176,7 @@ public class GraphQLWebJavaToolsAutoConfiguration {
     //@Bean(name = "thirdSchemaStringProvider")
     @Bean
     public SchemaStringProvider thirdSchemaStringProvider() {
-        return new ClasspathResourceSchemaStringProvider("thirdService/**/*.graphqls");
+        return new ClasspathResourceSchemaStringProvider("thirdService/**/*.graphql");
     }
 
     @Bean
