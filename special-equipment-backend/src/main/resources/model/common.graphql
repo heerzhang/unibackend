@@ -3,7 +3,7 @@ directive @authr(
     qx: [String] = ["USER"]
 ) on FIELD_DEFINITION
 
-#不支持中文的名字,似乎不需要定义
+#不支持中文的名字,似乎不需要定义 EnumValue不持中文。
 enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager }
 
 #输入复合对象必须POJO+Query的java代码有地方用到了才算

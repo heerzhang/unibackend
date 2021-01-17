@@ -20,6 +20,7 @@ public class Authority {
     //@SequenceGenerator(name = "authority_seq", sequenceName = "authority_seq", allocationSize = 1)
     private Long id;
 
+    /**直接上字符串enum保险点,用数字还要再映射,可惜用不上中文*/
     @Column(name = "NAME", length = 40)
     @NotNull
     @Enumerated(EnumType.STRING)

@@ -6,11 +6,11 @@ package md.system;
 //要 ROLE_  开头的；
 //注意！ id不应该随着AuthorityName的增删改而导致ID变动。  看Table( AUTHORITY )
 //Authority需要人工匹配enum AuthorityName的数据。
-//"不支持中文的名字"  graphql还要配套对照这个文件 graphql/common.graphqls 前端对应名字。
 
-//enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager }
-
-//根本不需要数字编号［数据库id不能改动］，只需要字符串EnumType.STRING。
+/**graphQL不支持中文的名字；graphql还要配套对照这个文件 graphql/common.graphql 前端对应名字。
+* enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager 不支持中文的}
+* 根本不需要数字编号［数据库id不能改动］，只需要字符串EnumType.STRING。
+ */
 public enum AuthorityName {
     //应该按顺序添加，数据库ID递增，不能乱改表记录。
     //ROLE_cmn = 随意的登录用户。

@@ -6,7 +6,10 @@ import md.specialEqp.Eqp;
 
 import javax.persistence.Entity;
 
-/**1000锅炉  TB_BOIL_PARA  锅炉技术参数
+/**1000锅炉  TB_BOIL_PARA  锅炉技术参数;
+ * 锅炉/电梯，在监察首检录入中不允许新增？ 施工告急中添加的。要监检
+ * 告知单编号自己填，电梯设备代码可null;锅炉告知有设备代码。
+ * 监察只看识别码oid。
  */
 
 @NoArgsConstructor

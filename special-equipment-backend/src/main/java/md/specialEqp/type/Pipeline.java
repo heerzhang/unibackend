@@ -12,6 +12,7 @@ import java.util.Set;
 
 /**8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
  * 管道总体的相关参数，不是具体单元的，是合计数据或者都统一的参数。
+ * 装置名=设备名『就是设备品种的俗称』;
 */
 
 @NoArgsConstructor
@@ -49,7 +50,10 @@ public class Pipeline extends Eqp {
      * 蒸汽：190、空气：60 ; 80(PL8005～S8068段）/60(S8068～S8069段);  -25/-50(PG0410)
      */
     private String  temp;
+
+    //监察整的汇总表编号？数据整理专项。
 }
+
 
 
 //不可改技术参数： 设计压力"DESIGN_PRESS" 设计温度"DESIGN_TEMP" 管道介质"WORK_MEDIUM"

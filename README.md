@@ -59,8 +59,10 @@ ElasticSearch搜索，若输入分词搞对了速度可以飞快，且过滤语�
 
 前端用中文做代码名字类完全可行，后端中文变量名卡在graphQL的语法解析工具上，在*.graphqls模型中定义中文名是不允许的，URL/JDBC/JPA都可允许中文名。
 graphql-java包依赖　ANTLR 自定义语言解析器框架/语法树AST；而graphql-java-tools包依赖Kotlin语言。
+graphQL标准 Name ::显然不可能支持中文的。#注释;EnumValue : Name  https://github.com/graphql/graphql-spec/blob/master/spec/Appendix%20B%20--%20Grammar%20Summary.md
 RESTful需用DTO对象K/V JSON转换[麻烦]。REST API不能支持Object实体直接序列化，graphQL可以直接内省Object实体类型的成员变量。https://www.cnblogs.com/zhangguicheng/articles/13204007.html
 前端 —— 中端 —— 后端 的三层结构模式？　https://zhuanlan.zhihu.com/p/157314533?from_voters_page=true
 Float精度为6~7位，能保证6位为绝对精确，7位一般也是正确的，这里的6~7位是有效小数点后几位, Double加倍。
 搜索引擎ES安装使用 https://www.elastic.co/guide/en/elasticsearch/reference/current/zip-windows.htm
 ES部署ik分词器 所有节点都安装插件 https://github.com/medcl/elasticsearch-analysis-ik
+
