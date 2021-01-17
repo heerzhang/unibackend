@@ -10,9 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
-/**8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
+/**管道装置;8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
  * 管道总体的相关参数，不是具体单元的，是合计数据或者都统一的参数。
- * 装置名=设备名『就是设备品种的俗称』;
+ * 工程（装置）名称：装置名=设备名『就是设备品种的俗称』;
+ * 指定装置后点击合并，将会将该单位底下的所有同类别、同区域（公用管道按照区县，长输管道按照市）下装置的管道单元合并到该装置，其余装置处理成垃圾数据；
+ * 安全管理部门：设备所在地址与使用单位地址不在同一处的，将设备所在地的管理机构视为分支机构，需写明具体地址和所在县区、乡镇（街道）。
+ * 同一管理部门管理的多个管道装置可共用一张使用登记表{使用登记证编号，识别码：都同一个}。
 */
 
 @NoArgsConstructor
@@ -23,6 +26,7 @@ import java.util.Set;
 @Entity
 public class Pipeline extends Eqp {
     //8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
+    //工程（装置）名称：  //装置名称：
 
     /**管道底下的具体的许多个单元组成集合： TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA
     *单元也可以合并。
@@ -51,7 +55,7 @@ public class Pipeline extends Eqp {
      */
     private String  temp;
 
-    //监察整的汇总表编号？数据整理专项。
+    //监察整的汇总表编号？数据整理专项。卷宗编号。整治排查
 }
 
 
@@ -59,3 +63,4 @@ public class Pipeline extends Eqp {
 //不可改技术参数： 设计压力"DESIGN_PRESS" 设计温度"DESIGN_TEMP" 管道介质"WORK_MEDIUM"
 
 //7000压力管道元件=制造库才用的　=制造流水表的type。
+//按装置分别登记管道信息，按单位统一发证；由分支机构管理的，需填写分支机构地址和分支机构所在区域。

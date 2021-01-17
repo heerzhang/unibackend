@@ -8,9 +8,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.util.Date;
 
-/**一条管道底下有很多的管道单元来组成的。TB_PIPELINE_UNIT_PARA
+/**管道单元,一条管道底下有很多的管道单元来组成的。TB_PIPELINE_UNIT_PARA
  * 每个单元管道特性表 TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA
  * 单元没有独立的地理定位字段，归属业务管辖区域码也没做独立设置；单元可能超长一百公里。
+ * 管道规格必须填写数值型，若是存在多种规格，只填写典型管径数据;
+ * 同一个使用单位下的（工程装置名称、管道编号）不允许重复。
  */
 @Getter
 @Setter
@@ -26,13 +28,18 @@ public class PipingUnit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pipe_id")
     private Pipeline pipe;
-
-    /**EQP_CODE管道编号:每个单元编码不同，管道单元的代码：报告书和单线图里面的key。*/
-    private String  code;
+    //关键字段》》 "管道名称(登记单元)"	"管道编号"
+    //1"序号（监管平台生成）" ??
     /**管道单元登记编号EQP_UNT_REGCOD;
      * 多数是顺序编号编下去: 总使用证-1,-2,-3...。
      */
     private String  rno;
+    //2"管道名称(登记单元)" //管道名称(工程名称)：
+
+    /**EQP_CODE管道编号:每个单元编码不同，管道单元的代码：报告书和单线图里面的key。
+     * 同一个使用单位下的同一工程装置名称、管道编号不允许重复。
+     * */
+    private String  code;
 
     //为止点起点地理定位,经度纬度？没意义，实际业务都要查设计图，找使用单位查更加明细资料来做地理定位。
     //直接套用管道设备的Address　pos字段定位地理，以及归属业务管辖的区域码{单个管道设备一个业务唯一管理部门/出报告方便}。
@@ -48,7 +55,7 @@ public class PipingUnit {
     private String  stop;
 
 
-    //todo: 级别enum ?  .V_PIPELINE_LEVEL  '计费用-管道级别（[G][A-D][1-3]）'
+    //todo: "管道级别"级别enum ?  .V_PIPELINE_LEVEL  '计费用-管道级别（[G][A-D][1-3]）'
 
     /**计费用-管道级别PIPELINE_LEVEL，管道的各个所属单元都可有自己单独设置的级别。
      * TB_PIPELINE_UNIT_PARA.PIPELINE_LEVEL'管道级别'　.V_PIPELINE_LEVEL'计费用-管道级别（[G][A-D][1-3]）'
@@ -79,6 +86,7 @@ public class PipingUnit {
     private Float dia;
 
     /**管道长度m LENGTH; 旧数据可null,可能超长一百多公里{这么长也不拆解开}。
+     * 管道规格泛指的3个参数："公称直径(mm)"	"公称壁厚(mm)""管道长度(m)"
      */
     private Float leng;
     /**使用状态USE_STA；若1,2,3,9是有效管理的。每个单元都独立的状态；
@@ -137,6 +145,7 @@ GD类(动力管道) 又分为：GD1类、GD2类。 动力管道=火力发电厂�
 TB_PIPELINE_UNIT_PARA.IS_KX'是否为跨县区管道登记单元：0-否，1-是' 实际数据没有=1的。
 单个管道设备底下再做细分的跨越区域登记管理一个管道单元有何意义？？登记管理区域实际上还能够升级地区级别的，还怕分解不了吗!
 长输管道完全可以直接肢解成各个大地区独立的管道设备去搞登记的。
+设计/工作条件一共5个参数： "设计压力(MPa)"	"工作压力(MPa)"	"设计温度(℃)"	"工作温度(℃)"	介质；
 
 */
 
