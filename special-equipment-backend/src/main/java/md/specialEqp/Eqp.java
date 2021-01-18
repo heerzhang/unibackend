@@ -57,9 +57,15 @@ public class Eqp implements Equipment{
     //乐观锁同步用，［注意］外部系统修改本实体数据就要改它时间一起commit事务。@Version防第二类更新丢失；
     @Version
     private int  version;   //之前Timestamp类型ES过不了; 旧表H2还用timestamp
-    //该条设备记录已被设置成了删除态不再有效，就等待以后维护程序去清理这些被历史淘汰的数据了。
-    @NotNull
-    private Boolean valid=true;
+
+    /**EQP_USE_STA 状态码; 合并标记
+     * 不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
+     * 该条设备记录已被设置成了删除态不再有效，就等待以后维护程序去清理这些被历史淘汰的数据了。
+     *     @NotNull
+     * 合并删除标记   private Boolean valid=true;
+    */
+    @Enumerated
+    private UseState_Enum   ust;
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //@Column(length =128, unique = true)
 
@@ -77,11 +83,13 @@ public class Eqp implements Equipment{
     private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     private String subv;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
-    //不能用private char   在H2无法建，Character占2字节
-    private Byte   reg;   //EQP_REG_STA 注册
-    //不能用保留字。private char  use ?　：若用了保留字导致表EQP无法自动建立！
-    private Byte   ust;   //EQP_USE_STA 状态码
-    private Byte   cag;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
+    /**EQP_REG_STA 注册
+     * 不能用private char   在H2无法建，Character占2字节
+    */
+    private Byte   reg;
+
+    /**目录外*/
+    private Boolean   ocat;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码

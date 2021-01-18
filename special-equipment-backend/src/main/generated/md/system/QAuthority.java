@@ -22,7 +22,7 @@ public class QAuthority extends EntityPathBase<Authority> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<AuthorityName> name = createEnum("name", AuthorityName.class);
+    public final EnumPath<AuthorityName_Enum> name = createEnum("name", AuthorityName_Enum.class);
 
     public final ListPath<User, QUser> users = this.<User, QUser>createList("users", User.class, QUser.class, PathInits.DIRECT2);
 

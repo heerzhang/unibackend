@@ -24,7 +24,7 @@ public class Authority {
     @Column(name = "NAME", length = 40)
     @NotNull
     @Enumerated(EnumType.STRING)
-    private AuthorityName name;
+    private AuthorityName_Enum name;
 
     //设置小心，故障：hibernate.LazyInitializationException: failed to lazily initialize
     //FetchType.LAZY，产生查询异常失败；有意外好处，切断graphQL的关联查询嵌套，避免信息安全问题。
@@ -40,11 +40,11 @@ public class Authority {
         this.id = id;
     }
 
-    public AuthorityName getName() {
+    public AuthorityName_Enum getName() {
         return name;
     }
 
-    public void setName(AuthorityName name) {
+    public void setName(AuthorityName_Enum name) {
         this.name = name;
     }
 

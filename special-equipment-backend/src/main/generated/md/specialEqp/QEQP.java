@@ -24,8 +24,6 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final DateTimePath<java.util.Date> accd = createDateTime("accd", java.util.Date.class);
 
-    public final NumberPath<Byte> cag = createNumber("cag", Byte.class);
-
     public final StringPath ccl1 = createString("ccl1");
 
     public final StringPath ccl2 = createString("ccl2");
@@ -69,6 +67,8 @@ public class QEqp extends EntityPathBase<Eqp> {
     public final DateTimePath<java.util.Date> nxtd1 = createDateTime("nxtd1", java.util.Date.class);
 
     public final DateTimePath<java.util.Date> nxtd2 = createDateTime("nxtd2", java.util.Date.class);
+
+    public final BooleanPath ocat = createBoolean("ocat");
 
     public final StringPath occa = createString("occa");
 
@@ -114,11 +114,9 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit useu;
 
-    public final NumberPath<Byte> ust = createNumber("ust", Byte.class);
+    public final EnumPath<UseState_Enum> ust = createEnum("ust", UseState_Enum.class);
 
     public final md.cm.unit.QDivision usud;
-
-    public final BooleanPath valid = createBoolean("valid");
 
     public final StringPath vart = createString("vart");
 

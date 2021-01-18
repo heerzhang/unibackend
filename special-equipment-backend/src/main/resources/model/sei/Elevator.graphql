@@ -1,12 +1,13 @@
 type Elevator implements Equipment & IfElevator{
     id:ID!
-     cod: String!
-     oid: String
-     type: String!
-     sort: String!
-     vart: String!
-
-     hlf: String
+    cod: String!
+    oid: String
+    type: String!
+    sort: String!
+    vart: String!
+    ust: String!
+    reg: String!
+    hlf: String
 
 }
 

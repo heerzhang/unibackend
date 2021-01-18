@@ -11,7 +11,7 @@ package md.system;
 * enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager 不支持中文的}
 * 根本不需要数字编号［数据库id不能改动］，只需要字符串EnumType.STRING。
  */
-public enum AuthorityName {
+public enum AuthorityName_Enum {
     //应该按顺序添加，数据库ID递增，不能乱改表记录。
     //ROLE_cmn = 随意的登录用户。
     ROLE_Ma,    //主模型域基础用户

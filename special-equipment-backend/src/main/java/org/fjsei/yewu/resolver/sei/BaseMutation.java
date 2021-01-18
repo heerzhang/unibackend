@@ -131,7 +131,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     @Transactional(rollbackFor = Exception.class)
     public Eqp newEQP(String cod, String type, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Eqp eQP =Eqp.builder().cod(cod).type(type).oid(oid).build();
+        Eqp eQP =Eqp.builder().cod(cod).type(type).oid(oid).reg(Byte.valueOf("3")).ust(UseState_Enum.usingsw).build();
         //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
         eQP.setSort("三方大的");
         eQP.setVart("Ccvs第三方大师傅得f");
@@ -170,7 +170,7 @@ public class BaseMutation implements GraphQLMutationResolver {
        // EqpEs eqpEs=new EqpEs();
         //嵌套对象会直接引用ref的=浅层拷贝。嵌套的关联对象给Elasticsearch也是全量都存储的。
       //直接用BeanUtils.copyProperties(eQP,eqpEs); 　 若有字段嵌套对象类型不一样的就会报错。
-        String json = JSON.toJSONString(eQP);
+        String json = JSON.toJSONString(eQP);       //支持自循环嵌套不报错
         EqpEs eqpEs=JSON.parseObject(json, EqpEs.class);   //遇到某字段的属于嵌套对象类型并且该字段对象类型还变化的情况也可顺利转换。
     //    eqpEs.getTask().forEach(item -> {
    //     });
@@ -673,7 +673,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eqp = eQPRepository.findById(eqpId).orElse(null);
         Assert.isTrue(eqp != null,"未找到EQP:"+eqpId);
-        eqp.setValid(false);
+        eqp.setUst(UseState_Enum.stoped);
         eQPRepository.save(eqp);
         return eqp!=null;
     }

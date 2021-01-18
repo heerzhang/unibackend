@@ -5,6 +5,8 @@ interface Equipment{
     sort: String!
     vart: String!
     oid: String
+    ust: String!
+    reg: String!
 }
 type Eqp implements Equipment{
     id:ID!
@@ -13,6 +15,8 @@ type Eqp implements Equipment{
     type: String!
     sort: String!
     vart: String!
+    ust: String!
+    reg: String!
     fno: String
     isps: [Isp]
     pos: Address
@@ -27,6 +31,8 @@ type EqpEs implements Equipment{
     type: String!
     sort: String!
     vart: String!
+    ust: String!
+    reg: String!
     fno: String
     #task: [TaskEs!]
 }

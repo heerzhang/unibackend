@@ -26,23 +26,28 @@ public class Elevator  extends Eqp {
      * 特种电梯，加收30%; 总共才10台啊，而且旧平台还是放在Eqp表
      */
     private Boolean spec;
-    /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？
+    /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？技术上的非标，特种电梯是使用范围上的。
      * 总共才7台啊， 是 否 / null
      */
     private Boolean nnor;
-    /**合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;*/
+    /**合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;
+     * 数量不多
+     * */
     private Boolean oldb;
-    /**ELEFLOORNUMBER电梯层数，*/
+
+    /**ELEFLOORNUMBER电梯层数，计费*/
     private Short  flo;
+    /**RUNVELOCITY运行速度 ，米/秒 运行速度(m/s)"RUNVELOCITY"
+     */
+    private Float  vl;
+
     /**ELEHEIGHT3000提升高度*/
     private Float  hlf;
     /**SLIDWAY_USE_LENG3300人行道使用区段长度 人行道使用区段长度（自动人行道）(m)"SLIDWAY_USE_LENG"*/
     private Float  lesc;
     /**名义宽度(自动扶梯/自动人行道)(mm)"NOMI_WIDTH"*/
     private Float  wesc;
-    /**RUNVELOCITY运行速度 ，米/秒 运行速度(m/s)"RUNVELOCITY"
-     */
-    private Float  vl;
+
 
     //IMPORT_TYPE进口类型,
 

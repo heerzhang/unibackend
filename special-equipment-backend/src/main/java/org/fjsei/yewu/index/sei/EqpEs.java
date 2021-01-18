@@ -3,6 +3,7 @@ package org.fjsei.yewu.index.sei;
 import lombok.*;
 import md.cm.unit.Unit;
 import md.specialEqp.Equipment;
+import md.specialEqp.UseState_Enum;
 import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 
@@ -25,7 +26,7 @@ public class EqpEs implements Equipment{
     @Id
     protected Long id;
     //该条设备记录已被设置成了删除态不再有效，就等待以后维护程序去清理这些被历史淘汰的数据了。
-    private Boolean valid;
+    //private Boolean valid;
 
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //ngram_analyzer缺省3+3配置的，若是少于3个字符就无法搜索出来。最少要求输入3个字符。
@@ -49,14 +50,18 @@ public class EqpEs implements Equipment{
     @Field(type = FieldType.Keyword)
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     @Field(type = FieldType.Keyword)
-    private String subVart; //SUB_EQP_VART 子设备品种
+    private String subv; //SUB_EQP_VART 子设备品种
     @Field(type = FieldType.Byte)
-    private char   reg;   //EQP_REG_STA 注册
+    private Byte   reg;   //EQP_REG_STA 注册
     //char默认和String一样处理映射_mapping。
-    @Field(type = FieldType.Byte)
-    private char   ust;   //EQP_USE_STA 状态码
-    @Field(type = FieldType.Byte)
-    private char   cag;   //IN_CAG 目录属性 1:目录内，2：目录外
+    /**ES对enum会实际看做FieldType.Keyword来处理的;
+     * 不能上@Field(type = FieldType.Byte)
+     * JSON.toJSONString(eQP)会直接上字符串的，无法简单从Eqp复制成EqpEs;
+    */
+    @Enumerated
+    private UseState_Enum ust;   //EQP_USE_STA 状态码
+    @Field(type = FieldType.Boolean)
+    private Boolean   ocat;   //IN_CAG 目录属性 1:目录内，2：目录外
     //无法动态修改已经初始化过的字段的类型，需要先删除再来
     @MultiField(mainField= @Field(type=FieldType.Text, analyzer = "ngram_analyzer", searchAnalyzer = "ngram_analyzer"),
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=40)
@@ -68,7 +73,7 @@ public class EqpEs implements Equipment{
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=40)
             }
     )
-    private String sNo;    //EQP_STATION_COD 设备代码(设备国家代码)
+    private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
     @Field(type = FieldType.Keyword)
     private String rcod;    //EQP_REG_COD 监察注册代码
     @Field(type = FieldType.Keyword)
@@ -91,7 +96,7 @@ public class EqpEs implements Equipment{
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=100)
             }
     )
-    private String  plNo;    //EQP_INNER_COD 单位内部编号place No
+    private String  plno;    //EQP_INNER_COD 单位内部编号place No
     //不能用保留字。private String mod;
     @MultiField(mainField= @Field(type=FieldType.Text),
             otherFields={ @InnerField(suffix="keyword",type=FieldType.Keyword, ignoreAbove=50)
@@ -99,26 +104,26 @@ public class EqpEs implements Equipment{
     )
     private String  model;    //EQP_MOD 设备型号
     private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
-    private Boolean  important;
+    private Boolean  vital;
     //  private Date instDate;
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date    useDt;  //FIRSTUSE_DATE 设备投用日期
+    private Date    used;  //FIRSTUSE_DATE 设备投用日期
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date    accpDt;  //COMPE_ACCP_DATE 竣工验收日期
+    private Date    accd;  //COMPE_ACCP_DATE 竣工验收日期
     @Field(type = FieldType.Date, format = DateFormat.date_time)
     private Date    expire;  //DESIGN_USE_OVERYEAR设计使用年限 到期年份 //END_USE_DATE 使用年限到期时间
     private Boolean  move;   //IS_MOVEEQP 是否流动设备
-    @Field(type = FieldType.Keyword)
-    private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
+ //   @Field(type = FieldType.Keyword)
+  //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     @Field(type = FieldType.Keyword)
-    private String occasion;    //EQP_USE_OCCA 使用场合
+    private String occa;    //EQP_USE_OCCA 使用场合
 
-    private float  ePrice=0;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
-    @Field(type = FieldType.Keyword)
-    private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
+    private Float  money;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
+    //@Field(type = FieldType.Keyword)
+    //private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
     //还没有做出结论判定的，就直接上null；
     private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
     //判定为合格的
@@ -129,15 +134,15 @@ public class EqpEs implements Equipment{
     @Field(type = FieldType.Keyword)
     private String ccl2;    //LAST_ISP_CONCLU2  '最后一次检验结论2
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date    ispD1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
+    private Date    ispd1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date    ispD2;      //LAST_ISP_DATE2
+    private Date    ispd2;      //LAST_ISP_DATE2
     //有指定FieldType的是启动就会初始化_mapping中出现; 否则是保存才初始化。
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date nxtD1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）
+    private Date nxtd1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）
     //Date字段没注解的，缺省ES映射是给　long　类型。　初始化_mapping时null字段没添加上。
     @Field(type = FieldType.Date, format = DateFormat.date_time)
-    private Date nxtD2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+    private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
    // @GeoPointField
    // @Field(ignoreFields=) 只是忽略注解下的字段中的字段，而不是忽略这个字段本身；
 
@@ -147,10 +152,10 @@ public class EqpEs implements Equipment{
    // private Set<Isp>  isps;
     //引入这两个单位字段消耗磁盘空间大
     @Field(type = FieldType.Object)
-    private UnitEs  useU;     //USE_UNT_ID 使用单位ID
+    private UnitEs  useu;     //USE_UNT_ID 使用单位ID
     //UnitEs并不会当成Java实体对象那样存储，相同UnitEs.id的可以有从ES读取出不同的内容。好像json{}存储那样。
-    @Field(type = FieldType.Object)
-    private UnitEs  owner;      //PROP_UNT_ID 产权单位
+    //@Field(type = FieldType.Object)
+    //private UnitEs  owner;      //PROP_UNT_ID 产权单位
 
     //@Field(type = FieldType.Nested) 集合数组对象的；性能较差；
     //坐标 Object 内部 lat lon: float

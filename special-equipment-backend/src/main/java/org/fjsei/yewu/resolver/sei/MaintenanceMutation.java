@@ -230,7 +230,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                 continue;
             }
             eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subv(each.getSUB_EQP_VART())
-                .reg(each.getEQP_REG_STA()).ust(each.getEQP_USE_STA()).cag(each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
+                .reg(each.getEQP_REG_STA()).ocat('2'==each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
                 .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fno(each.getFACTORY_COD()).name(each.getEQP_NAME()).plno(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
                 .cping(each.getIF_INCPING()=='1').vital(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
                     .used(each.getFIRSTUSE_DATE())
@@ -242,6 +242,8 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                     .ccl1(each.getLAST_ISP_CONCLU1()).ccl2(each.getLAST_ISP_CONCLU2())
                     .ispd1(each.getLAST_ISP_DATE1()).ispd2(each.getLAST_ISP_DATE2()).nxtd1(each.getNEXT_ISP_DATE1())
                 .nxtd2(each.getNEXT_ISP_DATE2()).build();
+            //转换
+            eqp.setUst(UseState_Enum.valueOf(each.getEQP_USE_STA().toString()));
             QUnit qm = QUnit.unit;
             Unit unit;
 
@@ -356,7 +358,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                     unitEs.setId(useU.getId());
                     unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
                     unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
-                    eqp.setUseU(unitEs);
+                    eqp.setUseu(unitEs);
                 }
                 useU=eqpfrom.getOwner();
                 if(null!=useU) {
@@ -364,7 +366,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                     unitEs.setId(useU.getId());
                     unitEs.setName(null!=useU.getCompany()? useU.getCompany().getName():useU.getPerson().getName());
                     unitEs.setAddress(null!=useU.getCompany()? useU.getCompany().getAddress():useU.getPerson().getAddress());
-                    eqp.setOwner(unitEs);
+                    //eqp.setOwner(unitEs);
                 }
                 neweqpes.add(eqp);
             }

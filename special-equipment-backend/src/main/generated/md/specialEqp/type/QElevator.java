@@ -32,9 +32,6 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath buff = createString("buff");
 
     //inherited
-    public final NumberPath<Byte> cag;
-
-    //inherited
     public final StringPath ccl1;
 
     //inherited
@@ -121,6 +118,9 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final DateTimePath<java.util.Date> nxtd2;
 
     //inherited
+    public final BooleanPath ocat;
+
+    //inherited
     public final StringPath occa;
 
     //inherited
@@ -201,13 +201,10 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final md.cm.unit.QUnit useu;
 
     //inherited
-    public final NumberPath<Byte> ust;
+    public final EnumPath<md.specialEqp.UseState_Enum> ust;
 
     // inherited
     public final md.cm.unit.QDivision usud;
-
-    //inherited
-    public final BooleanPath valid;
 
     //inherited
     public final StringPath vart;
@@ -242,7 +239,6 @@ public class QElevator extends EntityPathBase<Elevator> {
         super(type, metadata, inits);
         this._super = new md.specialEqp.QEqp(type, metadata, inits);
         this.accd = _super.accd;
-        this.cag = _super.cag;
         this.ccl1 = _super.ccl1;
         this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
@@ -265,6 +261,7 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.name = _super.name;
         this.nxtd1 = _super.nxtd1;
         this.nxtd2 = _super.nxtd2;
+        this.ocat = _super.ocat;
         this.occa = _super.occa;
         this.oid = _super.oid;
         this.owner = _super.owner;
@@ -289,7 +286,6 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.useu = _super.useu;
         this.ust = _super.ust;
         this.usud = _super.usud;
-        this.valid = _super.valid;
         this.vart = _super.vart;
         this.version = _super.version;
         this.vital = _super.vital;
