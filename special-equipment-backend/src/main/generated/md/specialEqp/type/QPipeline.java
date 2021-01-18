@@ -122,6 +122,8 @@ public class QPipeline extends EntityPathBase<Pipeline> {
 
     public final StringPath prs = createString("prs");
 
+    public final StringPath pttl = createString("pttl");
+
     //inherited
     public final StringPath rcod;
 

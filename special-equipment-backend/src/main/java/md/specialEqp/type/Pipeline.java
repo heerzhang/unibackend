@@ -26,7 +26,12 @@ import java.util.Set;
 @Entity
 public class Pipeline extends Eqp {
     //8000压力管道/ TB_PIPELINE_PARA  JC_TEMP_PIPELINE_PARA
-    //工程（装置）名称：  //装置名称：
+    /**管道工程或者固定式装置名称
+    * 工程（装置）名称：装置名称： 不同于父类Eqp.name;设备名称;
+    * 市场化的检验竞争，以整个管道装置设备oid/使用证、工程（装置）名称，统一划归某个检验机构。
+     * 责任分解： 看单线图{设计单位}和工程图{安装单位}；
+    */
+    private String  pttl;
 
     /**管道底下的具体的许多个单元组成集合： TB_PIPELINE_UNIT_PARA  JC_TEMP_PIPELINE_UNIT_PARA
     *单元也可以合并。
@@ -39,23 +44,30 @@ public class Pipeline extends Eqp {
      * 实际是标号， PE管； 20 ；钢制；碳钢；无缝钢管（牌号不清）; 详见管道特性表
     */
     private String  matr;
+
     //合成属性123级别+ABCD类别；PIPELINE_LEVEL = "";// 管道级别@[{id:'GA1',text:'GA1'},{id:'GA2',text:'GA2'},{id:'GB1',text:'GB1'},{id:'GB2',text:'GB2'},{id:'GC1',text:'GC1'},{id:'GC2',text:'GC2'},{id:'GC3',text:'GC3'},{id:'GD1',text:'GD1'},{id:'GD2',text:'GD2'}]
+    //管道级别PIPELINE_LEVEL，管道的各个所属单元都可有自己单独设置的级别。
+    //父类Eqp.level 代替
 
     /**管道介质"WORK_MEDIUM" 见特性表
      * 乙炔/粗BYD/BYD+水
      */
     private String  mdi;
+
+
+
     /**设计压力"DESIGN_PRESS" 见特性表 详见管道特性表,
      * 高压部分/低压部分：2.0/1.5    高压侧：2.0；低压侧1.5
      * {"高":, "低":, "某部分管":, }
      */
     private String  prs;
+
     /**设计温度"DESIGN_TEMP"  常温; 见管道单线图
      * 蒸汽：190、空气：60 ; 80(PL8005～S8068段）/60(S8068～S8069段);  -25/-50(PG0410)
      */
     private String  temp;
 
-    //监察整的汇总表编号？数据整理专项。卷宗编号。整治排查
+    //监察整的汇总表编号？数据整理专项。卷宗编号。整治排查 ==>OID 使用证号
 }
 
 
