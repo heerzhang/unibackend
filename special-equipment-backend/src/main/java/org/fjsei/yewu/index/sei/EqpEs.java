@@ -3,6 +3,7 @@ package org.fjsei.yewu.index.sei;
 import lombok.*;
 import md.cm.unit.Unit;
 import md.specialEqp.Equipment;
+import md.specialEqp.RegState_Enum;
 import md.specialEqp.UseState_Enum;
 import org.springframework.data.elasticsearch.annotations.*;
 import org.springframework.data.elasticsearch.core.geo.GeoPoint;
@@ -51,16 +52,18 @@ public class EqpEs implements Equipment{
     private String vart;    //设备品种代码 EQP_VART{首3个字符}
     @Field(type = FieldType.Keyword)
     private String subv; //SUB_EQP_VART 子设备品种
-    @Field(type = FieldType.Byte)
-    private Byte   reg;   //EQP_REG_STA 注册
+    /**EQP_REG_STA 注册*/
+    @Enumerated
+    @Field(type = FieldType.Keyword)
+    private RegState_Enum reg;
     //char默认和String一样处理映射_mapping。
-    /**ES对enum会实际看做FieldType.Keyword来处理的;
+    /**EQP_USE_STA 状态码; ES对enum会实际看做FieldType.Keyword来处理的;
      * 不能上@Field(type = FieldType.Byte)
-     * JSON.toJSONString(eQP)会直接上字符串的，无法简单从Eqp复制成EqpEs; ES要求Keyword类型
+     * JSON.toJSONString(eQP)会直接上字符串的，无法简单从Eqp复制成EqpEs; ES要求Keyword类型。
     */
     @Enumerated
     @Field(type = FieldType.Keyword)
-    private UseState_Enum ust;   //EQP_USE_STA 状态码
+    private UseState_Enum ust;
     @Field(type = FieldType.Boolean)
     private Boolean   ocat;   //IN_CAG 目录属性 1:目录内，2：目录外
     //无法动态修改已经初始化过的字段的类型，需要先删除再来
@@ -182,5 +185,6 @@ ES过滤使用termQuery例子：boolQueryBuilder.must(termQuery("useU.id",where.
 NativeSearchQueryBuilder().withFilter()只能用在已经统计后的过滤(最后的统计条目过滤)，其它情形不要用；正常查询应该用NativeSearchQueryBuilder().withQuery();
 ES:将Geo精度设置到3米,内存占用可以减少62%    https://blog.csdn.net/u012332735/article/details/54971638
 ES对Enum 枚举数据类型的处置：转成Keword / String方式的，会自带优化。
+_mapping无法直接修改，需要重做index?
 */
 

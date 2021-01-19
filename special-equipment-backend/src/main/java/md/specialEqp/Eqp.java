@@ -31,12 +31,15 @@ import java.util.stream.Collectors;
 //EntityGraph存在理由:提示JPA去屏蔽LAZY，用JOIN FETCH一次关联表全查，减少SQL语句(规避了1+N 问题)，从而提高速度；但也失去懒加载优点。https://blog.csdn.net/dm_vincent/article/details/53366934
 //对于@NamedEntityGraphs({ @NamedEntityGraph每条定义尽量精简，不要太多字段，必须每一条/每一个接口都要测试对比/打印调试hibernate SQL。
 //字段名称用了保留字导致表EQP无法自动建立！ 需手动创建最简单eqp表。 字段类型要用java包装类
+//继承实体类做法：String=eqp.getDTYPE没有啊，无法在SQL获得派生类类型做过滤条件，不能在数据库直接过滤派生类类型。ElevatorRepository可只搜索本派生类，不灵活啊。
 
-/**特种设备检验有8大类。
+
+/**特种设备检验有8大类{目前实际7个}。
 监察特有功能:许可证(单位/人员{监察/检验检测/无损检测/评审/协管/质保体系人员}/设备)；工作成效统计(作业人/监察人/考试机构{班级}/检验检测机构/检验人员/生产单位,整改率)，到期预警，
  证书到期预警；重要问题闭环，现场检查安排(指令书)；告知受理；检验相关审核(单位{安装改造维修/制造/设计/充装/检验机构/乡镇机构}变更/关键字段{使用单位}/设备状态变更/维保认领)。
  机构(评审/考试/培训)变更审核，作业人员聘用单位变更；设备<省外注册/迁出/流动设备/使用登记/首检录入/办证后管道新增确认>；许可{申请书}办证流程；考试审核，案件，诚信，维保准入。
-*/
+不属于8大类的比如R000常压容器; 直接就是Eqp基类/没有独立参数表。
+ */
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -79,14 +82,30 @@ public class Eqp implements Equipment{
     private String cod;
 
     //光用继承实体类不好解决问题，还是要附加冗余的类别属性；特种设备分类代码 层次码4个字符/大写字母 ；可仅用前1位、前2位或前3位代码；
-    private String type;    //设备种类 EQP_TYPE{首1个字符} ,
-    private String sort;    //设备类别代码 EQP_SORT{首2个字符} ,
-    private String vart;    //设备品种代码 EQP_VART{首3个字符}
-    private String subv;     //SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
+    /**设备种类 EQP_TYPE{首1个字符} ,
+     * 用实体类java类型区别，只是在服务器内存中区分操作的, if(eQP instanceof Elevator)
+     *  ((Elevator) eQP).setxxx;，难道要把数据集全部搜到内存中来; 要直接要在数据库DB来设置SQL层次过滤？
+     * 继承派生缺点，Hibernate语句生成超长。就算派生继承，还得要再搞个字段表示继承类的类型方便SQL过滤。
+     * */
+    private String type;
+    /**设备类别代码 EQP_SORT{首2个字符} ,
+     * 62个
+     * */
+    private String sort;
+    /**设备品种代码 EQP_VART{首3个字符}
+     * 142个
+     * */
+    private String vart;
+    /**SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
+     * 22个
+     * 可同号9999，不同称谓的。
+     * */
+    private String subv;
     /**EQP_REG_STA 注册
      * 不能用private char   在H2无法建，Character占2字节
     */
-    private Byte   reg;
+    @Enumerated
+    private RegState_Enum   reg;
 
     /**目录外*/
     private Boolean   ocat;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
@@ -311,3 +330,26 @@ join爆炸记录数范例 @NamedEntityGraph( name="Eqp.task",attributeNodes={　
 //         　 @Index(name="factoryNo_idx",columnList="fNo")  } )
 
 //二级缓存可移植性@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast") 这里region是按照配置来区分的区分标识，竟然不省略。
+
+/*树形层次分类设备； https://baike.baidu.com/item/%E7%89%B9%E7%A7%8D%E8%AE%BE%E5%A4%87%E7%9B%AE%E5%BD%95/19834714?fr=aladdin#2
+type,sort,vart,subv设备细分类别，实际前端采用的多，算展示层映射用的。后端服务器主要用于计费/报告类型的控制。
+type有：
+3 电梯
+ sort有：
+ 31 曳引驱动
+    vart有：
+
+
+ 32 液压
+ 33 扶梯
+ 34 其他类型
+ <3000,3000,9999>其它?
+2 压力容器
+4 起重
+8 管道
+1 锅炉
+5 厂车
+6 游乐
+9 索道
+R 常压容器
+*/

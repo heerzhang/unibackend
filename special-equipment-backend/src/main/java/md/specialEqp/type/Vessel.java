@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 //@DiscriminatorValue(value="电梯")
 
 /**2000压力容器	 TB_VESSEL_PARA
+ * R000常压容器 能否也放在这个派生类{技术参数表}；再已经 数据库-type-sort-vart字段区分。实体继承成了技术参数表分别了。
  */
 
 @NoArgsConstructor

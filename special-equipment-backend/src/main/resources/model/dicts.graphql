@@ -1,0 +1,3 @@
+#对输入参数有用，输出Object{}可以不用Enum,直接String没区别
+enum UseState_Enum { NOTINUSE, USE, STOP, DISCARD, DEMOLISH, MOVEOUT, DELETE, REMOVESUPV, USENOTREG }
+enum RegState_Enum { TODOREG, REG, CANCEL }

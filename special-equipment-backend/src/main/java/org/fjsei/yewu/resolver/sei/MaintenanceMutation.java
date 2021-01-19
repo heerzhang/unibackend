@@ -230,7 +230,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                 continue;
             }
             eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subv(each.getSUB_EQP_VART())
-                .reg(each.getEQP_REG_STA()).ocat('2'==each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
+                .reg(RegState_Enum.valueOf(each.getEQP_REG_STA().toString())).ocat('2'==each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
                 .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fno(each.getFACTORY_COD()).name(each.getEQP_NAME()).plno(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
                 .cping(each.getIF_INCPING()=='1').vital(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
                     .used(each.getFIRSTUSE_DATE())
@@ -317,8 +317,9 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     }
 
     //从Eqp以及关联实体提取数据腾挪到EqpEs索引中去
+    //_正常维护代码保留
     @Transactional(rollbackFor = Exception.class)
-    public Iterable<String> syncEqpEsFromEqp_正常维护代码保留(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         Iterable<Eqp> eqps= eQPRepository.findAll(pageable);
@@ -979,7 +980,7 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
     //同一个单位不同设备的管理部门类型却设置多种，有些设备有分支机构的，有些设备无内设的。第一步骤差错=>分支机构无效
     //第四步为eqp填上Division使用单位分支机构
     @Transactional(rollbackFor = Exception.class)
-    public Iterable<String> syncEqpEsFromEqp(int offset, int limit) {
+    public Iterable<String> syncEqpEsFromEqp_填上Division使用单位分支机构(int offset, int limit) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Pageable pageable= PageOffsetFirst.of(offset, limit);
         QEqpMge qm2 = QEqpMge.eqpMge;

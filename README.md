@@ -4,7 +4,7 @@ graphQL文档 https://www.graphql-java.com/documentation/
 网页POST https://hanyeyinyong2.123nat.com:8673/graphql net::ERR_CERT_COMMON_NAME_INVALID 域名服务提供商有问题。
 
 更新触发Gradle报错：右侧条gradle配置按钮-Use default gradle wrapper模式+gradle JVM版本12.1选;某些包下载遭遇失败,刷新重做，
-看下载URL是国内的aliyun还是缺省https://plugins.gradle.org/m2/。
+看下载URL是国内的aliyun还是缺省https://plugins.gr_settingsadle.org/m2/。
 graphQL input递归,会导致 装载*.graphqls配置失败
 graphQL用interface只能限定前端查询指定类型约束的可见字段，但无法限制前端修改查询结果的实际Type/通过它获得interface定义范围以外的字段。
 　graphQL和java实体类两种系统独立但是又有联系的，有些部分必须各自独立定义，靠名字唯一性联系。实体继承性对graphQL不可见的。
@@ -65,5 +65,5 @@ RESTful需用DTO对象K/V JSON转换[麻烦]。REST API不能支持Object实体�
 Float精度为6~7位，能保证6位为绝对精确，7位一般也是正确的，这里的6~7位是有效小数点后几位, Double加倍。
 搜索引擎ES安装使用 https://www.elastic.co/guide/en/elasticsearch/reference/current/zip-windows.htm
 ES部署ik分词器 所有节点都安装插件 https://github.com/medcl/elasticsearch-analysis-ik
-从ES查看index的映射URL=  http://localhost:9200/eqp_latest/_mapping
+从ES查看index的映射URL=  http://localhost:9200/eqp_latest/_mapping   _settings
 

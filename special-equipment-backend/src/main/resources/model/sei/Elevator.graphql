@@ -5,8 +5,8 @@ type Elevator implements Equipment & IfElevator{
     type: String!
     sort: String!
     vart: String!
-    ust: String!
-    reg: String!
+    ust: UseState_Enum!
+    reg: RegState_Enum!
     hlf: String
 
 }
