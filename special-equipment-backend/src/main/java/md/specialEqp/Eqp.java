@@ -87,18 +87,21 @@ public class Eqp implements Equipment{
      *  ((Elevator) eQP).setxxx;，难道要把数据集全部搜到内存中来; 要直接要在数据库DB来设置SQL层次过滤？
      * 继承派生缺点，Hibernate语句生成超长。就算派生继承，还得要再搞个字段表示继承类的类型方便SQL过滤。
      * */
+    @Column(nullable = false)
     private String type;
     /**设备类别代码 EQP_SORT{首2个字符} ,
      * 62个
+     * 可为空
      * */
     private String sort;
     /**设备品种代码 EQP_VART{首3个字符}
      * 142个
+     * 可为空
      * */
     private String vart;
     /**SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
      * 22个
-     * 可同号9999，不同称谓的。
+     * 可为空 9999
      * */
     private String subv;
     /**EQP_REG_STA 注册
@@ -112,65 +115,113 @@ public class Eqp implements Equipment{
     private String cert;    //EQP_USECERT_COD 使用证号
     private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
     private String rcod;    //EQP_REG_COD 监察注册代码
-    /**EQP_LEVEL 设备等级//CLASS_COD 产品分类代码
+    /**EQP_LEVEL 设备等级 ,可融合合并旧平台的CLASS_COD 产品分类代码
      * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
-     * 设计上的级别
+     * 设计上的级别; 目前随意，todo://根据type看怎么规范-提升使用价值。
+     * 关键的等级有些已直接体现到设备{容器}类别上了。
+     * 游乐设施的，同步AMUS_TYPE设备级别
      */
     private String level;
     private String fno;   //FACTORY_COD  出厂编号
-    private String name;    //EQP_NAME 设备名称
-    //不能用保留字。private String inner;
-    //附加上后更加能精确定位某个地理空间的位置
-    private String plno;    //EQP_INNER_COD 单位内部编号place No
-    //不能用保留字。private String mod;
-    private String  model;    //EQP_MOD 设备型号
-    private Boolean  cping;   //IF_INCPING 是否正在安装监检//IF_NOREG_LEGAR非注册法定设备（未启用）
+    /**EQP_NAME 设备名称，给外行看的*/
+    private String name;
+
+    /**EQP_INNER_COD 单位内部编号place No
+     * 附加上后更加能精确定位某个地理空间的位置
+     * */
+    private String plno;
+    /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填
+     * */
+    private String  model;
+    /**IF_INCPING 是否正在安装监检{检验业务状态/时间长、监察关心注册}, 相关IF_NOREG_LEGAR非注册法定设备（未启用）
+     * */
+    private Boolean  cping;
     /**IF_MAJEQP 是否重要特种设备
      * 监察初始化设置的关照级别。
      */
     private Boolean  vital;
-    //private Date  instDate;
-    private Date used;  //FIRSTUSE_DATE 设备投用日期
-    private Date accd;  //COMPE_ACCP_DATE 竣工验收日期
-    //.EXTEND_USE_YEAR延长使用年限; .MAKE_DATE制造日期
-    private Date    expire;  //DESIGN_USE_OVERYEAR设计使用年限 到期年份 //END_USE_DATE 使用年限到期时间
-    private Boolean  move;   //IS_MOVEEQP 是否流动设备  流动作业设备才会出现省外JC注册　使用证/编码都是外省旧的,oidno才是新的。
+    //private Date  instDate;放入pa.json
+    /**FIRSTUSE_DATE 设备投用日期
+     * 投用有磨损，应该比安装日期更关注。
+     * */
+    private Date used;
+    /**COMPE_ACCP_DATE 竣工验收日期;放入pa.json
+     * */
+    private Date accd;
+    //.EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联？
+    // .MAKE_DATE制造日期
+    /**END_USE_DATE 使用年限到期时间
+     * DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
+     * */
+    private Date    expire;
+    /**IS_MOVEEQP 是否流动设备
+     * 流动作业设备才会出现省外JC注册　使用证/编码都是外省旧的,oidno才是新的。
+     * */
+    private Boolean  move;
     //EQP_AREA_COD定义规律大乱；    //统计和行政含义的地址区分；
     //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
     //  private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     //.EQP_USE_PLACE场所性质　？不一样概念，或Address pos底下附加属性。
-    private String occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
+
+ //   private String occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
+
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
     //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
-    private Float money;   //算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
+    /**算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
+     * */
+    private Float money;
 
     /**监察扩展，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
-     * 可加: 监察非结构化字段；前端可方便操作，后端不参与的字段。
-     * 临时把它设为= USE_MOBILE
+     * 可加: 监察非结构化字段；前端可方便操作，后端都不参与的字段{但统计抽取方式就可除外}。
+     * 临时把它初始化为= USE_MOBILE
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (1500)")
     private String  svp;
-    //还没有做出结论判定的，就直接上null；
-    private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
-    //判定为合格的
-    private Boolean unqf2;    //NOTELIGIBLE_FALG2 不合格标志2(机电定检，内检，全面）
-    //判定不合格的，以及不合格情形下的报告结论给出的简短的关键字提示。
-    private String ccl1;    //LAST_ISP_CONCLU1  '最后一次检验结论1'
-    //判定为合格的或者勉强合格的，带注释提示但是合格的， 还没有做出结论判定的，就直接上null；
-    private String ccl2;    //LAST_ISP_CONCLU2  '最后一次检验结论2'
-    private Date ispd1;   //LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
-    private Date ispd2;      //LAST_ISP_DATE2
+
+    /**NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
+     * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
+     * 还没有做出结论判定的，就直接上null；
+     * 判定为不合格的*/
+    private Boolean unqf1;
+    /**NOTELIGIBLE_FALG2 不合格标志2(机电定检，内检，全面）
+     * */
+    private Boolean unqf2;
+
+    /**LAST_ISP_CONCLU1  '最后一次检验结论1'
+     * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
+     * 判定不合格的，以及不合格情形下的报告结论给出的简短的关键字提示。
+     * */
+    private String ccl1;
+
+    /**LAST_ISP_CONCLU2  '最后一次检验结论2'
+     * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
+     * 判定为合格的或者勉强合格的，带注释提示但是合格的， 还没有做出结论判定的，就直接上null；
+     * */
+    private String ccl2;
+    /**LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
+     * 初始化新平台，本平台还没有关联数据的需要，否则实际是关联Isp数据快照，注意同步一致性。
+     * */
+    private Date ispd1;
+    /**LAST_ISP_DATE2 最后一次检验日期2 (机电定检，内检，全面）
+     * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
+     * */
+    private Date ispd2;
     //有可能扩展?：检测记录，check 检测规定时间。
     //Instant? 纳秒时间,不使用java.util.Date
     //@Field(type = FieldType.Date, format = DateFormat.date_time)
     //private Instant nxtD1;   规则：if等级1/3/的，耐压试验6年{2.5年}一次；
-    private Date nxtd1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
-    private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+    /**NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
+     * */
+    private Date nxtd1;
+    /**NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
+     *管道 例外，需要看具体的管道单元。
+     * */
+    private Date nxtd2;
 
     //索引会被自动创建的。
-    /**PROP_UNT_ID 产权单位, 不是监管重点 可省略
+    /**PROP_UNT_ID 产权单位, 不是监管重点 可省略null
      * 若null,默认=使用单位。
      */
     @ManyToOne(fetch= FetchType.LAZY)
@@ -183,29 +234,35 @@ public class Eqp implements Equipment{
     @JoinColumn(name = "regu_id")
     private Unit regu;
 
-    //流动设备管理，注册监察机构和当前实际再做监察管理的机构不一样呢？历史资料／原始发证机构。
     /**当前的 法定职责下的，责任监察机构。 REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
      *就算设备迁出也不能是null,负责到下一个机构转入为止；
+     *流动设备管理，注册监察机构和当前实际再做监察管理的机构不一样呢？历史资料／原始发证机构。
      */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "svu_id")
     private Unit svu;
-
+    /**MAKE_UNT_ID 制造单位ID
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit makeu;     //MAKE_UNT_ID 制造单位ID
+    private Unit makeu;
+    /**INST_UNT_ID 安装单位ID
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit insu;     //INST_UNT_ID 安装单位ID
+    private Unit insu;
+    /**ALT_UNT_ID 改造单位ID; 最近做改造的
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
-    private Unit remu;     //ALT_UNT_ID 改造单位ID
+    private Unit remu;
 
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
-    /**地理定位。长输管道覆盖范围大的情形特指核心地点*/
+    /**地理定位。长输管道覆盖范围大的情形特指核心地点
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
-    private Address pos;    //多对1，多端来存储定义实体ID字段。 ；地理定位。
+    private Address pos;
     //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
     //一个任务只能搞1个设备的/为出报告准备的{流转Isp报告,报告对应技术参数只能是一个设备，煤气罐系列化的设备号01..09排除05}。
@@ -225,7 +282,8 @@ public class Eqp implements Equipment{
     private Set<Isp>  isps;
 
     //底下这两组实际相当于内嵌结构对象，或者说[mtU，mtud]是复合字段的。单位ID+分支部门ID配套的才能完全表达出来。
-    /**MANT_UNT_ID 维保单位ID maintUnt,电梯才有的*/
+    /**MANT_UNT_ID 维保单位ID maintUnt,电梯才有的
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit mtu;
@@ -235,8 +293,10 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division mtud;     //.MANT_DEPT_ID 监察才关心的	 .MANT_UNT_ID	is '维保单位ID'；检验平台没有设置该数据。
-    //若是个人就一定没分支部门；[useU，usud]复合字段的；
-    /**USE_UNT_ID 使用单位ID;　正常业务上单位都是它*/
+
+    /**USE_UNT_ID 使用单位ID;　正常业务上单位都是用它；
+     * 若是个人就一定没分支部门；[useu，usud]复合字段的；
+     * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit useu;     //USE_UNT_ID 使用单位ID
@@ -247,6 +307,7 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
+
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 设备联系人，设备联系人电话；前端可以方便操作。contact USE_MOBILE 设备联系人手机/短信；维保人员？
      */
@@ -254,12 +315,15 @@ public class Eqp implements Equipment{
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (12000)")
     private String  pa;
-    /**.SAFE_LEV安全评定等级{监察才用到，检验没用}
+
+    /**.SAFE_LEV安全评定等级{监察才用到，检验没用},对合格字段补充/检验结论还不够{结论/不合格都是两个字段的}，
+     * 什么时机设置本字段的？干啥的。备注吗/巡视。
      * 目前只有2000容器类才有，其他类型备用的；
      * 动态的级别，用于监察重点关注用。 null=没事安全
      * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
      */
     private String safe;
+
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。
     //本函数执行之前，JPA数据实际已都取完成了。
@@ -332,24 +396,232 @@ join爆炸记录数范例 @NamedEntityGraph( name="Eqp.task",attributeNodes={　
 //二级缓存可移植性@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Fast") 这里region是按照配置来区分的区分标识，竟然不省略。
 
 /*树形层次分类设备； https://baike.baidu.com/item/%E7%89%B9%E7%A7%8D%E8%AE%BE%E5%A4%87%E7%9B%AE%E5%BD%95/19834714?fr=aladdin#2
+vart是复合字段就可以唯一表示出设备类型(国家标准范围),vart的3个字符按照顺序分别拆解出type,sort类型。subv是独立的扩展{针对sort}。
 type,sort,vart,subv设备细分类别，实际前端采用的多，算展示层映射用的。后端服务器主要用于计费/报告类型的控制。
+subv是国家标准之外扩展的分类标记，实际附带于sort底下的，目的用于修饰vart的细分类型。
+type,sort,vart三个是层次化的以3个单个字符来组合的属性=复合字段分解为3个字段。
 type有：
 3 电梯
  sort有：
- 31 曳引驱动
+ 31 曳引与强制驱动电梯
     vart有：
-
-
- 32 液压
- 33 扶梯
- 34 其他类型
- <3000,3000,9999>其它?
+    311 曳引驱动乘客电梯
+    312 曳引驱动载货电梯
+    313 强制驱动载货电梯
+    subv在31底下的有：
+    3001 有机房电梯
+    3002 无机房电梯
+ 32 液压驱动电梯
+    vart有：
+    321 液压乘客电梯
+    322 液压载货电梯
+    subv在32底下的=无： {32底下目前没有3002该细分型}3210有16条3001细分？问题数据
+ 33 自动扶梯与自动人行道
+    vart有：
+    331 自动扶梯
+    332 自动人行道
+    subv在32底下的=无： 已有的是问题数据
+ 34 其它类型电梯
+    vart有：
+    341 防爆电梯
+    342 消防员电梯
+    343 杂物电梯
+    subv在34底下的有：
+    3001 有机房电梯
+    3002 无机房电梯
+ <3, 3000,3000,9999无细分>?是问题数据: 待注册+未投入使用的?还未决定细分和具体种类，字段可为空=未决定。
 2 压力容器
-4 起重
-8 管道
+    sort有：
+    21 固定式压力容器
+        vart有：
+        211 超高压容器
+        213 第三类压力容器
+        215 第二类压力容器
+        217 第一类压力容器<低压>
+        subv在21底下的有：
+        2001 大型压力容器
+        2002 球形容器
+        2003 液化气体储配站
+        2004 非大型压力容器
+        2005 超高压容器
+        2006 超高压水晶釜
+    22 移动式压力容器
+        221 铁路罐车
+        222 汽车罐车
+        223 长管拖车
+        224 罐式集装箱
+        225 管束式集装箱
+        subv在22底下的=无：
+    23 气瓶
+        231 无缝气瓶
+        232 焊接气瓶
+        23T  特种气瓶（内装填料气瓶、纤维缠绕气瓶、低温绝热气瓶）
+        subv在=无：
+    24 氧舱
+        241 医用氧舱
+        242 高气压舱
+        subv在=无：
+4 起重机械
+    41: "桥式起重机"
+        411: "通用桥式起重机",
+        413: "防爆桥式起重机",
+        414: "绝缘桥式起重机",
+        415: "冶金桥式起重机",
+        417: "电动单梁起重机",
+        419: "电动葫芦桥式起重机",
+        subv在=无：
+    42: "门式起重机"
+        421: "通用门式起重机"
+        422: "防爆门式起重机"
+        423: "轨道式集装箱门式起重机"
+        424: "轮胎式集装箱门式起重机"
+        425: "岸边集装箱起重机"
+        426: "造船门式起重机"
+        427: "电动葫芦门式起重机"
+        428: "装卸桥"
+        429: "架桥机"
+        subv在42=无：
+    43: "塔式起重机"
+        431 普通塔式起重机
+        432 电站塔式起重机
+        subv在=无：
+    44: "流动式起重机"
+        441 轮胎起重机
+        442 履带起重机
+        444 集装箱正面吊运起重机
+        445 铁路起重机
+        4490 4480 4430 =飞出目录
+        subv在=无：
+    47: "门座式起重机"
+        471 门座起重机
+        476 固定式起重机
+        subv在=无：
+    48: "升降机"
+        486 施工升降机
+        487 简易升降机
+        vart='4890'例外1条； 488,489=飞出目录了
+        subv在底下的有：
+        4871 简易升降机（电动葫芦式）
+        4872 简易升降机（曳引式）
+    49: "缆索式起重机"
+        491 缆索式起重机{490也成}
+        subv在=无：
+    4A: "桅杆式起重机"
+        4A1 桅杆式起重机
+        subv在=无：
+    4D: "机械式停车设备"
+        4D1 机械式停车设备{4D0也成}
+        subv在4D底下的有：
+            "4001": "升降横移类机械式停车设备",
+            "4002": "垂直循环类机械式停车设备",
+            "4003": "多层循环类机械式停车设备",
+            "4004": "平面移动类机械式停车设备",
+            "4005": "巷道堆垛类机械式停车设备",
+            "4006": "水平循环类机械式停车设备",
+            "4007": "垂直升降类机械式停车设备",
+            "4008": "简易升降类机械式停车设备"
+    sort=4C00||4B00{已经飞出特种设备目录表了}的数据没啥用。
+8 压力管道
+    "81": "长输管道",
+        811 "输油管道"
+        812 "输气管道"
+    "82": "公用管道",
+        821 "燃气管道"
+        822 "热力管道"
+    "83": "工业管道",
+        "831": "工艺管道",
+        "832": "动力管道",
+        "833": "制冷管道",
 1 锅炉
-5 厂车
-6 游乐
-9 索道
-R 常压容器
+    "11": "承压蒸汽锅炉",
+        111 "承压蒸汽锅炉"
+        subv在11底下的有：
+        "1002": "电站锅炉",
+        "1003": "工业锅炉",
+    "12": "承压热水锅炉",
+        121 "承压热水锅炉"
+        subv在12底下的有：
+        "1002": "电站锅炉",
+        "1003": "工业锅炉",
+    "13": "有机热载体锅炉",
+        "131": "有机热载体气相炉",
+        "132": "有机热载体液相炉",
+        subv在13底下的有：
+        "1002": "电站锅炉",
+        "1003": "工业锅炉",
+5 场（厂）内专用机动车辆
+    "51": "机动工业车辆",
+        511 "叉车"
+        非标准目录的：5120 "叉车(防爆功能)" 有24条数据?, 涉及报告？收费？
+    "52": "非公路用旅游观光车辆",
+        521 "非公路用旅游观光车辆"
+        而 5220 5230 =飞出目录
+        subv在52底下的有：
+        "5001": "内燃类",
+        "5002": "电动类",
+     "5C00" "5B00"= 飞出目录
+6 大型游乐设施
+    "61": "观览车类",
+        611 "观览车类"
+    "62": "滑行车类",
+        621 "滑行车类"
+    "63": "架空游览车类",
+        631 "架空游览车类"
+    "64": "陀螺类",
+        641 "陀螺类"
+    "65": "飞行塔类",
+        651 "飞行塔类"
+    "66": "转马类",
+        661 "转马类"
+    "67": "自控飞机类",
+        671 "自控飞机类"
+    "68": "赛车类",
+        681 "赛车类"
+    "69": "小火车类",
+        691 "小火车类"
+    "6A": "碰碰车类",
+        6A1 "碰碰车类"
+    "6B": "滑道类",
+        6B1 "滑道类"
+    "6D": "水上游乐设施",
+        "6D1": "峡谷漂流系列",
+        "6D2": "水滑梯系列",
+        "6D4": "碰碰船系列",
+        "6D30" "6D60" = 飞出目录
+    "6E": "无动力游乐设施",
+        "6E1": "蹦极系列",
+        "6E4": "滑索系列",
+        "6E5": "空中飞人系列",
+        "6E6": "系留式观光气球系列"
+        subv在6E底下的有：
+        "6001": "高空蹦极系列",
+        "6002": "弹射蹦极系列",
+        "6003": "小蹦极系列",
+        ?"6004": "滑索系列", ?  和"6E4"重合，数据问题？报告/计费？
+        subv?"6005" ?"6006": 没数据；
+9 客运索道
+    "91": "客运架空索道",
+        "912": "循环式客运架空索道",
+        "911": "往复式客运架空索道",
+    "92": "客运缆车",
+        "922": "循环式客运缆车",
+        "921": "往复式客运缆车",
+    "93": "客运拖牵索道",
+        "932": "高位客运拖牵索道",
+        "931": "低位客运拖牵索道",
+R 常压容器 <非国家标准目录的>  ocat=true 是目录外
+    "R3":"危险化学品常压容器"
+        "R31": "液体危险货物常压容器(罐体)",
+        "R32": "危险化学品常压容器",
+F 安全附件 <标准目录的> 。
+    731 安全阀?? 不能独立构成一个设备，监管目标太小了，检验管理太细了，无法进入Eqp设备模型的表。 没有单独报告/收费。
+7 压力管道元件 {目录内，给制造生产的}
+    制造的，一次性的，批次的雷同多个单元；没必要进入Eqp设备表。
+    "71": "压力管道管子",
+    "72": "压力管道管件",
+    "73": "压力管道阀门",
+    "74": "压力管道法兰",
+    "75": "补偿器",
+    "77": "压力管道密封元件",
+    "7T": "压力管道特种元件",
 */

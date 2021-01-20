@@ -84,7 +84,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath rcod = createString("rcod");
 
-    public final NumberPath<Byte> reg = createNumber("reg", Byte.class);
+    public final EnumPath<RegState_Enum> reg = createEnum("reg", RegState_Enum.class);
 
     public final md.cm.unit.QUnit regu;
 

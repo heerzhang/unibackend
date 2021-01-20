@@ -140,7 +140,7 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath rcod;
 
     //inherited
-    public final NumberPath<Byte> reg;
+    public final EnumPath<md.specialEqp.RegState_Enum> reg;
 
     // inherited
     public final md.cm.unit.QUnit regu;

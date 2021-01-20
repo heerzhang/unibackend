@@ -102,7 +102,12 @@ public class Crane extends Eqp {
     private Float  high;
     /**起升机构部件(桥门,轻小型,旋臂)"UP_BODY" ,钢丝绳*/
     private String  part;
+    /**EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
+     * 从父类Eqp移动到此子类; 等待规范 Enum{中文描述的-？转成 英文graphQL接口才能对接前端的Enum}
+     * */
+    private String occa;
 }
+
 
 
 //升降机不可改技术参数：额定载重"RATED_LOAD" 额定速度"RATED_V"站数"STATION_NUM"曳引机编号"DRAG_COD"控制屏型号"CON_SCREEN_TYPE"控制屏编号"CON_SCREEN_COD"层数"FLOOR_NUM"曳引机型号"DRAG_TYPE"
