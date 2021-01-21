@@ -22,7 +22,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public static final QEqp eqp = new QEqp("eqp");
 
-    public final DateTimePath<java.util.Date> accd = createDateTime("accd", java.util.Date.class);
+    public final DatePath<java.util.Date> accd = createDate("accd", java.util.Date.class);
 
     public final StringPath ccl1 = createString("ccl1");
 
@@ -34,7 +34,11 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final BooleanPath cping = createBoolean("cping");
 
-    public final DateTimePath<java.util.Date> expire = createDateTime("expire", java.util.Date.class);
+    public final DatePath<java.util.Date> did1 = createDate("did1", java.util.Date.class);
+
+    public final DatePath<java.util.Date> did2 = createDate("did2", java.util.Date.class);
+
+    public final DatePath<java.util.Date> expire = createDate("expire", java.util.Date.class);
 
     public final StringPath fno = createString("fno");
 
@@ -42,9 +46,9 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit insu;
 
-    public final DateTimePath<java.util.Date> ispd1 = createDateTime("ispd1", java.util.Date.class);
+    public final DatePath<java.util.Date> ispd1 = createDate("ispd1", java.util.Date.class);
 
-    public final DateTimePath<java.util.Date> ispd2 = createDateTime("ispd2", java.util.Date.class);
+    public final DatePath<java.util.Date> ispd2 = createDate("ispd2", java.util.Date.class);
 
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
 
@@ -64,13 +68,11 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final StringPath name = createString("name");
 
-    public final DateTimePath<java.util.Date> nxtd1 = createDateTime("nxtd1", java.util.Date.class);
+    public final DatePath<java.util.Date> nxtd1 = createDate("nxtd1", java.util.Date.class);
 
-    public final DateTimePath<java.util.Date> nxtd2 = createDateTime("nxtd2", java.util.Date.class);
+    public final DatePath<java.util.Date> nxtd2 = createDate("nxtd2", java.util.Date.class);
 
     public final BooleanPath ocat = createBoolean("ocat");
-
-    public final StringPath occa = createString("occa");
 
     public final StringPath oid = createString("oid");
 
@@ -110,7 +112,7 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final BooleanPath unqf2 = createBoolean("unqf2");
 
-    public final DateTimePath<java.util.Date> used = createDateTime("used", java.util.Date.class);
+    public final DatePath<java.util.Date> used = createDate("used", java.util.Date.class);
 
     public final md.cm.unit.QUnit useu;
 

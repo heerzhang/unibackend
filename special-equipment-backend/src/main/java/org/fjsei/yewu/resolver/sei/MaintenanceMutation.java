@@ -236,7 +236,6 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
                     .used(each.getFIRSTUSE_DATE())
                 .accd(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
                     .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1')
-                .occa(each.getEQP_USE_OCCA())
                     .money(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).svp(each.getUSE_MOBILE())
                     .unqf1(each.getNOTELIGIBLE_FALG1()).unqf2(each.getNOTELIGIBLE_FALG2())
                     .ccl1(each.getLAST_ISP_CONCLU1()).ccl2(each.getLAST_ISP_CONCLU2())

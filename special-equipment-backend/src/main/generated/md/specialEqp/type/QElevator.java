@@ -27,7 +27,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final StringPath aap = createString("aap");
 
     //inherited
-    public final DateTimePath<java.util.Date> accd;
+    public final DatePath<java.util.Date> accd;
 
     public final StringPath buff = createString("buff");
 
@@ -50,10 +50,16 @@ public class QElevator extends EntityPathBase<Elevator> {
 
     public final StringPath cpm = createString("cpm");
 
+    //inherited
+    public final DatePath<java.util.Date> did1;
+
+    //inherited
+    public final DatePath<java.util.Date> did2;
+
     public final StringPath doop = createString("doop");
 
     //inherited
-    public final DateTimePath<java.util.Date> expire;
+    public final DatePath<java.util.Date> expire;
 
     public final NumberPath<Short> flo = createNumber("flo", Short.class);
 
@@ -69,10 +75,10 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final md.cm.unit.QUnit insu;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd1;
+    public final DatePath<java.util.Date> ispd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd2;
+    public final DatePath<java.util.Date> ispd2;
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
@@ -112,16 +118,13 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final BooleanPath nnor = createBoolean("nnor");
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd1;
+    public final DatePath<java.util.Date> nxtd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd2;
+    public final DatePath<java.util.Date> nxtd2;
 
     //inherited
     public final BooleanPath ocat;
-
-    //inherited
-    public final StringPath occa;
 
     //inherited
     public final StringPath oid;
@@ -195,7 +198,7 @@ public class QElevator extends EntityPathBase<Elevator> {
     public final BooleanPath unqf2;
 
     //inherited
-    public final DateTimePath<java.util.Date> used;
+    public final DatePath<java.util.Date> used;
 
     // inherited
     public final md.cm.unit.QUnit useu;
@@ -244,6 +247,8 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.cert = _super.cert;
         this.cod = _super.cod;
         this.cping = _super.cping;
+        this.did1 = _super.did1;
+        this.did2 = _super.did2;
         this.expire = _super.expire;
         this.fno = _super.fno;
         this.id = _super.id;
@@ -262,7 +267,6 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.nxtd1 = _super.nxtd1;
         this.nxtd2 = _super.nxtd2;
         this.ocat = _super.ocat;
-        this.occa = _super.occa;
         this.oid = _super.oid;
         this.owner = _super.owner;
         this.pa = _super.pa;

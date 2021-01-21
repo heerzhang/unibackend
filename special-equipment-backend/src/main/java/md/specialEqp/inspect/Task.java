@@ -1,7 +1,9 @@
 package md.specialEqp.inspect;
 //任务单，检验的业务起始点。
+
 import lombok.Getter;
 import lombok.Setter;
+import md.cm.unit.Unit;
 import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -65,6 +67,13 @@ public class Task {
 
     //是否使用年限到期了
     //类型： 常规任务
+    /**CONS_UNIT "施工单位"土建施工单位 检验的报告才用到的；
+     * 编制检验报告，要选择配套的施工单位。
+     * BUILD_UNT_ID 业务申请中的施工单位 (监检)安装|改造|维修的融合称谓，SDN用的BUILD_UNT_ID，监察施工告知用；
+     * */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit constu;
 }
 
 

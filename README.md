@@ -66,4 +66,4 @@ Float精度为6~7位，能保证6位为绝对精确，7位一般也是正确的�
 搜索引擎ES安装使用 https://www.elastic.co/guide/en/elasticsearch/reference/current/zip-windows.htm
 ES部署ik分词器 所有节点都安装插件 https://github.com/medcl/elasticsearch-analysis-ik
 从ES查看index的映射URL=  http://localhost:9200/eqp_latest/_mapping   _settings
-
+mysql对存储硬盘存取速度要求极高，全表级别字段的增删性能非常低！维护优化特别注意。

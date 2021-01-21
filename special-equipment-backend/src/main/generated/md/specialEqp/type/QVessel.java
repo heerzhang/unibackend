@@ -25,7 +25,7 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final md.specialEqp.QEqp _super;
 
     //inherited
-    public final DateTimePath<java.util.Date> accd;
+    public final DatePath<java.util.Date> accd;
 
     //inherited
     public final StringPath ccl1;
@@ -42,10 +42,16 @@ public class QVessel extends EntityPathBase<Vessel> {
     //inherited
     public final BooleanPath cping;
 
+    //inherited
+    public final DatePath<java.util.Date> did1;
+
+    //inherited
+    public final DatePath<java.util.Date> did2;
+
     public final StringPath dim = createString("dim");
 
     //inherited
-    public final DateTimePath<java.util.Date> expire;
+    public final DatePath<java.util.Date> expire;
 
     //inherited
     public final StringPath fno;
@@ -65,10 +71,10 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath insul = createString("insul");
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd1;
+    public final DatePath<java.util.Date> ispd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd2;
+    public final DatePath<java.util.Date> ispd2;
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
@@ -104,16 +110,13 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final StringPath name;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd1;
+    public final DatePath<java.util.Date> nxtd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd2;
+    public final DatePath<java.util.Date> nxtd2;
 
     //inherited
     public final BooleanPath ocat;
-
-    //inherited
-    public final StringPath occa;
 
     //inherited
     public final StringPath oid;
@@ -181,7 +184,7 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final BooleanPath unqf2;
 
     //inherited
-    public final DateTimePath<java.util.Date> used;
+    public final DatePath<java.util.Date> used;
 
     // inherited
     public final md.cm.unit.QUnit useu;
@@ -230,6 +233,8 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.cert = _super.cert;
         this.cod = _super.cod;
         this.cping = _super.cping;
+        this.did1 = _super.did1;
+        this.did2 = _super.did2;
         this.expire = _super.expire;
         this.fno = _super.fno;
         this.id = _super.id;
@@ -248,7 +253,6 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.nxtd1 = _super.nxtd1;
         this.nxtd2 = _super.nxtd2;
         this.ocat = _super.ocat;
-        this.occa = _super.occa;
         this.oid = _super.oid;
         this.owner = _super.owner;
         this.pa = _super.pa;

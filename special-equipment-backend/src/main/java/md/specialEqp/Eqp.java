@@ -69,6 +69,11 @@ public class Eqp implements Equipment{
     */
     @Enumerated
     private UseState_Enum   ust;
+    /**EQP_REG_STA 注册
+     * 不能用private char   在H2无法建，Character占2字节
+     */
+    @Enumerated
+    private RegState_Enum   reg;
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //@Column(length =128, unique = true)
 
@@ -104,17 +109,16 @@ public class Eqp implements Equipment{
      * 可为空 9999
      * */
     private String subv;
-    /**EQP_REG_STA 注册
-     * 不能用private char   在H2无法建，Character占2字节
-    */
-    @Enumerated
-    private RegState_Enum   reg;
 
-    /**目录外*/
-    private Boolean   ocat;   //IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
-    private String cert;    //EQP_USECERT_COD 使用证号
-    private String sno;    //EQP_STATION_COD 设备代码(设备国家代码)
-    private String rcod;    //EQP_REG_COD 监察注册代码
+    /**目录外IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
+     * */
+    private Boolean   ocat;
+    /**EQP_USECERT_COD 使用证号*/
+    private String cert;
+    /**EQP_STATION_COD 设备代码(设备国家代码)*/
+    private String sno;
+    /**EQP_REG_COD 监察注册代码*/
+    private String rcod;
     /**EQP_LEVEL 设备等级 ,可融合合并旧平台的CLASS_COD 产品分类代码
      * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
      * 设计上的级别; 目前随意，todo://根据type看怎么规范-提升使用价值。
@@ -122,7 +126,10 @@ public class Eqp implements Equipment{
      * 游乐设施的，同步AMUS_TYPE设备级别
      */
     private String level;
-    private String fno;   //FACTORY_COD  出厂编号
+    /**FACTORY_COD  出厂编号
+     * 若管道的 ，实际是工程描述、比较长。
+     * */
+    private String fno;
     /**EQP_NAME 设备名称，给外行看的*/
     private String name;
 
@@ -140,20 +147,19 @@ public class Eqp implements Equipment{
      * 监察初始化设置的关照级别。
      */
     private Boolean  vital;
-    //private Date  instDate;放入pa.json
-    /**FIRSTUSE_DATE 设备投用日期
+
+    /**FIRSTUSE_DATE 设备投用日期  ，管道EQP_FINMAKE_DATE
      * 投用有磨损，应该比安装日期更关注。
      * */
+    @Temporal(TemporalType.DATE)
     private Date used;
-    /**COMPE_ACCP_DATE 竣工验收日期;放入pa.json
-     * */
-    private Date accd;
-    //.EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联？
-    // .MAKE_DATE制造日期
+
+    //private Date accd; COMPE_ACCP_DATE 竣工验收日期;
     /**END_USE_DATE 使用年限到期时间
-     * DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
      * */
+    @Temporal(TemporalType.DATE)
     private Date    expire;
+
     /**IS_MOVEEQP 是否流动设备
      * 流动作业设备才会出现省外JC注册　使用证/编码都是外省旧的,oidno才是新的。
      * */
@@ -162,11 +168,10 @@ public class Eqp implements Equipment{
     //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
     //  private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     //.EQP_USE_PLACE场所性质　？不一样概念，或Address pos底下附加属性。
-
- //   private String occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
-
+    //   private String occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
     //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
+
     /**算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
      * */
     private Float money;
@@ -179,6 +184,18 @@ public class Eqp implements Equipment{
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (1500)")
     private String  svp;
+    /*svp.json参数有这些：
+    进口类型：IMPORT_TYPE  "国产";
+    制造国 MAKE_COUNTRY {非行政区域实体类型关联字段}
+    制造日期：MAKE_DATE  制造（安装）日期 ，统计范围查询
+    安装日期 INST_DATE监察告知单，  EQP_INST_DATE{管道单元} 跟安装单位相关；
+    COMPE_ACCP_DATE 竣工验收日期 和施工单位相关； 管道才有意义；
+    DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
+    .EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联审批单？
+    事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'}];
+    是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
+
+     */
 
     /**NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
      * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
@@ -203,22 +220,41 @@ public class Eqp implements Equipment{
     /**LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
      * 初始化新平台，本平台还没有关联数据的需要，否则实际是关联Isp数据快照，注意同步一致性。
      * */
+    @Temporal(TemporalType.DATE)
     private Date ispd1;
     /**LAST_ISP_DATE2 最后一次检验日期2 (机电定检，内检，全面）
      * 关联状态的快捷汇报字段，免去抽取关联，但是同步工作必须小心，否则会不一致。
      * */
+    @Temporal(TemporalType.DATE)
     private Date ispd2;
-    //有可能扩展?：检测记录，check 检测规定时间。
+    //检测记录，check 检测规定时间。检测的监察也要关心？检验机构要关注检测记录的{关联检测报告历史}。
     //Instant? 纳秒时间,不使用java.util.Date
     //@Field(type = FieldType.Date, format = DateFormat.date_time)
     //private Instant nxtD1;   规则：if等级1/3/的，耐压试验6年{2.5年}一次；
+
     /**NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
+     * 少部分品种的设备才需要两个系列字段都要用；多数设备只需要系列2的字段
+     *管道 例外，需要看具体的管道单元。
      * */
+    @Temporal(TemporalType.DATE)
     private Date nxtd1;
     /**NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
      *管道 例外，需要看具体的管道单元。
      * */
+    @Temporal(TemporalType.DATE)
     private Date nxtd2;
+
+    /**延期检验日期1：ABNOR_ISP_DATE1 相对NEXT_ISP_DATE1下次检验日期1
+     * 检验业务状态关心字段。实际关联了延期检验申请单，申请批准后的/申请延期日期。字段关联直接转为本地状态复制字段，注意保证一致性。
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date did1;
+    /**延期检验日期2：ABNOR_ISP_DATE2  超期未检+统计
+     * 为什么设置该字段？ 预定下次定检日期2到了，检验任务未搞定，设置延期，就不会上报监察重要事项了，否则自动申告给监察。
+     * 字段关联直接转为本地状态复制字段，注意保证一致性。
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date did2;
 
     //索引会被自动创建的。
     /**PROP_UNT_ID 产权单位, 不是监管重点 可省略null
@@ -234,28 +270,39 @@ public class Eqp implements Equipment{
     @JoinColumn(name = "regu_id")
     private Unit regu;
 
-    /**当前的 法定职责下的，责任监察机构。 REG_UNT_ID 监察注册机构ID //REG_UNT_NAME注册机构名称
+    /**当前的 法定职责下的，责任监察机构。
+     * REG_UNT_ID 监察注册机构ID  REG_UNT_NAME注册机构名称
      *就算设备迁出也不能是null,负责到下一个机构转入为止；
      *流动设备管理，注册监察机构和当前实际再做监察管理的机构不一样呢？历史资料／原始发证机构。
      */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "svu_id")
     private Unit svu;
+
     /**MAKE_UNT_ID 制造单位ID
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit makeu;
-    /**INST_UNT_ID 安装单位ID
+
+    /**INST_UNT_ID 安装单位ID, 最早 监检
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit insu;
-    /**ALT_UNT_ID 改造单位ID; 最近做改造的
+
+    /**ALT_UNT_ID 改造单位ID; 最近做改造的，改造比维修等级资质要求高。
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit remu;
+
+    /**OVH_UNT_ID '维修单位' 改造要监察告知，维修等级不够格，多个层级的历史记录；
+     * 维保单位 MANT_UNT_ID？todo: 能合并？
+     * */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit repu;
 
     //缺省FetchType.EAGER  不管查询对象后面具体使用的字段，EAGER都会提前获取数据。
     /**地理定位。长输管道覆盖范围大的情形特指核心地点
@@ -309,12 +356,34 @@ public class Eqp implements Equipment{
     private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
 
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
-     * 可加: 设备联系人，设备联系人电话；前端可以方便操作。contact USE_MOBILE 设备联系人手机/短信；维保人员？
+     * 可加: 设备联系人，设备联系人电话；前端可以方便操作。 USE_MOBILE 设备联系人手机/短信；维保人员？
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (12000)")
     private String  pa;
+    /*在pa.json加这些参数：
+     USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时。
+    更多的单位：,维修单位,设计单位,型式试验单位{高层级认定},设计文件鉴定单位
+
+    "DESIGN_CHKUNT" 设计文件鉴定单位;
+    DESIGN_UNT_ID  设计单位名称/资质，管道。
+    TYPETEST_UNT_NAME, 申请单， 型式试验单位{高层级认定},应该是针对生产单位的属性。
+    TEST_UNT_ID 监察,型式试验
+
+    IF_WYL是否微压炉
+    制造日期
+    EMERGENCY_TEL应急救援电话： EMERGENCY_USER_NAME应急救援人名
+    SAFE_LEV安全评定等级 IF_SPEC_EQP是否特殊设备
+    上次检验报告号1 链接关联。
+     */
+
+    /**当前分配去哪个法定检验机构(市场化标定模式)
+     * 缺省由svu监察主动分配的。
+    */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit ispu;
 
     /**.SAFE_LEV安全评定等级{监察才用到，检验没用},对合格字段补充/检验结论还不够{结论/不合格都是两个字段的}，
      * 什么时机设置本字段的？干啥的。备注吗/巡视。
@@ -323,6 +392,25 @@ public class Eqp implements Equipment{
      * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
      */
     private String safe;
+    /**注册登记人员REG_USER_NAME 注册人员姓名  REG_USER_ID注册人员{关联操作日志}
+     * 状态变更; 注册 流水日志，注销记录？到底谁敢干的；旧平台导入数据的：历史用户以往旧人员呢？
+     * 注册历史记录，关联操作User实体的, 可历史记录太旧的可能被当做垃圾数据删除。
+     * 把User改成Person实体关联来做，Person还会死亡注销也成垃圾数据。可改成中文姓名String(同名的)，爱查就去找,姓名修改
+     */
+    private String  rnam;
+    /**注销人员, 中文姓名 关联操作记录
+     * 使用状态报停的经手人员，操作记录；特别旧平台导入新平台如何处理？旧平台关键历史记录也得导入或伪增。
+     * */
+    private String  cnam;
+
+    /**注册登记日期REG_DATE
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date regd;
+    /**注册登记注销日期REG_LOGOUT_DATE
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date cand;
 
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。
@@ -387,6 +475,7 @@ public class Eqp implements Equipment{
                 attributeNodes = {}  )
     })
 join爆炸记录数范例 @NamedEntityGraph( name="Eqp.task",attributeNodes={　@NamedAttributeNode("task"),　@NamedAttributeNode("isps")　} )  无关的task+isps搞在一起＝爆炸。
+JPA日期字段短的需要加@Temporal(TemporalType.DATE)节省硬盘，否则缺省是=@Temporal(TemporalType.TIMESTAMP)长的。
 */
 
 //注解定制索引，没啥实际意义。

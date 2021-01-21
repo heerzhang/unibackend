@@ -25,7 +25,7 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final md.specialEqp.QEqp _super;
 
     //inherited
-    public final DateTimePath<java.util.Date> accd;
+    public final DatePath<java.util.Date> accd;
 
     public final NumberPath<Float> angl = createNumber("angl", Float.class);
 
@@ -45,7 +45,13 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final BooleanPath cping;
 
     //inherited
-    public final DateTimePath<java.util.Date> expire;
+    public final DatePath<java.util.Date> did1;
+
+    //inherited
+    public final DatePath<java.util.Date> did2;
+
+    //inherited
+    public final DatePath<java.util.Date> expire;
 
     //inherited
     public final StringPath fno;
@@ -63,10 +69,10 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final md.cm.unit.QUnit insu;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd1;
+    public final DatePath<java.util.Date> ispd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> ispd2;
+    public final DatePath<java.util.Date> ispd2;
 
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
@@ -100,16 +106,13 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final StringPath name;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd1;
+    public final DatePath<java.util.Date> nxtd1;
 
     //inherited
-    public final DateTimePath<java.util.Date> nxtd2;
+    public final DatePath<java.util.Date> nxtd2;
 
     //inherited
     public final BooleanPath ocat;
-
-    //inherited
-    public final StringPath occa;
 
     //inherited
     public final StringPath oid;
@@ -173,7 +176,7 @@ public class QAmusement extends EntityPathBase<Amusement> {
     public final BooleanPath unqf2;
 
     //inherited
-    public final DateTimePath<java.util.Date> used;
+    public final DatePath<java.util.Date> used;
 
     // inherited
     public final md.cm.unit.QUnit useu;
@@ -220,6 +223,8 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.cert = _super.cert;
         this.cod = _super.cod;
         this.cping = _super.cping;
+        this.did1 = _super.did1;
+        this.did2 = _super.did2;
         this.expire = _super.expire;
         this.fno = _super.fno;
         this.id = _super.id;
@@ -238,7 +243,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
         this.nxtd1 = _super.nxtd1;
         this.nxtd2 = _super.nxtd2;
         this.ocat = _super.ocat;
-        this.occa = _super.occa;
         this.oid = _super.oid;
         this.owner = _super.owner;
         this.pa = _super.pa;
