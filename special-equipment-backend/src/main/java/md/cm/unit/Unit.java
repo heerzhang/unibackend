@@ -11,6 +11,7 @@ import java.util.Set;
 //单位是应用系统的泛指概念:　把个人也纳入管理单元。
 //设备中的单位， 即可以是公司，也可以是个人。company和person是大数据的影子实体类/只能读。Unit是本地附加的属性。
 //搜索引擎ES找到company或者person的id后，就能通过Unit的关联ID和数据库索引快速找到其它相关的字段属性，比如owns设备集合。
+//永久单位库JC_PMT_UNT 监察的，土建施工单位：就是简单的新增或更新组织机构代码。
 
 //表实体的名字替换小心：底层数据库的旧的索引FK外键并没有删除掉，可能导致无法跑起来，也不报错！！
 @AllArgsConstructor
@@ -83,7 +84,10 @@ public class Unit {
     public Set<Eqp>  getMaints() {
         return  this.maints;
     }
+
+    //todo: MANAGE_UNT  上级的行业管理单位
 }
+
 
 
 /*

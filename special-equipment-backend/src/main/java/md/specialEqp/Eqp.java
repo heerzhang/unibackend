@@ -69,7 +69,7 @@ public class Eqp implements Equipment{
     */
     @Enumerated
     private UseState_Enum   ust;
-    /**EQP_REG_STA 注册
+    /**EQP_REG_STA 注册状态
      * 不能用private char   在H2无法建，Character占2字节
      */
     @Enumerated
@@ -81,7 +81,10 @@ public class Eqp implements Equipment{
     @Field
     @Column(length =40)
     private String oid;
-    /**EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。*/
+
+    /**EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。
+     * 对接旧平台的，新平台没意义
+     * */
     @Field
     @Size(min = 4, max = 32)
     private String cod;
@@ -113,11 +116,16 @@ public class Eqp implements Equipment{
     /**目录外IN_CAG 目录属性 1:目录内，2：目录外 目录外的{针对设备}不一定不能是法定的{针对业务操作}性质
      * */
     private Boolean   ocat;
-    /**EQP_USECERT_COD 使用证号*/
-    private String cert;
     /**EQP_STATION_COD 设备代码(设备国家代码)*/
     private String sno;
-    /**EQP_REG_COD 监察注册代码*/
+    /**EQP_USECERT_COD 使用证号
+     * 有可能更换号码，换证？新号
+     * */
+    private String cert;
+    /**EQP_REG_COD 监察注册代码 设备注册号 eqp_reg_sta不同的就可重复
+     * eqp_reg_cod=NEW_EQP_REG_COD 注册代码 和eqp_reg_sta相关;
+     * 注册码还会有变动和新的
+     * */
     private String rcod;
     /**EQP_LEVEL 设备等级 ,可融合合并旧平台的CLASS_COD 产品分类代码
      * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
@@ -137,10 +145,12 @@ public class Eqp implements Equipment{
      * 附加上后更加能精确定位某个地理空间的位置
      * */
     private String plno;
-    /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填
+    /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填，监察关心!
      * */
     private String  model;
     /**IF_INCPING 是否正在安装监检{检验业务状态/时间长、监察关心注册}, 相关IF_NOREG_LEGAR非注册法定设备（未启用）
+     * 改造大修 安装监检或改造监检 EQP_REG_STA=0？ 检验竟然设置注册状态？
+     * 监检中了，定检就跳过吗（普通规则失效）,管道装置大；
      * */
     private Boolean  cping;
     /**IF_MAJEQP 是否重要特种设备
@@ -172,12 +182,13 @@ public class Eqp implements Equipment{
     //楼盘=地址的泛房型表达式;     单独设立一个模型对象。　(楼盘名称)＝使用地点！=使用单位的单位地址。
     //  private Long  buildId;    //暂用 BUILD_ID  楼盘ID
 
-    /**算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元)
+    /**算钱搞的，EQP_PRICE 产品设备价(进口安全性能监检的设备价)(单位:元) EQP_SELL_PRICE设备销售价格
      * */
     private Float money;
 
     /**监察扩展，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 监察非结构化字段；前端可方便操作，后端都不参与的字段{但统计抽取方式就可除外}。
+     * 未注册设备可以授权检验人员或SDN告知人员修改的，审核注册后权限关闭，相当于临时设备库倒腾。
      * 临时把它初始化为= USE_MOBILE
      */
     @Lob
@@ -187,13 +198,30 @@ public class Eqp implements Equipment{
     /*svp.json参数有这些：
     进口类型：IMPORT_TYPE  "国产";
     制造国 MAKE_COUNTRY {非行政区域实体类型关联字段}
-    制造日期：MAKE_DATE  制造（安装）日期 ，统计范围查询
+    制造日期：MAKE_DATE  制造（安装）日期 ，统计范围查询  DESIGN_USE_YEAR 设计使用年限
     安装日期 INST_DATE监察告知单，  EQP_INST_DATE{管道单元} 跟安装单位相关；
     COMPE_ACCP_DATE 竣工验收日期 和施工单位相关； 管道才有意义；
     DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
     .EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联审批单？
-    事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'}];
+    事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1':'特别重大'},{id:'2':'特大'},{id:'3':'重大'},{id:'4':'严重'},{id:'5':'一般'}];
     是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
+    CONST_UNT_ID土建施工单位，CONST_UNT_NAME 监察审核什么东西，难道给个单位名称就都放行、仅备注{没有实际意义}难道验证资质证照，验明真身是浮云。
+    CONST_ACCP_UNT_ID土建验收单位, 监察临时设备表特有字段；CONST_ACCP_UNT_NAME
+    CONST_CLASS施工类别 CONST_UNT_CHK_NUM, CONST_START_DATE COMPE_ACCP_DATE 施工日期、验收，COMPE_ACCP_DATE竣工验收日期
+    DESIGN_CHKUNT设计文件鉴定单位(已淘汰?)，可以在告知或首检录入时低权限用户录入，然后审核登记时高权限用户触发比对关联资料，注册后更新pa.json进历史记录。
+    DESIGN_UNT_CHK_NUM 设计{单位？}许可证编号(已淘汰?)
+    DESIGN_UNT_ID  设计单位名称/资质{设计时他有资质，注册后，失去资质呢，审核时间做资质快照的}， DESIGN_UNT_NAME管道报告用。
+    PRODUCT_MEASURE 产品标准 {号}？关联标准实体列表。
+    一次性验证后就不会在做修改的可关联信息{当时快照数据}：
+    TYPETEST_UNT_NAME 监察单位管理 型式试验单位{高层级认定},应该是针对生产单位的属性。TYPETEST_UNT_NAME代表产品(限制范围,典型产品)
+    TEST_UNT_ID 监察,型式试验 型式试验单位; TEST_REPCOD型式试验报告编号{历史特别检验}，检验设备表也有。
+    TEST_UNT_CHK_NUM试验机构核准证编号  TEST_UNT_CERT_NUM型式试验证书编号{单位资格}
+    型式试验和制造监检2个独立！。电梯安装监督检验时，申请单位提交符合要求的电梯整机和部件产品型式试验证书或报告。
+    MAKE_ISP_UNT_ID制造监检机构 检验平台没有该字段 监察设备许可用的，MAKE_ISP_CHK_NUM监检机构核准证编号;
+    MAKE_ISP_CERT_NUM制造监检证书编号{关联制造监检 证号(批量的/人工校对包含哪些设备)、检验Isp历史}。
+    DESIGN_PIC 设计图号 || 产品图号；
+    ACCEP_INSP_UNT_ID 验收检验单位(审核快照的) ACCEP_INSP_UNT_NAME ？安装监检； ACCEP_INST_REPORT_NUM 验收检验验收报告编号{查证URL}；客运索道?
+    PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验？ PRO_GB_UNT_NAME 产品监检单位;
 
      */
 
@@ -292,13 +320,17 @@ public class Eqp implements Equipment{
     private Unit insu;
 
     /**ALT_UNT_ID 改造单位ID; 最近做改造的，改造比维修等级资质要求高。
+     * 检验平台 改造维修单位分立的。  ALT_UNT_NAME 监察平台的改造维修单位;
+     * 施工告知中的  改造维修单位, 施工告知可以多条的，一次审批后，覆盖上一次的快照改造单位到svp.json中。
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit remu;
 
     /**OVH_UNT_ID '维修单位' 改造要监察告知，维修等级不够格，多个层级的历史记录；
-     * 维保单位 MANT_UNT_ID？todo: 能合并？
+     * 多次改造维修的新单位覆盖掉旧的单位？报告中能查出历史改造单位。
+     * 维保单位 MANT_UNT_ID？todo: 能合并？ 应该放在业务单告知中关联!
+     * 多次维修，改造的历史业务申报单子。
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
@@ -363,22 +395,29 @@ public class Eqp implements Equipment{
     @Column( columnDefinition="TEXT (12000)")
     private String  pa;
     /*在pa.json加这些参数：
-     USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时。
-    更多的单位：,维修单位,设计单位,型式试验单位{高层级认定},设计文件鉴定单位
+    USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时。
+    INSURANCE_INS_NAME 保险单位 监察 起重机洗才有保险机构, INSURANCE_AMOUNT 保险金额
+	INSURANCE_TYPE 保险险种 INSURANCE_VALUE 保险价值 INSURANCE_PREMIUM 保险费；
+    IF_WYL是否微压炉？ 检验才有的，该字段已经删除了吗!
 
-    "DESIGN_CHKUNT" 设计文件鉴定单位;
-    DESIGN_UNT_ID  设计单位名称/资质，管道。
-    TYPETEST_UNT_NAME, 申请单， 型式试验单位{高层级认定},应该是针对生产单位的属性。
-    TEST_UNT_ID 监察,型式试验
+    INST_COMP_DATE 安装竣工日期
 
-    IF_WYL是否微压炉
-    制造日期
+    QUACERT_COD制造许可证号--资格证书号
+
     EMERGENCY_TEL应急救援电话： EMERGENCY_USER_NAME应急救援人名
     SAFE_LEV安全评定等级 IF_SPEC_EQP是否特殊设备
     上次检验报告号1 链接关联。
+    EQP_WEIGHT 游乐设备重，PRODUCT_NUM质量证明书编号
+    LAST_ISPOPE_TYPE2 检验类型代码2
+    LAST_ISPOPE_WENTI2 主要问题2 LAST_ISP_WENTI1
+    MANT_CYCLE维保周期 MANT_TYPE维保型式 MANT_QUACERT_COD资格证书号 ALT_CYCLE大修周期
+    REG_ISP_MONEY定检标准收费(定检、内部、全面)(单位：元); ACP_ISP_MONEY验收标准收费(外部、在线、年度)(单位：元)
+    EQP_SETAMOUNT设备布置数量/没用? IF_MAJCTL是否重点监控  IF_MAJPLACE是否在重要场所
+    QUACERT_NAME制造资格证书名,QUACERT_COD制造许可证号 PRODUCT_NUM质量证明书编号=产品合格证编号
+
      */
 
-    /**当前分配去哪个法定检验机构(市场化标定模式)
+    /**ISPUNT_NAME ISPUNT_ID当前分配去哪个法定检验机构(市场化标定模式)
      * 缺省由svu监察主动分配的。
     */
     @ManyToOne(fetch= FetchType.LAZY)

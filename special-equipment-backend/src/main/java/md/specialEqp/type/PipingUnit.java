@@ -139,6 +139,23 @@ public class PipingUnit {
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (2000)")
     private String  pa;
+/*  每一个单元独立配置的：
+	EQP_INST_DATE 安装日期
+	EQP_FINMAKE_DATE 投用日期   ，超期服役？
+	第二页：管道基本信息汇总表
+    DESIGN_UNIT 设计单位
+    INST_UNIT 安装单位
+
+    INCP_ISP_NAME 监督检验机构
+    INCP_ISP_REPORT_COD 监督检验报告号
+    INCP_ISP_DATE 监检日期
+    INCP_ISP_CONCLU 监督检验结论
+    ISP_UNT_NAME 定检机构 ;?应该分配定检机构=管道装置统一敲定一个定检机构的。
+    ISP_REPORT_COD 定检报告号
+    ISP_DATE 定期检验检验日期
+    ISP_CONCLU 定期检验检验结论
+    NEXT_ISP_DATE 定期检验下次检验日期
+*/
 
     //todo:关联 Isp字段：关联Isp 以过滤排序形式返回给前端展示层的
     //  private Isp isp;   //定检检验报告
