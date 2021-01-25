@@ -9,7 +9,7 @@ import md.specialEqp.inspect.Task;
 import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 //import org.springframework.data.annotation.Transient;
-import org.springframework.data.elasticsearch.annotations.Field;
+//import org.springframework.data.elasticsearch.annotations.Field;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
  证书到期预警；重要问题闭环，现场检查安排(指令书)；告知受理；检验相关审核(单位{安装改造维修/制造/设计/充装/检验机构/乡镇机构}变更/关键字段{使用单位}/设备状态变更/维保认领)。
  机构(评审/考试/培训)变更审核，作业人员聘用单位变更；设备<省外注册/迁出/流动设备/使用登记/首检录入/办证后管道新增确认>；许可{申请书}办证流程；考试审核，案件，诚信，维保准入。
 不属于8大类的比如R000常压容器; 直接就是Eqp基类/没有独立参数表。
+结构化字段非json的必要性：计费不会用，过滤不会用，常规统计不会用，后端服务器业务逻辑不会用，不是监察严格管制修改要审核的字段，满足这些的可以放json中。
  */
 
 @NoArgsConstructor
@@ -77,15 +78,13 @@ public class Eqp implements Equipment{
     //@PropertyDef(label="监察识别码")    数据库建表注释文字。
     //@Column(length =128, unique = true)
 
-    /**OIDNO每一个省份监察机构自己产生的易识别码。 {@link Collectors}.*/
-    @Field
+    /**OIDNO每一个省份监察机构自己产生的易识别码。最多40 char*/
     @Column(length =40)
     private String oid;
 
     /**EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。
-     * 对接旧平台的，新平台没意义
+     * 对接旧平台用的，新平台没有意义。
      * */
-    @Field
     @Size(min = 4, max = 32)
     private String cod;
 
@@ -96,20 +95,23 @@ public class Eqp implements Equipment{
      * 继承派生缺点，Hibernate语句生成超长。就算派生继承，还得要再搞个字段表示继承类的类型方便SQL过滤。
      * */
     @Column(nullable = false)
+    @Size(min = 1, max = 1)
     private String type;
     /**设备类别代码 EQP_SORT{首2个字符} ,
      * 62个
      * 可为空
      * */
+    @Size(min = 2, max = 2)
     private String sort;
     /**设备品种代码 EQP_VART{首3个字符}
      * 142个
      * 可为空
      * */
+    @Size(min = 3, max = 3)
     private String vart;
-    /**SUB_EQP_VART 子设备品种？{4个字符}用于做报告选择模板/收费计算参数。
-     * 22个
-     * 可为空 9999
+    /**SUB_EQP_VART 子设备品种？{非国家标准的扩展分类} 用于做报告选择模板/收费计算参数。
+     * 22个, 计费可能用的。
+     * 可为空， 旧平台9999=无
      * */
     private String subv;
 
@@ -127,9 +129,10 @@ public class Eqp implements Equipment{
      * 注册码还会有变动和新的
      * */
     private String rcod;
-    /**EQP_LEVEL 设备等级 ,可融合合并旧平台的CLASS_COD 产品分类代码
+
+    /**EQP_LEVEL 设备等级 {技术标准标注的，每种设备Enum可不一样},可融合合并旧平台的CLASS_COD 产品分类代码
      * [合并字段]游乐AMUS_TYPE游乐设施等级类型;PIPELINE_LEVEL，管道独立的?总的级别，但底下所属单元可有自己级别。
-     * 设计上的级别; 目前随意，todo://根据type看怎么规范-提升使用价值。
+     * 设计上的级别; 目前随意，todo://根据type看怎么规范-提升使用价值。每一个大类都有不同编码的？直接String但是隐形约束输入。
      * 关键的等级有些已直接体现到设备{容器}类别上了。
      * 游乐设施的，同步AMUS_TYPE设备级别
      */
@@ -138,23 +141,27 @@ public class Eqp implements Equipment{
      * 若管道的 ，实际是工程描述、比较长。
      * */
     private String fno;
-    /**EQP_NAME 设备名称，给外行看的*/
-    private String name;
+    //private 设备名称 name;计费不会用，过滤不会用，常规统计不会用，后端服务器业务逻辑不会用，不是监察严格管制修改要审核的字段。
 
-    /**EQP_INNER_COD 单位内部编号place No
+    /**EQP_INNER_COD 单位内部编号place No；搜索过滤用
      * 附加上后更加能精确定位某个地理空间的位置
      * */
     private String plno;
-    /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填，监察关心!
+    /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填？监察关心!监察严格管制修改要审核的字段
+     * 监察搜索过滤用
      * */
     private String  model;
+
     /**IF_INCPING 是否正在安装监检{检验业务状态/时间长、监察关心注册}, 相关IF_NOREG_LEGAR非注册法定设备（未启用）
      * 改造大修 安装监检或改造监检 EQP_REG_STA=0？ 检验竟然设置注册状态？
      * 监检中了，定检就跳过吗（普通规则失效）,管道装置大；
+     * task isp report
      * */
     private Boolean  cping;
-    /**IF_MAJEQP 是否重要特种设备
+    /**IF_MAJEQP 是否重要特种设备 只用于显示过滤，
      * 监察初始化设置的关照级别。
+     * 是否重点监控 IF_MAJCTL 监察才用；
+     * 安全评定等级是检验的；事故隐患类别ACCI_TYPE是监察的；
      */
     private Boolean  vital;
 
@@ -222,7 +229,7 @@ public class Eqp implements Equipment{
     DESIGN_PIC 设计图号 || 产品图号；
     ACCEP_INSP_UNT_ID 验收检验单位(审核快照的) ACCEP_INSP_UNT_NAME ？安装监检； ACCEP_INST_REPORT_NUM 验收检验验收报告编号{查证URL}；客运索道?
     PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验？ PRO_GB_UNT_NAME 产品监检单位;
-
+    EQP_NAME 设备名称，给外行看的 name ；
      */
 
     /**NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
@@ -405,12 +412,12 @@ public class Eqp implements Equipment{
     QUACERT_COD制造许可证号--资格证书号
 
     EMERGENCY_TEL应急救援电话： EMERGENCY_USER_NAME应急救援人名
-    SAFE_LEV安全评定等级 IF_SPEC_EQP是否特殊设备
+    SAFE_LEV安全评定等级
     上次检验报告号1 链接关联。
-    EQP_WEIGHT 游乐设备重，PRODUCT_NUM质量证明书编号
-    LAST_ISPOPE_TYPE2 检验类型代码2
-    LAST_ISPOPE_WENTI2 主要问题2 LAST_ISP_WENTI1
-    MANT_CYCLE维保周期 MANT_TYPE维保型式 MANT_QUACERT_COD资格证书号 ALT_CYCLE大修周期
+    EQP_WEIGHT 游乐设备重{监察}，PRODUCT_NUM质量证明书编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志}
+    LAST_ISPOPE_TYPE2 检验类型代码2{业务名}
+    LAST_ISPOPE_WENTI2 主要问题2 LAST_ISP_WENTI1 报告指出的问题1{不合格明细}
+    MANT_CYCLE维保周期（月数） MANT_TYPE维保型式 MANT_QUACERT_COD资格证书号 ALT_CYCLE大修周期{监察的}
     REG_ISP_MONEY定检标准收费(定检、内部、全面)(单位：元); ACP_ISP_MONEY验收标准收费(外部、在线、年度)(单位：元)
     EQP_SETAMOUNT设备布置数量/没用? IF_MAJCTL是否重点监控  IF_MAJPLACE是否在重要场所
     QUACERT_NAME制造资格证书名,QUACERT_COD制造许可证号 PRODUCT_NUM质量证明书编号=产品合格证编号
@@ -426,9 +433,14 @@ public class Eqp implements Equipment{
 
     /**.SAFE_LEV安全评定等级{监察才用到，检验没用},对合格字段补充/检验结论还不够{结论/不合格都是两个字段的}，
      * 什么时机设置本字段的？干啥的。备注吗/巡视。
-     * 目前只有2000容器类才有，其他类型备用的；
+     * 目前只有2000容器类才有，其他类型备用的； 1级--5级数量的,而检验结论是Enum或关键字的，合格标记是Boolean；
      * 动态的级别，用于监察重点关注用。 null=没事安全
      * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
+     * 安全评定等级是设备自身的状况体现{不含外部因素}主要是检验结论评级；事故隐患类别ACCI_TYPE是设备给周围带来的危险程度的评级，主要体现静态的判定/监察才能设置。
+     * 事故隐患类别 int=0,1,2,3,4 能做范围查询 4最严重，前端可以映射中文。
+     * var ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'}];
+     * 安全评定等级 int=0,1,2,3,4 能做范围查询 4最不保险；前端映射
+     * var SAFE_LEV=[{id:'1',text:'1级'},{id:'2',text:'2级'},{id:'3',text:'3级'},{id:'4',text:'4级'},{id:'5',text:'5级'}];
      */
     private String safe;
     /**注册登记人员REG_USER_NAME 注册人员姓名  REG_USER_ID注册人员{关联操作日志}
@@ -466,8 +478,8 @@ public class Eqp implements Equipment{
                 curruser==men.getId()
                     ).count()>0 )
         ).collect(Collectors.toSet());
-       //[误区]像这样的stream().filter().collect全部转载到后端服务器内存，速度慢！正常的应当依赖数据库去直接驱动SQL查询过滤后返回小部分数据集合。
-        //Todo: 应该改为JPA接口从让数据库替您搜索，我这里等着数据库给答案就好了。
+       //[误区]像这样的stream().filter().collect全部装载到后端服务器内存，速度慢！正常应当依赖数据库去直接驱动SQL查询过滤后返回小部分数据集合。
+       //Todo: 应该改为JPA接口从让数据库替您搜索，我这里等着数据库给答案就好了。
     }
 
 }

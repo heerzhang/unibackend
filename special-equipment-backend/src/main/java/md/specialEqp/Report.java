@@ -21,6 +21,9 @@ import java.util.Set;
  @Lob字段小心：可能造成见建表失败，mysql和Oracle还表现不一致。
 */
 
+/** 原始记录+报告的数据，快照信息。
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

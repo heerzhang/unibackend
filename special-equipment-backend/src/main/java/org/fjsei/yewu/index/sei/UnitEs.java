@@ -7,7 +7,9 @@ import org.springframework.data.elasticsearch.annotations.*;
 import javax.persistence.Id;
 import java.util.Date;
 
-//非独立索引；仅作为ES内部对象nested类型。
+/**非独立索引；仅作为ES内部对象nested类型。
+ * 单位ES实际模型分为{@link CompanyEs} 和{@link PersonEs} 搜索企业和个人了
+ */
 
 @Data
 @NoArgsConstructor

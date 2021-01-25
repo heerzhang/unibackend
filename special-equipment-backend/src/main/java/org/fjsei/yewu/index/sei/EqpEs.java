@@ -16,6 +16,11 @@ import java.util.Date;
 
 //设备Eqp对应的ES索引库,  从设备角度来过滤搜索。
 //无法改代码的生产系统情形，最好用index别名xxx_latest，方便维护。
+
+/**搜索Eqp设备用：这里字段只需要那些需要作为搜索条件的字段即可，可不考虑稀罕统计需求，常见统计可以满足。
+ *
+ */
+
 @Document(indexName = "eqp_latest")
 @Data
 //@Builder(toBuilder = true)

@@ -12,6 +12,8 @@ import java.util.Date;
 //java中的接口之间可以实现多继承，也可以实现多实现。但是java中的类只能实现单extends继承
 
 /** 电梯才会有维保单位的，其它类设备都没有。
+ * 计费需要的参数，修改需要严格审批的参数，常见的要求立刻统计的参数{OLAP非实时统计参数非常规统计参数都可除外}。
+ * 参数放在那里：看是否需要后端服务器java普通的快捷访问而定，若放在非结构化JSON数据中，前端访问没问题，后端很难操作。
  */
 
 @AllArgsConstructor
@@ -23,8 +25,9 @@ import java.util.Date;
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Elevator  extends Eqp {
     //3000电梯  TB_ELEV_PARA  电梯技术参数表
-    /**IF_SPEC_EQP特种电梯；.IF_SPEC_EQP是否特殊设备
+    /**IF_SPEC_EQP特种电梯； IF_SPEC_EQP 是否特殊设备
      * 特种电梯，加收30%; 总共才10台啊，而且旧平台还是放在Eqp表
+     * 其它种类都没用到该字段 Eqp.IF_SPEC_EQP 是否特殊设备
      */
     private Boolean spec;
     /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？技术上的非标，特种电梯是使用范围上的。
