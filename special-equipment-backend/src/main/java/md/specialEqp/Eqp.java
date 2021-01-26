@@ -109,8 +109,9 @@ public class Eqp implements Equipment{
      * */
     @Size(min = 3, max = 3)
     private String vart;
+
     /**SUB_EQP_VART 子设备品种？{非国家标准的扩展分类} 用于做报告选择模板/收费计算参数。
-     * 22个, 计费可能用的。
+     * 22个, 计费 在后端服务器中 可能用的。
      * 可为空， 旧平台9999=无
      * */
     private String subv;
@@ -137,8 +138,8 @@ public class Eqp implements Equipment{
      * 游乐设施的，同步AMUS_TYPE设备级别
      */
     private String level;
-    /**FACTORY_COD  出厂编号
-     * 若管道的 ，实际是工程描述、比较长。
+    /**FACTORY_COD  出厂编号，+制造单位+型号=联合关键字了。
+     * 若管道的 ，实际是工程描述、文本较长。管道装置的关键字应该看使用单位+出厂编号？?管道是整体工程而不是现成型设备/要设计要施工。
      * */
     private String fno;
     //private 设备名称 name;计费不会用，过滤不会用，常规统计不会用，后端服务器业务逻辑不会用，不是监察严格管制修改要审核的字段。
@@ -148,7 +149,7 @@ public class Eqp implements Equipment{
      * */
     private String plno;
     /**EQP_MOD 设备型号, 有没有型号外部编码规范，可能随意填？监察关心!监察严格管制修改要审核的字段
-     * 监察搜索过滤用
+     * 监察搜索过滤用, 监察严格修改管控字段；
      * */
     private String  model;
 
@@ -182,7 +183,7 @@ public class Eqp implements Equipment{
      * */
     private Boolean  move;
     //EQP_AREA_COD定义规律大乱；    //统计和行政含义的地址区分；
-    //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域
+    //  private String  area;    //实际应该放入Address中, 暂用； EQP_AREA_COD 设备所在区域; 监察划区为牢
     //  private String addr;    //暂时用 EQP_USE_ADDR 使用地址 //该字段数据质量差！
     //.EQP_USE_PLACE场所性质　？不一样概念，或Address pos底下附加属性。
     //   private String occa;    //EQP_USE_OCCA 使用场合　.EQP_USE_OCCA起重才用
@@ -196,7 +197,8 @@ public class Eqp implements Equipment{
     /**监察扩展，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 监察非结构化字段；前端可方便操作，后端都不参与的字段{但统计抽取方式就可除外}。
      * 未注册设备可以授权检验人员或SDN告知人员修改的，审核注册后权限关闭，相当于临时设备库倒腾。
-     * 临时把它初始化为= USE_MOBILE
+     * 给注册时刻用的快照的申报和检验验证后的参数字段，或者监察控制修改严格的字段，只给监察用的非结构化前端字段。
+     * 临时把它初始化为= USE_MOBILE；
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
@@ -211,6 +213,7 @@ public class Eqp implements Equipment{
     DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
     .EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联审批单？
     事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1':'特别重大'},{id:'2':'特大'},{id:'3':'重大'},{id:'4':'严重'},{id:'5':'一般'}];
+    ACCI_TYPE {没实质性用途，}过滤统计有可能用它？；
     是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
     CONST_UNT_ID土建施工单位，CONST_UNT_NAME 监察审核什么东西，难道给个单位名称就都放行、仅备注{没有实际意义}难道验证资质证照，验明真身是浮云。
     CONST_ACCP_UNT_ID土建验收单位, 监察临时设备表特有字段；CONST_ACCP_UNT_NAME
@@ -229,7 +232,20 @@ public class Eqp implements Equipment{
     DESIGN_PIC 设计图号 || 产品图号；
     ACCEP_INSP_UNT_ID 验收检验单位(审核快照的) ACCEP_INSP_UNT_NAME ？安装监检； ACCEP_INST_REPORT_NUM 验收检验验收报告编号{查证URL}；客运索道?
     PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验？ PRO_GB_UNT_NAME 产品监检单位;
-    EQP_NAME 设备名称，给外行看的 name ；
+    EQP_NAME 设备名称，给外行看的 name ；特别！属于监察严格修改管控字段。
+    QUACERT_COD 制造单位制造许可证号--资格证书号/监察才用； QUACERT_NAME 制造资格证书名,资格证书名称;
+    PRODUCT_NUM 质量证明书编号=产品合格证编号;/监察才有的；
+    INST_COMP_DATE 安装竣工日期 ？后端不参与字段？过滤排序分组会使用该字段吗？若不是常见需求实际可转为OLAP非实时需要ETL渠道搜索的应用场景/字段数量不同/表不同。
+    EQP_SETAMOUNT 设备布置数量/ 没用?
+    IF_MAJCTL 是否重点监控{没实质性意义，只是显示标记的}/监察才有的,和IF_MAJEQP重复意义？
+    IF_MAJPLACE 是否在重要场所{没实质性意义，只是显示标记的}/监察才有的(地址附加属性/同一个地址各类型等级设备重要性还有差异)；和 IF_MAJEQP 重复？主观、变迁。
+    FIXEDASSETS 固定资产值{监察才有}{没实质性，只是显示标记的}
+    维保 ALT_CYCLE大修周期{监察才有}{没实质性，只是显示标记的}；   MANT_CYCLE 维保周期（检验算月数）（监察算周数）{没实质性，只是显示标记的}；
+    MANT_QUACERT_COD维保单位资格证书号{监察才有}{没实质性，只是显示标记的}；
+    MANT_TYPE 维保型式(监察才有，jc_mant_lastinfo专门表关联/仅是备案用处/统计), 维保记录实体表？流水/合同；
+    EQP_WEIGHT 设备重 {没实质性用途，只是显示标记的}；
+    PRODUCT_NUM 质量证明书编号,产品合格证编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志};
+
      */
 
     /**NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
@@ -315,12 +331,14 @@ public class Eqp implements Equipment{
     private Unit svu;
 
     /**MAKE_UNT_ID 制造单位ID
+     * 监察关心！
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit makeu;
 
     /**INST_UNT_ID 安装单位ID, 最早 监检
+     * 监察关心！
      * */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
@@ -396,31 +414,28 @@ public class Eqp implements Equipment{
 
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 设备联系人，设备联系人电话；前端可以方便操作。 USE_MOBILE 设备联系人手机/短信；维保人员？
+     * 修改控制等级较低的参数，容易发生变化的字段。注意：检验机构人员可能是多人的/权限分割、责任归属。
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (12000)")
     private String  pa;
     /*在pa.json加这些参数：
-    USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时。
+    USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时，检验员对真假负责。
     INSURANCE_INS_NAME 保险单位 监察 起重机洗才有保险机构, INSURANCE_AMOUNT 保险金额
 	INSURANCE_TYPE 保险险种 INSURANCE_VALUE 保险价值 INSURANCE_PREMIUM 保险费；
     IF_WYL是否微压炉？ 检验才有的，该字段已经删除了吗!
+    EMERGENCY_TEL 应急救援电话/电梯才有?/值班电话，监察维保管理的才用：
+    EMERGENCY_USER_NAME 应急救援人名/？没啥用/在报告内的, 一个单位、楼盘可以不同的多个救援人。SDN申报给经过检验报告可确认修改;
 
-    INST_COMP_DATE 安装竣工日期
+    检验信息快照：todo:独立关联 年度Isp1,全面Isp2{上一次log/report}; 但是下次预定日期1,2单独的。
+    非关联Isp？ LAST_ISPOPE_WENTI2 主要问题2{监察Eqp临时表的}{注册时期才有}, LAST_ISP_WENTI1 报告指出的问题1{不合格明细}监察Eqp临时表的。
+    LAST_ISPOPE_TYPE2 检验类型代码2{业务名} 检验类别，最后一次检验报告类型2;
+    LAST_ISP_REPORT2 报告书编号; LAST_ISP_REPORT1 上次检验报告号1 ； 非关联！来自外部平台检验？链接,仅文本编号、无法查证的。
+    xx1=上次年度检验 xx2=上次全面检验； 平台割据，外部或者遗留平台的链接，非关联模式，新增伪记录Isp代替。
 
-    QUACERT_COD制造许可证号--资格证书号
-
-    EMERGENCY_TEL应急救援电话： EMERGENCY_USER_NAME应急救援人名
-    SAFE_LEV安全评定等级
-    上次检验报告号1 链接关联。
-    EQP_WEIGHT 游乐设备重{监察}，PRODUCT_NUM质量证明书编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志}
-    LAST_ISPOPE_TYPE2 检验类型代码2{业务名}
-    LAST_ISPOPE_WENTI2 主要问题2 LAST_ISP_WENTI1 报告指出的问题1{不合格明细}
-    MANT_CYCLE维保周期（月数） MANT_TYPE维保型式 MANT_QUACERT_COD资格证书号 ALT_CYCLE大修周期{监察的}
-    REG_ISP_MONEY定检标准收费(定检、内部、全面)(单位：元); ACP_ISP_MONEY验收标准收费(外部、在线、年度)(单位：元)
-    EQP_SETAMOUNT设备布置数量/没用? IF_MAJCTL是否重点监控  IF_MAJPLACE是否在重要场所
-    QUACERT_NAME制造资格证书名,QUACERT_COD制造许可证号 PRODUCT_NUM质量证明书编号=产品合格证编号
+    REG_ISP_MONEY定检标准收费(定检、内部、全面)(单位：元);预计定检收费, ？给SDN提示的，预估可能收入？
+    ACP_ISP_MONEY验收标准收费(外部、在线、年度)(单位：元); 验收标准收费(外部、在线、年度) OPE_TYPE=8,定检标准收费(定检、内部、全面) OPE_TYPE=3;
 
      */
 
@@ -431,18 +446,22 @@ public class Eqp implements Equipment{
     @JoinColumn
     private Unit ispu;
 
-    /**.SAFE_LEV安全评定等级{监察才用到，检验没用},对合格字段补充/检验结论还不够{结论/不合格都是两个字段的}，
+    /** SAFE_LEV 安全评定等级{监察才能改!},对合格字段补充/检验结论还不够{结论/不合格都是两个字段xx1xx2的}，
      * 什么时机设置本字段的？干啥的。备注吗/巡视。
-     * 目前只有2000容器类才有，其他类型备用的； 1级--5级数量的,而检验结论是Enum或关键字的，合格标记是Boolean；
+     * 目前只有2000容器类才有{原始记录读显示}，其他类型备用的； 1级--5级数量的,而检验结论是Enum或关键字的，合格标记是Boolean；
      * 动态的级别，用于监察重点关注用。 null=没事安全
      * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
-     * 安全评定等级是设备自身的状况体现{不含外部因素}主要是检验结论评级；事故隐患类别ACCI_TYPE是设备给周围带来的危险程度的评级，主要体现静态的判定/监察才能设置。
+     *
      * 事故隐患类别 int=0,1,2,3,4 能做范围查询 4最严重，前端可以映射中文。
      * var ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'}];
      * 安全评定等级 int=0,1,2,3,4 能做范围查询 4最不保险；前端映射
      * var SAFE_LEV=[{id:'1',text:'1级'},{id:'2',text:'2级'},{id:'3',text:'3级'},{id:'4',text:'4级'},{id:'5',text:'5级'}];
+     *
+     * 事故隐患类别ACCI_TYPE{没实质性用途，}是设备给周围带来的危险程度的评级，主要体现静态的判定,注册时期/监察才能设置。
+     * 安全评定等级是设备自身的状况体现{不含外部因素}主要是检验结论评级, 动态的；
      */
     private String safe;
+
     /**注册登记人员REG_USER_NAME 注册人员姓名  REG_USER_ID注册人员{关联操作日志}
      * 状态变更; 注册 流水日志，注销记录？到底谁敢干的；旧平台导入数据的：历史用户以往旧人员呢？
      * 注册历史记录，关联操作User实体的, 可历史记录太旧的可能被当做垃圾数据删除。
