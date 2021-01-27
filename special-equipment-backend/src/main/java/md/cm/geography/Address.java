@@ -64,7 +64,19 @@ public class Address {
         this.lat=Double.parseDouble(lat);
         return true;
     }
+
+    /**
+     EQP_USE_PLACE 设备使用场所--字典库； 只有4000起重机械才会使用登记证上注明本字段的{混淆！}; JC_TASK_EQP,报告会用到。
+     EQP_USE_OCCA 使用场合 EQP_USE_OCCA起重机械才用;
+     EQP_USE_PLACE=[{id:'1',text:'公众聚集场所（学校）'},{id:'2',text:'公众聚集场所（幼儿园）'},{id:'3',text:'公众聚集场所（医院）'},
+     {id:'4',text:'公众聚集场所（车站）'},{id:'5',text:'公众聚集场所（客运码头）'},{id:'6',text:'公众聚集场所（商场）'},{id:'7',text:'公众聚集场所（体育场馆）'},
+     {id:'8',text:'公众聚集场所（展览馆）'},{id:'9',text:'公众聚集场所（公园）'},{id:'10',text:'公众聚集场所（其它）'},{id:'11',text:'住宅'}];
+     IF_PUBLIC_AREA 是否公共领域（0不是，1是）:已被删除字段?
+     IF_MAJPLACE 是否在重要场所{没实质性意义，只是显示标记的},
+     IF_POPULATED 是否人口密集区{没实质性意义，只是显示标记的}
+     * */
 }
+
 
 
 //能减少重复性录入的随意性，地址字符串实体化。 已经输入生成的就直接能选择关联旧的地址登记字符串。同时隐含地就选定了地区编码xxx_AREA_COD。

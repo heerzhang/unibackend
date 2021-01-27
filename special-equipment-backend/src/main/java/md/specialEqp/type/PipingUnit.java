@@ -2,6 +2,7 @@ package md.specialEqp.type;
 
 import lombok.Getter;
 import lombok.Setter;
+import md.cm.unit.Unit;
 import md.specialEqp.inspect.Isp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -107,6 +108,7 @@ public class PipingUnit {
      */
     private String level;
 
+
     /**计费用-敷设方式，TB_PIPELINE_UNIT_PARA.LAY_MODE   is '敷设方式' 随意填写　不规范
      *TB_PIPELINE_UNIT_PARA.V_LAY_MODE  is '计费用-敷设方式（架空、埋地、其他）'　Enum?比较少
      * LAY_MODE管道敷设方式[{id:'埋地',text:'埋地'},{id:'架空',text:'架空'},{id:'其它',text:'其它'}]
@@ -119,6 +121,7 @@ public class PipingUnit {
      * 计费依据：PIPELINE_MEDIUM==钢制&&PIPELINE_LEVEL=!GA
      */
     private String  matr;
+
     /**介质
      */
     private String  mdi;
@@ -127,7 +130,9 @@ public class PipingUnit {
     //关联 备份字段：
     /**下次年检日期YEAR_NEXT_ISP_DATE；*/
     private Date nxtd1;      //NEXT_ISP_DATE1下次检验日期1（在线、年度）粗的检
-    /**定检下检日期NEXT_ISP_DATE；*/
+    /**定检下检日期NEXT_ISP_DATE；
+     * NEXT_ISP_DATE 定期检验下次检验日期 : 预定
+     * */
     private Date nxtd2;      //NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
     //省略掉：监检报告下检日期INCP_NEXT_ISP_DATE；
 
@@ -139,28 +144,45 @@ public class PipingUnit {
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (2000)")
     private String  pa;
-/*  每一个单元独立配置的：
-	EQP_INST_DATE 安装日期
-	EQP_FINMAKE_DATE 投用日期   ，超期服役？
-	第二页：管道基本信息汇总表
-    DESIGN_UNIT 设计单位
-    INST_UNIT 安装单位
 
-    INCP_ISP_NAME 监督检验机构
-    INCP_ISP_REPORT_COD 监督检验报告号
+/*  每一个单元可独立配置的：
+	EQP_INST_DATE 安装日期
+	第二页：管道基本信息汇总表
+    INCP_ISP_REPORT_COD 监督检验报告号, 关联Isp;
+    INCP_ISP_NAME 监督检验机构 关联ID;
     INCP_ISP_DATE 监检日期
     INCP_ISP_CONCLU 监督检验结论
-    ISP_UNT_NAME 定检机构 ;?应该分配定检机构=管道装置统一敲定一个定检机构的。
-    ISP_REPORT_COD 定检报告号
+    ISP_UNT_NAME 定检机构 ;?应该分配定检机构=管道装置统一敲定一个定检机构的-不能肢解了。
+    ISP_REPORT_COD 定检报告号, 关联Isp;
     ISP_DATE 定期检验检验日期
     ISP_CONCLU 定期检验检验结论
-    NEXT_ISP_DATE 定期检验下次检验日期
+    "设计压力(MPa)"	"工作压力(MPa)"	"设计温度(℃)"	"工作温度(℃)"
+    单线图
 */
+
+
+    /**DESIGN_UNIT 设计单位
+     * */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit desu;
+
+    /**INST_UNIT 安装单位
+     * */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit insu;
+
+    /**EQP_FINMAKE_DATE 投用日期 ，超期服役？ 影响到结论的！改造大修
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date used;
 
     //todo:关联 Isp字段：关联Isp 以过滤排序形式返回给前端展示层的
     //  private Isp isp;   //定检检验报告
     //private Isp year;  //年检报告
     //监检报告
+
 }
 
 

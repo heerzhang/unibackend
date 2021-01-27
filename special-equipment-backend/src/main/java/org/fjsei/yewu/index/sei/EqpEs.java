@@ -132,7 +132,7 @@ public class EqpEs implements Equipment{
 
     private Float  money;   //EQP_PRICE 产品设备价(进口安全性能监检的设备价)(元)
     //@Field(type = FieldType.Keyword)
-    //private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人or维保人员？
+    //private String  contact;    //USE_MOBILE 设备联系手机/短信； ?使用单位负责人
     //还没有做出结论判定的，就直接上null；
     private Boolean unqf1;    //NOTELIGIBLE_FALG1 不合格标志1（在线、年度，外检）
     //判定为合格的

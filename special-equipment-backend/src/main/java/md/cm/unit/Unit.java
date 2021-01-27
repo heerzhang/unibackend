@@ -14,6 +14,11 @@ import java.util.Set;
 //永久单位库JC_PMT_UNT 监察的，土建施工单位：就是简单的新增或更新组织机构代码。
 
 //表实体的名字替换小心：底层数据库的旧的索引FK外键并没有删除掉，可能导致无法跑起来，也不报错！！
+
+/**单位类型和资质证书管理
+ * UNT_TYPE_FORCHG = [{id:'USE_UNT_ID',text:'使用单位'},{id:'MANT_UNT_ID',text:'维保单位'},{id:'ALT_UNT_ID',text:'改造单位'},
+ * {id:'MAKE_UNT_ID',text:'制造单位'}, {id:'INST_UNT_ID',text:'安装单位'},{id:'OVH_UNT_ID',text:'维修单位'}];
+*/
 @AllArgsConstructor
 @Data
 @Entity
@@ -85,7 +90,9 @@ public class Unit {
         return  this.maints;
     }
 
-    //todo: MANAGE_UNT  上级的行业管理单位
+    //todo: MANAGE_UNT 上级的行业管理单位；行业管理单位=后妈；监察JC_UNT_MANAGE？管理下级单位，到底有啥权限职责威力，仅仅摆设或标记。
+
+    //监察才有的， 所属自贸区ZMQ_COD，针对设备所属的单位 的上级 监管机构管辖。{行政割据概念}
 }
 
 

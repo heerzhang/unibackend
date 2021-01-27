@@ -34,8 +34,9 @@ public class Elevator  extends Eqp {
      * 总共才7台啊， 是 否 / null
      */
     private Boolean nnor;
-    /**合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;
-     * 数量不多
+    /**是否属于旧楼加装电梯 合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;
+     * 计费优惠依据 ，数量不多
+     * 不同概念！ 是否老旧电梯：IF_OLD_DT，是否老旧电梯评估 IF_OLDDED_DT_PG_q
      * */
     private Boolean oldb;
 
@@ -84,10 +85,13 @@ public class Elevator  extends Eqp {
     private String  opm;
 
     /**最后一次制动实验时间LAST_BRAKE_TASK_DATE  IF_BRAKE_TASK, --是否制动实验
+     * 最后一次制动试验日期,  是否制动试验IF_BRAKE_q= LAST_BRAKE_TASK_DATE is null
      * */
     @Temporal(TemporalType.DATE)
     private Date lbkd;
     /**下次制动实验时间NEXT_BRAKE_TASK_DATE  电梯才有的字段
+     * 老旧电梯评估会修改 IF_OLDDED_DT_PG ,是否老旧电梯：IF_OLD_DT,【日期+预期寿命】,
+     * 定检时刻 确认老旧电梯评估的实际需求。
      * */
     @Temporal(TemporalType.DATE)
     private Date nbkd;
@@ -101,5 +105,8 @@ public class Elevator  extends Eqp {
 //@NoArgsConstructor缺少导致 No default constructor for entity:  : md.specialEqp.type.电梯
 /*
 * 电梯才有的字段 Task.IF_BRAKE_TASK, --是否制动实验, 任务根据年限决定是否制动；
-*
+北京市政策：对于投入使用年限不满10年的电梯(公众聚集场所使用的电梯除外)和杂物电梯，经具有一定规模的维保单位申请，检验检测方式调整为1年定期检验后，
+* 次年转变为自行检测。为了确保安全可靠，在自检92项定期检验外，再增加30项自检项目，其中有24项为严于国家标准的企业标准。再由检验机构对自行检测结果
+* 实施不低于5%的抽查比例。
 */
+

@@ -162,18 +162,28 @@ public class Eqp implements Equipment{
     /**IF_MAJEQP 是否重要特种设备 只用于显示过滤，
      * 监察初始化设置的关照级别。
      * 是否重点监控 IF_MAJCTL 监察才用；
-     * 安全评定等级是检验的；事故隐患类别ACCI_TYPE是监察的；
+     * 事故隐患类别 ACCI_TYPE 是监察的；
      */
     private Boolean  vital;
 
-    /**FIRSTUSE_DATE 设备投用日期  ，管道EQP_FINMAKE_DATE
+    /**FIRSTUSE_DATE 设备投用日期, 移装设备会修改？
      * 投用有磨损，应该比安装日期更关注。
+     * 如果是监检，并且投用日期为空更新投用日期为检验日期
      * */
     @Temporal(TemporalType.DATE)
     private Date used;
 
-    //private Date accd; COMPE_ACCP_DATE 竣工验收日期;
-    /**END_USE_DATE 使用年限到期时间
+    /**制造日期：MAKE_DATE ，管道EQP_FINMAKE_DATE
+     *  制造（安装）日期 ， 游乐设施需要判断下检日期和制造日期和设计使用年限
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date mkd;
+
+    /** 使用年限到期时间,  DESIGN_USE_OVERYEAR设计使用年限 到期年份
+     * 上结论：使用年限到期时间小于投入使用时间+设计使用年限+延长使用年限;
+     * 游乐定捡是否今年到期，如今年到期不受理定检 TO_CHAR(A.DESIGN_USE_OVERYEAR,'YYYY') <= TO_CHAR(SYSDATE,'YYYY')
+     * 设计年限到期日期 从 DESIGN_USE_OVERYEAR_FROM至：DESIGN_USE_OVERYEAR_TO
+     * 电梯绝大多数没有设置到期时间
      * */
     @Temporal(TemporalType.DATE)
     private Date    expire;
@@ -207,11 +217,10 @@ public class Eqp implements Equipment{
     /*svp.json参数有这些：
     进口类型：IMPORT_TYPE  "国产";
     制造国 MAKE_COUNTRY {非行政区域实体类型关联字段}
-    制造日期：MAKE_DATE  制造（安装）日期 ，统计范围查询  DESIGN_USE_YEAR 设计使用年限
     安装日期 INST_DATE监察告知单，  EQP_INST_DATE{管道单元} 跟安装单位相关；
     COMPE_ACCP_DATE 竣工验收日期 和施工单位相关； 管道才有意义；
-    DESIGN_USE_OVERYEAR设计使用年限 到期年份?统计？
-    .EXTEND_USE_YEAR延长使用年限; 应该是个历史资料，关联审批单？
+    DESIGN_USE_YEAR 设计使用年限 DESIGN_USELIFE;  DESIGN_USE_OVERYEAR = add_months(FIRSTUSE_DATE,12*DESIGN_USE_YEAR)
+    DESIGN_USE_OVERYEAR 设计使用年限 到期年份?统计？使用年限到期时间
     事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1':'特别重大'},{id:'2':'特大'},{id:'3':'重大'},{id:'4':'严重'},{id:'5':'一般'}];
     ACCI_TYPE {没实质性用途，}过滤统计有可能用它？；
     是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
@@ -220,11 +229,13 @@ public class Eqp implements Equipment{
     CONST_CLASS施工类别 CONST_UNT_CHK_NUM, CONST_START_DATE COMPE_ACCP_DATE 施工日期、验收，COMPE_ACCP_DATE竣工验收日期
     DESIGN_CHKUNT设计文件鉴定单位(已淘汰?)，可以在告知或首检录入时低权限用户录入，然后审核登记时高权限用户触发比对关联资料，注册后更新pa.json进历史记录。
     DESIGN_UNT_CHK_NUM 设计{单位？}许可证编号(已淘汰?)
-    DESIGN_UNT_ID  设计单位名称/资质{设计时他有资质，注册后，失去资质呢，审核时间做资质快照的}， DESIGN_UNT_NAME管道报告用。
+    DESIGNDOC_CHKDATE 设计文件鉴定日期，
+    DESIGN_DATE 设计日期{制造库才有意义,设备都已卖出安装了}，JC_DWXK_CASE_DEGPRO,JC_UNT_DEGPRO,JC_MAKEEQP_EQP,JC_DESIGN_PRODUCT有效期内设计产品?
+    DESIGN_UNT_ID 设计单位名称/资质，管道 {设计时他有资质，注册后，失去资质呢，审核时间做资质快照的}， DESIGN_UNT_NAME管道报告用。
     PRODUCT_MEASURE 产品标准 {号}？关联标准实体列表。
     一次性验证后就不会在做修改的可关联信息{当时快照数据}：
-    TYPETEST_UNT_NAME 监察单位管理 型式试验单位{高层级认定},应该是针对生产单位的属性。TYPETEST_UNT_NAME代表产品(限制范围,典型产品)
-    TEST_UNT_ID 监察,型式试验 型式试验单位; TEST_REPCOD型式试验报告编号{历史特别检验}，检验设备表也有。
+    TYPETEST_UNT_NAME 监察单位管理 申请单,型式试验单位{高层级认定},应该是针对生产单位的属性。TYPETEST_UNT_NAME代表产品(限制范围,典型产品)
+    TEST_UNT_ID 监察,型式试验 型式试验单位; TEST_REPCOD型式试验报告编号{历史特别检验}型式试验报告书编号，检验设备表也有。
     TEST_UNT_CHK_NUM试验机构核准证编号  TEST_UNT_CERT_NUM型式试验证书编号{单位资格}
     型式试验和制造监检2个独立！。电梯安装监督检验时，申请单位提交符合要求的电梯整机和部件产品型式试验证书或报告。
     MAKE_ISP_UNT_ID制造监检机构 检验平台没有该字段 监察设备许可用的，MAKE_ISP_CHK_NUM监检机构核准证编号;
@@ -245,6 +256,11 @@ public class Eqp implements Equipment{
     MANT_TYPE 维保型式(监察才有，jc_mant_lastinfo专门表关联/仅是备案用处/统计), 维保记录实体表？流水/合同；
     EQP_WEIGHT 设备重 {没实质性用途，只是显示标记的}；
     PRODUCT_NUM 质量证明书编号,产品合格证编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志};
+    IF_POPULATED 是否人口密集区{没实质性意义，只是显示标记的}
+    IF_IN_PROV 是否省内安装，该字段已被删除。
+    MANG_UNT_PHONE 管理单位电话，字段已被删除。
+    上次施工告知号：LAST_NOTIFY_ID,字段已被删除。
+    上次事故号：LAST_ACCI_ID {没实质性意义，档案代码}关联独立事故表/历史事故记录伪表。
 
      */
 
@@ -291,6 +307,8 @@ public class Eqp implements Equipment{
     private Date nxtd1;
     /**NEXT_ISP_DATE2下次检验日期2(机电定检，内检，全面）
      *管道 例外，需要看具体的管道单元。
+     * TO_CHAR(D.NEXT_ISP_DATE2,'YYYY')||'年'|| TO_CHAR(D.NEXT_ISP_DATE2,'mm')||'月' NEXT_ISP_DATE2,
+     * TO_CHAR(D.NEXT_ISP_DATE1,'YYYY')||'年'|| TO_CHAR(D.NEXT_ISP_DATE1,'mm')||'月' NEXT_ISP_DATE1,
      * */
     @Temporal(TemporalType.DATE)
     private Date nxtd2;
@@ -413,7 +431,7 @@ public class Eqp implements Equipment{
     private Division usud;     //.SECUDEPT_ID	'分支机构ID' || .SAFE_DEPT_ID '安全管理部门'
 
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
-     * 可加: 设备联系人，设备联系人电话；前端可以方便操作。 USE_MOBILE 设备联系人手机/短信；维保人员？
+     * 可加: 设备联系人，；前端可以方便操作。
      * 修改控制等级较低的参数，容易发生变化的字段。注意：检验机构人员可能是多人的/权限分割、责任归属。
      */
     @Lob
@@ -421,7 +439,7 @@ public class Eqp implements Equipment{
     @Column( columnDefinition="TEXT (12000)")
     private String  pa;
     /*在pa.json加这些参数：
-    USE_MOBILE 设备联系人手机,直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时，检验员对真假负责。
+    EXTEND_USE_YEAR 延长使用年限(数字/几年); ？检验员判定的。
     INSURANCE_INS_NAME 保险单位 监察 起重机洗才有保险机构, INSURANCE_AMOUNT 保险金额
 	INSURANCE_TYPE 保险险种 INSURANCE_VALUE 保险价值 INSURANCE_PREMIUM 保险费；
     IF_WYL是否微压炉？ 检验才有的，该字段已经删除了吗!
@@ -436,31 +454,31 @@ public class Eqp implements Equipment{
 
     REG_ISP_MONEY定检标准收费(定检、内部、全面)(单位：元);预计定检收费, ？给SDN提示的，预估可能收入？
     ACP_ISP_MONEY验收标准收费(外部、在线、年度)(单位：元); 验收标准收费(外部、在线、年度) OPE_TYPE=8,定检标准收费(定检、内部、全面) OPE_TYPE=3;
+    SECURITY_LEV 和 SAFE_LEV合并字段: 安全状况等级 容器；安全状况等级(检验)
+      SAFE_LEV 安全评定等级, 是设备自身的状况体现{不含外部因素}主要是检验结论评级, 动态的；
+      事故隐患类别 ACCI_TYPE, 实际含义差不多，目前只有2000容器类才有{原始记录读显示}； 1级--5级数量的；
+      安全评定等级 int=1,2,3,4,5 能做范围查询 4最不保险；前端映射 3级
+      SAFE_LEV=[{id:'1',text:'1级'},{id:'2',text:'2级'},{id:'3',text:'3级'},{id:'4',text:'4级'},{id:'5',text:'5级'}];
+    MAJEQP_TYPE 重点关注设备类型? 已删除字段！
 
      */
 
-    /**ISPUNT_NAME ISPUNT_ID当前分配去哪个法定检验机构(市场化标定模式)
+
+    /**ISPUNT_NAME ISPUNT_ID 当前分配去哪个法定检验机构(市场化标定模式)
      * 缺省由svu监察主动分配的。
+     * 另外独立表关联映射关系，第二层级分配： 具体该单位企业下面哪个部门。第三层次分配：详细的科室。
     */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn
     private Unit ispu;
 
-    /** SAFE_LEV 安全评定等级{监察才能改!},对合格字段补充/检验结论还不够{结论/不合格都是两个字段xx1xx2的}，
-     * 什么时机设置本字段的？干啥的。备注吗/巡视。
-     * 目前只有2000容器类才有{原始记录读显示}，其他类型备用的； 1级--5级数量的,而检验结论是Enum或关键字的，合格标记是Boolean；
-     * 动态的级别，用于监察重点关注用。 null=没事安全
-     * 被申报重要事项？汇总enum列表,目的给监察前端一个结论性字段，方便前端过滤。
-     *
-     * 事故隐患类别 int=0,1,2,3,4 能做范围查询 4最严重，前端可以映射中文。
-     * var ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'}];
-     * 安全评定等级 int=0,1,2,3,4 能做范围查询 4最不保险；前端映射
-     * var SAFE_LEV=[{id:'1',text:'1级'},{id:'2',text:'2级'},{id:'3',text:'3级'},{id:'4',text:'4级'},{id:'5',text:'5级'}];
-     *
-     * 事故隐患类别ACCI_TYPE{没实质性用途，}是设备给周围带来的危险程度的评级，主要体现静态的判定,注册时期/监察才能设置。
-     * 安全评定等级是设备自身的状况体现{不含外部因素}主要是检验结论评级, 动态的；
+    /**事故隐患类别 ACCI_TYPE [合并字段] SAFE_LEV
+     * SAFE_LEV 安全评定等级 int=1,2,3,4,5 能做范围查询 5最不保险；检验员上报等级后确认，监察人员根本照顾不过来，监察只是读取。
+     * 事故隐患类别ACCI_TYPE{没实质性用途，}是设备给周围带来的危险程度的评级，主要体现静态的判定。
+     * 事故隐患类别 int=0,1,2,3,4,5{满分5分制} 能做范围查询 4最严重的，0最安全的，前端可以映射中文{slider数字拉动条}。
+     * 注意旧平台是 ACCI_TYPE=[{id:'1',text:'特别重大'},{id:'2',text:'特大'},{id:'3',text:'重大'},{id:'4',text:'严重'},{id:'5',text:'一般'},null];
      */
-    private String safe;
+    private Byte cpa;
 
     /**注册登记人员REG_USER_NAME 注册人员姓名  REG_USER_ID注册人员{关联操作日志}
      * 状态变更; 注册 流水日志，注销记录？到底谁敢干的；旧平台导入数据的：历史用户以往旧人员呢？
@@ -481,6 +499,11 @@ public class Eqp implements Equipment{
      * */
     @Temporal(TemporalType.DATE)
     private Date cand;
+
+    /**发短信用 设备联系人手机号，USE_MOBILE 设备联系手机
+     *直接关联Person实体类可能信息更新速度不够快/检验员直接修改最及时，检验员对真假负责。
+     * */
+    private String lpho;
 
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。

@@ -49,7 +49,9 @@ public class Vessel extends Eqp {
     private String  mdi;
     /**夹套介质"COVERMEDIUM"*/
     private String  jakm;
-    /**罐车牌号"CARSIGN"*/
+    /**罐车牌号"CARSIGN"
+     * 车牌
+     * */
     private String  plat;
     /**罐车结构型式"CARSTRFORM"
      * 没几个有数据的;
@@ -59,6 +61,7 @@ public class Vessel extends Eqp {
     private String  insul;
     /**安装形式"INSFORM"*/
     private String  mont;
+
 }
 
 

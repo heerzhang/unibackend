@@ -102,15 +102,19 @@ public class Crane extends Eqp {
     private Float  high;
     /**起升机构部件(桥门,轻小型,旋臂)"UP_BODY" ,钢丝绳*/
     private String  part;
+
     /**EQP_USE_OCCA 使用场合/适用场合{设计目标}　.EQP_USE_OCCA起重才用来敲定 ISP_CYCLE = 12
      * 从父类Eqp移动到此子类; 等待规范 Enum{中文描述的-？转成 英文graphQL接口才能对接前端的Enum} 或者前端限定文本列表输入选定/直接用String。
      * "室内,室外，吊运熔融金属，防爆，绝缘" 其中一个， "吊运熔融金属"才是有用的。
+     * 只有4000起重机械才会使用登记证上注明本字段的{混淆！}; 不同于 EQP_USE_PLACE 设备使用场所--字典库；可用于JC_TASK_EQP和报告。
      * */
     private String occa;
-    /*放入pa.json的参数有这些：
-    * "是".equals(IF_METALLURGY 是否冶金(桥门)(检验))) 如果是冶金起重机，检验周期为一年用来敲定 ISP_CYCLE = 12
-    *
+
+    /**IF_METALLURGY 是否冶金(桥门)(检验)
+    * "是".equals( IF_METALLURGY 是否冶金(桥门)(检验))) 如果是冶金起重机，检验周期为一年用来敲定 ISP_CYCLE = 12;
+     * 类似 EQP_USE_OCCA=吊运熔融金属
      */
+    private Boolean metl;
 
 }
 
