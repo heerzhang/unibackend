@@ -179,11 +179,11 @@ public class Eqp implements Equipment{
     @Temporal(TemporalType.DATE)
     private Date mkd;
 
-    /** 使用年限到期时间,  DESIGN_USE_OVERYEAR设计使用年限 到期年份
-     * 上结论：使用年限到期时间小于投入使用时间+设计使用年限+延长使用年限;
+    /** 使用年限到期时间,  DESIGN_USE_OVERYEAR 设计使用年限到期年份{精确到月}
+     * 上结论：使用年限到期时间小于 投入使用时间+设计使用年限+延长使用年限;
      * 游乐定捡是否今年到期，如今年到期不受理定检 TO_CHAR(A.DESIGN_USE_OVERYEAR,'YYYY') <= TO_CHAR(SYSDATE,'YYYY')
      * 设计年限到期日期 从 DESIGN_USE_OVERYEAR_FROM至：DESIGN_USE_OVERYEAR_TO
-     * 电梯绝大多数没有设置到期时间
+     * 电梯绝大多数没有设置到期时间；电梯更新改造大修后敲定新一轮的到期时间? 电梯不看寿命只认定检结论的!
      * */
     @Temporal(TemporalType.DATE)
     private Date    expire;
@@ -220,7 +220,7 @@ public class Eqp implements Equipment{
     安装日期 INST_DATE监察告知单，  EQP_INST_DATE{管道单元} 跟安装单位相关；
     COMPE_ACCP_DATE 竣工验收日期 和施工单位相关； 管道才有意义；
     DESIGN_USE_YEAR 设计使用年限 DESIGN_USELIFE;  DESIGN_USE_OVERYEAR = add_months(FIRSTUSE_DATE,12*DESIGN_USE_YEAR)
-    DESIGN_USE_OVERYEAR 设计使用年限 到期年份?统计？使用年限到期时间
+    DESIGN_USE_OVERYEAR 设计使用年限到期年份?统计？使用年限到期时间
     事故隐患类别：ACCI_TYPE， 类似含义字段太多了/监察操心的。ACCI_TYPE=[{id:'1':'特别重大'},{id:'2':'特大'},{id:'3':'重大'},{id:'4':'严重'},{id:'5':'一般'}];
     ACCI_TYPE {没实质性用途，}过滤统计有可能用它？；
     是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
@@ -284,7 +284,8 @@ public class Eqp implements Equipment{
      * 判定为合格的或者勉强合格的，带注释提示但是合格的， 还没有做出结论判定的，就直接上null；
      * */
     private String ccl2;
-    /**LAST_ISP_DATE1最后一次检验日期1【一般是外检或年度在线】
+    /**LAST_ISP_DATE1 最后一次检验日期1【一般是外检或年度在线】
+     * 并不是每种设备都需要分离成两组的，有些种类只需要 xx_ISP_xx2 一组就够。
      * 初始化新平台，本平台还没有关联数据的需要，否则实际是关联Isp数据快照，注意同步一致性。
      * */
     @Temporal(TemporalType.DATE)
@@ -460,13 +461,15 @@ public class Eqp implements Equipment{
       安全评定等级 int=1,2,3,4,5 能做范围查询 4最不保险；前端映射 3级
       SAFE_LEV=[{id:'1',text:'1级'},{id:'2',text:'2级'},{id:'3',text:'3级'},{id:'4',text:'4级'},{id:'5',text:'5级'}];
     MAJEQP_TYPE 重点关注设备类型? 已删除字段！
+    IF_QR_CODE 二维码
 
      */
 
 
-    /**ISPUNT_NAME ISPUNT_ID 当前分配去哪个法定检验机构(市场化标定模式)
+    /**ISPUNT_NAME ISPUNT_ID 当前分配去哪个法定检验机构(市场化标定模式,缺省的业务)
      * 缺省由svu监察主动分配的。
      * 另外独立表关联映射关系，第二层级分配： 具体该单位企业下面哪个部门。第三层次分配：详细的科室。
+     * 检验机构内的分配很复杂，明显需要人工介入的。一台设备的监督和定期等业务很可能分开多个部门干的。
     */
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn

@@ -137,6 +137,7 @@ public class PipingUnit {
     //省略掉：监检报告下检日期INCP_NEXT_ISP_DATE；
 
     /**扩展的技术参数，JSON非结构化存储模式的参数
+     * 离线快照， 非实时关联的。
      * 设计/工作条件一共5个参数： "设计压力(MPa)"	"工作压力(MPa)"	"设计温度(℃)"	"工作温度(℃)"	介质；
      * 单线图URL;
      */
@@ -178,7 +179,7 @@ public class PipingUnit {
     @Temporal(TemporalType.DATE)
     private Date used;
 
-    //todo:关联 Isp字段：关联Isp 以过滤排序形式返回给前端展示层的
+    //todo:关联 实时关联的Isp字段：关联Isp 以过滤排序形式返回给前端展示层的
     //  private Isp isp;   //定检检验报告
     //private Isp year;  //年检报告
     //监检报告
