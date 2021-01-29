@@ -24,7 +24,9 @@ import java.util.Set;
  * 本次检验决定的结论/法定应当的下次检验日期。
  * 对接旧平台/外部检验系统，历史报告检验/历史记录。
  TB_ISP_MGE像个大杂烩？TB_ISP_DET参数，报告和流转,主要是记录状态的，DATA_PATH代表报告纸,Isp代表作业成果。
- * */
+ * 分项报告|主报告的流转审核打印等人员状态日期：直接放到Report模型中；
+ * Isp单个设备等同<BaseTask>模型。 V_ISP_MAININFO ;
+*/
 
 @Getter
 @Setter
@@ -43,7 +45,7 @@ public class Isp {
     //todo:若是ISP该从TASK挂接关系而来的，本来这里就不应该有EQP字段的，设备在TASK 哪去找，多余的字段?。Task是部门细分责任的。
     //我是多端我来维护关联关系，我的表有直接外键的存储。
     /** 单个Isp只能有单个Eqp;
-     * todo: <BaseTask> 实际应该归并给Isp?
+     * todo: <BaseTask> 实际应该==Isp?
      * */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_id")
@@ -66,8 +68,11 @@ public class Isp {
     @ManyToOne
     @JoinColumn
     private User checkMen;
-
+    /**敲定下次检验日期xx1,xx2，管道只能针对本次牵涉到的单元。
+     * */
     private Date    nextIspDate;
+    /**总体结论，子报告有各自子结论
+     * */
     private String  conclusion;
     //缺省, fetch= FetchType.EAGER
     //有可能Report的实际数据库表还没有创建啊;
@@ -93,6 +98,14 @@ public class Isp {
     //COR_DATE 整改反馈日期 如果复检派工的时间小于等待整改反馈期，则取原来的报告号TO_CHAR(A.COR_DATE, 'yyyy-mm-dd') >= TO_CHAR(SYSDATE, 'yyyy-mm-dd')\n")
     //  '超期未整改'  机电类安装监检报告，首检报告，检验结论为不合格的，因报告中没有记录整改反馈日期，
     //EFF_DATE下次定检日期; INP_BEG_DATE监检开始日期
+    //IF_BATCHMAKE 制造监检 按批出具的压力容器数量TB_ISP_INSPSTOP_MGE.EQP_NUM|TB_ISP_MGE.EQP_NUM;
+    //EQP_NUM  制造 压力容器数量
+    //CURR_NODE,OPE_TYPE,ISP_TYPE机电1,BUSI_TYPE法定1；
+    //ASSINV_FALG 0,1,2,3发票关联状态非法 发票关联及审核标志 0未关联1关联未审核2关联已审核;如果有关联检验合同，且为制造监检 则无需关联收费清单;
+    //TASKFEE_FALG 收费审核标志 -1=未查看过收费清单,
+    //ISP_CONCLU
+    //F_GET_TASKFEEBYTASKID(A.TASK_ID, 0) PRICE_CNT 报告是否有收费清单标志 报告收费清单状态,F_GET_TASKFEEBYTASKID(A.TASK_ID, 1) PRICE_TOTAL 报告收费清单金额;
+    //LIMIT_UPLOAD_TYPE 作废字段？承压类如果是不合格数据，必须选择问题类型
 
 }
 
@@ -103,7 +116,7 @@ public class Isp {
 
 /*
 *一个设备号可以有几个Task{1:1 Isp}同时进行中;
-*有分项就有多子SubISPid/多REP_TYPE子报告{独立WF_TODO分项流转，单独结论}。报告模板规范当中已经明显看出是分开的子报告，纸质组合排版的。
+*有分项就有多子SubISPid/多个独立REP_TYPE子报告{独立WF_TODO分项流转，单独结论}。报告模板规范当中已经明显看出是分开的子报告，纸质组合排版的。
 *分项报告类型；分项单独编制的分项报告必须是103状态，主报告才可以流转到审核；
- */
+*/
 

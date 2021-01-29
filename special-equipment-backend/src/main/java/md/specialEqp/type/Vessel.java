@@ -67,3 +67,8 @@ public class Vessel extends Eqp {
 
 //不可改技术参数：容积(换热面积)"CONTAINERVOLUME"罐车总重量"TANKCARTOWEI"容器高"CONTAINERHEIGHT"载重量"LOADWEIG"充装介质"TINAMPLMEDI"容器内径"CONINNDIA"
 // 夹套介质"COVERMEDIUM"罐车牌号"CARSIGN"罐车结构型式"CARSTRFORM"满载总重量"FULLYLOADWEI"保温(绝热形式)"TEMPPREMODE"安装形式"INSFORM"
+
+/*
+REP_TYPE.equals("200005")简单压力容器产品安全性能监督检验 "200001")压力容器产品安全性能监督检验 "232001")液化石油气钢瓶制造监督检验
+制造监检填写按批出具的压力容器数量,仅仅打印证书用的;
+*/

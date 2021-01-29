@@ -22,6 +22,8 @@ import java.util.Set;
 */
 
 /** 原始记录+报告的数据，快照信息。
+ * 分项报告或主报告{目录页报告内嵌在主报告上}，每种REP_TYPE都不同的。
+ * 流转审核打印等人员状态日期。
  */
 
 @NoArgsConstructor
@@ -69,6 +71,8 @@ public class Report  implements SimpleReport {
     private String  snapshot;
     //TEXT,MEDIUMTEXT,LONGTEXT三种不同类型，BLOB和TEXT大量删除操作性能有影响。建议定期使用OPTIMEIZE TABLE功能对表碎片整理。
 
+    /**关联的 单线图等文件。
+     * */
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;
 
