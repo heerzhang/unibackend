@@ -227,9 +227,9 @@ public class Eqp implements Equipment{
     CONST_UNT_ID土建施工单位，CONST_UNT_NAME 监察审核什么东西，难道给个单位名称就都放行、仅备注{没有实际意义}难道验证资质证照，验明真身是浮云。
     CONST_ACCP_UNT_ID土建验收单位, 监察临时设备表特有字段；CONST_ACCP_UNT_NAME
     CONST_CLASS施工类别 CONST_UNT_CHK_NUM, CONST_START_DATE COMPE_ACCP_DATE 施工日期、验收，COMPE_ACCP_DATE竣工验收日期
-    DESIGN_CHKUNT设计文件鉴定单位(已淘汰?)，可以在告知或首检录入时低权限用户录入，然后审核登记时高权限用户触发比对关联资料，注册后更新pa.json进历史记录。
-    DESIGN_UNT_CHK_NUM 设计{单位？}许可证编号(已淘汰?)
-    DESIGNDOC_CHKDATE 设计文件鉴定日期，
+    DESIGN_CHKUNT设计文件鉴定单位(才51条有数据，淘汰)，可以在告知或首检录入时低权限用户录入，然后审核登记时高权限用户触发比对关联资料，注册后更新pa.json进历史记录。
+    JC_TEMP_EQPMGE.DESIGN_UNT_CHK_NUM 设计{单位？}许可证编号 DESIGN_UNT_CHK_NUM 在监察临时表的锅炉容器才有的。
+    DESIGNDOC_CHKDATE 设计文件鉴定日期，(才59条有有效数据，淘汰)
     DESIGN_DATE 设计日期{制造库才有意义,设备都已卖出安装了}，JC_DWXK_CASE_DEGPRO,JC_UNT_DEGPRO,JC_MAKEEQP_EQP,JC_DESIGN_PRODUCT有效期内设计产品?
     DESIGN_UNT_ID 设计单位名称/资质，管道 {设计时他有资质，注册后，失去资质呢，审核时间做资质快照的}， DESIGN_UNT_NAME管道报告用。
     PRODUCT_MEASURE 产品标准 {号}？关联标准实体列表。
