@@ -26,6 +26,7 @@ public class Village {
 
     /**楼盘性质：INST_BUILD_TYPE 监察没有
      * .INST_BUILD_TYPE楼盘性质。,商品房、复建房、拆迁安置房、廉租房、回迁房、经济适用房、限价房,棚户区。
+     * 计费有用， 谁来裁定的。
      * */
     private String type;
 

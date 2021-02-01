@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 
 /**2000压力容器	 TB_VESSEL_PARA
  * R000常压容器 能否也放在这个派生类{技术参数表}；再已经 数据库-type-sort-vart字段区分。实体继承成了技术参数表分别了。
+ * 即时参数放到TB_ISP_DET中了；,PA4,PA5 属于安全阀 F 安全附件等其他类型业务TB_BUSI_OTHER的即时参数。
  */
 
 @NoArgsConstructor
@@ -41,10 +42,11 @@ public class Vessel extends Eqp {
      * 没几个有数据的; H2数据库不能用full这个名只能改。
      */
     private Float fulw;
-    /**容器内径"CONINNDIA"  复合字段 宽×高：680×1180; 上：800/下：3000; DN800mm
-     * Φ400/Φ850/Φ1000;  球形505; 2200(内筒)/2800(夹套)
+    /**容器内径"CONINNDIA" 其实应当放入父类的svp.json参数 ，计费过滤常规统计等后端逻辑没用到，就是不允许修改。
+     *有些浮点数(mm)就可以，也可能会是复合字段字符串：宽×高：680×1180; 上：800/下：3000; DN800mm "365.00" "600/480"
+     * Φ400/Φ850/Φ1000;  球形505; 更离谱的还有： 2200(内筒)/2800(夹套)； "内筒/夹套：1200/1300"
      */
-    private String  dim;
+    //private String  dim;
     /**充装介质"TINAMPLMEDI"*/
     private String  mdi;
     /**夹套介质"COVERMEDIUM"*/

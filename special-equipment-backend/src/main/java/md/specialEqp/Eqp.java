@@ -111,7 +111,7 @@ public class Eqp implements Equipment{
     private String vart;
 
     /**SUB_EQP_VART 子设备品种？{非国家标准的扩展分类} 用于做报告选择模板/收费计算参数。
-     * 22个, 计费 在后端服务器中 可能用的。
+     * 22个, 计费 在后端服务器中 可能用的。在JC_TEMP_EQPMGE没有SUB_EQP_VART字段
      * 可为空， 旧平台9999=无
      * */
     private String subv;
@@ -261,6 +261,11 @@ public class Eqp implements Equipment{
     MANG_UNT_PHONE 管理单位电话，字段已被删除。
     上次施工告知号：LAST_NOTIFY_ID,字段已被删除。
     上次事故号：LAST_ACCI_ID {没实质性意义，档案代码}关联独立事故表/历史事故记录伪表。
+    检验端不可更改的技术参数：
+    容器内径"CONINNDIA"
+    [电梯]控制屏出厂编号"CONTSCRCODE"
+    [电梯]曳引机出厂编号"TRACANGLEAFACNUMBER"
+    [电梯]电动机(驱动主机)编号"ELEC_COD"
 
      */
 
@@ -434,6 +439,7 @@ public class Eqp implements Equipment{
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 设备联系人，；前端可以方便操作。
      * 修改控制等级较低的参数，容易发生变化的字段。注意：检验机构人员可能是多人的/权限分割、责任归属。
+     *
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)

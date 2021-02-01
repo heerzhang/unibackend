@@ -118,5 +118,6 @@ public class Isp {
 *一个设备号可以有几个Task{1:1 Isp}同时进行中;
 *有分项就有多子SubISPid/多个独立REP_TYPE子报告{独立WF_TODO分项流转，单独结论}。报告模板规范当中已经明显看出是分开的子报告，纸质组合排版的。
 *分项报告类型；分项单独编制的分项报告必须是103状态，主报告才可以流转到审核；
-*/
+* 分项报告 子报告 IF_HAVESUBREP； TB_ISP_SUBPROJ{=Isp}  TB_TASK_TO_ISPPROJ{派工关联和关键信息,MAIN_FLAG主报告标识1：主报告;0分项报告，REP_TYPE检验项目}
+ */
 

@@ -41,6 +41,8 @@ public class Amusement extends Eqp {
     private Float  grad;
     /**摆角"SWINGANGLE"*/
     private Float  angl;
+
+    //游乐设施额定载荷不一定是数值，可以是区间
 }
 
 

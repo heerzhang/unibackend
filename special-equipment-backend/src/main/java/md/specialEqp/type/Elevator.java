@@ -32,7 +32,7 @@ public class Elevator  extends Eqp {
      */
     private Boolean spec;
     /**IF_UNNORMAL是否非标电梯， ？非标 和 特种不一样概念？技术上的非标，特种电梯是使用范围上的。
-     * 总共才7台啊， 是 否 / null
+     * 总共才7台啊， 是 否 / null， 默认=不是非标的电梯。
      */
     private Boolean nnor;
     /**是否属于旧楼加装电梯 合并字段 ？。IF_OLDBUILD ？ 旧楼房加装,   Eqp.IF_OLDBUILD_INST旧楼加装;
@@ -43,34 +43,46 @@ public class Elevator  extends Eqp {
 
     /**ELEFLOORNUMBER电梯层数，计费*/
     private Short  flo;
+
     /**RUNVELOCITY运行速度 ，米/秒 运行速度(m/s)"RUNVELOCITY"
      */
     private Float  vl;
 
     /**ELEHEIGHT3000提升高度*/
     private Float  hlf;
-    /**SLIDWAY_USE_LENG3300人行道使用区段长度 人行道使用区段长度（自动人行道）(m)"SLIDWAY_USE_LENG"*/
+    /**SLIDWAY_USE_LENG 3300人行道使用区段长度，计费有用
+     * 人行道使用区段长度（自动人行道）单位是(m)"SLIDWAY_USE_LENG"*/
     private Float  lesc;
-    /**名义宽度(自动扶梯/自动人行道)(mm)"NOMI_WIDTH"*/
+    /**名义宽度(自动扶梯/自动人行道)(mm)"NOMI_WIDTH", 有可能被当成收费依据;
+     *旧平台类型是字符串： "/" ，有些是 米 做单位的。实际可能扩充定义：电梯最大可开启的面宽方向宽度(能塞得进来)。
+     * */
     private Float  wesc;
 
-    /**控制屏型号"CONSCRTYPE"*/
+    /**控制屏型号"CONSCRTYPE" CON_SCREEN_TYPE
+     * 有可能被当成过滤常规统计依据;
+     * */
     private String  cpm;
     /**控制屏出厂编号"CONTSCRCODE"*/
-    private String  cpi;
-    /**曳引机型号"TRACANGTYPE"*/
+    //private String  cpi;
+    /**曳引机型号"TRACANGTYPE"
+     * 有可能被当成过滤常规统计依据;
+     * */
     private String  tm;
-    /**曳引机出厂编号"TRACANGLEAFACNUMBER"*/
-    private String  tno;
+    /**曳引机出厂编号"TRACANGLEAFACNUMBER" 有重复的*/
+    //private String  tno;
     /**电动机(驱动主机)型号"ELEC_TYPE"*/
     private String  mtm;
     /**电动机(驱动主机)编号"ELEC_COD"*/
-    private String  mtno;
-    /**缓冲器形式"BUFFER_MODE"*/
+    //private String  mtno;
+    /**缓冲器形式"BUFFER_MODE"
+     * 19个取值。 前端Enum{后端不管，当成字符串，前端控制输入列表，初始化数据要校对Enum处理}
+     * */
     private String  buff;
 
-    /**额定载荷(kg)"RATEDLOAD"  */
-    private Float rtl;
+    /**额定载荷(kg)"RATEDLOAD"
+     * 整数，行业惯例单位是 kg;
+     * */
+    private Integer rtl;
     /**是否加装附加装置"IF_ADDDEVICE" 字符串*/
     private String aap;
     /**轿厢意外移动保护装置型号"CAR_PROTECT_TYPE"*/

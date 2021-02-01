@@ -24,6 +24,10 @@ import java.util.Set;
 /** 原始记录+报告的数据，快照信息。
  * 分项报告或主报告{目录页报告内嵌在主报告上}，每种REP_TYPE都不同的。
  * 流转审核打印等人员状态日期。
+ * 实际对应旧平台TB_TASK_TO_ISPPROJ{派工关联和关键信息,MAIN_FLAG主报告标识1：主报告;0分项报告，REP_TYPE检验项目}
+ * 每个主子报告都有，TB_ISP_SUBPROJ实际等同于TB_ISP_MGE主表的！，分项子报告/主=分离继承/组合显示，把流转独立。
+ * 流程实际该放这里：WF_TODO/TB_ISP_SUBPROJ.FLOW_IMPCOD/WF_FLOW_IMP.FLOW_IMPID加流程；
+ * 旧平台TB_ISP_DET实际该放这里的检验时刻参数。
  */
 
 @NoArgsConstructor
