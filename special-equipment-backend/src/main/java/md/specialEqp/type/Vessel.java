@@ -9,8 +9,9 @@ import javax.persistence.Entity;
 //子类不能再做@org.hibernate.annotations.Cache()注解的。
 //@DiscriminatorValue(value="电梯")
 
-/**2000压力容器	 TB_VESSEL_PARA
+/**2000压力容器 TB_VESSEL_PARA | TB_GENERAL_VESSEL_PARA
  * R000常压容器 能否也放在这个派生类{技术参数表}；再已经 数据库-type-sort-vart字段区分。实体继承成了技术参数表分别了。
+ * 【特殊】常压和压力俩容器的代码不一样，但是技术参数类似，所以公用一个Java实体类。
  * 即时参数放到TB_ISP_DET中了；,PA4,PA5 属于安全阀 F 安全附件等其他类型业务TB_BUSI_OTHER的即时参数。
  */
 
@@ -73,4 +74,9 @@ public class Vessel extends Eqp {
 /*
 REP_TYPE.equals("200005")简单压力容器产品安全性能监督检验 "200001")压力容器产品安全性能监督检验 "232001")液化石油气钢瓶制造监督检验
 制造监检填写按批出具的压力容器数量,仅仅打印证书用的;
+常压容器的设备代码不同于压力容器！
+R 常压容器 <非国家标准目录的>  ocat=true 是目录外
+    "R3":"危险化学品常压容器"
+        "R31": "液体危险货物常压容器(罐体)",
+        "R32": "危险化学品常压容器",
 */

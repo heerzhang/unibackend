@@ -11,20 +11,18 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QAmusement is a Querydsl query type for Amusement
+ * QRopeway is a Querydsl query type for Ropeway
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QAmusement extends EntityPathBase<Amusement> {
+public class QRopeway extends EntityPathBase<Ropeway> {
 
-    private static final long serialVersionUID = 988301521L;
+    private static final long serialVersionUID = 195596757L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QAmusement amusement = new QAmusement("amusement");
+    public static final QRopeway ropeway = new QRopeway("ropeway");
 
     public final md.specialEqp.QEqp _super;
-
-    public final NumberPath<Float> angl = createNumber("angl", Float.class);
 
     //inherited
     public final DatePath<java.util.Date> cand;
@@ -59,14 +57,10 @@ public class QAmusement extends EntityPathBase<Amusement> {
     //inherited
     public final DatePath<java.util.Date> expire;
 
+    public final NumberPath<Short> flo = createNumber("flo", Short.class);
+
     //inherited
     public final StringPath fno;
-
-    public final NumberPath<Float> grad = createNumber("grad", Float.class);
-
-    public final NumberPath<Float> high = createNumber("high", Float.class);
-
-    public final NumberPath<Float> hlf = createNumber("hlf", Float.class);
 
     //inherited
     public final NumberPath<Long> id;
@@ -99,8 +93,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
 
     // inherited
     public final md.cm.unit.QUnit makeu;
-
-    public final BooleanPath mbig = createBoolean("mbig");
 
     //inherited
     public final DatePath<java.util.Date> mkd;
@@ -141,8 +133,6 @@ public class QAmusement extends EntityPathBase<Amusement> {
     //inherited
     public final StringPath plno;
 
-    public final NumberPath<Short> pnum = createNumber("pnum", Short.class);
-
     // inherited
     public final md.cm.geography.QAddress pos;
 
@@ -167,7 +157,7 @@ public class QAmusement extends EntityPathBase<Amusement> {
     //inherited
     public final StringPath rnam;
 
-    public final NumberPath<Float> sdia = createNumber("sdia", Float.class);
+    public final NumberPath<Integer> rtl = createNumber("rtl", Integer.class);
 
     //inherited
     public final StringPath sno;
@@ -219,23 +209,23 @@ public class QAmusement extends EntityPathBase<Amusement> {
 
     public final NumberPath<Float> vl = createNumber("vl", Float.class);
 
-    public QAmusement(String variable) {
-        this(Amusement.class, forVariable(variable), INITS);
+    public QRopeway(String variable) {
+        this(Ropeway.class, forVariable(variable), INITS);
     }
 
-    public QAmusement(Path<? extends Amusement> path) {
+    public QRopeway(Path<? extends Ropeway> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QAmusement(PathMetadata metadata) {
+    public QRopeway(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QAmusement(PathMetadata metadata, PathInits inits) {
-        this(Amusement.class, metadata, inits);
+    public QRopeway(PathMetadata metadata, PathInits inits) {
+        this(Ropeway.class, metadata, inits);
     }
 
-    public QAmusement(Class<? extends Amusement> type, PathMetadata metadata, PathInits inits) {
+    public QRopeway(Class<? extends Ropeway> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new md.specialEqp.QEqp(type, metadata, inits);
         this.cand = _super.cand;

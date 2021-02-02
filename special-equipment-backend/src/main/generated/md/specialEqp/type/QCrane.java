@@ -25,7 +25,7 @@ public class QCrane extends EntityPathBase<Crane> {
     public final md.specialEqp.QEqp _super;
 
     //inherited
-    public final DatePath<java.util.Date> accd;
+    public final DatePath<java.util.Date> cand;
 
     public final NumberPath<Float> cap = createNumber("cap", Float.class);
 
@@ -39,9 +39,15 @@ public class QCrane extends EntityPathBase<Crane> {
     public final StringPath cert;
 
     //inherited
+    public final StringPath cnam;
+
+    //inherited
     public final StringPath cod;
 
     public final BooleanPath cotr = createBoolean("cotr");
+
+    //inherited
+    public final NumberPath<Byte> cpa;
 
     public final StringPath cpi = createString("cpi");
 
@@ -75,6 +81,9 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final NumberPath<Long> id;
 
+    //inherited
+    public final NumberPath<Byte> impt;
+
     // inherited
     public final md.cm.unit.QUnit insu;
 
@@ -87,12 +96,18 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps;
 
+    // inherited
+    public final md.cm.unit.QUnit ispu;
+
     public final StringPath jobl = createString("jobl");
 
     //inherited
     public final StringPath level;
 
     public final NumberPath<Float> lmv = createNumber("lmv", Float.class);
+
+    //inherited
+    public final StringPath lpho;
 
     public final StringPath luf = createString("luf");
 
@@ -101,7 +116,12 @@ public class QCrane extends EntityPathBase<Crane> {
     // inherited
     public final md.cm.unit.QUnit makeu;
 
+    public final BooleanPath metl = createBoolean("metl");
+
     public final NumberPath<Float> miot = createNumber("miot", Float.class);
+
+    //inherited
+    public final DatePath<java.util.Date> mkd;
 
     //inherited
     public final StringPath model;
@@ -121,9 +141,6 @@ public class QCrane extends EntityPathBase<Crane> {
     public final md.cm.unit.QDivision mtud;
 
     public final NumberPath<Float> mvl = createNumber("mvl", Float.class);
-
-    //inherited
-    public final StringPath name;
 
     public final BooleanPath nnor = createBoolean("nnor");
 
@@ -173,20 +190,26 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final EnumPath<md.specialEqp.RegState_Enum> reg;
 
+    //inherited
+    public final DatePath<java.util.Date> regd;
+
     // inherited
     public final md.cm.unit.QUnit regu;
 
     // inherited
     public final md.cm.unit.QUnit remu;
 
+    // inherited
+    public final md.cm.unit.QUnit repu;
+
+    //inherited
+    public final StringPath rnam;
+
     public final NumberPath<Float> rtl = createNumber("rtl", Float.class);
 
     public final NumberPath<Float> rtv = createNumber("rtv", Float.class);
 
     public final NumberPath<Float> rvl = createNumber("rvl", Float.class);
-
-    //inherited
-    public final StringPath safe;
 
     public final NumberPath<Float> scv = createNumber("scv", Float.class);
 
@@ -275,29 +298,34 @@ public class QCrane extends EntityPathBase<Crane> {
     public QCrane(Class<? extends Crane> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new md.specialEqp.QEqp(type, metadata, inits);
-        this.accd = _super.accd;
+        this.cand = _super.cand;
         this.ccl1 = _super.ccl1;
         this.ccl2 = _super.ccl2;
         this.cert = _super.cert;
+        this.cnam = _super.cnam;
         this.cod = _super.cod;
+        this.cpa = _super.cpa;
         this.cping = _super.cping;
         this.did1 = _super.did1;
         this.did2 = _super.did2;
         this.expire = _super.expire;
         this.fno = _super.fno;
         this.id = _super.id;
+        this.impt = _super.impt;
         this.insu = _super.insu;
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;
         this.isps = _super.isps;
+        this.ispu = _super.ispu;
         this.level = _super.level;
+        this.lpho = _super.lpho;
         this.makeu = _super.makeu;
+        this.mkd = _super.mkd;
         this.model = _super.model;
         this.money = _super.money;
         this.move = _super.move;
         this.mtu = _super.mtu;
         this.mtud = _super.mtud;
-        this.name = _super.name;
         this.nxtd1 = _super.nxtd1;
         this.nxtd2 = _super.nxtd2;
         this.ocat = _super.ocat;
@@ -308,9 +336,11 @@ public class QCrane extends EntityPathBase<Crane> {
         this.pos = _super.pos;
         this.rcod = _super.rcod;
         this.reg = _super.reg;
+        this.regd = _super.regd;
         this.regu = _super.regu;
         this.remu = _super.remu;
-        this.safe = _super.safe;
+        this.repu = _super.repu;
+        this.rnam = _super.rnam;
         this.sno = _super.sno;
         this.sort = _super.sort;
         this.subv = _super.subv;

@@ -231,10 +231,10 @@ public class MaintenanceMutation implements GraphQLMutationResolver {
             }
             eqp=Eqp.builder().oid(each.getOIDNO()).cod(each.getEqpcod()).type(each.getEQP_TYPE()).sort(each.getEQP_SORT()).vart(each.getEQP_VART()).subv(each.getSUB_EQP_VART())
                 .reg(RegState_Enum.valueOf(each.getEQP_REG_STA().toString())).ocat('2'==each.getIN_CAG()).cert(each.getEQP_USECERT_COD()).sno(each.getEQP_STATION_COD())
-                .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fno(each.getFACTORY_COD()).name(each.getEQP_NAME()).plno(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
+                .rcod(each.getEQP_REG_COD()).level(each.getEQP_LEVEL()).fno(each.getFACTORY_COD()).plno(each.getEQP_INNER_COD()).model(each.getEQP_MOD())
                 .cping(each.getIF_INCPING()=='1').vital(each.getIF_MAJEQP()!=null&&( each.getIF_MAJEQP().equals("1")||each.getIF_MAJEQP().equals("是")) )
                     .used(each.getFIRSTUSE_DATE())
-                .accd(each.getCOMPE_ACCP_DATE()).expire(each.getDESIGN_USE_OVERYEAR())
+                .expire(each.getDESIGN_USE_OVERYEAR())
                     .move(each.getIS_MOVEEQP()!=null&&each.getIS_MOVEEQP()=='1')
                     .money(each.getEQP_PRICE()!=null?each.getEQP_PRICE():0).svp(each.getUSE_MOBILE())
                     .unqf1(each.getNOTELIGIBLE_FALG1()).unqf2(each.getNOTELIGIBLE_FALG2())

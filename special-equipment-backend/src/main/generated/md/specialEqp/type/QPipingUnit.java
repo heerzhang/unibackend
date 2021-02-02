@@ -24,9 +24,13 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public final StringPath code = createString("code");
 
+    public final md.cm.unit.QUnit desu;
+
     public final NumberPath<Float> dia = createNumber("dia", Float.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final md.cm.unit.QUnit insu;
 
     public final StringPath lay = createString("lay");
 
@@ -58,6 +62,8 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public final NumberPath<Float> thik = createNumber("thik", Float.class);
 
+    public final DatePath<java.util.Date> used = createDate("used", java.util.Date.class);
+
     public final NumberPath<Byte> ust = createNumber("ust", Byte.class);
 
     public QPipingUnit(String variable) {
@@ -78,6 +84,8 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public QPipingUnit(Class<? extends PipingUnit> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.desu = inits.isInitialized("desu") ? new md.cm.unit.QUnit(forProperty("desu"), inits.get("desu")) : null;
+        this.insu = inits.isInitialized("insu") ? new md.cm.unit.QUnit(forProperty("insu"), inits.get("insu")) : null;
         this.pipe = inits.isInitialized("pipe") ? new QPipeline(forProperty("pipe"), inits.get("pipe")) : null;
     }
 

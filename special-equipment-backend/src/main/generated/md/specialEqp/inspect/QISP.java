@@ -58,7 +58,7 @@ public class QIsp extends EntityPathBase<Isp> {
         super(type, metadata, inits);
         this.checkMen = inits.isInitialized("checkMen") ? new md.system.QUser(forProperty("checkMen")) : null;
         this.dev = inits.isInitialized("dev") ? new md.specialEqp.QEqp(forProperty("dev"), inits.get("dev")) : null;
-        this.task = inits.isInitialized("task") ? new QTask(forProperty("task")) : null;
+        this.task = inits.isInitialized("task") ? new QTask(forProperty("task"), inits.get("task")) : null;
     }
 
 }

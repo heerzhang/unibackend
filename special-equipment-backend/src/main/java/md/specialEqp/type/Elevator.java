@@ -11,7 +11,7 @@ import java.util.Date;
 //子类不能再做@org.hibernate.annotations.Cache() 与 @Inheritance(strategy=)和@Version注解的。
 //java中的接口之间可以实现多继承，也可以实现多实现。但是java中的类只能实现单extends继承
 
-/** 电梯才会有维保单位的，其它类设备都没有。
+/** 3000电梯  TB_ELEV_PARA  电梯技术参数表,电梯才会有维保单位的，其它类设备都没有。
  * 计费需要的参数，修改需要严格审批的参数，常见的要求立刻统计的参数{OLAP非实时统计参数非常规统计参数都可除外}。
  * 参数放在那里：看是否需要后端服务器java普通的快捷访问而定，若放在非结构化JSON数据中，前端访问没问题，后端很难操作。
  * 老旧电梯评估？算特别业务类型{监督检验是用户发起的，定期一般法定时间有周期的，委托是自愿；这个有点强制但是非定期的非用户发起是监管主动发现的}=临时统计抽取处理标记。
@@ -25,7 +25,6 @@ import java.util.Date;
 @Entity
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class Elevator  extends Eqp {
-    //3000电梯  TB_ELEV_PARA  电梯技术参数表
     /**IF_SPEC_EQP特种电梯； IF_SPEC_EQP 是否特殊设备
      * 特种电梯，加收30%; 总共才10台啊，而且旧平台还是放在Eqp表
      * 其它种类都没用到该字段 Eqp.IF_SPEC_EQP 是否特殊设备
@@ -83,15 +82,24 @@ public class Elevator  extends Eqp {
      * 整数，行业惯例单位是 kg;
      * */
     private Integer rtl;
-    /**是否加装附加装置"IF_ADDDEVICE" 字符串*/
+
+    /**加装的附加装置，是否加装附加装置"IF_ADDDEVICE"
+     * 新 增加的字段, "/" 否，"自动平层装置" "IC卡和能量反馈装置"
+     * */
     private String aap;
     /**轿厢意外移动保护装置型号"CAR_PROTECT_TYPE"*/
     private String  prot;
-    /**开门方式"DOOR_OPEN_TYPE"*/
+    /**开门方式"DOOR_OPEN_TYPE"
+     * 常用7种，+不常用48种; 前端Enum方式处理;
+     * */
     private String  doop;
-    /**限速器型号"RESTSPEEDTYPE"*/
+    /**限速器型号"RESTSPEEDTYPE"
+     * "DS-6SS1B(轿厢侧)；DS-6SS1B(对重侧)"
+     * */
     private String  limm;
-    /**控制方式"CONTROL_TYPE"*/
+    /**控制方式"CONTROL_TYPE"
+     * 常用7种，+不常用46种; 前端Enum方式处理;
+     * */
     private String  opm;
 
     /**最后一次制动实验时间LAST_BRAKE_TASK_DATE  IF_BRAKE_TASK, --是否制动实验
@@ -106,9 +114,6 @@ public class Elevator  extends Eqp {
      * */
     @Temporal(TemporalType.DATE)
     private Date nbkd;
-
-
-    //IMPORT_TYPE进口类型,计费依据 IMPORT_TYPE 进口类型
 
 }
 
