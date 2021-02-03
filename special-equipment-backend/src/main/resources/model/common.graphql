@@ -8,7 +8,8 @@ enum AuthorityName {  ROLE_SOMEONE,  ROLE_USER,  ROLE_ADMIN,   ROLE_Manager }
 
 #输入复合对象必须POJO+Query的java代码有地方用到了才算
 input DeviceCommonInput {cod: String, address: String, oid: String,
-    ownerId:ID, fno:String, lat:String, cert: String, addr: String, model: String,useUid: ID, id:ID
+    ownerId:ID, fno:String, lat:String, cert: String, addr: String, model: String,useUid: ID, id:ID,
+    flo:Int
     }
 
 input UnitCommonInput {company:Boolean, name: String, no:String, address: String, linkMen: String, phone:String

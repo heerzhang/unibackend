@@ -140,8 +140,6 @@ public class QPipeline extends EntityPathBase<Pipeline> {
 
     public final StringPath prs = createString("prs");
 
-    public final StringPath pttl = createString("pttl");
-
     //inherited
     public final StringPath rcod;
 
@@ -182,6 +180,9 @@ public class QPipeline extends EntityPathBase<Pipeline> {
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
     public final StringPath temp = createString("temp");
+
+    //inherited
+    public final StringPath titl;
 
     //inherited
     public final StringPath type;
@@ -281,6 +282,7 @@ public class QPipeline extends EntityPathBase<Pipeline> {
         this.svp = _super.svp;
         this.svu = _super.svu;
         this.task = _super.task;
+        this.titl = _super.titl;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;
         this.unqf2 = _super.unqf2;

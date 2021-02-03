@@ -1,4 +1,4 @@
-type Elevator implements Equipment & IfElevator{
+type Elevator implements Equipment{
     id:ID!
     cod: String!
     oid: String
@@ -8,11 +8,8 @@ type Elevator implements Equipment & IfElevator{
     ust: UseState_Enum!
     reg: RegState_Enum!
     hlf: String
+    flo: Int
 
-}
-
-interface IfElevator{
-    hlf: String
 }
 
 extend type Query {

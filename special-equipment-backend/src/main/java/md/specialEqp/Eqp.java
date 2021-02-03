@@ -241,7 +241,6 @@ public class Eqp implements Equipment{
     DESIGN_PIC 设计图号 || 产品图号；
     ACCEP_INSP_UNT_ID 验收检验单位(审核快照的) ACCEP_INSP_UNT_NAME ？安装监检； ACCEP_INST_REPORT_NUM 验收检验验收报告编号{查证URL}；客运索道?
     PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验？ PRO_GB_UNT_NAME 产品监检单位;
-    EQP_NAME 设备名称，给外行看的 name ；管道装置用到{挪到参数表Pipeline}。
     QUACERT_COD 制造单位制造许可证号--资格证书号/监察才用； QUACERT_NAME 制造资格证书名,资格证书名称;
     PRODUCT_NUM 质量证明书编号=产品合格证编号;/监察才有的；
     INST_COMP_DATE 安装竣工日期 ？后端不参与字段？过滤排序分组会使用该字段吗？若不是常见需求实际可转为OLAP非实时需要ETL渠道搜索的应用场景/字段数量不同/表不同。
@@ -517,6 +516,13 @@ public class Eqp implements Equipment{
      * 硬编码Enum模式： null,0='国产', 1='部件进口' ,2='整机进口'
      * */
     private Byte impt;
+
+    /**EQP_NAME 设备名称，给使用单位看的 name ； 管道装置用到。
+     * 管道工程或者固定式装置名称
+     * 工程（装置）名称：装置名称： 不同于父类Eqp.name;设备名称;
+     *管道特别！ 旧平台直接用父类Eqp EQP_NAME字段,设备名称。初始化数据要倒腾转移。
+     */
+    private String  titl;
 
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。

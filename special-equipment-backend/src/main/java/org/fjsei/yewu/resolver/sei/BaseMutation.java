@@ -9,6 +9,7 @@ import md.cm.base.PersonRepository;
 import md.specialEqp.inspect.Isp;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
+import md.specialEqp.type.Vessel;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
@@ -129,9 +130,19 @@ public class BaseMutation implements GraphQLMutationResolver {
     private PasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
-    public Eqp newEQP(String cod, String type, String oid) {
+    public Eqp newEQP(String type, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
-        Eqp eQP =Eqp.builder().cod(cod).type(type).oid(oid).reg(RegState_Enum.values()[3]).ust(UseState_Enum.USE).build();
+        Eqp.EqpBuilder<?, ?>  eqpBld=null;
+        if(type.equals("3"))
+            eqpBld = Elevator.builder().flo(info.getFlo());
+        else if(type.equals("2") || type.equals("R"))
+            eqpBld = Vessel.builder().pnum(info.getFlo());
+        else
+            eqpBld = Eqp.builder();
+
+        Eqp eQP =eqpBld.cod(info.getCod()).type(type).oid(info.getOid()).reg(RegState_Enum.values()[3])
+                .ust(UseState_Enum.USE).build();
+
         //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
         eQP.setSort("三方大的");
         eQP.setVart("Ccvs第三方大师傅得f");

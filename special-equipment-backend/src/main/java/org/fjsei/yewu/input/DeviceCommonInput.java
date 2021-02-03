@@ -1,5 +1,6 @@
 package org.fjsei.yewu.input;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 //graphQL内省和接口参数输入的场合，实际只用Getter就可以。
@@ -14,6 +15,7 @@ import lombok.Setter;
 /** 专用于前端输入参数，输入类似REST的搞的DTO，graphql接口函数参数不能直接上实体类。
  * 没办法直接用Eqp的实体类，报错.SchemaError: Expected type 'Eqp' to be a GraphQLInputType, but it wasn't!
 */
+
 @Getter
 @Setter
 public class DeviceCommonInput {
@@ -29,6 +31,8 @@ public class DeviceCommonInput {
     String  model;
     Long    useUid;     //使用单位ID
     Long  id;       //共通ID
+    //电梯的：
+    Short  flo;
 }
 
 

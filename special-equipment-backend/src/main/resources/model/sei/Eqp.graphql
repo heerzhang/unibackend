@@ -40,7 +40,7 @@ type EqpEs implements Equipment{
 extend type Query {
     getDevice(id:ID!): Eqp
     getEqpEs(id:ID!): EqpEs
-    getDeviceSelf(id:ID!): Eqp
+    getDeviceSelf(id:ID!): Equipment
     findEQPbyCod(cod: String!): Eqp
     findEQPLike(filter: DeviceCommonInput): [Eqp]!
     findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Eqp]!
@@ -54,7 +54,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    newEQP(cod: String!, type: String!, oid: String) : Eqp!
+    newEQP(type: String!, info: DeviceCommonInput!) : Eqp!
     "因为type普通对象直接用于输入参数的话,语义比较模糊,所以graphQL要求另外单独建"
     setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Eqp!
     #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。

@@ -235,6 +235,9 @@ public class QCrane extends EntityPathBase<Crane> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
+    //inherited
+    public final StringPath titl;
+
     public final StringPath tm = createString("tm");
 
     public final StringPath tno = createString("tno");
@@ -347,6 +350,7 @@ public class QCrane extends EntityPathBase<Crane> {
         this.svp = _super.svp;
         this.svu = _super.svu;
         this.task = _super.task;
+        this.titl = _super.titl;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;
         this.unqf2 = _super.unqf2;

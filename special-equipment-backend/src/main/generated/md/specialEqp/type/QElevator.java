@@ -205,6 +205,9 @@ public class QElevator extends EntityPathBase<Elevator> {
     //inherited
     public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
 
+    //inherited
+    public final StringPath titl;
+
     public final StringPath tm = createString("tm");
 
     //inherited
@@ -309,6 +312,7 @@ public class QElevator extends EntityPathBase<Elevator> {
         this.svp = _super.svp;
         this.svu = _super.svu;
         this.task = _super.task;
+        this.titl = _super.titl;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;
         this.unqf2 = _super.unqf2;

@@ -325,10 +325,13 @@ public class BaseQuery implements GraphQLQueryResolver {
         return eqpEsRepository.findById(id).orElse(null);
     }
     //前端路由乱来？不是正常的url也来这里了： java.lang.Long` from String "favicon.ico": not a valid Long value
-    public Eqp getDeviceSelf(Long id) {
+    public Equipment getDeviceSelf(Long id) {
+        Equipment   equipment;
         Eqp eqp=eQPRepository.findById(id).orElse(null);
+        //必须倒腾一手,否则前端收不到Eqp子类Elevator的参数。不能直接用Eqp,应该返回接口类型才可以。
+        equipment=eqp;
         // Assert.isTrue(eqp != null,"未找到EQP:"+id);
-        return eqp;
+        return equipment;
     }
 
     public Iterable<SimpleReport> getReportOfISP(Long id) {
