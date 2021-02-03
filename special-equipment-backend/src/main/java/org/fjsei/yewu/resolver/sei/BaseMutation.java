@@ -130,7 +130,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     private PasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
-    public Eqp newEQP(String type, DeviceCommonInput info) {
+    public Equipment newEQP(String type, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp.EqpBuilder<?, ?>  eqpBld=null;
         if(type.equals("3"))
@@ -141,11 +141,10 @@ public class BaseMutation implements GraphQLMutationResolver {
             eqpBld = Eqp.builder();
 
         Eqp eQP =eqpBld.cod(info.getCod()).type(type).oid(info.getOid()).reg(RegState_Enum.values()[3])
-                .ust(UseState_Enum.USE).build();
+                .ust(UseState_Enum.USE).sort(info.getSort()).vart(info.getVart())
+                .build();
 
         //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
-        eQP.setSort("三方大的");
-        eQP.setVart("Ccvs第三方大师傅得f");
         Task task=new Task();
         task.setDep("12111kk234fv");
         Set<Task> tasks=new HashSet<>();
@@ -154,20 +153,20 @@ public class BaseMutation implements GraphQLMutationResolver {
         List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
         //多对多保存复杂一点，必须都给set上。
-        task.setDevs(devs);
+        //task.setDevs(devs);
 
         Task task2=new Task();
         task2.setDep("aAxwxxxx3f4fv");
         eQP.getTask().add(task2);
         List<Eqp> devs2=new ArrayList<>();
         devs2.add(eQP);
-        task2.setDevs(devs2);
+        //task2.setDevs(devs2);
 
-        task.setStatus("STOPted");
-        task2.setStatus("RuningYe");
+        //task.setStatus("STOPted");
+        //task2.setStatus("RuningYe");
         try {
-            taskRepository.save(task);
-            taskRepository.save(task2);
+          //  taskRepository.save(task);
+           // taskRepository.save(task2);
             eQPRepository.saveAndFlush(eQP);
             //这里保存若事务异常就导致下面ES更新无法回滚了。
             //Eqp sec = eQP instanceof Elevator ? ((Elevator) eQP) : null;
@@ -190,7 +189,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         eqpEsRepository.save(eqpEs);
         //这个时间保存ES若异常可自动取消eQPRepository.saveAndFlush的操作结果。
         //运行到这还处于Transactional范围下，可是Elasticsearch已经发给服务器去处理了，JPA却还没有交给数据库去存储。
-        return eQP;
+        return (Equipment) eQP;
     }
 
     //Town + address
@@ -263,7 +262,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Task task = new Task();
         List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
-        task.setDevs(devs);
+    //todo:    task.setDevs(devs);
         taskRepository.save(task);
         return task;
     }
@@ -283,7 +282,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Task task = new Task();
         List<Eqp> devs=new ArrayList<>();
         devs.add(eQP);
-        task.setDevs(devs);
+   //todo:     task.setDevs(devs);
         task.setDep(dep);
         task.setDate(date);
         taskRepository.save(task);
@@ -479,7 +478,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public Eqp setEQPPosUnit(Long id, Long posId, Long ownerId, Long maintId) {
+    public Equipment setEQPPosUnit(Long id, Long posId, Long ownerId, Long maintId) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
@@ -492,14 +491,14 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQP.setOwner(ownerUnit);
         eQP.setMtu(maintUnit);
         eQPRepository.save(eQP);
-        return eQP;
+        return (Equipment) eQP;
     }
 
     //设置基本设备信息; 参数和模型定义的同名接口的输入类型按顺序一致，否则Two different classes used for type
     /**输入字段放入 DeviceCommonInput 各个设备种类 扁平化。
      */
     @Transactional
-    public Eqp buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
+    public Equipment buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
@@ -520,16 +519,16 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQP.setCod(info.getCod());
         eQP.setOid(info.getOid());
         eQPRepository.save(eQP);
-        return eQP;
+        return (Equipment) eQP;
     }
     @Transactional
-    public Eqp buildEQP2(Long id, Long ownerId, DeviceCommonInput info) {
+    public Equipment buildEQP2(Long id, Long ownerId, DeviceCommonInput info) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
 
         eQPRepository.save(eQP);
-        return eQP;
+        return (Equipment) eQP;
     }
     @Transactional
     public Elevator buildElevator_222(Long id, Long ownerId, DeviceCommonInput info) {
@@ -551,7 +550,7 @@ public class BaseMutation implements GraphQLMutationResolver {
     }
 
     @Transactional
-    public Eqp testEQPModify(Long id, String oid) {
+    public Equipment testEQPModify(Long id, String oid) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         String  prevOid="is null";
         Map<String, Object>  properties1=emSei.getProperties();
@@ -562,7 +561,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         prevOid=eQP.getOid();
         eQP.setOid(oid);
         eQPRepository.save(eQP);
-        return  eQP;
+        return  (Equipment) eQP;
     }
     @Transactional
     public String testEQPFindModify(String cod,String oid) {
@@ -614,7 +613,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         return  prevOid;
     }
     @Transactional
-    public Eqp testEQPCriteriaModify(String cod, String oid, String type) {
+    public Equipment testEQPCriteriaModify(String cod, String oid, String type) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         //必须加这2行，否则可能无法获取最新DB数据，可能不被认定为必须做DB更新。
         emSei.setProperty(JPA_SHARED_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
@@ -647,7 +646,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             eQPRepository.save(eQP);     //若缓存数据没有变换，这个不一定会提交给数据库？等于没干活。
         }
         if(eqpObjs.size()>1)    prevOid="超过1个的eqp?";
-        return  eqpObjs.get(0);
+        return (Equipment) eqpObjs.get(0);
     }
     @Transactional
     public String testEQPcreateQueryModify(String cod,String oid) {

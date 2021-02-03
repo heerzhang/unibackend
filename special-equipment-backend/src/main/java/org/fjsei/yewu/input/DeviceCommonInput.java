@@ -20,6 +20,9 @@ import lombok.Setter;
 @Setter
 public class DeviceCommonInput {
     //这里字段名字必须和外模型相同的。
+    String  type;
+    String  sort;
+    String  vart;
     String  cod;
     String  address;
     String  oid;

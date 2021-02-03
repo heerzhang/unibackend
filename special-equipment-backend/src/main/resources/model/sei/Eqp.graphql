@@ -8,6 +8,7 @@ interface Equipment{
     ust: UseState_Enum!
     reg: RegState_Enum!
 }
+#不分类设备
 type Eqp implements Equipment{
     id:ID!
     cod: String!
@@ -38,13 +39,13 @@ type EqpEs implements Equipment{
 }
 
 extend type Query {
-    getDevice(id:ID!): Eqp
+    getDevice(id:ID!): Equipment
     getEqpEs(id:ID!): EqpEs
     getDeviceSelf(id:ID!): Equipment
-    findEQPbyCod(cod: String!): Eqp
-    findEQPLike(filter: DeviceCommonInput): [Eqp]!
-    findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Eqp]!
-    getAllEQP: [Eqp]!
+    findEQPbyCod(cod: String!): Equipment
+    findEQPLike(filter: DeviceCommonInput): [Equipment]!
+    findAllEQPsFilterInput(filter: DeviceCommonInput!, offset:Int!, first:Int=20, orderBy:String, asc:Boolean=true): [Equipment]!
+    getAllEQP: [Equipment]!
     countAllEQP: Int!
     countAllEQPsFilter(filter: DeviceCommonInput!): Int!
     #升级弃用countAllEQPsWhere(where: WhereTree): Int!
@@ -54,16 +55,16 @@ extend type Query {
 }
 
 extend type Mutation {
-    newEQP(type: String!, info: DeviceCommonInput!) : Eqp!
+    newEQP(type: String!, info: DeviceCommonInput!) : Equipment!
     "因为type普通对象直接用于输入参数的话,语义比较模糊,所以graphQL要求另外单独建"
-    setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Eqp!
+    setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Equipment!
     #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。
-    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : Eqp
-    buildEQP2(id:ID!, owner: ID!, info: DeviceCommonInput) : Eqp
-    testEQPModify(id:ID!, oid: String ): Eqp
+    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : Equipment
+    buildEQP2(id:ID!, owner: ID!, info: DeviceCommonInput) : Equipment
+    testEQPModify(id:ID!, oid: String ): Equipment
     testEQPFindModify(cod:String!, oid: String ): String
     testEQPStreamModify(cod:String!, oid: String ): String
-    testEQPCriteriaModify(cod:String!, oid: String, type: String): Eqp
+    testEQPCriteriaModify(cod:String!, oid: String, type: String): Equipment
     testEQPcreateQueryModify(cod:String!, oid: String ): String
     invalidateEQP(whichEqp:ID!, reason: String!) : Boolean!
     removeEQP(id:ID!) : Boolean!

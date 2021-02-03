@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import md.cm.unit.Unit;
 import md.specialEqp.Eqp;
+import md.specialEqp.Equipment;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

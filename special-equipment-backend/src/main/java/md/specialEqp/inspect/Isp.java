@@ -3,6 +3,7 @@ package md.specialEqp.inspect;
 import lombok.Getter;
 import lombok.Setter;
 import md.specialEqp.Eqp;
+import md.specialEqp.Equipment;
 import md.specialEqp.Report;
 import md.system.User;
 import org.fjsei.yewu.filter.SimpleReport;
@@ -44,6 +45,7 @@ public class Isp {
     //单个ISP检验为了某个EQP和某个TASK而生成的。主要目的推动后续的报告，管理流程，等。
     //todo:若是ISP该从TASK挂接关系而来的，本来这里就不应该有EQP字段的，设备在TASK 哪去找，多余的字段?。Task是部门细分责任的。
     //我是多端我来维护关联关系，我的表有直接外键的存储。
+    //改成Equipment dev报错 @OneToOne or @ManyToOne on md.specialEqp.inspect.Isp.dev references an unknown entity:
     /** 单个Isp只能有单个Eqp;
      * todo: <BaseTask> 实际应该==Isp?
      * */

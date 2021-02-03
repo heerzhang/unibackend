@@ -158,12 +158,17 @@ public class BaseQuery implements GraphQLQueryResolver {
     }
 
     //多数系统正常地，查询都是直接规定设计好了参数范围的模式，但是灵活性较差，参数个数和逻辑功能较为限制；但安全性好，就是代码上麻烦点。
-    public Iterable<Eqp> findEQPLike(DeviceCommonInput filter) {
-        return eQPRepository.findAll();
+    public Iterable<Equipment> findEQPLike(DeviceCommonInput filter) {
+        List<Equipment>  allrt = new ArrayList<Equipment>();
+        List<Eqp> list=eQPRepository.findAll();
+        list.forEach(item -> {
+            allrt.add(item);
+        });
+        return allrt;
     }
 
     //orderBy 可支持直接指定某属性的下级字段。 {"orderBy": "pos.building",}
-    public Iterable<Eqp> findAllEQPsFilterInput(DeviceCommonInput filter, int offset, int first, String orderBy, boolean asc) {
+    public Iterable<Equipment> findAllEQPsFilterInput(DeviceCommonInput filter, int offset, int first, String orderBy, boolean asc) {
         Pageable pageable;
 
         if(StringUtils.isEmpty(orderBy))
@@ -195,8 +200,12 @@ public class BaseQuery implements GraphQLQueryResolver {
             }
         }, pageable);
 
+        List<Equipment>  allrt = new ArrayList<Equipment>();
         List<Eqp>  eqps= allPage.getContent();
-        return eqps;        //.subList(74070,74085)
+        eqps.forEach(item -> {
+            allrt.add(item);
+        });
+        return allrt;
     }
 
     public long countAllEQPsFilter(DeviceCommonInput filter) {
@@ -315,8 +324,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         }
     }
     //原型对应：getDevice(id:ID!): Eqp! 尽量不要返回值必选的，前端会报错，改成getDevice(id:ID!): EQP可选null。
-    public Eqp getDevice(Long id) {
-        return eQPRepository.findById(id).orElse(null);
+    public Equipment getDevice(Long id) {
+        return (Equipment) eQPRepository.findById(id).orElse(null);
         //因为LAZY所以必须在这里明摆地把它预先查询出来，否则graphQL内省该字段就没结果=报错; open-in-view也没效果。
         //单层eqp.getTask().stream().count();  //.collect(Collectors.toSet())
         //两层eqp.getTask().stream().forEach(t->t.getIsps().stream().count());
@@ -349,8 +358,8 @@ public class BaseQuery implements GraphQLQueryResolver {
         return  parents;
     }
 
-    public Eqp findEQPbyCod(String cod) {
-        return eQPRepository.findByCod(cod);
+    public Equipment findEQPbyCod(String cod) {
+        return (Equipment) eQPRepository.findByCod(cod);
     }
     public Iterable<CompanyEs> findUnitbyNameAnd(String name, String name2) {
         if(name2==null) name2="";
@@ -474,7 +483,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         return strJson;
     }
 
-    public Iterable<Eqp> getAllEQP() {
+    public Iterable<Equipment> getAllEQP() {
         String partcod="05T1";
         String partoid="C8456";
         Specification<Eqp> spec= new Specification<Eqp>() {
@@ -496,7 +505,12 @@ public class BaseQuery implements GraphQLQueryResolver {
             }
         };
         Sort sort = Sort.by(Sort.Order.asc("oid"), Sort.Order.desc("id"));
-        return eQPRepository.findAll(spec, sort);
+        List<Equipment>  allrt = new ArrayList<Equipment>();
+        List<Eqp> list=eQPRepository.findAll(spec, sort);
+        list.forEach(item -> {
+            allrt.add(item);
+        });
+        return allrt;
     }
     public long countAllEQP() {
         String partcod="L";
@@ -585,7 +599,7 @@ public class BaseQuery implements GraphQLQueryResolver {
         Report report=reportRepository.findById(id).orElse(null);
         //若需初始化，snapshot为空的
         if(report!=null && report.getSnapshot()==null){
-            String cod=report.getIsp().getDev().getCod();
+            String cod="";//todo: report.getIsp().getDev().getCod();
             DeviceSnapshot dss=new DeviceSnapshot();
             dss.setEqpcod(cod);
             EqpMge eqp=eqpMgeRepository.findByEqpcodEquals(cod);

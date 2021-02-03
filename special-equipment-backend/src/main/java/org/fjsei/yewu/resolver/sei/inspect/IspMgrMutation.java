@@ -164,7 +164,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         //这实体发现之间关联的情况越多的，删除就越麻烦咯，关系复杂。
         //ISP表与EQP都关联着Task的呢。  只好把ISP的清理当成了前置条件。
         Assert.isTrue(task.getIsps().isEmpty(),"还有ISP关联"+taskId);
-        List<Eqp>  devs= task.getDevs();
+        List<Eqp>  devs=null;//todo: task.getDevs();
         //解除关系
         devs.forEach(dev -> dev.getTask().remove(task));
         emSei.remove(task);
@@ -184,7 +184,8 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         //若不解除关系不能立即给正确的应答，在缓存期限时间内做关联查找会报错某关联id找不到。
         //下面这两行若去掉一个都会导致关联id找不到，除非cache缓存时间过了才行，或者其他操作影响。
         isp.getTask().getIsps().remove(isp);
-        isp.getDev().getIsps().remove(isp);
+
+  //todo:      isp.getDev().getIsps().remove(isp);
 
         emSei.remove(isp);
         emSei.flush();

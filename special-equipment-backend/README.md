@@ -178,3 +178,4 @@ JPA插入枚举类型字段@Enumerated(EnumType.ORDINAL)；　　　https://www.
 JPA无法直接将数组持久化@ElementCollection　public List<Integer> values;　　　http://codingdict.com/questions/56439
 @ElementCollection　Map<Key, Value> collection;      　https://cloud.tencent.com/developer/ask/54977
 mysql+JPA遇到启动卡壳的情况，需要关闭后等待数据库后台处理完毕，在mysql/data/看数据库文件变化和硬盘文件读取情况。
+graphql模型中接口比如Equipment，动态运行报错：一个接口类型名字不能配对多个Java类名的: Two different classes used for type Equipment:。

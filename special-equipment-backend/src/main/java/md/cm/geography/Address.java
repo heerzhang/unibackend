@@ -3,6 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import md.specialEqp.Eqp;
+import md.specialEqp.Equipment;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.persistence.*;
@@ -53,6 +54,7 @@ public class Address {
     @JoinColumn(name = "vid")
     private Village  vlg;       //楼盘
 
+    //改成Set<Equipment> eqps报错 Use of @OneToMany or @ManyToMany targeting an unmapped class
     //保持独立性：不需要双向的关联
     @OneToMany(mappedBy = "pos")
     private Set<Eqp> eqps;      //双向的关联，需要在外部实体表内也要声明，虽然数据库实体表没有字段，但内存操作需要它。
