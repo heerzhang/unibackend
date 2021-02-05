@@ -3,6 +3,8 @@ package org.fjsei.yewu.input;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 //graphQL内省和接口参数输入的场合，实际只用Getter就可以。
 //[语法核心限制] 查询和变更Query, Mutation的接口输入的参数类型不可以用外模型object对象类型=type定义的啊！！。
 //Input Object：输入对象 定义的数据类型，因为 Object 的字段可能存在循环引用a->b->a，可以嵌套，但是不能死循环，或者字段引用了不能作为查询输入对象的接口和联合类型。
@@ -34,8 +36,30 @@ public class DeviceCommonInput {
     String  model;
     Long    useUid;     //使用单位ID
     Long  id;       //共通ID
+    String  svp;
+    String  pa;
     //电梯的：
     Short  flo;
+    Boolean spec;
+    Boolean nnor;
+    Boolean oldb;
+    Float  vl;
+    Float  hlf;
+    Float  lesc;
+    Float  wesc;
+    String  cpm;
+    String  tm;
+    String  mtm;
+    String  buff;
+    Integer rtl;
+    String aap;
+    String  prot;
+    String  doop;
+    String  limm;
+    String  opm;
+    Date lbkd;
+    Date nbkd;
+
 }
 
 

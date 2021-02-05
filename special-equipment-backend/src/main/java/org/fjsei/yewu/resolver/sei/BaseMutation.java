@@ -130,18 +130,18 @@ public class BaseMutation implements GraphQLMutationResolver {
     private PasswordEncoder passwordEncoder;
 
     @Transactional(rollbackFor = Exception.class)
-    public Equipment newEQP(String type, DeviceCommonInput info) {
+    public Equipment newEQP(String type, DeviceCommonInput in) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp.EqpBuilder<?, ?>  eqpBld=null;
         if(type.equals("3"))
-            eqpBld = Elevator.builder().flo(info.getFlo());
+            eqpBld = Elevator.builder().flo(in.getFlo());
         else if(type.equals("2") || type.equals("R"))
-            eqpBld = Vessel.builder().pnum(info.getFlo());
+            eqpBld = Vessel.builder().pnum(in.getFlo());
         else
             eqpBld = Eqp.builder();
 
-        Eqp eQP =eqpBld.cod(info.getCod()).type(type).oid(info.getOid()).reg(RegState_Enum.values()[3])
-                .ust(UseState_Enum.USE).sort(info.getSort()).vart(info.getVart())
+        Eqp eQP =eqpBld.cod(in.getCod()).type(type).oid(in.getOid()).reg(RegState_Enum.values()[3])
+                .ust(UseState_Enum.USE).sort(in.getSort()).vart(in.getVart())
                 .build();
 
         //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
@@ -498,26 +498,33 @@ public class BaseMutation implements GraphQLMutationResolver {
     /**输入字段放入 DeviceCommonInput 各个设备种类 扁平化。
      */
     @Transactional
-    public Equipment buildEQP(Long id, Long ownerId, DeviceCommonInput info) {
+    public Equipment buildEQP(Long id, Long ownerId, DeviceCommonInput in) {
         if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp eQP = eQPRepository.findById(id).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
-        //Todo: 行政部分+用户定义名
-        Address position= addressRepository.findByName(info.getAddress());
-        if(position==null){
-            position=new Address();
-            //Todo: 行政部分 独立了。
-            position.setName(info.getAddress());
-            addressRepository.save(position);
-        }
-        Unit ownerUnit= unitRepository.findById(ownerId).orElse(null);
-        Assert.isTrue(position != null,"未找到position:"+position);
-        Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
-        eQP.setPos(position);
-        eQP.setOwner(ownerUnit);
         //修改数据的特别权限控制嵌入这里：
-        eQP.setCod(info.getCod());
-        eQP.setOid(info.getOid());
+        //Todo: 行政部分+用户定义名setPos
+        Unit ownerUnit= unitRepository.findById(ownerId).orElse(null);
+        //Assert.isTrue(ownerUnit != null,"未找到ownerUnit:"+ownerUnit);
+        eQP.setOwner(ownerUnit);
+        String type="3";
+        Eqp.EqpBuilder<?, ?>  eqpBld=null;
+        if(type.equals("3")) {
+            eqpBld = ((Elevator) eQP).toBuilder().oldb(in.getOldb()).flo(in.getFlo());
+            ((Elevator.ElevatorBuilder<?, ?>) eqpBld).cpm(in.getCpm()).spec(in.getSpec()).nnor(in.getNnor()).vl(in.getVl())
+                .hlf(in.getHlf()).lesc(in.getLesc()).wesc(in.getWesc()).tm(in.getTm()).mtm(in.getMtm()).buff(in.getBuff()).rtl(in.getRtl())
+                .aap(in.getAap()).prot(in.getProt()).doop(in.getDoop()).limm(in.getLimm()).opm(in.getOpm()).lbkd(in.getLbkd()).nbkd(in.getNbkd());
+        }
+        else if(type.equals("2") || type.equals("R"))
+            eqpBld = ((Vessel)eQP).toBuilder();
+        else
+            eqpBld = eQP.toBuilder();
+
+        eQP=eqpBld.cod(in.getCod()).type(type).oid(in.getOid()).reg(RegState_Enum.values()[3])
+                .ust(UseState_Enum.USE).sort(in.getSort()).vart(in.getVart())
+                .svp(in.getSvp()).pa(in.getPa())
+                .build();
+
         eQPRepository.save(eQP);
         return (Equipment) eQP;
     }

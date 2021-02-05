@@ -23,6 +23,8 @@ type Eqp implements Equipment{
     pos: Address
     task: [Task]
     useu: Unit
+    svp:String,
+    pa:String
 }
 
 type EqpEs implements Equipment{
@@ -55,11 +57,11 @@ extend type Query {
 }
 
 extend type Mutation {
-    newEQP(type: String!, info: DeviceCommonInput!) : Equipment!
+    newEQP(type: String!, in: DeviceCommonInput!) : Equipment!
     "因为type普通对象直接用于输入参数的话,语义比较模糊,所以graphQL要求另外单独建"
     setEQPPosUnit(id:ID!, pos: ID!, owner: ID!, maint: ID) : Equipment!
     #模型接口和java执行函数的参数顺序和类型是关键，参数名字却可不一致。接口函数名要唯一。
-    buildEQP(id:ID!, owner: ID!, info: DeviceCommonInput) : Equipment
+    buildEQP(id:ID!, owner: ID!, in: DeviceCommonInput) : Equipment
     buildEQP2(id:ID!, owner: ID!, info: DeviceCommonInput) : Equipment
     testEQPModify(id:ID!, oid: String ): Equipment
     testEQPFindModify(cod:String!, oid: String ): String

@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder=true)
 @Entity
 @Getter
 @Setter
@@ -177,6 +177,10 @@ public class Eqp implements Equipment{
      * */
     @Temporal(TemporalType.DATE)
     private Date mkd;
+    /**安装日期 INST_DATE  (非常规统计需要？,政策截止过滤 需要)，
+     * */
+    @Temporal(TemporalType.DATE)
+    private Date insd;
 
     /** 使用年限到期时间,  DESIGN_USE_OVERYEAR 设计使用年限到期年份{精确到月}
      * 上结论：使用年限到期时间小于 投入使用时间+设计使用年限+延长使用年限;
@@ -215,7 +219,7 @@ public class Eqp implements Equipment{
     private String  svp;
     /*svp.json参数有这些：
     制造国 MAKE_COUNTRY {非行政区域实体类型关联字段}
-    安装日期 INST_DATE监察告知单，  EQP_INST_DATE{管道单元} 跟安装单位相关；
+    EQP_INST_DATE{管道单元} 跟安装单位相关；
     COMPE_ACCP_DATE 竣工验收日期 和施工单位相关； 管道才有意义；
     DESIGN_USE_YEAR 设计使用年限 DESIGN_USELIFE;  DESIGN_USE_OVERYEAR = add_months(FIRSTUSE_DATE,12*DESIGN_USE_YEAR)
     DESIGN_USE_OVERYEAR 设计使用年限到期年份?统计？使用年限到期时间
@@ -524,6 +528,8 @@ public class Eqp implements Equipment{
      */
     private String  titl;
 
+
+
     //@Transient用法，非实际存在的实体属性，动态生成的实体临时属性字段。
     //大规模数据集查询不可用它，效率太慢，应该。。
     //本函数执行之前，JPA数据实际已都取完成了。
@@ -826,7 +832,11 @@ F 安全附件 <标准目录的> 。
     "77": "压力管道密封元件",
     "7T": "压力管道特种元件",
 【新设备】入口：
- 首检录入；施工告知监督检验，省外流动设备。
+1， 检验-检验机构首检录入,录入;
+2， 监察-施工告知录入,施工告知，录入;
+3， 监察-使用登记申请代录入,只能新增压力容器、压力管道、外省流动作业起重机械，省外流动设备=新增;导入检验系统设备=导入;
+4， 监察-首检录入, 电梯、锅炉不允许新增首检录入;
+
 
 */
 

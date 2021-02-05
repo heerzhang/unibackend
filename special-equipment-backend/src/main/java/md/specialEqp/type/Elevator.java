@@ -18,7 +18,7 @@ import java.util.Date;
  */
 
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder=true)
 @Getter
 @Setter
 @NoArgsConstructor

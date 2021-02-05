@@ -7,9 +7,28 @@ type Elevator implements Equipment{
     vart: String!
     ust: UseState_Enum!
     reg: RegState_Enum!
-    hlf: String
+    svp:String,
+    pa:String
     flo: Int
-
+    spec: Boolean
+    nnor: Boolean
+    oldb: Boolean
+    vl: Float
+    hlf: Float
+    lesc: Float
+    wesc: Float
+    cpm: String
+    tm: String
+    mtm: String
+    buff: String
+    rtl: Int
+    aap: String
+    prot: String
+    doop: String
+    limm: String
+    opm: String
+    lbkd: String
+    nbkd: String
 }
 
 extend type Query {
