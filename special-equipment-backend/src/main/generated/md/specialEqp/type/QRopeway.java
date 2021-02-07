@@ -68,6 +68,9 @@ public class QRopeway extends EntityPathBase<Ropeway> {
     //inherited
     public final NumberPath<Byte> impt;
 
+    //inherited
+    public final DatePath<java.util.Date> insd;
+
     // inherited
     public final md.cm.unit.QUnit insu;
 
@@ -245,6 +248,7 @@ public class QRopeway extends EntityPathBase<Ropeway> {
         this.fno = _super.fno;
         this.id = _super.id;
         this.impt = _super.impt;
+        this.insd = _super.insd;
         this.insu = _super.insu;
         this.ispd1 = _super.ispd1;
         this.ispd2 = _super.ispd2;

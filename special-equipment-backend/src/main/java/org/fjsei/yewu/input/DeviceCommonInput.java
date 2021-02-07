@@ -36,7 +36,9 @@ public class DeviceCommonInput {
     String  model;
     Long    useUid;     //使用单位ID
     Long  id;       //共通ID
-    String  svp;
+    //共用的 json类型 汇聚字段。
+    String  svp;     //数据库存储可以null或"{}" 但是不可以是""，否则前端报错。json里面有没有以及各字段类型只能前端自己做主了。不受到控制。
+    //可信赖的前端用户，用户自己负责任的参数字段，伪造变造可能，和权限适配管理。
     String  pa;
     //电梯的：
     Short  flo;

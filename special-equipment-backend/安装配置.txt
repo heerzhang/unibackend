@@ -219,3 +219,10 @@ TB_TASK_TO_ISPPROJ.E_PROJ_USER_ID'任务负责人(包含检验员)'.JY_USER_ID�
 TB_ISP_SUBPROJ分项对等简化ISP表,否已经送组合:合并送审/.CHL_SUB_SEQ分项报告下序号;
 TB_ISP_MGE.WORK_DAY'工作日数（不合格去掉等待日期）.REP_INTIME报告及时率'
 TB_ISP_MGE.NOTELIGIBLE_FALG不合格标志'
+
+
+
+const  snap =items&&items.snapshot&&JSON.parse(items.snapshot);
+JSON.stringify(mutationResult.data)
+{"制造国":"11dddss", "设计使用年限":5567}
+{e => set重点监控(nnor? undefined: true) }

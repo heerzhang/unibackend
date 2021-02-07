@@ -50,7 +50,9 @@ public class Elevator  extends Eqp {
     /**ELEHEIGHT3000提升高度*/
     private Float  hlf;
     /**SLIDWAY_USE_LENG 3300人行道使用区段长度，计费有用
-     * 人行道使用区段长度（自动人行道）单位是(m)"SLIDWAY_USE_LENG"*/
+     * 人行道使用区段长度（自动人行道）单位是(m)"SLIDWAY_USE_LENG"
+     * Float 误差！ 精度很低 6位数都无法确保精确的,5位数可保。
+     * */
     private Float  lesc;
     /**名义宽度(自动扶梯/自动人行道)(mm)"NOMI_WIDTH", 有可能被当成收费依据;
      *旧平台类型是字符串： "/" ，有些是 米 做单位的。实际可能扩充定义：电梯最大可开启的面宽方向宽度(能塞得进来)。

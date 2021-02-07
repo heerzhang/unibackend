@@ -215,7 +215,7 @@ public class Eqp implements Equipment{
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
-    @Column( columnDefinition="TEXT (1500)")
+    @Column( columnDefinition="TEXT (4000)")
     private String  svp;
     /*svp.json参数有这些：
     制造国 MAKE_COUNTRY {非行政区域实体类型关联字段}
@@ -444,7 +444,7 @@ public class Eqp implements Equipment{
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
-    @Column( columnDefinition="TEXT (12000)")
+    @Column( columnDefinition="TEXT (9000)")
     private String  pa;
     /*在pa.json加这些参数：
     EXTEND_USE_YEAR 延长使用年限(数字/几年); ？检验员判定的。
