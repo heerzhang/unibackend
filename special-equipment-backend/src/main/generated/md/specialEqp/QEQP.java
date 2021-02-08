@@ -50,6 +50,8 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final NumberPath<Byte> impt = createNumber("impt", Byte.class);
 
+    public final DatePath<java.util.Date> insd = createDate("insd", java.util.Date.class);
+
     public final md.cm.unit.QUnit insu;
 
     public final DatePath<java.util.Date> ispd1 = createDate("ispd1", java.util.Date.class);

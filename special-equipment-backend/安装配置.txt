@@ -221,8 +221,7 @@ TB_ISP_MGE.WORK_DAY'工作日数（不合格去掉等待日期）.REP_INTIME报�
 TB_ISP_MGE.NOTELIGIBLE_FALG不合格标志'
 
 
-
-const  snap =items&&items.snapshot&&JSON.parse(items.snapshot);
-JSON.stringify(mutationResult.data)
-{"制造国":"11dddss", "设计使用年限":5567}
-{e => set重点监控(nnor? undefined: true) }
+IDEA编译乱码 Build Output提示信息乱码  https://blog.csdn.net/qq_39232249/article/details/104917424
+springboot 启动 指定配置文件 https://www.cnblogs.com/vitoboy/p/12729663.html
+打包jar用 gradle - special-equipment - Tasks -build -jar 直接打包最简单了
+命令行启动 \special-equipment-backend\build\libs>java -jar -Dspring.profiles.active=dev spec-SNAPSHOT.jar
