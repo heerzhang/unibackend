@@ -6,3 +6,4 @@ tmlog.lck
 special-equipment-backend/src/main/resources/application.yml
 special-equipment-backend/build/
 tmlog*.log
+/out/
