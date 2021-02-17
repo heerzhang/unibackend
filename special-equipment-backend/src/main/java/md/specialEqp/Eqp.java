@@ -165,7 +165,7 @@ public class Eqp implements Equipment{
      */
     private Boolean  vital;
 
-    /**FIRSTUSE_DATE 设备投用日期, 移装设备会修改？
+     /**FIRSTUSE_DATE 设备投用日期, 移装设备会修改？
      * 投用有磨损，应该比安装日期更关注。
      * 如果是监检，并且投用日期为空更新投用日期为检验日期
      * */

@@ -224,4 +224,7 @@ TB_ISP_MGE.NOTELIGIBLE_FALG不合格标志'
 IDEA编译乱码 Build Output提示信息乱码  https://blog.csdn.net/qq_39232249/article/details/104917424
 springboot 启动 指定配置文件 https://www.cnblogs.com/vitoboy/p/12729663.html
 打包jar用 gradle - special-equipment - Tasks -build -jar 直接打包最简单了
-命令行启动 \special-equipment-backend\build\libs>java -jar -Dspring.profiles.active=dev spec-SNAPSHOT.jar
+命令行启动\special-equipment-backend\build\libs>java -jar -Dspring.profiles.active=dev spec-SNAPSHOT.jar
+家里 D:\DEV\jdk13.1\bin>java -jar -Dspring.profiles.active=home D:\coding\home\unibackend\special-equipment-backend\build\libs\special-equipment-backend-0.1.0-SNAPSHOT-20210211061414.jar
+
+
