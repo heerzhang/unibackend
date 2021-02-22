@@ -523,6 +523,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         eQP=eqpBld.cod(in.getCod()).type(type).oid(in.getOid()).reg(RegState_Enum.values()[3])
                 .ust(UseState_Enum.USE).sort(in.getSort()).vart(in.getVart())
                 .svp(in.getSvp()).pa(in.getPa())
+                .cpa(in.getCpa()).vital(in.getVital())
                 .build();
 
         eQPRepository.save(eQP);

@@ -61,6 +61,9 @@ public class DeviceCommonInput {
     String  opm;
     Date lbkd;
     Date nbkd;
+    //事故隐患类别
+    Byte cpa;
+    Boolean vital;
 
 }
 

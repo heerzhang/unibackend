@@ -29,6 +29,8 @@ type Elevator implements Equipment{
     opm: String
     lbkd: String
     nbkd: String
+    cpa: Int
+    vital: Boolean
 }
 
 extend type Query {
