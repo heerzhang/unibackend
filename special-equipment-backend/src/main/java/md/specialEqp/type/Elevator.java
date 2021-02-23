@@ -116,8 +116,19 @@ public class Elevator  extends Eqp {
      * */
     @Temporal(TemporalType.DATE)
     private Date nbkd;
-
+    //按照品种；1常用都输入的程度，2不常输入的则是再按照汉字顺序 排序一起。 常规统计过滤，计费，后端的控制 不会用到这些参数；
+    /*CAR_UPLIMIT_MV 轿厢上行限速器机械动作速度(m/s)： 类似这样参数在注册时给人观摩的，出报告可能用到，检验员查询资料可能用，就如图纸，设备部件参数。
+    DIP_ANGLE 倾斜角度(自动扶梯/自动人行道)：
+    SAFECLAMTYPE 安全钳型号： 几百种， ？出问题才需要抽取做过滤和排查安全的--业务需求？。OLAP方式,突发特殊定制的作业。
+    SAFECLAMNUM 安全钳编号：
+    FB_SUBSTANCE 爆炸物质(防爆电梯)： 周围存在的气体。
+    COMPENTYPE 补偿方式
+    FLOORDOORTYPE 层门型号
+    BOTTOMDEPTH 底坑深度(m)
+    ELECTROPOWER 电动机功率
+    * */
 }
+
 
 
 //不可改技术参数：控制屏出厂编号"CONTSCRCODE"控制屏型号"CONSCRTYPE"电梯层数"ELEFLOORNUMBER"电动机(驱动主机)型号"ELEC_TYPE"缓冲器形式"BUFFER_MODE"额定载荷(kg)"RATEDLOAD"是否加装附加装置"IF_ADDDEVICE"

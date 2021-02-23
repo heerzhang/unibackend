@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 public class Vessel extends Eqp {
     //2000压力容器	 TB_VESSEL_PARA
     /**CONTAINERVOLUME压力容器容积（立方米），复合字段
+     * 应该 规整成 数字类型，后端可能比较判定
      *容积(换热面积)"CONTAINERVOLUME"  内容器/外壳:0.077/0.05
      */
     private String  vol;
@@ -43,7 +44,9 @@ public class Vessel extends Eqp {
      * 没几个有数据的; H2数据库不能用full这个名只能改。
      */
     private Float fulw;
-    /**容器内径"CONINNDIA" 其实应当放入父类的svp.json参数 ，计费过滤常规统计等后端逻辑没用到，就是不允许修改。
+
+    /**容器内径"CONINNDIA";  不允许修改。
+     * 计费过滤常规统计等后端逻辑没用到? ?，其实应当放入父类的svp.json参数 ，
      *有些浮点数(mm)就可以，也可能会是复合字段字符串：宽×高：680×1180; 上：800/下：3000; DN800mm "365.00" "600/480"
      * Φ400/Φ850/Φ1000;  球形505; 更离谱的还有： 2200(内筒)/2800(夹套)； "内筒/夹套：1200/1300"
      */

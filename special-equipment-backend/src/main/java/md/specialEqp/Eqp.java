@@ -212,6 +212,7 @@ public class Eqp implements Equipment{
      * 未注册设备可以授权检验人员或SDN告知人员修改的，审核注册后权限关闭，相当于临时设备库倒腾。
      * 给注册时刻用的快照的申报和检验验证后的参数字段，或者监察控制修改严格的字段，只给监察用的非结构化前端字段。
      * 临时把它初始化为= USE_MOBILE；
+     * 临时的尚未登记发证的可以低权限用户修改，状态改成已注册的只能高权限者做更改。
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)
@@ -228,45 +229,52 @@ public class Eqp implements Equipment{
     是否重点监控 IF_MAJCTL， 类似含义字段太多了, 含义雷同:IF_MAJEQP 是否重要特种设备。
     CONST_UNT_ID土建施工单位，CONST_UNT_NAME 监察审核什么东西，难道给个单位名称就都放行、仅备注{没有实际意义}难道验证资质证照，验明真身是浮云。
     CONST_ACCP_UNT_ID土建验收单位, 监察临时设备表特有字段；CONST_ACCP_UNT_NAME
-    CONST_CLASS施工类别 CONST_UNT_CHK_NUM, CONST_START_DATE COMPE_ACCP_DATE 施工日期、验收，COMPE_ACCP_DATE竣工验收日期
+    JC_TEMP_EQPMGE.CONST_CLASS 施工类别 CONST_UNT_CHK_NUM施工许可证编号{很少}, CONST_START_DATE COMPE_ACCP_DATE 施工日期、验收，COMPE_ACCP_DATE竣工验收日期
     DESIGN_CHKUNT设计文件鉴定单位(才51条有数据，淘汰)，可以在告知或首检录入时低权限用户录入，然后审核登记时高权限用户触发比对关联资料，注册后更新pa.json进历史记录。
-    JC_TEMP_EQPMGE.DESIGN_UNT_CHK_NUM 设计{单位？}许可证编号 DESIGN_UNT_CHK_NUM 在监察临时表的锅炉容器才有的。
     DESIGNDOC_CHKDATE 设计文件鉴定日期，(才59条有有效数据，淘汰)
     DESIGN_DATE 设计日期{制造库才有意义,设备都已卖出安装了}，JC_DWXK_CASE_DEGPRO,JC_UNT_DEGPRO,JC_MAKEEQP_EQP,JC_DESIGN_PRODUCT有效期内设计产品?
     DESIGN_UNT_ID 设计单位名称/资质，管道 {设计时他有资质，注册后，失去资质呢，审核时间做资质快照的}， DESIGN_UNT_NAME管道报告用。
+    JC_TEMP_EQPMGE. DESIGN_UNT_CHK_NUM 设计许可证编号 DESIGN_UNT_CHK_NUM 在监察临时表的锅炉容器才有的。
     PRODUCT_MEASURE 产品标准 {号}？关联标准实体列表。
     一次性验证后就不会在做修改的可关联信息{当时快照数据}：
-    TYPETEST_UNT_NAME 监察单位管理 申请单,型式试验单位{高层级认定},应该是针对生产单位的属性。TYPETEST_UNT_NAME代表产品(限制范围,典型产品)
-    TEST_UNT_ID 监察,型式试验 型式试验单位; TEST_REPCOD型式试验报告编号{历史特别检验}型式试验报告书编号，检验设备表也有。
-    TEST_UNT_CHK_NUM试验机构核准证编号  TEST_UNT_CERT_NUM型式试验证书编号{单位资格}
-    型式试验和制造监检2个独立！。电梯安装监督检验时，申请单位提交符合要求的电梯整机和部件产品型式试验证书或报告。
-    MAKE_ISP_UNT_ID制造监检机构 检验平台没有该字段 监察设备许可用的，MAKE_ISP_CHK_NUM监检机构核准证编号;
-    MAKE_ISP_CERT_NUM制造监检证书编号{关联制造监检 证号(批量的/人工校对包含哪些设备)、检验Isp历史}。
-    DESIGN_PIC 设计图号 || 产品图号；
+    TYPETEST_UNT_NAME 监察单位管理 申请单,型式试验单位{高层级认定},该是针对生产单位的.属性字段?多品类批次的。TYPETEST_UNT_NAME代表产品(限制范围,典型产品)
+    TEST_UNT_ID 监察,型式试验 型式试验单位; TEST_REPCOD型式试验报告编号{历史特别检验}型式试验报告书编号，检验设备表也有。历史？关联断了线/外部来的报告=附件形式的。
+    伪报告：旧系统的独立文件模式报告，外部手工报告证书，用照片上传证明的报告，甚至只有报告书编号-?关联ID/伪报告一条长久保存，分类标记=可清理删除日期。
+    TEST_UNT_CHK_NUM 试验机构核准证编号
+    TEST_UNT_CERT_NUM 型式试验证书编号{单位资格}  ?机构单位的属性？当前使用的证书，有效期？
+    设备->型式试验Isp报告, 制造监检Isp ?
+    型式试验 和 制造监检, 验收检验=3个独立！。电梯安装监督检验时，申请单位提交符合要求的电梯整机和部件产品型式试验 证书或报告。前面两个有必要保持关联方式吗/快照验证=历史数据。
+    MAKE_ISP_UNT_ID制造监检机构 检验平台没有该字段 监察设备许可用的，
+    MAKE_ISP_CHK_NUM监检机构核准证编号;
+    MAKE_ISP_CERT_NUM 制造监检证书编号{关联制造监检 证号(批量的/人工校对包含哪些设备)、检验Isp历史}。
+    这三个Isp检验机构证书:验证。 型式 制造 验收监检
     ACCEP_INSP_UNT_ID 验收检验单位(审核快照的) ACCEP_INSP_UNT_NAME ？安装监检； ACCEP_INST_REPORT_NUM 验收检验验收报告编号{查证URL}；客运索道?
-    PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验？ PRO_GB_UNT_NAME 产品监检单位;
+    PRO_GB_UNT_ID (审核快照的)容器锅炉/产品监检单位；?首次检验==等于 验收检验？ PRO_GB_UNT_NAME 产品监检单位;
     QUACERT_COD 制造单位制造许可证号--资格证书号/监察才用； QUACERT_NAME 制造资格证书名,资格证书名称;
-    PRODUCT_NUM 质量证明书编号=产品合格证编号;/监察才有的；
+    DESIGN_PIC 设计图号 || 产品图号 (比较少有)；
+    PRODUCT_NUM 质量证明书编号=产品合格证编号;/监察才有的； 质量合格证编号
+    PRODUCT_NUM 质量证明书编号,产品合格证编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志};
     INST_COMP_DATE 安装竣工日期 ？后端不参与字段？过滤排序分组会使用该字段吗？若不是常见需求实际可转为OLAP非实时需要ETL渠道搜索的应用场景/字段数量不同/表不同。
-    EQP_SETAMOUNT 设备布置数量/ 没用?
+    EQP_SETAMOUNT 设备布置数量/ 没用? >1的才25条；
     IF_MAJCTL 是否重点监控{没实质性意义，只是显示标记的}/监察才有的,和IF_MAJEQP重复意义？
     IF_MAJPLACE 是否在重要场所{没实质性意义，只是显示标记的}/监察才有的(地址附加属性/同一个地址各类型等级设备重要性还有差异)；和 IF_MAJEQP 重复？主观、变迁。
-    FIXEDASSETS 固定资产值{监察才有}{没实质性，只是显示标记的}
-    维保 ALT_CYCLE大修周期{监察才有}{没实质性，只是显示标记的}；   MANT_CYCLE 维保周期（检验算月数）（监察算周数）{没实质性，只是显示标记的}；
-    MANT_QUACERT_COD维保单位资格证书号{监察才有}{没实质性，只是显示标记的}；
-    MANT_TYPE 维保型式(监察才有，jc_mant_lastinfo专门表关联/仅是备案用处/统计), 维保记录实体表？流水/合同；
-    EQP_WEIGHT 设备重 {没实质性用途，只是显示标记的}；
-    PRODUCT_NUM 质量证明书编号,产品合格证编号{申报给监察的,如何验证/资质材料查对？网上可查证/防伪标志};
-    IF_POPULATED 是否人口密集区{没实质性意义，只是显示标记的}
+    FIXEDASSETS 固定资产值{监察才有}{没实质性，只是显示标记的},<售价 -减值的? +工程费附加费；
+    EQP_WEIGHT 设备重 {没实质性用途，只是显示标记的}；设备总重量
+    IF_POPULATED 是否人口密集区{没实质性意义，只是显示标记的}(地址附加属性？)
     IF_IN_PROV 是否省内安装，该字段已被删除。
     MANG_UNT_PHONE 管理单位电话，字段已被删除。
-    上次施工告知号：LAST_NOTIFY_ID,字段已被删除。
-    上次事故号：LAST_ACCI_ID {没实质性意义，档案代码}关联独立事故表/历史事故记录伪表。
-    检验端不可更改的技术参数：
-    容器内径"CONINNDIA"
-    [电梯]控制屏出厂编号"CONTSCRCODE"
-    [电梯]曳引机出厂编号"TRACANGLEAFACNUMBER"
-    [电梯]电动机(驱动主机)编号"ELEC_COD"
+    ALT_CYCLE大修周期{监察才有}{没实质性，只是显示标记的}；/月、 比较较少条。
+    维保 MANT_CYCLE 维保周期（检验算月数）（监察算周数）{没实质性，只是显示标记的}；比较较少条,？被荒废功能?。
+    MANT_QUACERT_COD 维保单位资格证书号{监察才有}{没实质性，只是显示标记的}；比较较少条，temp表的；
+    MANT_TYPE 维保型式(监察temp才有,很少条的，jc_mant_lastinfo专门表关联/仅是备案用处/统计), 维保记录实体表？流水/合同；
+    jc_mant_lastinfo条数也不多?
+    上次施工告知号：LAST_NOTIFY_ID,字段已被删除。 关联?
+    上次事故号：LAST_ACCI_ID {没实质性意义，档案代码}[单方向关联的]关联独立事故表/历史事故记录伪表[导入生成?]。
+   检验端也不可更改的技术参数(后端不会用的部分)：
+    [电梯部分] 控制屏出厂编号"CONTSCRCODE"
+     曳引机出厂编号"TRACANGLEAFACNUMBER"
+     电动机(驱动主机)编号"ELEC_COD"
+    【容器部分】 容器内径"CONINNDIA"
 
      */
 
@@ -440,7 +448,7 @@ public class Eqp implements Equipment{
     /**扩展的技术参数，JSON非结构化存储模式的参数，能支持很多个，但是java无法简单化访问或操控单个技术参数。
      * 可加: 设备联系人，；前端可以方便操作。
      * 修改控制等级较低的参数，容易发生变化的字段。注意：检验机构人员可能是多人的/权限分割、责任归属。
-     *
+     *真正在负责定期检验的人才可以修改，非当前责任人不允许修改，空闲的未做检验也不能修改，但是例外情况审批后可修改。
      */
     @Lob
     @Basic(fetch= FetchType.LAZY)

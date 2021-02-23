@@ -227,4 +227,20 @@ springboot 启动 指定配置文件 https://www.cnblogs.com/vitoboy/p/12729663.
 命令行启动\special-equipment-backend\build\libs>java -jar -Dspring.profiles.active=dev spec-SNAPSHOT.jar
 家里 D:\DEV\jdk13.1\bin>java -jar -Dspring.profiles.active=home D:\coding\home\unibackend\special-equipment-backend\build\libs\special-equipment-backend-0.1.0-SNAPSHOT-20210211061414.jar
 
-
+VMoptions
+-Xms128m
+-Xmx713m
+-XX:ReservedCodeCacheSize=312m
+-XX:+UseConcMarkSweepGC
+-XX:SoftRefLRUPolicyMSPerMB=50
+-XX:CICompilerCount=2
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:-OmitStackTraceInFastThrow
+-ea
+-Dsun.io.useCanonCaches=false
+-Djdk.http.auth.tunneling.disabledSchemes=""
+-Djdk.attach.allowAttachSelf=true
+-Djdk.module.illegalAccess.silent=true
+-Dkotlinx.coroutines.debug=off
+-Dfile.encoding=UTF-8
+-javaagent:C:\Users\Public\.BetterIntelliJ\BetterIntelliJ-1.16.jar
