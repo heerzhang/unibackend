@@ -175,7 +175,35 @@ public class Elevator  extends Eqp {
     IF_SHIP 是否船舶电梯： 总共就4台
     IF_PUB_TRAN 是否公共交通型： "非公共交通型"
     IF_CAR 是否汽车电梯：
-
+    IF_SCANMOBILE 是否手机信号覆盖：
+    V_PROPOR 速比：
+    RUNDLEBREADTH 梯级宽度(m)：
+    DRAG_MODE 拖动方式：
+    DOWN_RATED_V 下行额定速度(液压电梯)(m/s)：
+    RESTSPLEAFACNUMBER 限速器出厂编号：
+    LIMIT_MV 限速器机械动作速度(液压/杂物电梯)(m/s)：
+    LIMIT_ROP_DIA 限速器绳直径(mm)：
+    RESTSPEEDTYPE 限速器型号：
+    LIMIT_MAKE_UNT 限速器制造单位：
+    WIRE_ROP_NUM 悬挂钢丝绳数(液压电梯)：
+    WIRE_ROP_DIA 悬挂钢丝绳直径(液压电梯)：
+    DRAG_PROPOR 曳引比：
+    DRAG_PITCH_DIA 曳引轮节径(mm)：
+    DRAG_NUM 曳引绳数：
+    DRAG_DIA 曳引绳直径(mm)：
+    PUMP_COD 液压泵编号(液压电梯)：
+    PUMP_POWER 液压泵功率(液压电梯)：
+    PUMP_FLUX 液压泵流量(液压电梯)：
+    PUMP_TYPE 液压泵型号(液压电梯)：
+    PUMP_SPEED 液压泵转速(液压电梯)：
+    OIL_TYPE 液压油型号(液压电梯)：
+    CYLINDER_NUM 油缸数量(液压电梯)：
+    CYLINDER_STYLE 油缸形式(液压电梯)：
+    RUNMETHOD 运行方法：
+    FB_MACHINEFLAG 整机防爆标志(防爆电梯)：
+    FB_HGCOD 整机防爆合格证编号(防爆电梯）：
+    MANUFACTURECRITERION 制造规范：
+    MAINSTRFORM 主体结构形式：
     * */
 }
 
