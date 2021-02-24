@@ -87,6 +87,7 @@ public class Elevator  extends Eqp {
 
     /**加装的附加装置，是否加装附加装置"IF_ADDDEVICE"
      * 新 增加的字段, "/" 否，"自动平层装置" "IC卡和能量反馈装置"
+     * 旧平台是: '是否加装附加装置'：
      * */
     private String aap;
     /**轿厢意外移动保护装置型号"CAR_PROTECT_TYPE"*/
@@ -126,6 +127,55 @@ public class Elevator  extends Eqp {
     FLOORDOORTYPE 层门型号
     BOTTOMDEPTH 底坑深度(m)
     ELECTROPOWER 电动机功率
+    ELEC_STYLE 电动机类型， 重新定义了吗；实际数据填写成了 重复定义字段?:电动机(驱动主机)型号"ELEC_TYPE"
+    ELEC_REV 电动机转速："960" "1201-1462" "1000/250" "127.3" "960/1150"，不用规整分解变成多个属性/复合字段！业务需求驱动？不要求做过滤比较大小的=仅仅就是给人看的备注形式。
+    ELEDOORNUMBER 电梯门数
+    ELESTADENUMBER 电梯站数
+ -  ELEWALKDISTANCE 电梯走行距离(m) ？极度少条，弃用？
+    TOPHEIGHT 顶层高度(m)
+    TOP_PATTERNS 顶升形式(液压电梯)
+    COUNORBTYPE 对重导轨型式
+    COUP_ORB_DIST 对重轨距
+    COUP_NUM  COUNTERAMOUNT 对重块数量 ,明明数字非得做成文本形式字段;"26块" "29+2" "高度：1.070m" "厚34薄9"
+    COUP_LIMIT_COD 对重限速器编号  不是唯一的序号 "SG1508352；SG1508345"。
+    COUP_LIMIT_TYPE 对重限速器型号
+ -   RATINGVOLTAGE 额定电流(A) ？极度少条 ,规整意图的 =新添加的字段?
+    RATED_CURRENT 额定电流(A)： "26.5" ，少数有复合形式的字段 "24/20" "18/17"
+ -   RATINGCURRENT 额定电压(V) ？极度少条
+    RATED_PEOPLE 额定载人 额定载人数 ："2000" "1050" "13" "21"  混淆变成 额定载荷(kg)？已经有独立字段。 人数还是kg啊?
+ -   PREVENT_SETTLEMENT 防沉降组合 ？极度少条
+ -   LADINCANGLE 扶梯倾斜角 ？极度少条
+ -   WORK_LEVL 工作级别 ？极度少条
+  -  MANAGEMODE 管理方式
+    BUFFERNUMBER 缓冲器编号 '1408607;1408610'
+    BUFFERTYPE 缓冲器型号
+    BUFFER_MAKE_UNT 缓冲器制造单位 ?文本就可以; 2个名字拼凑:"镇江朝阳机电科技有限公司;上海优意工业设备有限公司" "ACLA-WERKEGMBH" "沈阳东阳聚氨酯有限公司" "江阴市聚丰电梯配件有限公司；杭州沪宁电梯部件股份有限公司" "德国纽伦堡"
+    CAR_HIGH 轿厢高(杂物电梯)(m) 实际大多是mm单位
+    CAR_WIDTH 轿厢宽(杂物电梯)(m) 实际大多是mm单位
+    CAR_DEEP 轿厢深(杂物电梯)(m) 实际大多是mm单位
+    CAR_ORB_DIST 轿厢轨距 mm;
+    CAR_UPLIMIT_EV 轿厢上行限速器电气动作速度(m/s); 两个取值复合？采用文本类型 "1.20-1.45" "1.21/1.45" "0.65"
+    CAR_UPLIMIT_MV 轿厢上行限速器机械动作速度(m/s) "2.22-2.27"
+    CAR_DOWNLIMIT_EV 轿厢下行限速器电气动作速度(m/s)
+    CAR_DOWNLIMIT_MV 轿厢下行限速器机械动作速度(m/s) "(119m/min)1.98"  ? 这4个字段应该是历史遗留取值问题。
+    CAR_PROTECT_COD 轿厢意外移动保护装置编号 可重复序列号 "/"代表没有意义吗？【上级装置没有】， 空缺="" ？="不明"
+    CAR_PROTECT_TYPE 轿厢意外移动保护装置型号
+    CAR_DECORATE_STA 轿厢装修状态
+  -  SAFE_DOOR 井道安全门(液压电梯)： "无" "是" "有"
+  -  DOOR_OPEN_DIRCT 开门方向(杂物电梯) ,取值雷同 ‘开门方式’
+    LOCK_TYPE 门锁型号(液压电梯)： 不见得都是液压电梯？
+    FB_AREALEVEL 区域防爆等级(防爆电梯）：
+    DRIV_APPROACH 驱动方式(杂物电梯)：
+    UP_PROTECT_MODE 上行保护装置形式： 遗留数据有的带编码
+    UP_PROTECT_MODEANDTYPE 上行保护装置形式/型号： 上行保护装置型号； 两个字段合并输入的。
+    UP_PROTECT_COD 上行超速保护装置编号： "SG1336798;↵↵SG1336805"
+  -  UP_PROTECT_TYPE 上行超速保护装置型号：  ？雷同 上行保护装置型号
+    UP_RATED_V 上行额定速度(液压电梯)(m/s)：
+  -  DESIGNCRITERION 设计规范： "GB7588-2003"
+    IF_SHIP 是否船舶电梯： 总共就4台
+    IF_PUB_TRAN 是否公共交通型： "非公共交通型"
+    IF_CAR 是否汽车电梯：
+
     * */
 }
 
