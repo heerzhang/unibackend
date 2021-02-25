@@ -118,7 +118,7 @@ public class Elevator  extends Eqp {
     @Temporal(TemporalType.DATE)
     private Date nbkd;
     //按照品种；1常用都输入的程度，2不常输入的则是再按照汉字顺序 排序一起。 常规统计过滤，计费，后端的控制 不会用到这些参数；
-    /*CAR_UPLIMIT_MV 轿厢上行限速器机械动作速度(m/s)： 类似这样参数在注册时给人观摩的，出报告可能用到，检验员查询资料可能用，就如图纸，设备部件参数。
+    /*
     DIP_ANGLE 倾斜角度(自动扶梯/自动人行道)：
     SAFECLAMTYPE 安全钳型号： 几百种， ？出问题才需要抽取做过滤和排查安全的--业务需求？。OLAP方式,突发特殊定制的作业。
     SAFECLAMNUM 安全钳编号：
@@ -156,6 +156,7 @@ public class Elevator  extends Eqp {
     CAR_ORB_DIST 轿厢轨距 mm;
     CAR_UPLIMIT_EV 轿厢上行限速器电气动作速度(m/s); 两个取值复合？采用文本类型 "1.20-1.45" "1.21/1.45" "0.65"
     CAR_UPLIMIT_MV 轿厢上行限速器机械动作速度(m/s) "2.22-2.27"
+    CAR_UPLIMIT_MV 轿厢上行限速器机械动作速度(m/s)： 类似这样参数在注册时给人观摩的，出报告可能用到，检验员查询资料可能用，就如图纸，设备部件参数。
     CAR_DOWNLIMIT_EV 轿厢下行限速器电气动作速度(m/s)
     CAR_DOWNLIMIT_MV 轿厢下行限速器机械动作速度(m/s) "(119m/min)1.98"  ? 这4个字段应该是历史遗留取值问题。
     CAR_PROTECT_COD 轿厢意外移动保护装置编号 可重复序列号 "/"代表没有意义吗？【上级装置没有】， 空缺="" ？="不明"
@@ -175,35 +176,36 @@ public class Elevator  extends Eqp {
     IF_SHIP 是否船舶电梯： 总共就4台
     IF_PUB_TRAN 是否公共交通型： "非公共交通型"
     IF_CAR 是否汽车电梯：
-    IF_SCANMOBILE 是否手机信号覆盖：
-    V_PROPOR 速比：
-    RUNDLEBREADTH 梯级宽度(m)：
-    DRAG_MODE 拖动方式：
-    DOWN_RATED_V 下行额定速度(液压电梯)(m/s)：
-    RESTSPLEAFACNUMBER 限速器出厂编号：
-    LIMIT_MV 限速器机械动作速度(液压/杂物电梯)(m/s)：
-    LIMIT_ROP_DIA 限速器绳直径(mm)：
-    RESTSPEEDTYPE 限速器型号：
-    LIMIT_MAKE_UNT 限速器制造单位：
-    WIRE_ROP_NUM 悬挂钢丝绳数(液压电梯)：
-    WIRE_ROP_DIA 悬挂钢丝绳直径(液压电梯)：
-    DRAG_PROPOR 曳引比：
-    DRAG_PITCH_DIA 曳引轮节径(mm)：
-    DRAG_NUM 曳引绳数：
-    DRAG_DIA 曳引绳直径(mm)：
-    PUMP_COD 液压泵编号(液压电梯)：
-    PUMP_POWER 液压泵功率(液压电梯)：
-    PUMP_FLUX 液压泵流量(液压电梯)：
-    PUMP_TYPE 液压泵型号(液压电梯)：
-    PUMP_SPEED 液压泵转速(液压电梯)：
-    OIL_TYPE 液压油型号(液压电梯)：
-    CYLINDER_NUM 油缸数量(液压电梯)：
-    CYLINDER_STYLE 油缸形式(液压电梯)：
-    RUNMETHOD 运行方法：
-    FB_MACHINEFLAG 整机防爆标志(防爆电梯)：
-    FB_HGCOD 整机防爆合格证编号(防爆电梯）：
-    MANUFACTURECRITERION 制造规范：
-    MAINSTRFORM 主体结构形式：
+    IF_SCANMOBILE 是否手机信号覆盖： ""？默认算有 "否" "是" "/"？等同无此项没有, "签订协议", " "
+    V_PROPOR 速比： "55:2"
+    RUNDLEBREADTH 梯级宽度(m)： mm; 才几条；
+    DRAG_MODE 拖动方式：     选择框:8项;
+    DOWN_RATED_V 下行额定速度(液压电梯)(m/s)： ，很少条；
+    RESTSPLEAFACNUMBER 限速器出厂编号： "19N3C10-530-13"
+    LIMIT_MV 限速器机械动作速度(液压/杂物电梯)(m/s)： 文本，"1.13" "上：0.87/下：0.79" "1.22/1.24" ，很少条； 可能复合上下行速但是可能只有单个速度表示。
+    LIMIT_ROP_DIA 限速器绳直径(mm)：  "φ 8" "φ8" "8" '8mm' "6.3" "8 "
+ -   LIMIT_MAKE_UNT 限速器制造单位： ？极度少条
+    WIRE_ROP_NUM 悬挂钢丝绳数(液压电梯)： "5×2" "6根"    ，很少条；
+    WIRE_ROP_DIA 悬挂钢丝绳直径(液压电梯)： mm; "10mm" "/"  ，很少条；
+    DRAG_PROPOR 曳引比： '2:1"
+    DRAG_PITCH_DIA 曳引轮节径(mm)：   "现场示标明" "330.0" "φ620"
+    DRAG_NUM 曳引绳数：(钢带条数)  ?@很多没有录入数据的@！？  "5" '5(钢带)'  "6根" "6"
+    ？？曳引绳类别 是否曳引绳是钢带，= 复合钢带，电梯钢丝绳; //电梯维保单位或者是质监局检查到该电梯钢丝绳直径小于原钢丝绳的7%就必须更换; 钢带设计寿命为20年，是传统钢丝绳寿命的2~3倍;
+    DRAG_DIA 曳引绳直径(mm)：@很多没有录入数据的@ ?钢带 有直径吗？ "13""φ8" "9.3" "12" "10mm" "φ 12" ‘扁平钢带30×3’  ‘30.0(宽)×3.0(厚)’ "3×30" "3x330" "30mm宽,2.5mm厚钢带" "30.0（宽）×3.0（厚）" 30mmx3mm
+    if 复合钢带 : [曳引钢带的规格，文本类型] 钢带宽度 mm，X 钢带厚度 mm;  else  曳引绳直径(mm) 【数字】
+    PUMP_COD 液压泵编号(液压电梯)：   ？极少条
+    PUMP_POWER 液压泵功率(液压电梯)：KW; "29.4"  ？极少条
+    PUMP_FLUX 液压泵流量(液压电梯)： L/M;  "180" "430" "2×360"  ？极少条
+    PUMP_TYPE 液压泵型号(液压电梯)： ？极少条  600L/M 51.5KW
+    PUMP_SPEED 液压泵转速(液压电梯)： r/min  "2750" "24/12" 转每分
+    OIL_TYPE 液压油型号(液压电梯)：  "L-HM46" ？极少条
+    CYLINDER_NUM 油缸数量(液压电梯)： "2"
+    CYLINDER_STYLE 油缸形式(液压电梯)： 组合框 ["浸油式", "非浸油式","油浸式","双节式（侧置）"]
+ -   RUNMETHOD 运行方法： ？极少条 ,数字类型？  "9000人/小时" "7300P/h" "9000 P/h"
+    FB_MACHINEFLAG 整机防爆标志(防爆电梯)： ？极少条   "ExdeiboⅡBT4"
+    FB_HGCOD 整机防爆合格证编号(防爆电梯）： ？极少条  "GYB081751X"
+  -  MANUFACTURECRITERION 制造规范：  "7588-1"
+  -  MAINSTRFORM 主体结构形式： ？作废
     * */
 }
 
