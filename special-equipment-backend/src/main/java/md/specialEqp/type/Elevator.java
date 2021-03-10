@@ -118,6 +118,7 @@ public class Elevator  extends Eqp {
     @Temporal(TemporalType.DATE)
     private Date nbkd;
     //按照品种；1常用都输入的程度，2不常输入的则是再按照汉字顺序 排序一起。 常规统计过滤，计费，后端的控制 不会用到这些参数；
+    //-代表还未实际采用(前端的管辖,后端不关注)。
     /*
     DIP_ANGLE 倾斜角度(自动扶梯/自动人行道)：
     SAFECLAMTYPE 安全钳型号： 几百种， ？出问题才需要抽取做过滤和排查安全的--业务需求？。OLAP方式,突发特殊定制的作业。

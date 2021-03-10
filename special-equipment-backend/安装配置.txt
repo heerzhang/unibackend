@@ -227,20 +227,28 @@ springboot 启动 指定配置文件 https://www.cnblogs.com/vitoboy/p/12729663.
 命令行启动\special-equipment-backend\build\libs>java -jar -Dspring.profiles.active=dev spec-SNAPSHOT.jar
 家里 D:\DEV\jdk13.1\bin>java -jar -Dspring.profiles.active=home D:\coding\home\unibackend\special-equipment-backend\build\libs\special-equipment-backend-0.1.0-SNAPSHOT-20210211061414.jar
 
-VMoptions
--Xms128m
--Xmx713m
--XX:ReservedCodeCacheSize=312m
--XX:+UseConcMarkSweepGC
--XX:SoftRefLRUPolicyMSPerMB=50
--XX:CICompilerCount=2
--XX:+HeapDumpOnOutOfMemoryError
--XX:-OmitStackTraceInFastThrow
--ea
--Dsun.io.useCanonCaches=false
--Djdk.http.auth.tunneling.disabledSchemes=""
--Djdk.attach.allowAttachSelf=true
--Djdk.module.illegalAccess.silent=true
--Dkotlinx.coroutines.debug=off
--Dfile.encoding=UTF-8
--javaagent:C:\Users\Public\.BetterIntelliJ\BetterIntelliJ-1.16.jar
+VMoptions       -Dfile.encoding=UTF-8
+spring-boot-starter-jta-atomikos可删除替代。  Heroku，OpenShift属于PaaS。Amazon EC2属于IaaS。
+和云服务相关的： Kubernetes； Spring Cloud for Cloud Foundry（平台即服务）=商业平台。
+Spring Cloud Data Flow=部署界面,图形编辑器,组装成流数据管道；
+Spring Cloud Stream=消息驱动,发布-订阅{商业云服务PaaS; Kafka,RabbitMQ}；
+Spring Cloud Config=dev/production配置文件(git仓库)?+{Spring Boot Actuator+Spring Config Client;bootstrap.yml;服务端+客户端都有};
+Spring Cloud Netflix{云核心||Eureka服务器-服务注册,Eureka客户机,Ribbon客户端负载均衡,
+                          Feign就=REST接口适配器;Zuul=服务端做路由控制负载均衡=代理;Hystrix断路器}；
+Spring Cloud Consul=云代理,与Netflix对皮尅。
+Spring Cloud Zookeeper=客户端,代理(服务发现、client-side load-balancing负债均衡，配置);与Spring Cloud Consul对皮尅？；
+Spring Cloud Sleuth=服务跨度(多个微服务)日志。
+Spring Cloud Security=(OAuth2 token)单点登录。
+Spring Cloud Skipper=版本管理和部署工具(模式支持1-Local、2-CloudFoundry和3-Kubernetes,...OpenShift,AWS,微软Azure,Docker)。
+Spring Cloud OpenFeign=REST接口MVC适配器;
+Spring Cloud Kubernetes=部署到Kubernetes{.PK.本地Local应用};
+Spring Cloud Gateway=路由限流。
+Spring Cloud Function=抽象serverless业务与运行时分离(适配器AWS Lambda, Microsoft Azure, Apache OpenWhisk;REST函数HTTP端点)；
+Spring Cloud Contract=云开发测试，云集成测试；
+Spring Cloud Task=任务;
+Spring Cloud Bus=(RabbitMQ server消息,所谓Broker的系统)；
+使用Kubernetes部署和发布,Kubernetes支持Docker，而Docker容器镜像Ubuntu替代VMware虚拟机，云主机购买CentOS。
+阿里云没有服务器托管的=IDC机房；挂载云盘；阿里云 OCS开放缓存服务；阿里云云上Elasticsearch；
+ECS自建Elasticsearch=同一地域内通过内网互通，不收取费用；需要面临高峰期洪峰时ECS供应链问题，低峰期的闲置可能造成资源浪费；文件存储NAS。
+阿里 云服务器 ECS + 云数据库 RDS 版 + 对象存储 OSS云盘{API,先解冻后才能读取} + 容器服务；
+
