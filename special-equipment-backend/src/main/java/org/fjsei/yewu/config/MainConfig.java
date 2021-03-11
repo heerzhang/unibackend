@@ -24,7 +24,7 @@ import java.util.Properties;
 //import org.apache.commons.dbcp2.BasicDataSource;
 
 //本文件已经实际废弃了，待删除
-
+@Deprecated(forRemoval=true)
 //@Configuration
 //@ComponentScan
 //@EnableTransactionManagement

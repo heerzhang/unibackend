@@ -131,7 +131,7 @@ public class BaseMutation implements GraphQLMutationResolver {
 
     @Transactional(rollbackFor = Exception.class)
     public Equipment newEQP(String type, DeviceCommonInput in) {
-        if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
+        //if(!emSei.isJoinedToTransaction())      emSei.joinTransaction();
         Eqp.EqpBuilder<?, ?>  eqpBld=null;
         if(type.equals("3"))
             eqpBld = Elevator.builder().flo(in.getFlo());
