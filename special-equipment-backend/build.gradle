@@ -49,8 +49,8 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.16'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
     //有点像lombok, main/generated目录代码是querydsl为Entity实体类自动生成的。
-    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
-    compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
+    implementation group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
+    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
     //graphql脱离web/MVC,  实际上spring-boot-starter-web对标spring-boot-starter-webflux关系二选一。
     //假如spring-boot-starter-web不添加照样跑，但是URL验证部分可能无法通过，想要测试graphiQL网页或者其它REST接口就需要它。
     //异步资源支持？ 'spring-boot-starter-web',改成 'spring-boot-starter-webflux' 替换副作用吗？没用到新的特性部分就可兼容。
@@ -60,10 +60,11 @@ dependencies {
     //健康检查、审计、统计和监控: 暴露HTTP或者JMX来监控和管理应用/health /metrics /loggers　。
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    compile group: 'com.graphql-java-kickstart', name: 'graphql-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
+    //compile group: 'com.graphql-java-kickstart', name: 'graphql-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
+    implementation group: 'com.graphql-java-kickstart', name: 'graphql-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     //graphiql工具,竞争对手altair和{playground离不开tomcat-embed-core包}。改成Chrome开发工具apollo-client-devtools
     //implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER" 底下altair弃用
-    compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
+    implementation group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
     //JPA默认就包含hibernate库的。
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
@@ -71,12 +72,12 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
 
 
-    compile "org.springframework.boot:spring-boot-starter-websocket"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
 
     //分布式数据库    　关系数据库部分
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation group: 'com.h2database', name: 'h2', version:'1.4.200'
-    compile group: 'com.oracle', name: 'ojdbc6', version:'11.2.0.3'
+    implementation group: 'com.oracle', name: 'ojdbc6', version:'11.2.0.3'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
     
     implementation "io.jsonwebtoken:jjwt:0.9.1"
@@ -92,12 +93,12 @@ dependencies {
     //不能用infinispan-spring-boot-starter-remote只能用*-embedded   版控迁移infinispan自己控'12.0.0.Dev02'
     implementation "org.infinispan:infinispan-spring-boot-starter-embedded:2.3.3.Final"
     //这里-v53针对Hibernate适配的版本；　LIB_INFINISPAN_VER是infinispan自己版本；
-    compile group: 'org.infinispan', name: 'infinispan-hibernate-cache-v53', version: "$LIB_INFINISPAN_VER"
+    implementation group: 'org.infinispan', name: 'infinispan-hibernate-cache-v53', version: "$LIB_INFINISPAN_VER"
     //ES索引搜索引擎
     implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch"
 
     //在2.3.2.RELEASE版本缺了添加
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     runtime('org.springframework.boot:spring-boot-devtools')
     
     //旧版本testCompile group: 'junit', name: 'junit', version: '4.13'
