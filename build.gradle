@@ -25,7 +25,6 @@ wrapper {
 }
 
 group 'industry-services-com'
-//group 'jianyan.org.cn'
 version '1.0-SNAPSHOT'
 
 //自己还要设置依赖库

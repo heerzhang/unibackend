@@ -9,7 +9,7 @@ apply plugin: 'io.spring.dependency-management'
 
 
 group 'industry-services-com'
-version = '0.1.0-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
+version = '0.1.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
 
 repositories {
 }
