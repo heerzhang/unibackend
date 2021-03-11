@@ -180,3 +180,5 @@ JPA无法直接将数组持久化@ElementCollection　public List<Integer> value
 mysql+JPA遇到启动卡壳的情况，需要关闭后等待数据库后台处理完毕，在mysql/data/看数据库文件变化和硬盘文件读取情况。
 graphql模型中接口比如Equipment，动态运行报错：一个接口类型名字不能配对多个Java类名的: Two different classes used for type Equipment:。
 graphql内省的层次嵌套计数最多4级，太多数据量太大，业务需求驱动力不大。
+JPA多个数据库实体相互间无法做关系模型关联的，hibernate底层自动生成SQL语句只能针对单一一个数据源来的，无法跨库join。
+graphQL的多个数据库之间实体模型不能重名的。

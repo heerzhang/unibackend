@@ -25,7 +25,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
     entityManagerFactoryRef = "entityManagerFactorySdn",
-    transactionManagerRef = "transactionManager",
+    //transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
     basePackages = {"org.fjsei.yewu.entity.sdn"})
 public class SdnConfig {
@@ -51,7 +51,7 @@ public class SdnConfig {
 
     @Bean(name = "entityManagerFactorySdn")
    // @DependsOn("transactionManager")  transactionManagerSdn
-    @DependsOn("transactionManager")
+   // @DependsOn("transactionManager")
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySdn(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(sdnDataSource)

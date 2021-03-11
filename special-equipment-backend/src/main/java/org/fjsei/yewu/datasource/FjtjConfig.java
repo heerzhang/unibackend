@@ -26,7 +26,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactoryFjtj",
-        transactionManagerRef = "transactionManager",
+        //transactionManagerRef = "transactionManager",
         repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
         basePackages = {"org.fjsei.yewu.entity.fjtj"})
 public class FjtjConfig {
@@ -55,7 +55,7 @@ public class FjtjConfig {
     //@Primary 注意只能一个数据源注解@Primary的。
     @Bean(name = "entityManagerFactoryFjtj")
     //@DependsOn("transactionManager")
-    @DependsOn("transactionManager")
+    //@DependsOn("transactionManager")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryFjtj(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(fjtjDataSource)

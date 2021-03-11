@@ -36,7 +36,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
     entityManagerFactoryRef = "entityManagerFactorySei",
-    transactionManagerRef = "transactionManager",
+   // transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
     basePackages = {"org.fjsei.yewu.repository","md"})
 @EnableElasticsearchRepositories(
@@ -68,7 +68,7 @@ public class SeiConfig {
     @Primary
     @Bean(name = "entityManagerFactorySei")
     //@DependsOn("transactionManager")
-    @DependsOn("transactionManager")
+    //@DependsOn("transactionManager")
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySei(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(seiDataSource)
@@ -79,7 +79,7 @@ public class SeiConfig {
 
         //必须在@EnableJpaRepositories里头注解  "org.fjsei.yewu.entity.sei"
     }
-
+    //不需要直接用HibernateTransactionManager， 最好是用JpaTransactionManager
 
     /*
     JPA使用的

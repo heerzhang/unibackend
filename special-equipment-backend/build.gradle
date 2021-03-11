@@ -64,7 +64,7 @@ dependencies {
     //graphiql工具,竞争对手altair和{playground离不开tomcat-embed-core包}。改成Chrome开发工具apollo-client-devtools
     //implementation "com.graphql-java-kickstart:graphiql-spring-boot-starter:$LIB_GRAPHQL_SPRING_BOOT_VER" 底下altair弃用
     compile group: 'com.graphql-java-kickstart', name: 'altair-spring-boot-starter', version: "$LIB_GRAPHQL_SPRING_BOOT_VER"
-
+    //JPA默认就包含hibernate库的。
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
     //加这个包注意，http://localhost:9000/；必须做登录接口部分对接处理，否则都是报错或者X-Frame-Options: DENY　status 401的。
@@ -82,7 +82,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt:0.9.1"
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
-    implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
+    //implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
 
     implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.74'
     

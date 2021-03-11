@@ -1,7 +1,6 @@
 package org.fjsei.yewu.config;
 
-import com.atomikos.icatch.jta.UserTransactionImp;
-import com.atomikos.icatch.jta.UserTransactionManager;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +13,21 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
+import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
-@Configuration
-@ComponentScan
-@EnableTransactionManagement
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.Properties;
+//import org.apache.commons.dbcp2.BasicDataSource;
+
+//本文件已经实际废弃了，待删除
+
+//@Configuration
+//@ComponentScan
+//@EnableTransactionManagement
 public class MainConfig {
 
 	@Bean
@@ -37,7 +45,7 @@ public class MainConfig {
 		//hibernateJpaVendorAdapter.setDatabase(Database.H2);
 		return hibernateJpaVendorAdapter;
 	}
-
+/*
 	@Bean(name = "userTransaction")
 	public UserTransaction userTransaction() throws Throwable {
 		UserTransactionImp userTransactionImp = new UserTransactionImp();
@@ -55,18 +63,37 @@ public class MainConfig {
 
 		return userTransactionManager;
 	}
+*/
 
 
-	@Bean(name = "transactionManager")
-	@DependsOn({ "userTransaction", "atomikosTransactionManager" })
-	public PlatformTransactionManager transactionManager() throws Throwable {
-		UserTransaction userTransaction = userTransaction();
+	@Bean("LocalSessionFactoryBean")
+	public LocalSessionFactoryBean getLocalSessionFactoryBean() {
+		LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
+		Properties properties = new Properties();
+		properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL5Dialect");
+		localSessionFactoryBean.setHibernateProperties(properties);
+		return localSessionFactoryBean;
+	}
 
-		AtomikosJtaPlatform.transaction = userTransaction;
 
-		TransactionManager atomikosTransactionManager = atomikosTransactionManager();
+	//@Bean(name = "transactionManager")
+	//@DependsOn({ "userTransaction", "atomikosTransactionManager" })
+	//public PlatformTransactionManager transactionManager() throws Throwable {
 
-		JtaTransactionManager jtaTransactionManager=new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+		//getHibernateTransactionManager(@Qualifier("dataSource") BasicDataSource basicDataSource, ... )
+	@Bean(name ="transactionManager")
+	public HibernateTransactionManager getHibernateTransactionManager(@Qualifier("seiDataSource") DataSource basicDataSource, @Qualifier("LocalSessionFactoryBean") LocalSessionFactoryBean sessionFactory) {
+
+		//UserTransaction userTransaction = userTransaction();
+
+	//	AtomikosJtaPlatform.transaction = userTransaction;
+
+		//TransactionManager atomikosTransactionManager = atomikosTransactionManager();
+
+	//	JtaTransactionManager jtaTransactionManager=new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+	//?? 不需要直接用HibernateTransactionManager， 最好是用JpaTransactionManager
+		HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
+		hibernateTransactionManager.setDataSource(basicDataSource);
 
 		//@Transactional事务几点注意:    https://blog.csdn.net/KinseyGeek/article/details/54931710
 		//因为加Transactional(isolation = Isolation.SERIALIZABLE)	setAllowCustomIsolationLevels；DEFAULT （默认）使用数据库设置的隔离级别.
@@ -82,8 +109,10 @@ public class MainConfig {
 		//悲观锁：利用数据库本身的锁机制实现,根据具体业务情况综合使用事务隔离级别与合理的手工指定锁的方式比如降低锁的粒度等减少并发等待。
 		//乐观锁利用程序处理并发。这种业务数据级别上的锁机制,加版本号.加时间戳。  https://blog.csdn.net/yuanyuanispeak/article/details/52756167
 
-		jtaTransactionManager.setAllowCustomIsolationLevels(true);
-		return  jtaTransactionManager;
+		//jtaTransactionManager.setAllowCustomIsolationLevels(true);
+		//return  jtaTransactionManager;
+		hibernateTransactionManager.setSessionFactory(sessionFactory.getObject());
+		return hibernateTransactionManager;
 	}
 
   	/*

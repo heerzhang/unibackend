@@ -234,7 +234,7 @@ Spring Cloud Data Flow=部署界面,图形编辑器,组装成流数据管道；
 Spring Cloud Stream=消息驱动,发布-订阅{商业云服务PaaS; Kafka,RabbitMQ}；
 Spring Cloud Config=dev/production配置文件(git仓库)?+{Spring Boot Actuator+Spring Config Client;bootstrap.yml;服务端+客户端都有};
 Spring Cloud Netflix{云核心||Eureka服务器-服务注册,Eureka客户机,Ribbon客户端负载均衡,
-                          Feign就=REST接口适配器;Zuul=服务端做路由控制负载均衡=代理;Hystrix断路器}；
+                    Feign就=REST接口适配器;Zuul=服务端做路由控制负载均衡=代理;Hystrix断路器,etcd服务发现}；
 Spring Cloud Consul=云代理,与Netflix对皮尅。
 Spring Cloud Zookeeper=客户端,代理(服务发现、client-side load-balancing负债均衡，配置);与Spring Cloud Consul对皮尅？；
 Spring Cloud Sleuth=服务跨度(多个微服务)日志。
@@ -251,4 +251,7 @@ Spring Cloud Bus=(RabbitMQ server消息,所谓Broker的系统)；
 阿里云没有服务器托管的=IDC机房；挂载云盘；阿里云 OCS开放缓存服务；阿里云云上Elasticsearch；
 ECS自建Elasticsearch=同一地域内通过内网互通，不收取费用；需要面临高峰期洪峰时ECS供应链问题，低峰期的闲置可能造成资源浪费；文件存储NAS。
 阿里 云服务器 ECS + 云数据库 RDS 版 + 对象存储 OSS云盘{API,先解冻后才能读取} + 容器服务；
+使用容器服务Kubernetes版在一组云服务器ECS上通过Docker容器管理应用生命周期，CentOS 7.x， 传统型负载均衡CLB（原SLB），弹性公网IP。
+普通模式NAT下，公网IP存在于网关设备，并不在ECS实例的网卡上，所以在操作系统内看不到公网IP，只能看到网卡上的私网IP；EIP网卡可见模式。
+专有网络VPC中自建NAT网关，使得ECS服务器不额外花钱可访问外网。
 

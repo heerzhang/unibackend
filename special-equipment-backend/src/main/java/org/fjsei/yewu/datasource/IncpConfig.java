@@ -24,7 +24,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
     entityManagerFactoryRef = "entityManagerFactoryIncp",
-    transactionManagerRef = "transactionManager",
+    //transactionManagerRef = "transactionManager",
     repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class,
     basePackages = {"org.fjsei.yewu.entity.incp"})
 public class IncpConfig {
@@ -53,7 +53,7 @@ public class IncpConfig {
 
     @Bean(name = "entityManagerFactoryIncp")
     //@DependsOn("transactionManager")
-    @DependsOn("transactionManager")
+    //@DependsOn("transactionManager")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryIncp(EntityManagerFactoryBuilder builder) {
         return builder
             .dataSource(incpDataSource)

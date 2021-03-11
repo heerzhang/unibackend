@@ -17,10 +17,11 @@ import java.util.*;
  * @author:
  * @create: 2018-05-02 11:13
  */
+//@Transactional(value="transactionManager",readOnly=true)
 
 @Service
 //@Qualifier("entityManagerFactoryBar")
-@Transactional(value="transactionManager",readOnly=true)
+@Transactional(readOnly=true)
 public class JpaServiceImpl implements JpaService {
     @Autowired
     private TeacherDao teacherDao;
