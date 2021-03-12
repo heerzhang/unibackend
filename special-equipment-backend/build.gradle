@@ -43,14 +43,15 @@ dependencyManagement {
 
 dependencies {
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
-    //compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+    /*compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
     testCompileOnly 'org.projectlombok:lombok:1.18.16'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+    */
     //有点像lombok, main/generated目录代码是querydsl为Entity实体类自动生成的。
-    implementation group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
-    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
+    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
+    compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
     //graphql脱离web/MVC,  实际上spring-boot-starter-web对标spring-boot-starter-webflux关系二选一。
     //假如spring-boot-starter-web不添加照样跑，但是URL验证部分可能无法通过，想要测试graphiQL网页或者其它REST接口就需要它。
     //异步资源支持？ 'spring-boot-starter-web',改成 'spring-boot-starter-webflux' 替换副作用吗？没用到新的特性部分就可兼容。

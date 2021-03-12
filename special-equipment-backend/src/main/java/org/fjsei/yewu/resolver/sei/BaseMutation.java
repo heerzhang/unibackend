@@ -29,8 +29,6 @@ import org.fjsei.yewu.input.UnitCommonInput;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.security.JwtUser;
 import org.fjsei.yewu.service.security.JwtUserDetailsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
