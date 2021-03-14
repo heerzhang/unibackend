@@ -255,4 +255,5 @@ ECS自建Elasticsearch=同一地域内通过内网互通，不收取费用；需
 普通模式NAT下，公网IP存在于网关设备，并不在ECS实例的网卡上，所以在操作系统内看不到公网IP，只能看到网卡上的私网IP；EIP网卡可见模式。
 专有网络VPC中自建NAT网关，使得ECS服务器不额外花钱可访问外网。
 Git clone新工程:Build/gralde/安装路径,Settings./Compiler/Annotation../enable；锤子springboot|StartApplication: JRE版本，@argsfile(9+),Active profile=dev;通过gradle编译,锤子右边按钮调试；无需理会Project Structure。
+在Hibernate中不是所有的数据都适合放置在二级缓存中，可将很少被修改的、不重要的且不会被并发访问的数据放置在二级缓存中，数据库也提供热数据缓存看着有些重叠。？
 

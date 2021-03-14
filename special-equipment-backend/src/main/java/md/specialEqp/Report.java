@@ -28,6 +28,20 @@ import java.util.Set;
  * 每个主子报告都有，TB_ISP_SUBPROJ实际等同于TB_ISP_MGE主表的！，分项子报告/主=分离继承/组合显示，把流转独立。
  * 流程实际该放这里：WF_TODO/TB_ISP_SUBPROJ.FLOW_IMPCOD/WF_FLOW_IMP.FLOW_IMPID加流程；
  * 旧平台TB_ISP_DET实际该放这里的检验时刻参数。
+ * 设备eqp；协议prot；任务task；账务记录actr；业务记录isp；报告report; 管道单元plunit。
+ * task: eqp =1: n/0;  无关联设备的业务；
+ * prot: task=1: n;  单个 task 业务类型单一，检验大部门归属单一个。
+ * actr: task=n: n;  单个 task还可以分裂开多条的账务记录。
+ * isp: eqp =n: 1;  单个task发起的isp一次只能分别为每一个eqp分配有单独的isp，也就是isp只能做1个eqp或无关联eqp;
+ * isp: report=1: n; 报告/分项报告/证书；report也可独立流转审批，isp有总的审批。
+ * plunit可独立多选选择；单1个 task 业务可挂接多个管道eqp，每一条管道还可以分别选择其中部分的plunit。
+ * 管道单元设备表pipeEqpunit会登记3个业务(监督检验、全面检验，在线检验)上一次的Isp用以过滤管道单元选择；isp关联eqp但是对于plunit不做关联；
+ * 管道单元未终结Isp: 当前管道单元最新已生成task关联关系表[任务锁], 任务锁主人=task,直接在pipeEqpunit实体增设'当前task'=任务锁；
+ * 有了某个plunit的业务opetype，就锁定新增加任务的源头，任务完成才能对管道单元解除新增任务锁。
+ * report批准了[再也不能改报告了] -> 账务结清确认[催收] -> isp终结确认[发送凭证快递]  -> 任务完成确认[单task多个eqp都完成了]->管道单元任务锁解除 。
+ * report形式可多样，web网页内容链接的报告，上传文件存储pdf/excl/doc/图片报告，允许isp没有关联实际report仅提供报告号和来源地文字说明或外部html链接;
+ * report :上传文件File关联 =1:N。 把isp作为监察视察的入口对象。
+ * 数据和文件的淘汰删除时机：从关联度底的实体开始清理，重要性程度，过期时间多长。
  */
 
 @NoArgsConstructor
