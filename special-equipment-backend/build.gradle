@@ -43,12 +43,12 @@ dependencyManagement {
 
 dependencies {
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-    /*compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
-    testCompileOnly 'org.projectlombok:lombok:1.18.16'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
-    */
+    //compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.18'
+    compileOnly 'org.projectlombok:lombok:1.18.18'
+    annotationProcessor 'org.projectlombok:lombok:1.18.18'
+    testCompileOnly 'org.projectlombok:lombok:1.18.18'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.18'
+
     //有点像lombok, main/generated目录代码是querydsl为Entity实体类自动生成的。
     compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.4.0'
     compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.4.0'
