@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import md.cm.unit.Unit;
 import md.specialEqp.Eqp;
-import md.specialEqp.Equipment;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -21,10 +20,13 @@ import java.util.Set;
 //派工人ASG_USER_ID:可以是?编制人或责任人;ISP_USER编制/检验人JY_MEN，审核PROJ_USER_ID CHEK_USER_ID：等级较高=科室主任；批准APPR_USER_ID：业务上算最高级别=中层干部。
 //部门分配科室分配派工人竟然全是编制人自己？奇葩。 编制人{写报告的人}属于检验人员之中主要人员。
 
-/**生成检验需求的作业工单，预设定收费参数。
+/**任务：业务运作驱动的发动机,掌控企业效率。
+ * 对特检设备检验检测企业，业务可能不关联设备，关联监察在库设备，关联非监察关注的设备。
+ *  生成检验需求的作业工单，预设定收费参数。
  * 开发票相关。合同和协议申报相关。
  * 聚合型任务参数字段：若每个子任务实际不一致的就不要设置，看实际情况。
  * 单个Eqp的Task实际应当与Isp合并的。多个子任务只是一起分配给某责任人{省掉些消息通知或页面输入}，汇聚型任务单-拆解子任务；
+ * Task是流水性质的，记录存储有效期限较短，任务终结1个年完整后（统计利用完成了）可能就清理掉，好比程序后台日志文件一样时间太久了失去意义。
 */
 
 @Getter
@@ -36,28 +38,32 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
-    /**聚合型任务，关联多个独立子任务。聚合型任务=页面输入的分解步骤：最终直接生成设备任务。显示上可以过滤树形状分别列表。直接搜设备加业务，受理部门不选不等于任务部门。
-     * 基本型任务=旧平台任务 multi=false，无关联更多Task, 若是聚合型任务，可自关联多个Task。
-     * 统计过滤可分别针对基本型/聚合型;
-     * 合同协议关联多个任务设备，发票关联多个任务。
-     * 1份合同协议可以关联多个Task任务，但是每个Task任务底下派生更多子任务的业务类别应该完全一样的。
+    /**基本型任务=旧平台任务那样的只能关联单个Eqp的。
+     * 聚合型任务，关联多个Eqp设备。聚合型任务=页面输入的分解步骤：最终直接生成设备任务。
+     * 显示上可以过滤树形状分别列表。直接搜设备加业务，受理部门不选不等于任务部门。
+     * 统计过滤可分别针对基本型/聚合型; OLAP模块另外抽取。
+     * 合同协议关联多个任务设备，发票关联多个任务。形式意义的合同:任务是多对多关联{?合同可能撤销后重新生成但是任务可以利用旧的,新的合同号新的收费}。
+     * 1份合同协议可以关联多个Task任务。
      * 发票仅仅只是链接和统计用途：1个发票可以关联多个Task,单个Task也可以关联多个发票,N:N。发票给同一个缴款人;TB_INVC_ASSDET；
-     * 合同协议仅仅只是链接和记载用途：1份协议合同可以关联多个Task,1:N。合同拆分Task应该选定一个对口业务部门(部门地域管辖)。
-     * 一个Task就只能单一个OPE_TYPE业务类别{每个业务Task独立设置Eqp},1个Task底下选择关联设备种类必须相同{方便分配给唯一个检验部门干活}，总之只能单个部门，什么设备类别业务类型都可以的。
-    *OPE_TYPE,ISP_TYPE机电1,BUSI_TYPE法定1；对于单一个Task应该都是相同的，子任务继承后只是设备不同了，或者制造监检这样分批次分时间做的可搞子任务{旧任务报告数据继承},旧协议新增子任务。
-     *1个Task所对应的发票的缴款人同一个单位的{代缴人，应缴人=使用单位}。
-     * 单独一个Task应当是唯一个使用单位的业务和设备(可多个)，为了优惠减免考虑 + 方便分配给同一组检验人员干(地域临近)。
-     * 法定定检自动生成任务？同一个单位还可能地域位置分开很远{地址}，不同单位的反而地域临近的可以一次性打包接活了{多个任务按照地理聚合?不同法定到期时间预约}。
+     * 合同协议仅仅只是链接和记载用途：1份协议合同可以关联多个Task,N:N。合同拆分Task应该选定一个对口业务部门(部门地域管辖)。
+     * 1个Task底下选择关联设备种类必须相同{方便分配给唯一个检验部门干活}，总之只能单个部门，有些部门不能执行某个业务类型。
+     *ISP_TYPE机电1承压 是种类附属的, BUSI_TYPE法定1委托 是业务以及监管责任附属的的；
+     *需要长期存储的字段 最好摆放在Isp中否则Task过期丢失。
+     * 制造监检考虑从Isp中恢复已有的数据来复用。制造监检没有关联设备，但是有单位,业务类型，附带设备类别有就是没有具体的设备?。
+     *1个Task所对应的发票的缴款人同一个单位的{代缴人，应缴人=使用单位},不支持多个缴款人, Task挂接发票申请/账务记录。
+     * 单独一个Task应当是唯一个使用单位的业务和设备(可多个)，为了优惠减免考虑 + 方便分配给同一组检验人员干(地域临近), 同种类的设备同一单位才享受优惠。
+     * Task层面预留收费调整机制。
+     * 法定定检自动生成任务？同一个单位还可能地域位置分开很远{地址}，不同单位的反而地域临近的可以一次性打包接活了{多个任务按照地理聚合?不同的定检到期时间预约}。
+     * 部门同一个科室的新任务，按照地理划分设备归属。科室派工可以提供机制把同时间段多个任务按照地理聚合分派同一个责任人去做；每个责任人的承接任务预计工时量。
      */
-    private Boolean  multi; //自关联=null? Set<BaseTask>
+    private String  director;    //PROJ_USER_ID
 
-    //todo: 1个任务只有1个设备,没有关联设备，虚拟设备（煤气罐系列化的设备号01..09排除05}），管道特别[选择几个单元为了报告/计费]。
-    /**Eqp 聚合型任务，关联多个独立子任务。
-     * 旧平台任务 multi=false，@ManyToOne，每个基本型任务单个设备
-     * 若是聚合型任务，@ManyToMany。 也可以省略掉关系，简洁通过关联多个Task做延伸关联。
-     */
-    //Task单独报告的可没有设备关联；
+    //1个任务有n个设备,没有关联设备，虚拟设备（煤气罐系列化的设备号01..09排除05}），管道特别[选择几个单元为了报告/计费]。
+    /**Eqp这里仅仅是提供几个设备号关联，更加明确的关系还得到Isp底下字段才能真正敲定那些设备(还需要业务类型详细分配设定)。
+     * 也就是这里仅仅指出 选择范围是那些Eqp?展示层交互提示目的？。 当然后续可以默认都加入Isp。
+    Task单独报告的可没有设备关联；
     //我是关系维护方,必须在我这save()，　缺省.LAZY;
+     */
     @ManyToMany
     @JoinTable(name="TASK_DEVS", joinColumns={@JoinColumn(name="TASK_ID")}, inverseJoinColumns={@JoinColumn(name="DEVS_ID")}
                 //indexes={@Index(name="DEVS_ID_idx",columnList="DEVS_ID")}
@@ -80,14 +86,16 @@ public class Task {
     @OneToMany(mappedBy = "task" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Isp>  isps;
-    /**主要负责检验部门，
+
+    /**责任检验部门，
      * 作为配合身份的部门，可以私底下约定收入的分成，仅供年终核算统计用途的；
+     * 可能附带一个配合部门，收入提成比例%；
      * */
     private String dep;  //类型弱化? ,应该是部门表的ID!
-    //配合部门，收入提成比例%；
 
     //ORACLE: 表名USER不能用，字段date不能用。
-    /**任务日期 多设备必须相同一致，否则多台设备如何算一个批次计费
+    /**任务日期 多设备必须相同一致，否则多台设备如何算一个批次计费; 一个任务多台设备应当同时终结(复检算最后一个设备完成为止)。
+     *任务延期多台设备进度排斥呢：部分设备延期，考虑拆分掉，1个正常部分任务+1个延期部分任务。
      *延期审核;有延期至日期的任务，查询任务时间以延期至日期为准 DECODE(A.ABNORTO_DATE,NULL,A.TASK_DATE,A.ABNORTO_DATE) TASK_DATE,
      *同意延期后，TASK_DATE应当改成新的。旧的TASK_DATE=初始原定任务日。
      * */
@@ -96,6 +104,7 @@ public class Task {
     private String status;
     private String  fee;
 
+    //todo: 【特别注意!】字段挂接摆放的地方不对， ?? 应该在检验记录当中做。当前任务下的所有设备不见得都有一致的关联数据。
     //[两个归并字段]只是前端显示区别；TB_TASK_MGE.IF_HOLD_TEST'4000是否载荷试验'？
     private Boolean test;   //.IF_WORKEQP_TEST '5000厂车是否工作装置测试'
     private Boolean verif;  //.IF_AQ_TEST '4000是否安全监控管理系统试验验证'
@@ -124,6 +133,7 @@ public class Task {
 
 
     /**CONS_UNIT "施工单位"土建施工单位 检验的报告才用到的；
+     * todo: 字段挂接摆放的地方不对， ?? 应该在检验记录当中做。当前任务下的所有设备不见得都有一致的关联数据。
      * 编制检验报告，要选择配套的施工单位。
      * BUILD_UNT_ID 业务申请中的施工单位 (监检)安装|改造|维修的融合称谓，SDN用的BUILD_UNT_ID，监察施工告知用；
      * */

@@ -1,23 +1,26 @@
 package md.specialEqp;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import md.cm.geography.Address;
 import md.cm.unit.Division;
 import md.cm.unit.Unit;
 import md.specialEqp.inspect.Isp;
 import md.specialEqp.inspect.Task;
-import md.cm.geography.Address;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-//import org.springframework.data.annotation.Transient;
-//import org.springframework.data.elasticsearch.annotations.Field;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+//import org.springframework.data.annotation.Transient;
+//import org.springframework.data.elasticsearch.annotations.Field;
 
 //同名冲突！@Cache不是来自javax.persistence.*的，所以添加org.hibernate.annotations.Cache在其上方。或直接@org.hibernate.annotations.Cache上了。
 
@@ -408,12 +411,14 @@ public class Eqp implements Equipment{
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Task> task= new HashSet<>();
 
-    //单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
+    /**检验检测历史
+     * 单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
     //Eqp.TASK.Isp  Eqp.Isp {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
     //ISP挂接关系到EQP底下还是挂接关系到TASK底下的？不可以两者同时都挂接关联关系，那样就是多余和混淆概念或两种分歧路径，数据多了而且还产生不一致了。
     //检验单独生成，TASK和EQP多对多的；单个ISP检验为了某个EQP和某个TASK而生成的。
     //先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
     //缺省FetchType.EAGER  LAZY
+    */
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Isp>  isps;

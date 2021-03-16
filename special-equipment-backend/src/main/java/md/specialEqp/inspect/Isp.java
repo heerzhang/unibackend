@@ -3,7 +3,6 @@ package md.specialEqp.inspect;
 import lombok.Getter;
 import lombok.Setter;
 import md.specialEqp.Eqp;
-import md.specialEqp.Equipment;
 import md.specialEqp.Report;
 import md.system.User;
 import org.fjsei.yewu.filter.SimpleReport;
@@ -21,12 +20,13 @@ import java.util.Set;
 //责任工程师审核：同时收费.Task->INVC明细金额最终确认人{收钱不合理退回}；CURR_NODE= [{id:'101',text:'报告编制'},{id:'102',text:'责任工程师审核'}；
 //如果两台同时进行检验的，按收费总额的90%收(单一次派工出去的/单任务?同种设备数)； 多个Isp捆绑审核，捆绑进度条/复检呢，一起做;自由裁决权。
 
-/**检验工作的流转审查，本次检验工作的关键记录(详细数据除外)，监察关心的关键字段。
+/**业务记录， 监管或追溯历史的检验检测工作情况。
+ * 检验工作的流转审查，本次检验工作的关键记录(详细数据除外)，监察关心的关键字段。
  * 本次检验决定的结论/法定应当的下次检验日期。
  * 对接旧平台/外部检验系统，历史报告检验/历史记录。
  TB_ISP_MGE像个大杂烩？TB_ISP_DET参数，报告和流转,主要是记录状态的，DATA_PATH代表报告纸,Isp代表作业成果。
  * 分项报告|主报告的流转审核打印等人员状态日期：直接放到Report模型中；
- * Isp单个设备等同<BaseTask>模型。 V_ISP_MAININFO ;
+ *制造监检考虑从Isp中恢复已有的数据来复用。制造监检没有关联设备，但有单位,业务类型，附带设备类别指示就是没有Eqp,出厂编号声明范围。
 */
 
 @Getter
@@ -39,28 +39,39 @@ public class Isp {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
-    //先有EQP,后来规划TASK了(1个task对1个eqp)，最后才为某task和某一个EQP去生成ISP{inspect}的;
+    /**OPE_TYPE
+     * 业务类型 OPE_TYPE：统计？模板？ TB_DICT_OPETYPE似乎没内涵36个压缩到实际28个/委托法定=
+     * 法定还是委托的 是 附加属性。 Task底下可能为一个Eqp同时派工多个业务类型(一个法定的，一个委托的)。
+     */
+    private String bsType;
+
+    /** 先有EQP,后来规划TASK了(1个task对1个eqp)，最后才为某task和某一个EQP去生成ISP{inspect}的;
     //一个检验ISP记录只有一个设备，一个设备EQP可有多个ISP检验。
     //检验单独生成，TASK和EQP多对1的； ISP比Task更进一步，更靠近事务处理中心。
     //单个ISP检验为了某个EQP和某个TASK而生成的。主要目的推动后续的报告，管理流程，等。
     //todo:若是ISP该从TASK挂接关系而来的，本来这里就不应该有EQP字段的，设备在TASK 哪去找，多余的字段?。Task是部门细分责任的。
     //我是多端我来维护关联关系，我的表有直接外键的存储。
     //改成Equipment dev报错 @OneToOne or @ManyToOne on md.specialEqp.inspect.Isp.dev references an unknown entity:
-    /** 单个Isp只能有单个Eqp;
-     * todo: <BaseTask> 实际应该==Isp?
+    单个Isp只能有单个Eqp; 也可能没有挂接Eqp的。
      * */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dev_id")
     private Eqp dev;
 
-    //单个检验记录规属于某一个TASK底下的某次;
-    //一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
+    /**单个检验记录规属于某一个TASK底下的某次; 单一个设备执行多次作业活动要跑很多趟的，很多人不同场次做的作业的，当成一次。
+    一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
+     同一个Task底下每个Eqp+OPE_TYPE不能重复保证唯一性，没有挂接Eqp的？只能最多一条Isp{OPE_TYPE不同例外};
     //我是多的方，我维护关系，我方表字段包含了对方表记录ID
+
+    */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
-    //缺省 fetch= FetchType.LAZY  ；多对多的实际都派生第三张表，不会和实体表放在一起的；
+
+    /**缺省 fetch= FetchType.LAZY  ；多对多的实际都派生第三张表，不会和实体表放在一起的；
     //这地方维护多对多关系，版本升级导致中间表ISP_ISP_MEN变成ISP_USERS；？需要自己指定表名,且字段名都也改了"ISPMEN_ID"　ISP_MEN_ID？
+    业务类型不同，同一个设备和可能需要派出不同的人去做，主要抓责任人，让责任人灵活配置各种人员，以及分配工作成果和权限。
+    */
     @ManyToMany
     @JoinTable(name="ISP_ISP_MEN",joinColumns={@JoinColumn(name="ISP_ID")},inverseJoinColumns={@JoinColumn(name="ISP_MEN_ID")})
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
@@ -76,10 +87,13 @@ public class Isp {
     /**总体结论，子报告有各自子结论
      * */
     private String  conclusion;
-    //缺省, fetch= FetchType.EAGER
+
+    /**一个业务可能生成的 多个[子]报告， 主要目的是单独流转分项报告；
+     * 缺省, fetch= FetchType.EAGER
     //有可能Report的实际数据库表还没有创建啊;
     //比旧平台多出个Report实体，旧系统是直接用Isp表。多个分项报告REP_TYPE;
-    //todo: 1个主/组合封面/报告，+0个或多个分项报告,带了顺序链接，打印物理页数？。
+    todo: 1个主/组合封面/报告，+0个或多个分项报告,带了顺序链接，打印物理页数？。
+    */
     @OneToMany(mappedBy ="isp")
     private Set<Report>  reps;
     //private Set<BaseReport>  reps;

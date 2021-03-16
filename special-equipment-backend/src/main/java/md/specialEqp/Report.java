@@ -21,7 +21,7 @@ import java.util.Set;
  @Lob字段小心：可能造成见建表失败，mysql和Oracle还表现不一致。
 */
 
-/** 原始记录+报告的数据，快照信息。
+/** 原始记录+报告的数据，快照信息,分项报告独立流转。
  * 分项报告或主报告{目录页报告内嵌在主报告上}，每种REP_TYPE都不同的。
  * 流转审核打印等人员状态日期。
  * 实际对应旧平台TB_TASK_TO_ISPPROJ{派工关联和关键信息,MAIN_FLAG主报告标识1：主报告;0分项报告，REP_TYPE检验项目}
@@ -56,33 +56,55 @@ public class Report  implements SimpleReport {
     protected Long id;
     //OPE_TYPE配合BUSI_TYPE法定1/=2委托业务的；来敲定的报告类型REP_TYPE
     //而检验范畴ISP_TYPE可以省略掉：机电 承压类->只是给科室分配/发票会计用，挑选列表大的分类大归类的/统计上分家。
+    /**
+     * 报告媒体形式： Web网页, 。
+     */
     private String type;
+    /**
+     * 报告号，合格证编号。
+     */
     private String  no;
 
     private Date upLoadDate;
+    /**
+     * 外部文件形式 Pdf, excel, docx, *image; 第三方的URL;
+     * 目录形式的封面报告：{自包含 其它的分项目子报告的url，并且编排展示, 先有子报告，再加入母报告展示目录的列表链接}
+     */
     private String path;
-    //TODO: 多次ISP汇集做一份报告Report?  管道单元有多对多，管道单元还有内部单元编码？管道单元忽视ISP的标识?
-    //单次ISP如果多个报告，每个报告单独打印，单独编制特定编号的报告，单独链接；主报告1+N。
+
+    /**1个检验可以有很多份子报告，分项报告 报告类型可以不同的。
+    单次ISP如果多个报告，每个报告单独打印，单独编制特定编号的报告，单独链接；主报告1+N。
+    */
     @ManyToOne
     @JoinColumn
-    private Isp isp;   //1个检验可以有很多份子报告，报告类型可以不同的。
+    private Isp isp;
 
     private double  numTest;    //测试表达式
 
     //测试：高保密性质的2个扩展字段；
     private String  sign;
     private String  detail;
+    /**
+     * 报告模板的分类识别代码, "EL-DJ" "EL-JJ"
+     */
     private String  modeltype;
+    /**
+     * 模板的版本标识号
+     */
     private String  modelversion;
-    //CLOB字段 会导致Hibernate无法自动创建该表？ 手动修改 建初始化表。
-    //原始记录内容-JSON；在前端录入和修改的部分。Oracle是这样@Column( columnDefinition="CLOB")
-    //字段长度，mysql8.0　数据库要修改定义成 clob
+    /**原始记录，可录入可编辑部分 JSON。
+      CLOB字段 会导致Hibernate无法自动创建该表？ 手动修改 建初始化表。
+    原始记录内容-JSON；在前端录入和修改的部分。Oracle是这样@Column( columnDefinition="CLOB")
+    字段长度，mysql8.0　数据库要修改定义成 clob
+    */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (64000)")
     private String  data;
-    //该部分数据-JSON，在编制后提交审核时就能固定化了。可直接复制合并到data，存snapshot仅是接口对接便利的过渡工具。
-    //纯粹是后端提供给检验报告的，编制报告的那一时间的相关设备状态数据。接口对接复制完成后就可清空了。
+    /**报告展示用到一部分数据-JSON，在编制后提交审核时就能固定化了。可直接复制合并到data，存snapshot仅是接口对接便利的过渡工具。
+    纯粹是后端提供给检验报告的，编制报告的那一时间的相关设备状态数据【快照】。接口对接复制完成后就可清空了。
+     前端实际上把 data+snapshot 两个进行合并。
+     */
     @Lob
     @Basic(fetch= FetchType.LAZY)
     @Column( columnDefinition="TEXT (64000)")
@@ -90,6 +112,8 @@ public class Report  implements SimpleReport {
     //TEXT,MEDIUMTEXT,LONGTEXT三种不同类型，BLOB和TEXT大量删除操作性能有影响。建议定期使用OPTIMEIZE TABLE功能对表碎片整理。
 
     /**关联的 单线图等文件。
+     * 文件名路径实际在json当中保存image* file的url，而这里是关联对象，管理文件存储有效期,用户权限等。
+     * 存在不一致风险。
      * */
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;

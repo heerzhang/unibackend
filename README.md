@@ -1,5 +1,11 @@
 # unibackend
 行业后端
+# 运行
+IDEA开发工具; 选择build using Gradle方式。
+gradle栏目点选special-equipment-backend/Tasks/build/bootJar编译打包。
+命令行启动后端CMD> cd \unibackend\special-equipment-backend\build\libs目录;
+java -jar -Dspring.profiles.active=dev spec-SNAPSHOT???.jar
+
 graphQL文档 https://www.graphql-java.com/documentation/
 网页POST https://hanyeyinyong2.123nat.com:8673/graphql net::ERR_CERT_COMMON_NAME_INVALID 域名服务提供商有问题。
 
@@ -67,3 +73,4 @@ Float精度为6~7位，能保证6位为绝对精确，7位一般也是正确的�
 ES部署ik分词器 所有节点都安装插件 https://github.com/medcl/elasticsearch-analysis-ik
 从ES查看index的映射URL=  http://localhost:9200/eqp_latest/_mapping   _settings
 mysql对存储硬盘存取速度要求极高，全表级别字段的增删性能非常低！维护优化特别注意。
+
