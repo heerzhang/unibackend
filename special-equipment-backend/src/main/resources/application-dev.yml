@@ -123,9 +123,8 @@ spring:
       max-request-size: 215MB
   application:
     name: unibackend
-  profiles:
-    active:
-    - product
+
+
   jta:
     atomikos:
       properties:

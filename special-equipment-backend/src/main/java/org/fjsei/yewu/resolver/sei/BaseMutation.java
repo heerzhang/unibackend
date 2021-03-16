@@ -2,29 +2,30 @@ package org.fjsei.yewu.resolver.sei;
 
 import com.alibaba.fastjson.JSON;
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import lombok.extern.slf4j.Slf4j;
 import md.cm.base.Company;
 import md.cm.base.CompanyRepository;
 import md.cm.base.Person;
 import md.cm.base.PersonRepository;
+import md.cm.geography.*;
+import md.cm.unit.Unit;
+import md.cm.unit.UnitRepository;
+import md.specialEqp.*;
 import md.specialEqp.inspect.Isp;
+import md.specialEqp.inspect.IspRepository;
+import md.specialEqp.inspect.Task;
+import md.specialEqp.inspect.TaskRepository;
 import md.specialEqp.type.Elevator;
 import md.specialEqp.type.ElevatorRepository;
 import md.specialEqp.type.Vessel;
 import md.system.AuthorityRepository;
 import md.system.User;
 import md.system.UserRepository;
-import md.cm.unit.Unit;
-import md.cm.unit.UnitRepository;
-import md.specialEqp.*;
 import org.fjsei.yewu.entity.fjtj.HrUserinfo;
 import org.fjsei.yewu.entity.fjtj.HrUserinfoRepository;
-import md.specialEqp.inspect.IspRepository;
-import md.specialEqp.inspect.Task;
-import md.specialEqp.inspect.TaskRepository;
 import org.fjsei.yewu.exception.BookNotFoundException;
 import org.fjsei.yewu.index.sei.*;
 import org.fjsei.yewu.input.DeviceCommonInput;
-import md.cm.geography.*;
 import org.fjsei.yewu.input.UnitCommonInput;
 import org.fjsei.yewu.security.JwtTokenUtil;
 import org.fjsei.yewu.security.JwtUser;
@@ -73,10 +74,10 @@ import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_STORE_MODE;
 //这个类名字不能重复简明！
 //GraphQL有非常重要的一个特点：强类型,自带graphQL基本类型标量Int, Float, String, Boolean和ID。　https://segmentfault.com/a/1190000011263214
 //乐观锁确保任何更新或删除不会被无意地覆盖或丢失。悲观锁会在数据库级别上锁实体会引起DB级死锁。 https://blog.csdn.net/neweastsun/article/details/82318734
-
+@Slf4j
 @Component
 public class BaseMutation implements GraphQLMutationResolver {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    //private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
@@ -410,7 +411,7 @@ public class BaseMutation implements GraphQLMutationResolver {
             Long userid = ((JwtUser) principal).getId();
             User user = userRepository.findById(userid).orElse(null);
             UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( user.getId().toString() );
-            logger.info("user logout '{}', 注销退出了", user.getUsername());
+            log.info("user logout '{}', 注销退出了", user.getUsername());
             userRepository.save(user);
         }
         //没有登录的也Authenticated! 有anonymousUser 有ROLE_ANONYMOUS；
@@ -440,10 +441,10 @@ public class BaseMutation implements GraphQLMutationResolver {
         if(!isMatch){
             Assert.isTrue(isMatch,"密码错:"+name);
         }
-        logger.debug("checking authentication for user '{}'", name);
+        log.debug("checking authentication for user '{}'", name);
         if(user==null)  return false;
         if (name != null ) {         //&& SecurityContextHolder.getContext().getAuthentication() == null
-            logger.debug("security context was null, so authorizating user");
+            log.debug("security context was null, so authorizating user");
             // It is not compelling necessary to load the use details from the database. You could also store the information
             // in the token and read it from it. It's up to you ;)
             UserDetails userDetails = jwtUserDetailsService.loadUserByUsername( user.getId().toString() );
@@ -454,7 +455,7 @@ public class BaseMutation implements GraphQLMutationResolver {
            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            logger.info("authorizated user '{}', setting security context", name);
+            log.info("authorizated user '{}', setting security context", name);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             //浏览器自动遵守标准：超时的cookie就不会该送过来了。 那万一不守规矩？两手准备。
            HttpServletResponse response=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();

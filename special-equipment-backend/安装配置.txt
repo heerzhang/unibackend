@@ -256,4 +256,5 @@ ECS自建Elasticsearch=同一地域内通过内网互通，不收取费用；需
 专有网络VPC中自建NAT网关，使得ECS服务器不额外花钱可访问外网。
 Git clone新工程:Build/gralde/安装路径,Settings./Compiler/Annotation../enable；锤子springboot|StartApplication: JRE版本，@argsfile(9+),Active profile=dev;通过gradle编译,锤子右边按钮调试；无需理会Project Structure。
 在Hibernate中不是所有的数据都适合放置在二级缓存中，可将很少被修改的、不重要的且不会被并发访问的数据放置在二级缓存中，数据库也提供热数据缓存看着有些重叠。？
+Spring Boot默认日志框架logback。可用ELK收集日志 https://www.imooc.com/article/280691
 
