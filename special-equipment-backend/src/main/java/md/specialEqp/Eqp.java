@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
  机构(评审/考试/培训)变更审核，作业人员聘用单位变更；设备<省外注册/迁出/流动设备/使用登记/首检录入/办证后管道新增确认>；许可{申请书}办证流程；考试审核，案件，诚信，维保准入。
 不属于8大类的比如R000常压容器; 直接就是Eqp基类/没有独立参数表。
 结构化字段非json的必要性：计费不会用，过滤不会用，常规统计不会用，后端服务器业务逻辑不会用，不是监察严格管制修改要审核的字段，满足这些的可以放json中。
+ 旧平台3个设备库：JC_TEMP_EQPMGE未注册临时库,正式JC_EQP_MGE,检验本地设备库{+制造库}。
  */
 
 @NoArgsConstructor
@@ -442,6 +443,7 @@ public class Eqp implements Equipment{
     @JoinColumn
     private Unit useu;     //USE_UNT_ID 使用单位ID
     /**针对使用单位的细化　管理分支部门。
+     * 旧平台遗留，报告和监管机构需要细分 单位底下的 小地方分公司吗。
      *假如设备表没有指定Division部门的，那就是Unit作为缺省部门:等价于该单位底下没有细分的部门，若要求具体Division但是该单位没有细分Division情形。
      *MGE_DEPT_TYPE若=2：TB_UNT_SECUDEPT关联; MGE_DEPT_TYPE若=1很少作废了TB_UNT_DEPT关联
      */

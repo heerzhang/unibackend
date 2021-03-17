@@ -2,6 +2,7 @@ package md.specialEqp.inspect;
 
 import lombok.Getter;
 import lombok.Setter;
+import md.cm.unit.Unit;
 import md.specialEqp.Eqp;
 import md.specialEqp.Report;
 import md.system.User;
@@ -20,6 +21,7 @@ import java.util.Set;
 //责任工程师审核：同时收费.Task->INVC明细金额最终确认人{收钱不合理退回}；CURR_NODE= [{id:'101',text:'报告编制'},{id:'102',text:'责任工程师审核'}；
 
 /**业务记录， 监管或追溯历史的检验检测工作情况。
+ * 初始化状态=其实也可看做 每个Eqp子任务。
  * 检验工作的流转审查，本次检验工作的关键记录(详细数据除外)，监察关心的关键字段。
  * 本次检验决定的结论/法定应当的下次检验日期。
  * 对接旧平台/外部检验系统，历史报告检验/历史记录。
@@ -27,6 +29,7 @@ import java.util.Set;
  * 分项报告|主报告的流转审核打印等人员状态日期：直接放到Report模型中；
  *制造监检考虑从Isp中恢复已有的数据来复用。制造监检没有关联设备，但有单位,业务类型，附带设备类别指示就是没有Eqp,出厂编号声明范围。
  * Isp初始化时机提前了，Task任务指定设备时刻就要生成新的Isp,所以回转余地较大，实体模型含义有所变化。
+ * 制造监检和水质报告这样没有Eqp的如何还原报告证书的真伪？只能从报告号和证书序列号来追溯了,Isp.repNo来定位。
 */
 
 @Getter
@@ -59,11 +62,11 @@ public class Isp {
     @JoinColumn(name = "dev_id")
     private Eqp dev;
 
-    /**单个检验记录规属于某一个TASK底下的某次; 单一个设备执行多次作业活动要跑很多趟的，很多人不同场次做的作业的，当成一次。
+    /**任务很可能已经过期或清理掉，历史数据。
+     * 单个检验记录规属于某一个TASK底下的某次; 单一个设备执行多次作业活动要跑很多趟的，很多人不同场次做的作业的，当成一次。
     一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
      同一个Task底下每个Eqp不能重复保证唯一性，没有挂接Eqp的？只能最多一条Isp;
     //我是多的方，我维护关系，我方表字段包含了对方表记录ID
-
     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
@@ -89,17 +92,43 @@ public class Isp {
      * */
     private String  conclusion;
 
-    /**一个业务可能生成的 多个[子]报告， 主要目的是单独流转分项报告；
+    /**母报告的 报告号，合格证编号。 证书和报告上一般都会有Eqp定位方法。
+     * 没挂接Eqp的报告证书的如何还原真伪？只能从no,作为外部接入查询的关键字。
+     * 有挂接设备的，一般走设备定位入口，延伸查询历史的Isp/报告。
+     * 水质报告这样的可以在Unit.task找到关联Isp，若Task过去时间太久了已经清理掉，就只能依赖报告号。
+     * 制造监检这样的第三方想查询历史上的合格证证明，估计就得直接用合格证编号在Isp匹配了。
+     * @Id 某种规则生成的关键字,全平台Key;
+     * 制造监检合格证编号是证明书自身的编码，而不是出厂产品序列号。
+     */
+    private String  no;
+
+    /**主报告，母+子形式的。
+     * 封面报告,json直接链接其它分项报告;
+     * */
+    private Report  report;
+
+    /**做业务的成果输出。 检验检测都会有结论证明等。
+     一个业务可能生成的 多个[母子]报告/合格证/手写证明{特别形式的文件/说明}， 主要目的是单独流转分项报告；
      * 缺省, fetch= FetchType.EAGER
-    //有可能Report的实际数据库表还没有创建啊;
-    //比旧平台多出个Report实体，旧系统是直接用Isp表。多个分项报告REP_TYPE;
-    todo: 1个主/组合封面/报告，+0个或多个分项报告,带了顺序链接，打印物理页数？。
-    */
+     //有可能Report的实际数据库表还没有创建啊;
+     //比旧平台多出个Report实体，旧系统是直接用Isp表。多个分项报告REP_TYPE;
+     todo: 1个主/组合封面/报告，+0个或多个分项报告,带了顺序链接，打印物理页数？。
+     前端页面在呈现Report报告内容json里面估计会提供关联Unit的,到底是发证书发报告给哪个单位的。
+     包含封面报告 report;
+     */
     @OneToMany(mappedBy ="isp")
     private Set<Report>  reps;
+
     //private Set<BaseReport>  reps;
     //改成安全的基础接口类－报错hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class
 
+    /**服务对象(使用单位)
+     上级的Task也会设置关联单位的，【特别注意】两个冗余字段的更新同步。 Isp是长期储存，Task是短期储存。
+     水质报告制造监检这样的，不依赖Task，也不依赖精确地输入报告号。还是能从服务对象(使用单位)搜索的，但是数据条数较多。
+     */
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn
+    private Unit servu;
 
     //graphQL内省都是查询的getxxx;
     public Set<SimpleReport>  getReps() {

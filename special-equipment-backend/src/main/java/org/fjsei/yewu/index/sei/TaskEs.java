@@ -1,13 +1,18 @@
 package org.fjsei.yewu.index.sei;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import java.util.Date;
+
+
+/**
+ * 测试先用, 准备删除！，
+ * 应该引进 IspEs，加快Isp检索可能有点用处？？
+ */
 
 @Data
 @NoArgsConstructor

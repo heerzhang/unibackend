@@ -32,7 +32,9 @@ public class File {
 
     private boolean anyoneCanSee=false;
 
-    //报告=原始记录的附带图片等的文件
+    /**报告=原始记录的附带图片等的文件
+     * 文件删除前 必须处理完成关联实体对象Report报告 的锁定需求。
+    */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Report report;

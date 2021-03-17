@@ -1,9 +1,13 @@
 package md.cm.unit;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import md.cm.base.Company;
 import md.cm.base.Person;
 import md.specialEqp.Eqp;
+import md.specialEqp.inspect.Isp;
+import md.specialEqp.inspect.Task;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -81,6 +85,19 @@ public class Unit {
     private Set<Division>  dvs;    //分支或部门集合
     //过渡用　地区代码
     private String  area;   //UntMge. UNT_AREA_COD   不一定 是最小的乡镇级别管理区域代码。
+    /**
+     * 单位关联任务
+     * */
+    @OneToMany(mappedBy = "servu")
+    private Set<Task> tasks;
+    /**
+     * 单位关联业务记录
+     * 记录Set条数 可能很多的;
+     * 可只做单方向的关联，例如查询 Unit.isps 就不要使用了。但是from Isp Where servu=unitId可以做,多一道查。
+     * */
+    @OneToMany(mappedBy = "servu")
+    private Set<Isp> isps;
+
 
     public Unit() {
     }

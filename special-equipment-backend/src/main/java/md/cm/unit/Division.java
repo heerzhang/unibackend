@@ -1,11 +1,8 @@
 package md.cm.unit;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import md.cm.base.Company;
-import md.cm.base.Person;
 import md.cm.geography.Address;
 import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -48,7 +45,11 @@ public class Division {
     private String  area;   //UntSecudept UntDept . 　_AREA_COD
     //MGE_DEPT_TYPE=1-分支机构.SECUDEPT_ID 关联TB_UNT_SECUDEPT; if=2-安全管理部门.SAFE_DEPT_ID  关联TB_UNT_DEPT
 
-    //使用单位用到了
+    /*使用单位用到了
+    分支机构， 任务生成区分不同的分支(根本就不同的科室负责的作业对象吧)？没啥可再去分。
+    出发点？监管细分照顾的？还是检验业务收钱对象差异，或是报告证书发送对象差异。
+    单位分解规则，机构识别代码 统一社会信用代码 UNT_ORG_COD。大公司可以分开多个信用代码=多个单位。
+    */
     @OneToMany(mappedBy = "usud")
     private Set<Eqp> uses;    //在用设备集合
 

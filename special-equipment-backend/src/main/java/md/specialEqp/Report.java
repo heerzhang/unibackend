@@ -42,6 +42,8 @@ import java.util.Set;
  * report形式可多样，web网页内容链接的报告，上传文件存储pdf/excl/doc/图片报告，允许isp没有关联实际report仅提供报告号和来源地文字说明或外部html链接;
  * report :上传文件File关联 =1:N。 把isp作为监察视察的入口对象。
  * 数据和文件的淘汰删除时机：从关联度底的实体开始清理，重要性程度，过期时间多长。
+ * Task直接挂接收费账务/协议/Isp/工分/前端入口作业列表/工作成果统计/任务前置导入生成机制/分配派工。
+ * Isp直接挂接报告/分项报告/设备/Task/监察或第三方直接链接Isp历史记录。
  */
 
 @NoArgsConstructor
@@ -57,11 +59,13 @@ public class Report  implements SimpleReport {
     //OPE_TYPE配合BUSI_TYPE法定1/=2委托业务的；来敲定的报告类型REP_TYPE
     //而检验范畴ISP_TYPE可以省略掉：机电 承压类->只是给科室分配/发票会计用，挑选列表大的分类大归类的/统计上分家。
     /**
-     * 报告媒体形式： Web网页, 。
+     * 成果报告媒体形式： Web网页, 单文件Pdf/Excel，多个附件files，,String。
+     * 最极端的报告成果形式：有可能只有一点文字说明,能收到钱就也算业务成果。
      */
     private String type;
-    /**
+    /**实际上 Isp.no 可代替本字段, 一个Isp只能有一个证书或报告号码
      * 报告号，合格证编号。
+     * 正常的，每个分项报告的编号都是直接采用母报告的报告号。
      */
     private String  no;
 
@@ -72,8 +76,8 @@ public class Report  implements SimpleReport {
      */
     private String path;
 
-    /**1个检验可以有很多份子报告，分项报告 报告类型可以不同的。
-    单次ISP如果多个报告，每个报告单独打印，单独编制特定编号的报告，单独链接；主报告1+N。
+    /**单个Isp检验业务记录，可有很多份子报告，分项报告 报告类型可以不同的。
+    单次ISP如果多个报告，每个报告单独打印，单独编制报告，单独链接；主报告1+N。
     */
     @ManyToOne
     @JoinColumn
@@ -113,7 +117,7 @@ public class Report  implements SimpleReport {
 
     /**关联的 单线图等文件。
      * 文件名路径实际在json当中保存image* file的url，而这里是关联对象，管理文件存储有效期,用户权限等。
-     * 存在不一致风险。
+     * 注意！ 存在不一致风险。
      * */
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;
