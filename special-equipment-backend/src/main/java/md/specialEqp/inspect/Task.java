@@ -4,12 +4,10 @@ package md.specialEqp.inspect;
 import lombok.Getter;
 import lombok.Setter;
 import md.cm.unit.Unit;
-import md.specialEqp.Eqp;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 //旧平台1个TASK映射1个ISP{可以多分项SubISPid}；Isp流转后出报告内容。
@@ -27,6 +25,8 @@ import java.util.Set;
  * 聚合型任务参数字段：若每个子任务实际不一致的就不要设置，看实际情况。
  * 单个Eqp的Task实际应当与Isp合并的。多个子任务只是一起分配给某责任人{省掉些消息通知或页面输入}，汇聚型任务单-拆解子任务；
  * Task是流水性质的，记录存储有效期限较短，任务终结1个年完整后（统计利用完成了）可能就清理掉，好比程序后台日志文件一样时间太久了失去意义。
+ * 不同业务类型OPE_TYPE拆分成不同Task。同一个Task底下的Isp的业务类型OPE_TYPE必须相同，都准备派工给同一个责任人的;
+ * 如果两台同时进行检验的，按收费总额的90%收(单一次派工出去的/单任务?同种设备数)； 多个Isp捆绑审核，捆绑进度条/复检呢，一起做;自由裁决权。
 */
 
 @Getter
@@ -38,7 +38,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonSeq")
     @SequenceGenerator(name = "commonSeq", initialValue = 1, allocationSize = 1, sequenceName = "SEQUENCE_COMMON")
     protected Long id;
-    /**基本型任务=旧平台任务那样的只能关联单个Eqp的。
+    /**责任人。
+     * 基本型任务=旧平台任务那样的只能关联单个Eqp的。
      * 聚合型任务，关联多个Eqp设备。聚合型任务=页面输入的分解步骤：最终直接生成设备任务。
      * 显示上可以过滤树形状分别列表。直接搜设备加业务，受理部门不选不等于任务部门。
      * 统计过滤可分别针对基本型/聚合型; OLAP模块另外抽取。
@@ -59,37 +60,39 @@ public class Task {
     private String  director;    //PROJ_USER_ID
 
     //1个任务有n个设备,没有关联设备，虚拟设备（煤气罐系列化的设备号01..09排除05}），管道特别[选择几个单元为了报告/计费]。
-    /**Eqp这里仅仅是提供几个设备号关联，更加明确的关系还得到Isp底下字段才能真正敲定那些设备(还需要业务类型详细分配设定)。
-     * 也就是这里仅仅指出 选择范围是那些Eqp?展示层交互提示目的？。 当然后续可以默认都加入Isp。
+    /* Eqp这里仅仅是提供几个设备号关联，更加明确的关系还得到Isp底下字段才能真正敲定那些设备。
     Task单独报告的可没有设备关联；
     //我是关系维护方,必须在我这save()，　缺省.LAZY;
-     */
     @ManyToMany
     @JoinTable(name="TASK_DEVS", joinColumns={@JoinColumn(name="TASK_ID")}, inverseJoinColumns={@JoinColumn(name="DEVS_ID")}
                 //indexes={@Index(name="DEVS_ID_idx",columnList="DEVS_ID")}
             )
     private List<Eqp> devs;
-    //管道检查　监察的处理较为特殊，可分解开成多个任务单, 1 Eqp配合 多 pipeUnit两个实体分解，需要选定详细的多个管道单元。
-    //todo:同一批次多台设备的收费优惠政策。如何证明：查验审核。 归属哪一个泛型类任务，同属一个父任务『关联子任务』？
-    //todo：子设备列表-管道单元的选择列表。管道特别：每个单元下次定检日期都不一样(可分开多批次的任务)。
+    【重大变更】 Task底下不挂Eqp了，要在Task.isps.Eqp才能获得设备信息， 请前端注意！
+    */
 
-    //对方ISP去维护这个关联关系。
-    //一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
-    //默认fetch= FetchType.LAZY; 而mappedBy代表对方维护关系  EAGER
-    /**单个基本型任务涉及单一个设备{管道}， Isp业务流转/次检验工作，
-     * todo: 关系模型？ <BaseTask> 实际应该归并给Isp?
-     * 单个Isp只能有单个Eqp;
+    /**挂接多个业务记录Isp; 注意！ Isp是长期存储的，而Task只能短期保存的。
+     * 实际就是多个设备； 所以上面 private List<Eqp> devs; 可以作废掉了！
      * 可能不同的业务作业类型OPE_TYPE? ,不同OPE_TYPE有各自的报告结论证明? 只会有唯独一个OPE_TYPE，所以Isp唯一:@OneToOne
      * 单个Task针对同一台设备 也会有多个业务类别 产生不同种类报告；业务或报告不一定都有挂接某个设备。
-     多个设备，每个设备一个BaseTask也就是Isp;
+     管道特别每个单元下次定检日期都不一样(可分开多批次的任务),任务生成时旧的核对单元并且加业务锁：应用层锁具体规则代码控制。
+     当前管道单元最新已生成task关联关系表[任务锁],直接在PipingUnit增设'当前task'=锁；
+     Isp在任务创建时刻指定设备号就得同时创建Isp。
+     //todo:同一批次多台设备的收费优惠政策。如何证明：查验审核。
+     对方ISP去维护这个关联关系。
+     一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
+     默认fetch= FetchType.LAZY; 而mappedBy代表对方维护关系  EAGER
      *  */
     @OneToMany(mappedBy = "task" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Isp>  isps;
 
-    /**责任检验部门，
+    /**责任检验部门， Task要最终派给责任人，所以科室部门都是隐含敲定的。
      * 作为配合身份的部门，可以私底下约定收入的分成，仅供年终核算统计用途的；
      * 可能附带一个配合部门，收入提成比例%；
+     * Task有收入证明，联合检验适用的配合部门有共享分成，发票是实时的且是主要检验部门独占收入，配合部门年底提供统计证明指示应当提成收入。
+     * 派工报告编制审核审批工分计算不涉及到配合检验部门的具体分工，配合部门人员工作当做隐形，收入提成比例由责任人设定就是，配合部门不参与平台其它操作。
+     * 联合检验配合部门最多设置一个。
      * */
     private String dep;  //类型弱化? ,应该是部门表的ID!
 
@@ -103,6 +106,11 @@ public class Task {
     private Date date;
     private String status;
     private String  fee;
+    /**
+     * 任务的名义作业地址，用于任务合并派工，临近地点的任务临近时间的都派给同一个责任人。
+     * 实际可以把底下多个Isp的实际地址进行中心位置纬度经度;或者首要Address地址。
+     */
+    private String  opAddress;
 
     //todo: 【特别注意!】字段挂接摆放的地方不对， ?? 应该在检验记录当中做。当前任务下的所有设备不见得都有一致的关联数据。
     //[两个归并字段]只是前端显示区别；TB_TASK_MGE.IF_HOLD_TEST'4000是否载荷试验'？

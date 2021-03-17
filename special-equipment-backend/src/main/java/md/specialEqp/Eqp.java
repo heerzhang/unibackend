@@ -9,13 +9,11 @@ import md.cm.geography.Address;
 import md.cm.unit.Division;
 import md.cm.unit.Unit;
 import md.specialEqp.inspect.Isp;
-import md.specialEqp.inspect.Task;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -86,7 +84,7 @@ public class Eqp implements Equipment{
     private String oid;
 
     /**EQP_COD设备号? 本平台自己产生的或照抄老旧平台产生的。
-     * 对接旧平台用的，新平台没有意义。
+     * 对接旧平台用的，新平台没有意义。 直接用OIDNO；旧平台EQP_COD没存在必要;
      * */
     @Size(min = 4, max = 32)
     private String cod;
@@ -403,20 +401,21 @@ public class Eqp implements Equipment{
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "pos_id")
     private Address pos;
-    //只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
+
+    /*只要哪个类出现了mappedBy，那么这个类就是关系的被维护端。里面的值指定的是关系维护端
     //缺省FetchType.LAZY  　　 .EAGER
-    //一个任务只能搞1个设备的/为出报告准备的{流转Isp报告,报告对应技术参数只能是一个设备，煤气罐系列化的设备号01..09排除05}。
-   //todo: 改成１对多
     @ManyToMany(mappedBy="devs" ,fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL,region ="Fast")
     private Set<Task> task= new HashSet<>();
+    【重大变更】 从Eqp不能直接获得task，要改成Eqp.isps.task来间接获得任务信息。 请前端注意！
+     */
 
-    /**检验检测历史
+    /**检验检测业务记录，可长期保存历史数据。
      * 单1次ISP只能做1个EQP;考虑？一次检验很多气瓶？若支持设备汇聚出场编号汇集重新转义呢，1:N子部件设备关联表。
     //Eqp.TASK.Isp  Eqp.Isp {.短路?}  复杂关联关系， 在做EntityGraph选择定义不恰当而貌似可能死循环了？
     //ISP挂接关系到EQP底下还是挂接关系到TASK底下的？不可以两者同时都挂接关联关系，那样就是多余和混淆概念或两种分歧路径，数据多了而且还产生不一致了。
-    //检验单独生成，TASK和EQP多对多的；单个ISP检验为了某个EQP和某个TASK而生成的。
-    //先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
+    //单个ISP检验为了某个EQP和某个TASK而生成的。
+    //旧平台先有派出TASK，后来才会生成ISP； 两个地方都必须维护数据的。
     //缺省FetchType.EAGER  LAZY
     */
     @OneToMany(mappedBy="dev" ,fetch = FetchType.LAZY)

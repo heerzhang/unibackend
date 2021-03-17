@@ -18,7 +18,6 @@ import java.util.Set;
 //针对graphQL关联查询的安全问题，考虑把关对其他或低权限用户不可见的字段独立出来，JPA　三种继承映射策略。
 //比如ISP extends ISPbase{ISPbase字段低保密性}，ISP可额外添加保密性要求高的其他字段，代码配置graphql返回对象类型正常都用ISPbase替换ISP。
 //责任工程师审核：同时收费.Task->INVC明细金额最终确认人{收钱不合理退回}；CURR_NODE= [{id:'101',text:'报告编制'},{id:'102',text:'责任工程师审核'}；
-//如果两台同时进行检验的，按收费总额的90%收(单一次派工出去的/单任务?同种设备数)； 多个Isp捆绑审核，捆绑进度条/复检呢，一起做;自由裁决权。
 
 /**业务记录， 监管或追溯历史的检验检测工作情况。
  * 检验工作的流转审查，本次检验工作的关键记录(详细数据除外)，监察关心的关键字段。
@@ -27,6 +26,7 @@ import java.util.Set;
  TB_ISP_MGE像个大杂烩？TB_ISP_DET参数，报告和流转,主要是记录状态的，DATA_PATH代表报告纸,Isp代表作业成果。
  * 分项报告|主报告的流转审核打印等人员状态日期：直接放到Report模型中；
  *制造监检考虑从Isp中恢复已有的数据来复用。制造监检没有关联设备，但有单位,业务类型，附带设备类别指示就是没有Eqp,出厂编号声明范围。
+ * Isp初始化时机提前了，Task任务指定设备时刻就要生成新的Isp,所以回转余地较大，实体模型含义有所变化。
 */
 
 @Getter
@@ -41,7 +41,9 @@ public class Isp {
     protected Long id;
     /**OPE_TYPE
      * 业务类型 OPE_TYPE：统计？模板？ TB_DICT_OPETYPE似乎没内涵36个压缩到实际28个/委托法定=
-     * 法定还是委托的 是 附加属性。 Task底下可能为一个Eqp同时派工多个业务类型(一个法定的，一个委托的)。
+     * 法定还是委托的 是 附加属性。
+     * Task底下可能为一个Eqp只能派工唯一一个业务类型(一个法定的，一个委托的)，Task底下Eqp具有唯一性。
+     * 同一个Task底下的Isp的业务类型OPE_TYPE必须相同，都准备派工给同一个责任人的。
      */
     private String bsType;
 
@@ -49,7 +51,6 @@ public class Isp {
     //一个检验ISP记录只有一个设备，一个设备EQP可有多个ISP检验。
     //检验单独生成，TASK和EQP多对1的； ISP比Task更进一步，更靠近事务处理中心。
     //单个ISP检验为了某个EQP和某个TASK而生成的。主要目的推动后续的报告，管理流程，等。
-    //todo:若是ISP该从TASK挂接关系而来的，本来这里就不应该有EQP字段的，设备在TASK 哪去找，多余的字段?。Task是部门细分责任的。
     //我是多端我来维护关联关系，我的表有直接外键的存储。
     //改成Equipment dev报错 @OneToOne or @ManyToOne on md.specialEqp.inspect.Isp.dev references an unknown entity:
     单个Isp只能有单个Eqp; 也可能没有挂接Eqp的。
@@ -60,7 +61,7 @@ public class Isp {
 
     /**单个检验记录规属于某一个TASK底下的某次; 单一个设备执行多次作业活动要跑很多趟的，很多人不同场次做的作业的，当成一次。
     一个任务单Task包含了多个的ISP检验记录。 　任务1：检验N；
-     同一个Task底下每个Eqp+OPE_TYPE不能重复保证唯一性，没有挂接Eqp的？只能最多一条Isp{OPE_TYPE不同例外};
+     同一个Task底下每个Eqp不能重复保证唯一性，没有挂接Eqp的？只能最多一条Isp;
     //我是多的方，我维护关系，我方表字段包含了对方表记录ID
 
     */

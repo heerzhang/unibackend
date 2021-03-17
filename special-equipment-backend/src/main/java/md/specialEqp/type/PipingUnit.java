@@ -3,7 +3,7 @@ package md.specialEqp.type;
 import lombok.Getter;
 import lombok.Setter;
 import md.cm.unit.Unit;
-import md.specialEqp.inspect.Isp;
+import md.specialEqp.inspect.Task;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -28,6 +28,13 @@ public class PipingUnit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pipe_id")
     private Pipeline pipe;
+
+    /**业务锁，每个管道单元在本平台只能存在唯一一个活动的Task{局限性，排斥多业务并行，必须前面任务终结后面才能受理}。
+    当前管道单元最新已生成task关联关系表[任务锁],直接在PipingUnit增设'当前task'=锁；
+     业务锁困扰: 特殊任务可以不指定单元没有在任务单声明每一个PipingUnit只需要Eqp代指(实际报告或证明书可以另外约束指定详细单元)，
+     再不行只能多加个业务锁了,分类别加锁。 目前思路针对监管核心业务上锁。
+    */
+    private Task task;
 
     //关键字段》》 "管道名称(登记单元)"	"管道编号"
     //1"序号（监管平台生成）" ?系统内部id?排序的;
