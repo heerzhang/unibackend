@@ -22,6 +22,10 @@ public class QReport extends EntityPathBase<Report> {
 
     public static final QReport report = new QReport("report");
 
+    public final StringPath auditOperates = createString("auditOperates");
+
+    public final StringPath authorizationUsers = createString("authorizationUsers");
+
     public final StringPath data = createString("data");
 
     public final StringPath detail = createString("detail");
@@ -45,6 +49,8 @@ public class QReport extends EntityPathBase<Report> {
     public final StringPath sign = createString("sign");
 
     public final StringPath snapshot = createString("snapshot");
+
+    public final StringPath status = createString("status");
 
     public final StringPath type = createString("type");
 

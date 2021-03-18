@@ -194,9 +194,6 @@ public class QVessel extends EntityPathBase<Vessel> {
     public final md.cm.unit.QUnit svu;
 
     //inherited
-    public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task;
-
-    //inherited
     public final StringPath titl;
 
     //inherited
@@ -301,7 +298,6 @@ public class QVessel extends EntityPathBase<Vessel> {
         this.subv = _super.subv;
         this.svp = _super.svp;
         this.svu = _super.svu;
-        this.task = _super.task;
         this.titl = _super.titl;
         this.type = _super.type;
         this.unqf1 = _super.unqf1;

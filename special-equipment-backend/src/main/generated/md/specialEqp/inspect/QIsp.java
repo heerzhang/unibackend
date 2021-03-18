@@ -22,6 +22,8 @@ public class QIsp extends EntityPathBase<Isp> {
 
     public static final QIsp isp = new QIsp("isp");
 
+    public final StringPath bsType = createString("bsType");
+
     public final md.system.QUser checkMen;
 
     public final StringPath conclusion = createString("conclusion");
@@ -34,7 +36,13 @@ public class QIsp extends EntityPathBase<Isp> {
 
     public final DateTimePath<java.util.Date> nextIspDate = createDateTime("nextIspDate", java.util.Date.class);
 
+    public final StringPath no = createString("no");
+
+    public final md.specialEqp.QReport report;
+
     public final SetPath<md.specialEqp.Report, md.specialEqp.QReport> reps = this.<md.specialEqp.Report, md.specialEqp.QReport>createSet("reps", md.specialEqp.Report.class, md.specialEqp.QReport.class, PathInits.DIRECT2);
+
+    public final md.cm.unit.QUnit servu;
 
     public final QTask task;
 
@@ -58,6 +66,8 @@ public class QIsp extends EntityPathBase<Isp> {
         super(type, metadata, inits);
         this.checkMen = inits.isInitialized("checkMen") ? new md.system.QUser(forProperty("checkMen")) : null;
         this.dev = inits.isInitialized("dev") ? new md.specialEqp.QEqp(forProperty("dev"), inits.get("dev")) : null;
+        this.report = inits.isInitialized("report") ? new md.specialEqp.QReport(forProperty("report"), inits.get("report")) : null;
+        this.servu = inits.isInitialized("servu") ? new md.cm.unit.QUnit(forProperty("servu"), inits.get("servu")) : null;
         this.task = inits.isInitialized("task") ? new QTask(forProperty("task"), inits.get("task")) : null;
     }
 

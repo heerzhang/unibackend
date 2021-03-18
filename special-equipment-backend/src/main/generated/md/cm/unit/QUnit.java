@@ -34,6 +34,8 @@ public class QUnit extends EntityPathBase<Unit> {
 
     public final StringPath indCod = createString("indCod");
 
+    public final SetPath<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp> isps = this.<md.specialEqp.inspect.Isp, md.specialEqp.inspect.QIsp>createSet("isps", md.specialEqp.inspect.Isp.class, md.specialEqp.inspect.QIsp.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> jcId = createNumber("jcId", Long.class);
 
     public final StringPath linkMen = createString("linkMen");
@@ -51,6 +53,8 @@ public class QUnit extends EntityPathBase<Unit> {
     public final md.cm.base.QPerson person;
 
     public final StringPath phone = createString("phone");
+
+    public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> tasks = this.<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask>createSet("tasks", md.specialEqp.inspect.Task.class, md.specialEqp.inspect.QTask.class, PathInits.DIRECT2);
 
     public QUnit(String variable) {
         this(Unit.class, forVariable(variable), INITS);

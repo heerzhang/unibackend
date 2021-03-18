@@ -30,7 +30,7 @@ public class QTask extends EntityPathBase<Task> {
 
     public final StringPath dep = createString("dep");
 
-    public final ListPath<md.specialEqp.Eqp, md.specialEqp.QEqp> devs = this.<md.specialEqp.Eqp, md.specialEqp.QEqp>createList("devs", md.specialEqp.Eqp.class, md.specialEqp.QEqp.class, PathInits.DIRECT2);
+    public final StringPath director = createString("director");
 
     public final StringPath fee = createString("fee");
 
@@ -38,7 +38,9 @@ public class QTask extends EntityPathBase<Task> {
 
     public final SetPath<Isp, QIsp> isps = this.<Isp, QIsp>createSet("isps", Isp.class, QIsp.class, PathInits.DIRECT2);
 
-    public final BooleanPath multi = createBoolean("multi");
+    public final StringPath opAddress = createString("opAddress");
+
+    public final md.cm.unit.QUnit servu;
 
     public final StringPath status = createString("status");
 
@@ -65,6 +67,7 @@ public class QTask extends EntityPathBase<Task> {
     public QTask(Class<? extends Task> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.constu = inits.isInitialized("constu") ? new md.cm.unit.QUnit(forProperty("constu"), inits.get("constu")) : null;
+        this.servu = inits.isInitialized("servu") ? new md.cm.unit.QUnit(forProperty("servu"), inits.get("servu")) : null;
     }
 
 }

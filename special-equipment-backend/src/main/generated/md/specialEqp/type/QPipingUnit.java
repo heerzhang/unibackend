@@ -60,6 +60,8 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
 
     public final StringPath stop = createString("stop");
 
+    public final md.specialEqp.inspect.QTask task;
+
     public final NumberPath<Float> thik = createNumber("thik", Float.class);
 
     public final DatePath<java.util.Date> used = createDate("used", java.util.Date.class);
@@ -87,6 +89,7 @@ public class QPipingUnit extends EntityPathBase<PipingUnit> {
         this.desu = inits.isInitialized("desu") ? new md.cm.unit.QUnit(forProperty("desu"), inits.get("desu")) : null;
         this.insu = inits.isInitialized("insu") ? new md.cm.unit.QUnit(forProperty("insu"), inits.get("insu")) : null;
         this.pipe = inits.isInitialized("pipe") ? new QPipeline(forProperty("pipe"), inits.get("pipe")) : null;
+        this.task = inits.isInitialized("task") ? new md.specialEqp.inspect.QTask(forProperty("task"), inits.get("task")) : null;
     }
 
 }

@@ -120,8 +120,6 @@ public class QEqp extends EntityPathBase<Eqp> {
 
     public final md.cm.unit.QUnit svu;
 
-    public final SetPath<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask> task = this.<md.specialEqp.inspect.Task, md.specialEqp.inspect.QTask>createSet("task", md.specialEqp.inspect.Task.class, md.specialEqp.inspect.QTask.class, PathInits.DIRECT2);
-
     public final StringPath titl = createString("titl");
 
     public final StringPath type = createString("type");
