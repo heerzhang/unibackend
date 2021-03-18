@@ -144,7 +144,8 @@ public class BaseMutation implements GraphQLMutationResolver {
                 .build();
 
         //这样无法执行Set<Task> task=new HashSet<>();原来new Eqp()却可以的。
-        Task task=new Task();
+        //【重大变更】 从Eqp不能直接获得task，要改成Eqp.isps.task来间接获得任务信息。
+        /*Task task=new Task();
         task.setDep("12111kk234fv");
         Set<Task> tasks=new HashSet<>();
         tasks.add(task);
@@ -153,16 +154,16 @@ public class BaseMutation implements GraphQLMutationResolver {
         devs.add(eQP);
         //多对多保存复杂一点，必须都给set上。
         //task.setDevs(devs);
-
         Task task2=new Task();
         task2.setDep("aAxwxxxx3f4fv");
         eQP.getTask().add(task2);
         List<Eqp> devs2=new ArrayList<>();
         devs2.add(eQP);
         //task2.setDevs(devs2);
-
         //task.setStatus("STOPted");
         //task2.setStatus("RuningYe");
+        */
+
         try {
           //  taskRepository.save(task);
            // taskRepository.save(task2);
@@ -286,7 +287,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         task.setDate(date);
         taskRepository.save(task);
         //在前端上无法立刻更新，看不见新任务啊；加了底下2行点刷新URL可立刻看见。
-        eQP.getTask().add(task);
+        //eQP.getTask().add(task);
         eQPRepository.save(eQP);
         return task;
     }
@@ -298,7 +299,7 @@ public class BaseMutation implements GraphQLMutationResolver {
         Assert.isTrue(task != null,"未找到task:"+task);
         Eqp eQP = eQPRepository.findById(devId).orElse(null);
         Assert.isTrue(eQP != null,"未找到eQP:"+eQP);
-        task.getDevs().add(eQP);
+        //task.getDevs().add(eQP);
         taskRepository.save(task);
         return task;
     }

@@ -166,7 +166,7 @@ public class IspMgrMutation implements GraphQLMutationResolver {
         Assert.isTrue(task.getIsps().isEmpty(),"还有ISP关联"+taskId);
         List<Eqp>  devs=null;//todo: task.getDevs();
         //解除关系
-        devs.forEach(dev -> dev.getTask().remove(task));
+        //devs.forEach(dev -> dev.getTask().remove(task));
         emSei.remove(task);
         emSei.flush();
         return task!=null;

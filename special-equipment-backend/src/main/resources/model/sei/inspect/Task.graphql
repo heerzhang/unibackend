@@ -1,6 +1,6 @@
 type Task{
     id: ID!
-    devs: [Eqp]!
+    #devs: [Eqp]!
     dep: String
     date: String
     status: String

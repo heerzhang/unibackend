@@ -102,9 +102,13 @@ public class Isp {
      */
     private String  no;
 
-    /**主报告，母+子形式的。
+    /**工作成果输出：主报告，母+子形式的。
+     * 只能一个入口, 多张证书这样平行关系不支持，改为多张 子证书。
      * 封面报告,json直接链接其它分项报告;
+     * 单向关联关系，底下的Set<Report>  reps才是所有的子报告。
+     * 冗余字段-快捷关联模式 ! ! ! 一个集合中特别指出当前最关注的那一条,免于数组[]嵌套。
      * */
+    @ManyToOne(fetch= FetchType.LAZY)
     private Report  report;
 
     /**做业务的成果输出。 检验检测都会有结论证明等。

@@ -34,7 +34,8 @@ public class PipingUnit {
      业务锁困扰: 特殊任务可以不指定单元没有在任务单声明每一个PipingUnit只需要Eqp代指(实际报告或证明书可以另外约束指定详细单元)，
      再不行只能多加个业务锁了,分类别加锁。 目前思路针对监管核心业务上锁。
     */
-    private Task task;
+    @ManyToOne(fetch= FetchType.LAZY)
+    private Task task;     //单向关联关系，就是锁定占坑的。
 
     //关键字段》》 "管道名称(登记单元)"	"管道编号"
     //1"序号（监管平台生成）" ?系统内部id?排序的;

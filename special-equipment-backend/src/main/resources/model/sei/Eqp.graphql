@@ -21,7 +21,7 @@ type Eqp implements Equipment{
     fno: String
     isps: [Isp]
     pos: Address
-    task: [Task]
+    #task: [Task]
     useu: Unit
     svp:String,
     pa:String

@@ -122,16 +122,16 @@ public class Report  implements SimpleReport {
     @OneToMany(mappedBy="report" ,fetch = FetchType.LAZY)
     private Set<File> files;
 
-    /**
+    /**自定义状态代号/后端数字代号Enum-前端中文表达。
     状态转移关联记录模式。Auditflow 业务含义阶段状态 status，
     */
     private String  status; //通用模型Auditflow,如何定制 node role{数据库内容依赖} Action{接口处理函数}
-    /**
+    /**状态转换后，用户就变动了。
      当前节点用户权限authorizationUsers[],
      authorizationUsers设置的同时，增加Message[user]{linkURL指代}提醒/站内短信。
      */
     private String  authorizationUsers;
-    /**
+    /** 流转或审核的操作明细Log。
      关联操作历史记录AuditOperate<(status,time,user,OPTION通过退回,MEMO,处理后转为Nextstatus,当前状态哪些Users可处理)>;
      */
     private String  auditOperates;
